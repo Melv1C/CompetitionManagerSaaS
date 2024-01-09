@@ -1,0 +1,7 @@
+version: "3"
+services:     # list all services for your application
+  cm-athletes:  # name of your service
+    image: melv1c/cm-athletes:latest  # image name
+    ports: [ "3000:3000" ]  # port mapping
+    restart: always  # restart policy
+
