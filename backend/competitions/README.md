@@ -4,6 +4,11 @@
 
 This service is responsible for managing competitions. 
 
+## Technologies
+
+- Node.js (Express)
+- PostgreSQL ??
+
 ## API
 
 ### Get competitions
@@ -34,7 +39,10 @@ This service is responsible for managing competitions.
     "message": "Competition retrieved successfully",
     "data": {
         "id": "string",
-        ...
+        "name": "string",
+        "date": "string",
+        "location": "string",
+        "club": "string",
     }
 }
 ```
@@ -49,6 +57,7 @@ This service is responsible for managing competitions.
     "name": "string",
     "date": "string",
     "location": "string",
+    "club": "string",
     ...
 }
 ```
@@ -58,8 +67,7 @@ This service is responsible for managing competitions.
     "status": "success",
     "message": "Competition created successfully",
     "data": {
-        "id": "string",
-        ...
+        "id": "string"
     }
 }
 ```

@@ -8,18 +8,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/athletes', async (req, res) => {
-    const name = req.query.name;
-    if (!name) {
+    const key = req.query.key;
+    if (!key) {
         res.status(400).json({
             status: 'error',
-            message: 'Missing required query parameter: name',
+            message: 'Missing required query parameter: key',
         });
         return;
     }
 
-    console.log("Searching for athletes with name: " + name);
+    console.log("Searching for athletes with key: " + key);
 
-    const data = await axios.get(`https://www.beathletics.be/api/search/public/${name}`);
+    const data = await axios.get(`https://www.beathletics.be/api/search/public/${key}`);
 
     // check if data is empty
     if (!data || !data.data) {
