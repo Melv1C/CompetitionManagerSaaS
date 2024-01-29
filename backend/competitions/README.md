@@ -1,5 +1,20 @@
 # Competitions service
 
+## TODO
+
+- date end inscriptions
+- add var payment boolean
+- add list club gratuit
+- lien vers horaire pdf optionnel
+- list des epreuves
+    - nom(id)
+    - heure
+    - list des categories
+    - nb participants max
+    - cout
+
+
+
 ## Description
 
 This service is responsible for managing competitions. 
@@ -7,7 +22,7 @@ This service is responsible for managing competitions.
 ## Technologies
 
 - Node.js (Express)
-- PostgreSQL ??
+- MongoDB (Mongoose)
 
 ## API
 
