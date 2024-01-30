@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/competition.css">
+</head>
+<body>
+    <h1>Competition</h1>
+    <div>
+        <h2><%= competition.name %></h2>
+        <p><%= competition.club %></p>
+        <p><%= competition.strDate %></p>
+        <p><%= competition.location %></p>
+        <button id="modifInfo">Modifier</button>
+    </div>
+    <div id="popupModifInfo" class="popup">
+        <span class="close-btn" id="popupModifInfoClose">Close</span>
+        <input type="text" id="nameInput" value="<%= competition.name %>" class="infoCompet">
+        <p><%= competition.club %></p>
+        <input type="date" id="dateInput" value="<%= competition.date %>" class="infoCompet">
+        <input type="text" id="locationInput" value="<%= competition.location %>" class="infoCompet">
+        <button id="sendModifInfo">Modifier</button>
+        <button id="cancelModifInfo">Annuler</button>
+    </div>
+    <div id="overlay" class="overlay"></div>
+</body>
+<script src="/scripts/competition.js"></script>
+</html>

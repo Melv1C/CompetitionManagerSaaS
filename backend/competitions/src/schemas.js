@@ -23,7 +23,7 @@ const competitionSchema = new Schema({
         type: Date,
     },
 });
-const Competition = mongoose.model("user", competitionSchema);
+const Competition = mongoose.model("competitions", competitionSchema);
 
 
 module.exports = { Competition };
