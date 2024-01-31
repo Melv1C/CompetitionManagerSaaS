@@ -41,19 +41,6 @@ const categorySchema = new Schema({
 });
 const Category = mongoose.model("category", categorySchema);
 
-const groupingSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    events:{
-        type: Array,
-        required: true,
-    }
-});
-const Grouping = mongoose.model("grouping", groupingSchema);
-
 const eventSchema = new Schema({
     name: {
         type: String,
@@ -63,8 +50,12 @@ const eventSchema = new Schema({
     validCat: {
         type: Array,
         required: true,
+    },
+    grouping: {
+        type: String,
+        required: true,
     }
 });
 const Event = mongoose.model("event", eventSchema);
 
-module.exports = { Category , Grouping , Event };
+module.exports = { Category , Event };
