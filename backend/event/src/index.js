@@ -23,13 +23,30 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 
-app.get('/event', async (req, res) => {
+app.get('/event/getInfoEvent', async (req, res) => {
     try{
-        const event = await Event.findOne({ id: req.query.id });
+        const event = await Event.findOne({ name: req.query.name });
         res.status(200).json({
             status: 'success',
             message: 'Event retrieved successfully',
             data: event,
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+app.get('/event/getInfoCategory', async (req, res) => {
+    try{
+        const category = await Category.findOne({ id: req.query.id });
+        res.status(200).json({
+            status: 'success',
+            message: 'Category retrieved successfully',
+            data: category,
         });
     }catch(err){
         console.error(err);
@@ -69,5 +86,21 @@ app.post('/event/createEvents', async (req, res) => {
     }
 });
 
+app.get('/event/getAllEvents', async (req, res) => {
+    try{
+        const events = await Event.find();
+        res.status(200).json({
+            status: 'success',
+            message: 'Events retrieved successfully',
+            data: events,
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
 
 app.listen(port, () => console.log(`Event app listening on port ${port}!`));
