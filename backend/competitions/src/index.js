@@ -34,6 +34,13 @@ async function generateId() {
 app.get('/competitions', async (req, res) => {
     try{
         const competition = await Competition.findOne({ id: req.query.id });
+        if (!competition){
+            return res.status(404).json({
+                status: 'success',
+                message: 'Competition not found',
+                data: null,
+            });
+        }
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
@@ -51,12 +58,18 @@ app.get('/competitions', async (req, res) => {
 //create a new competition
 app.post('/competitions', async (req, res) => {
     try{
+        console.log(req.body)
         const competition = new Competition({
             id: await generateId(),
             name: req.body.name,
             location: req.body.location,
             club: req.body.club,
             date: req.body.date,
+            paid: req.body.paid,
+            freeClub: req.body.freeClub,
+            schedule: req.body.schedule,
+            description: req.body.description,
+            open: false,
         });
         await competition.save();
         res.status(201).json({
@@ -81,6 +94,10 @@ app.put('/competitions', async (req, res) => {
             location: req.body.location,
             club: req.body.club,
             date: req.body.date,
+            paid: req.body.paid,
+            freeClub: req.body.freeClub,
+            schedule: req.body.schedule,
+            description: req.body.description,
         });
         res.status(200).json({
             status: 'success',

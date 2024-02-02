@@ -7,22 +7,52 @@
     <link rel="stylesheet" href="/styles/competition.css">
 </head>
 <body>
-    <h1>Competition</h1>
     <div>
-        <h2><%= competition.name %></h2>
+        <h1><%= competition.name %></h1>
         <p><%= competition.club %></p>
         <p><%= competition.strDate %></p>
         <p><%= competition.location %></p>
+        <p>Description :<%= competition.description %></p>
+        <p>Payant : <%= competition.paid %></p>
+        <% if (competition.schedule) { %>
+            <a href="<%= competition.schedule %>">Lien vers l'horaire</a>
+        <% } %>
         <button id="modifInfo">Modifier</button>
     </div>
+    <div>
+        <h2>Epreuves</h2>
+        <button id="addEpr">Ajouter une epreuve</button>
+    </div>
     <div id="popupModifInfo" class="popup">
-        <span class="close-btn" id="popupModifInfoClose">Close</span>
-        <input type="text" id="nameInput" value="<%= competition.name %>" class="infoCompet">
-        <p><%= competition.club %></p>
-        <input type="date" id="dateInput" value="<%= competition.date %>" class="infoCompet">
-        <input type="text" id="locationInput" value="<%= competition.location %>" class="infoCompet">
-        <button id="sendModifInfo">Modifier</button>
-        <button id="cancelModifInfo">Annuler</button>
+        <form id="modifForm">
+            <span class="close-btn" id="popupModifInfoClose">X</span>
+            <h2>Modifier les informations</h2>
+            <label for="name">Nom de la compétition</label>
+            <input type="text" name="name" id="name" value="<%= competition.name %>">
+            <label for="date">Date de la compétition</label>
+            <input type="date" name="date" id="date" value="<%= competition.date %>">
+            <label for="club">Club organisateur</label>
+            <input type="text" name="club" id="club" value="<%= competition.club %>">
+            <label for="location">Lieu de la compétition</label>
+            <input type="text" name="location" id="location" value="<%= competition.location %>">
+            <label for="paid">Payant</label>
+            <input type="checkbox" name="paid" id="paid" value="<%= competition.paid %>">
+            <Label for="freeClub">Gratuit pour les club : </Label>
+            <input type="text" name="freeClub" id="freeClub" value="<%= competition.freeClub %>">
+            <label for="schedule">Lien vers un horaire(optionel)</label>
+            <input type="text" name="schedule" id="schedule" value="<%= competition.schedule %>">
+            <label for="description">Description de la compétition</label>
+            <textarea name="description" id="description" cols="30" rows="10"></textarea value="<%= competition.description %>">
+            <button id="sendModifInfo" type="button">Modifier</button>
+            <button id="cancelModifInfo" type="button">Annuler</button>
+        </form>
+    </div>
+    <div id="popupAddEpr" class="popup">
+        <form id="AddEprForm">
+            <span class="close-btn" id="popupAddEprClose">X</span>
+            <h2>Ajouter une epreuve</h2>
+            <button id="cancelAddEpr" type="button">Annuler</button>
+        </form>
     </div>
     <div id="overlay" class="overlay"></div>
 </body>

@@ -3,6 +3,17 @@ const competitionId = urlParams.get('id');
 
 const overlay = document.getElementById("overlay");
 
+const nameInput = document.getElementById('name');
+const locationInput = document.getElementById('location');
+const clubInput = document.getElementById('club');
+const dateInput = document.getElementById('date');
+const paidInput = document.getElementById('paid');
+const freeClubInput = document.getElementById('freeClub');
+const scheduleInput = document.getElementById('schedule');
+const descriptionInput = document.getElementById('description');
+
+
+
 function openPopup(popup){
     popup.style.display = "block";
     overlay.style.display = "block";
@@ -28,15 +39,33 @@ cancelModifInfo.addEventListener("click", function(){
     closePopup(popupModifInfo);
 });
 
+const popupAddEpr = document.getElementById("popupAddEpr");
+const popupAddEprClose = document.getElementById("popupAddEprClose");
+popupAddEprClose.addEventListener("click", function(){
+    closePopup(popupAddEpr);
+});
+
+document.getElementById("addEpr").addEventListener("click", function(){
+    openPopup(popupAddEpr);
+});
+
+const cancelAddEpr = document.getElementById("cancelAddEpr");
+cancelAddEpr.addEventListener("click", function(){
+    closePopup(popupAddEpr);
+});
+
+
 const sendModifInfo = document.getElementById("sendModifInfo");
 sendModifInfo.addEventListener("click", function(){
-    const name = document.getElementById('nameInput').value;
-    const date = document.getElementById('dateInput').value;
-    const location = document.getElementById('locationInput').value;
     const competitionData = {
-        name: name,
-        date: date,
-        location: location
+        name: nameInput.value,
+        location: locationInput.value,
+        club: clubInput.value,
+        date: dateInput.value,
+        paid: paidInput.checked,
+        freeClub: freeClubInput.value,
+        schedule: scheduleInput.value,
+        description: descriptionInput.value,
     };
     fetch('/admin/competition?id=' + competitionId, {
         method: 'PUT',
