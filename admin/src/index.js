@@ -3,7 +3,7 @@ const axios = require('axios');
 const env = require('dotenv').config();
 
 
-const port = 3001;
+const port = 5000;
 const app = express();
 
 app.use(express.static('public'));
@@ -11,10 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
-const API_URL = process.env.API_URL || 'http://localhost:3000';
-
-
-
+const API_URL = process.env.API_URL || '';
 
 app.get('/admin', (req, res) => {
     res.render('index');

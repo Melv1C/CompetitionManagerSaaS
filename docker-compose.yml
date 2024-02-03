@@ -1,48 +1,114 @@
 version: "3"
 services:     # list all services for your application
-  cm-athletes:  # name of your service
+  athletes-service:  # service name
     image: claesweb/cm-athletes:latest  # image name
     ports: [ "3000:3000" ]  # port mapping
     restart: always  # restart policy
+    networks:
+      - backend-networks  # network name
 
-  mongo:
+  competitions-db:
     image: mongo
     restart: always
     volumes:
       - ./db_data/:/data/./db_data/:/data/db/
       - /ect/timezone:/ect/timezone:ro
-    ports:
-      - 27017:27017
+    ports: [ "3001:27017" ]
     networks:
       - backend-networks
 
-  mongo-express:
+  competitions-db-viewer:
     image: mongo-express
     restart: always
-    ports:
-      - 8081:8081
+    ports: [ "3002:8081" ]
     environment:
+      - ME_CONFIG_MONGODB_SERVER=competitions-db
+      - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=123456
-      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
     networks:
       - backend-networks
+    depends_on:
+      - competitions-db
 
-  cm-competitions:
+  competitions-service:
     image: claesweb/cm-competitions:latest
     restart: always
-    ports:
-      - 3001:3000
+    ports: [ "3003:3000" ]
     environment:
-      - MONGO_URI=mongodb://mongo:27017/competitions
+      - MONGO_URI=mongodb://competitions-db:27017/competitions
+    networks:
+      - backend-networks
+    depends_on:
+      - competitions-db
+
+  events-db:
+    image: mongo
+    restart: always
+    volumes:
+      - ./db_data/:/data/./db_data/:/data/db/
+      - /ect/timezone:/ect/timezone:ro
+    ports: [ "3004:27017" ]
     networks:
       - backend-networks
 
-  cm-frontend:
-    image: claesweb/cm-frontend:latest
-    ports: [ "80:3000" ]
+  events-db-viewer:
+    image: mongo-express
     restart: always
+    ports: [ "3005:8081" ]
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=events-db
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+    networks:
+      - backend-networks
+    depends_on:
+      - events-db
 
+  events-service:
+    image: claesweb/cm-events:latest
+    restart: always
+    ports: [ "3006:3000" ]
+    environment:
+      - MONGO_URI=mongodb://events-db:27017/eventcat
+    networks:
+      - backend-networks
+    depends_on:
+      - events-db
+
+  admin-service:
+    image: claesweb/cm-admin:latest
+    restart: always
+    ports: [ "5000:5000" ]
+    environment:
+      - API_URL=http://competitions-service:3000
+    depends_on:
+      - competitions-service
+    networks:
+      - backend-networks  
+
+  frontend:
+    image: claesweb/cm-frontend:latest
+    ports: [ "8080:3000" ]
+    restart: always
+    networks:
+      - backend-networks
+
+  gateway:
+    image: claesweb/cm-nginx:latest
+    ports: [ "80:80" ]
+    restart: always
+    networks:
+      - backend-networks
+    depends_on:
+      - athletes-service
+      - competitions-service
+      - events-service
+      - admin-service
+      - frontend
 
 networks:
   backend-networks:
