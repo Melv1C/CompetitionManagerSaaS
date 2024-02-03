@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crée</title>
+    <link rel="stylesheet" href="/styles/create.css">
+</head>
+<body>
+    <div>
+        <h1>Crée une compétitions</h1>
+        <form id="createForm">
+            <label for="name">Nom de la compétition</label>
+            <input type="text" name="name" id="name" required>
+            <label for="date">Date de la compétition</label>
+            <input type="date" name="date" id="date" required>
+            <label for="club">Club organisateur</label>
+            <input type="text" name="club" id="club" required>
+            <label for="location">Lieu de la compétition</label>
+            <input type="text" name="location" id="location" required>
+            <label for="paid">Payant</label>
+            <input type="checkbox" name="paid" id="paid" required>
+            <Label for="freeClub">Gratuit pour les club : </Label>
+            <input type="text" name="freeClub" id="freeClub" required>
+            <label for="schedule">Lien vers un horaire(optionel)</label>
+            <input type="text" name="schedule" id="schedule">
+            <label for="description">Description de la compétition</label>
+            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            <input type="button" value="Crée" id="createBtn" disabled>
+        </form>
+    </div>
+</body>
+<script src="/scripts/create.js"></script>
+</html>
