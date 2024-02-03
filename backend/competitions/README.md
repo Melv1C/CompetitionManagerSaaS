@@ -53,11 +53,14 @@ This service is responsible for managing competitions.
     "status": "success",
     "message": "Competition retrieved successfully",
     "data": {
-        "id": "string",
         "name": "string",
-        "date": "string",
         "location": "string",
         "club": "string",
+        "date": "string",
+        "paid": "boolean",          //true if athletes have to pay to participate
+        "freeClub": ["string"],     //list of clubs that don't have to pay
+        "schedule": "string",       //link to the schedule pdf 
+        "description": "string",    
     }
 }
 ```
@@ -70,10 +73,13 @@ This service is responsible for managing competitions.
 ```json
 {
     "name": "string",
-    "date": "string",
     "location": "string",
     "club": "string",
-    ...
+    "date": "string",
+    "paid": "boolean",          //true if athletes have to pay to participate
+    "freeClub": ["string"],     //list of clubs that don't have to pay (optional)
+    "schedule": "string",       //link to the schedule pdf (optional)
+    "description": "string",    //(optional)
 }
 ```
 - Response: HTTP 201 Created
@@ -95,9 +101,13 @@ This service is responsible for managing competitions.
 ```json
 {
     "name": "string",
-    "date": "string",
     "location": "string",
-    ...
+    "club": "string",
+    "date": "string",
+    "paid": "boolean",          //true if athletes have to pay to participate
+    "freeClub": ["string"],     //list of clubs that don't have to pay (optional)
+    "schedule": "string",       //link to the schedule pdf (optional)
+    "description": "string",    //(optional)
 }
 ```
 - Response: HTTP 200 OK
@@ -106,9 +116,30 @@ This service is responsible for managing competitions.
     "status": "success",
     "message": "Competition updated successfully",
     "data": {
-        "id": "string",
-        ...
+        "id": "string"
     }
 }
+```
+
+## Testing
+
+### Create a new competition
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"Club 1\",\"date\":\"2021-01-01\",\"paid\":true,\"freeClub\":[\"Club 2\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 1\"}" http://localhost:3000/competitions
+```
+
+### Get all competitions
+```
+curl -X GET http://localhost:3000/competitions
+```
+
+### Get competition by id
+```
+curl -X GET http://localhost:3000/competitions/{ID}
+```
+
+### Update a competition
+```
+curl -X PUT -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"Club 1\",\"date\":\"2021-01-01\",\"paid\":true,\"freeClub\":[\"Club 2\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 2\"}" http://localhost:3000/competitions/{ID}
 ```
 

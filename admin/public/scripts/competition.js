@@ -80,6 +80,5 @@ sendModifInfo.addEventListener("click", function(){
             alert(response.message);
         }
     })
-    //todo
     closePopup(popupModifInfo);
 });

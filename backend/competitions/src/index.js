@@ -30,20 +30,45 @@ async function generateId() {
     return id;
 }
 
-//Get competition's data by id 
-app.get('/competitions', async (req, res) => {
+
+app.get("/competitions", async (req, res) => {
     try{
-        const competition = await Competition.findOne({ id: req.query.id });
+        const competitions = await Competition.find({});
+        res.status(200).json({
+            status: 'success',
+            message: 'Competitions retrieved successfully',
+            data: competitions,
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+
+//Get competition's data by id 
+app.get('/competitions/:id', async (req, res) => {
+    try{
+        const id = req.params.id;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        const competition = await Competition.findOne({ id: id});
         if (!competition){
             return res.status(404).json({
-                status: 'success',
+                status: 'error',
                 message: 'Competition not found',
-                data: null,
             });
         }
         res.status(200).json({
             status: 'success',
-            message: 'Competitions retrieved successfully',
+            message: 'Competition retrieved successfully',
             data: competition,
         });
     }catch(err){
@@ -58,17 +83,72 @@ app.get('/competitions', async (req, res) => {
 //create a new competition
 app.post('/competitions', async (req, res) => {
     try{
-        console.log(req.body)
+        const name = req.body.name;
+        const location = req.body.location;
+        const club = req.body.club;
+        const date = req.body.date;
+        const paid = req.body.paid ? req.body.paid : false;
+        const freeClub = req.body.freeClub ? req.body.freeClub : [];
+        const schedule = req.body.schedule ? req.body.schedule : "";
+        const description = req.body.description ? req.body.description : "";
+        if (!name && typeof name !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid name',
+            });
+        }
+        if (!location && typeof location !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid location',
+            });
+        }
+        if (!club && typeof club !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid club',
+            });
+        }
+        if (!date && typeof date !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid date',
+            });
+        }
+        if (!paid && typeof paid !== 'boolean'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid paid',
+            });
+        }
+        if (!freeClub && !Array.isArray(freeClub)){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid freeClub',
+            });
+        }
+        if (!schedule && typeof schedule !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid schedule',
+            });
+        }
+        if (!description && typeof description !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid description',
+            });
+        }
         const competition = new Competition({
             id: await generateId(),
-            name: req.body.name,
-            location: req.body.location,
-            club: req.body.club,
-            date: req.body.date,
-            paid: req.body.paid,
-            freeClub: req.body.freeClub,
-            schedule: req.body.schedule,
-            description: req.body.description,
+            name: name,
+            location: location,
+            club: club,
+            date: date,
+            paid: paid,
+            freeClub: freeClub,
+            schedule: schedule,
+            description: description,
             open: false,
         });
         await competition.save();
@@ -86,18 +166,81 @@ app.post('/competitions', async (req, res) => {
     }
 });
 
-app.put('/competitions', async (req, res) => {
+app.put('/competitions/:id', async (req, res) => {
     try{
-        const competition = await Competition.findOne({ id: req.query.id });
+        const id = req.params.id;
+        const name = req.body.name;
+        const location = req.body.location;
+        const club = req.body.club;
+        const date = req.body.date;
+        const paid = req.body.paid ? req.body.paid : false;
+        const freeClub = req.body.freeClub ? req.body.freeClub : [];
+        const schedule = req.body.schedule ? req.body.schedule : "";
+        const description = req.body.description ? req.body.description : "";
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        if (!name && typeof name !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid name',
+            });
+        }
+        if (!location && typeof location !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid location',
+            });
+        }
+        if (!club && typeof club !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid club',
+            });
+        }
+        if (!date && typeof date !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid date',
+            });
+        }
+        if (!paid && typeof paid !== 'boolean'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid paid',
+            });
+        }
+        if (!freeClub && !Array.isArray(freeClub)){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid freeClub',
+            });
+        }
+        if (!schedule && typeof schedule !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid schedule',
+            });
+        }
+        if (!description && typeof description !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid description',
+            });
+        }
+        const competition = await Competition.findOne({ id: id });
         await competition.updateOne({
-            name: req.body.name,
-            location: req.body.location,
-            club: req.body.club,
-            date: req.body.date,
-            paid: req.body.paid,
-            freeClub: req.body.freeClub,
-            schedule: req.body.schedule,
-            description: req.body.description,
+            name: name,
+            location: location,
+            club: club,
+            date: date,
+            paid: paid,
+            freeClub: freeClub,
+            schedule: schedule,
+            description: description,
         });
         res.status(200).json({
             status: 'success',
