@@ -7,7 +7,7 @@ This service is responsible for managing competitions.
 ## Technologies
 
 - Node.js (Express)
-- PostgreSQL ??
+- MongoDB (Mongoose)
 
 ## API
 
