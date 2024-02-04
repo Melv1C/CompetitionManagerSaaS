@@ -23,7 +23,7 @@ app.get('/admin/create', (req, res) => {
 
 app.get('/admin/competition', async (req, res) => {
     try {
-        const competition = (await axios.get(`${API_URL}/competitions?id=${req.query.id}`)).data.data;
+        const competition = (await axios.get(`${API_URL}/api/competitions/${req.query.id}`)).data.data;
         competition.strDate = new Date(competition.date).toLocaleDateString('fr-BE');
         competition.date = new Date(competition.date).toISOString().split('T')[0];
         res.render('competition', { competition: competition });
@@ -54,7 +54,7 @@ app.post('/admin/competition', async (req, res) => {
             schedule: req.body.schedule,
             description: req.body.description,
         };
-        const createCompet = await axios.post(`${API_URL}/competitions`, competitionData);
+        const createCompet = await axios.post(`${API_URL}/api/competitions`, competitionData);
         console.log(createCompet.data.data.id);
         res.status(200).json({
             status: 'success',
@@ -82,7 +82,7 @@ app.put('/admin/competition', async (req, res) => {
             schedule: req.body.schedule,
             description: req.body.description,
         };
-        await axios.put(`${API_URL}/competitions?id=${req.query.id}`, competitionData);
+        await axios.put(`${API_URL}/api/competitions/${req.query.id}`, competitionData);
         res.status(200).json({
             status: 'success',
             message: 'Competition updated successfully',

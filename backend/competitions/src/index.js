@@ -22,6 +22,13 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
 async function generateId() {
     let id = crypto.randomBytes(20).toString('hex');
     while (await Competition.findOne({ id })) {
@@ -31,7 +38,7 @@ async function generateId() {
 }
 
 
-app.get("/competitions", async (req, res) => {
+app.get("/api/competitions", async (req, res) => {
     try{
         const competitions = await Competition.find({});
         res.status(200).json({
@@ -50,7 +57,7 @@ app.get("/competitions", async (req, res) => {
 
 
 //Get competition's data by id 
-app.get('/competitions/:id', async (req, res) => {
+app.get('/api/competitions/:id', async (req, res) => {
     try{
         const id = req.params.id;
         if (!id && typeof id !== 'string'){
@@ -81,7 +88,7 @@ app.get('/competitions/:id', async (req, res) => {
 });
 
 //create a new competition
-app.post('/competitions', async (req, res) => {
+app.post('/api/competitions', async (req, res) => {
     try{
         const name = req.body.name;
         const location = req.body.location;
@@ -166,7 +173,7 @@ app.post('/competitions', async (req, res) => {
     }
 });
 
-app.put('/competitions/:id', async (req, res) => {
+app.put('/api/competitions/:id', async (req, res) => {
     try{
         const id = req.params.id;
         const name = req.body.name;

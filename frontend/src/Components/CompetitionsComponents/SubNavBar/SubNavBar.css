@@ -1,0 +1,43 @@
+.subnavbar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    background-color: #E5F0FF;
+    border-bottom: 1px solid #E5F0FF;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.subnavbar-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 100px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.subnavbar-menu li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+    cursor: pointer;
+}
+
+.subnavbar-menu li a {
+    text-decoration: none;
+    color: black
+}
+
+.subnavbar-menu hr {
+    border: none;
+    width: 80%;
+    height: 3px;
+    border-radius: 10px;
+    background-color: #ff4141;
+}
+

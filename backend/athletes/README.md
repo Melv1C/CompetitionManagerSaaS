@@ -8,7 +8,7 @@ This service is responsible for managing athletes. It will use beathletics api f
 
 ### Get athletes
 
-- `GET /athletes?key=string`
+- `GET /api/athletes?key=string`
 - Description: Get athletes by key (first name, last name or bib)
 - Response: HTTP 200
 ```json
@@ -33,7 +33,7 @@ This service is responsible for managing athletes. It will use beathletics api f
 
 ### Get athlete by id
 
-- `GET /athletes/:id`
+- `GET /api/athletes/:id`
 - Description: Get athlete"s data by id
 - Response: HTTP 200
 ```json

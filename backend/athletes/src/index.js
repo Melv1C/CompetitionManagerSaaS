@@ -7,7 +7,14 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/athletes', async (req, res) => {
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
+app.get('/api/athletes', async (req, res) => {
     const key = req.query.key;
     if (!key) {
         res.status(400).json({
@@ -51,7 +58,7 @@ app.get('/athletes', async (req, res) => {
     });
 });
 
-app.get('/athletes/:id', async (req, res) => {
+app.get('/api/athletes/:id', async (req, res) => {
     const id = req.params.id;
     if (!id) {
         res.status(400).json({

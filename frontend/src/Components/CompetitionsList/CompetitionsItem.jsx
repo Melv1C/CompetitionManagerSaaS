@@ -7,15 +7,15 @@ export const CompetitionsItem = (props) => {
     
 
     return (
-        <div className="competitions-item">
-            <div className="competitions-item-date">{props.competition.date}</div>
-            <div className="competitions-item-name">{props.competition.name}</div>
-            <div className="competitions-item-inscription-deadline">Inscription avant le {props.competition.inscriptionDeadline}</div>
-            <div className="competitions-item-button">
-                <Link to={`/competitions/${props.competition.id}`}>
+        <Link to={`/competitions/${props.competition.id}`}>
+            <div className="competitions-item">
+                <div className="competitions-item-date">{new Date(props.competition.date).toLocaleDateString("fr-FR")}</div>
+                <div className="competitions-item-name">{props.competition.name}</div>
+                <div className="competitions-item-inscription-deadline">Inscription avant le {new Date(props.competition.date).toLocaleDateString("fr-FR")}</div>
+                <div className="competitions-item-button">
                     <div className="right-arrow"></div>
-                </Link>
+                </div>
             </div>
-        </div>
+        </Link>
     )
 }
