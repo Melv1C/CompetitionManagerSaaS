@@ -91,7 +91,9 @@ export const Athlete = ({athlete, setAthlete, setStep}) => {
         
         setLoading(true);
 
-        axios.get(`http://localhost/api/athletes?key=${keyword}`)
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/athletes' : '/api/athletes';
+
+        axios.get(`${url}?key=${keyword}`)
         .then(res => {
             const athletes = res.data.data;
             setLoading(false);

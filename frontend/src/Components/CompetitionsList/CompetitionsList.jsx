@@ -10,7 +10,9 @@ export const CompetitionsList = () => {
 
     useEffect(() => {
 
-        axios.get('http://localhost/api/competitions')
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : '/api/competitions';
+
+        axios.get(url)
             .then((response) => {
                 setCompetitions(response.data.data);
             })

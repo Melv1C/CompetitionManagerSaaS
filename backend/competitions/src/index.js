@@ -96,6 +96,42 @@ app.get('/api/competitions/:id', async (req, res) => {
     }
 });
 
+//Get events of a competition filtered by a category
+app.get('/api/competitions/:id/events', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const category = req.query.category;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        const competition = await Competition.findOne({ id: id});
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+            });
+        }
+        let events = competition.events;
+        if (category){
+            events = events.filter(event => event.categories.includes(category));
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Events retrieved successfully',
+            data: events,
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
 //create a new competition
 app.post('/api/competitions', async (req, res) => {
     try{

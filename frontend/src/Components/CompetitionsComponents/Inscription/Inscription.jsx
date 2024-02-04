@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleList, faUser, faPersonRunning, faStopwatch } from '@fortawesome/free-solid-svg-icons'
 
 import { Athlete } from './Athlete/Athlete'
+import { Events } from './Events/Events'
+import { Records } from './Records/Records'
 
 function ProgressBar({step}) {
 
@@ -57,11 +59,13 @@ function ControlButtons({step, setStep}) {
 
 
 
-export const Inscription = (id) => {
+export const Inscription = ({id}) => {
 
     const [step, setStep] = useState(1);
 
     const [athlete, setAthlete] = useState(null);
+    const [events, setEvents] = useState([]);
+    const [records, setRecords] = useState([]);
 
     if (athlete) {
         console.log("athlete in inscription");
@@ -81,6 +85,13 @@ export const Inscription = (id) => {
         })
     }, [])
 
+    useEffect(() => {
+        if (athlete === null) {
+            setEvents([]);
+            setRecords([]);
+        }
+    }, [athlete])
+
     if (!user) {
         return (
             <div className='competition-page'>
@@ -94,8 +105,10 @@ export const Inscription = (id) => {
             <ProgressBar step={step} />
 
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthlete} setStep={setStep} /> : null}
+            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete.category} /> : null}
+            {step === 3 ? <Records events={events} records={records} setRecords={setRecords} setStep={setStep} /> : null}
 
-            <ControlButtons step={step} setStep={setStep} />
+            {/*<ControlButtons step={step} setStep={setStep} />*/}
         </div>
     )
 }
