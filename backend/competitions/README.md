@@ -60,7 +60,12 @@ This service is responsible for managing competitions.
         "paid": "boolean",          //true if athletes have to pay to participate
         "freeClub": ["string"],     //list of clubs that don't have to pay
         "schedule": "string",       //link to the schedule pdf 
-        "description": "string",    
+        "description": "string",
+        "events": [
+            event1,
+            event2,
+            ...
+        ] 
     }
 }
 ```
@@ -106,6 +111,81 @@ This service is responsible for managing competitions.
     "message": "Competition created successfully",
     "data": {
         "id": "string"
+    }
+}
+```
+
+### Add an event to a competition
+
+- `POST /api/competitions/:id/events`
+- Description: Add an event to a competition
+- Request body:
+```json
+{
+    "name": "string",
+    "pseudoName" : "string",     //optional default name
+    "time": "date",
+    "categories": ["string"],
+    "maxParticipants": "number", //optional
+    "cost": "number",            //optional default 0
+}
+```
+
+- Response: HTTP 201 Created
+```json
+{
+    "status": "success",
+    "message": "Event added successfully",
+    "data": {
+        "id": "string",
+        "events": [
+            event1,
+            event2,
+            ...
+        ]
+    }
+}
+```
+
+### Delete an event from a competition (TODO)
+
+- `DELETE /api/competitions/:id/events/:eventId`
+- Description: Delete an event from a competition
+- Response: HTTP 200 OK
+```json
+{
+    "status": "success",
+    "message": "Event deleted successfully",
+}
+```
+
+### Update an event from a competition (TODO)
+
+- `PUT /api/competitions/:id/events/:eventId`
+- Description: Update an event from a competition
+- Request body:
+```json
+{
+    "name": "string",
+    "pseudoName" : "string",     //optional default name
+    "time": "date",
+    "categories": ["string"],
+    "maxParticipants": "number", //optional
+    "cost": "number",            //optional
+}
+```
+- Response: HTTP 200 OK
+```json
+{
+    "status": "success",
+    "message": "Event updated successfully",
+    "data": {
+        "id": "string",
+        "events": [
+            event1,
+            event2,
+            ...
+        ]
     }
 }
 ```
@@ -168,8 +248,14 @@ curl -X GET http://localhost:3000/api/competitions
 curl -X GET http://localhost:3000/api/competitions/{ID}
 ```
 
+### Add an event to a competition
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Event 1\",\"time\":\"2021-01-01\",\"categories\":[\"Category 1\",\"Category 2\"],\"maxParticipants\":100,\"cost\":10}" http://localhost:3000/api/competitions/{ID}/events
+```
+
 ### Update a competition
 ```
 curl -X PUT -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"Club 1\",\"date\":\"2021-01-01\",\"paid\":true,\"freeClub\":[\"Club 2\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 2\"}" http://localhost:3000/api/competitions/{ID}
 ```
+
 

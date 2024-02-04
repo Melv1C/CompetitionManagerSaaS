@@ -41,6 +41,10 @@ const competitionSchema = new Schema({
         required: true,
         default: false,
     },
+    events: {
+        type: Array,
+        required: true,
+    },
 });
 const Competition = mongoose.model("competitions", competitionSchema);
 

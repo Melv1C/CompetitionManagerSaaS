@@ -11,7 +11,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
-const API_URL = process.env.API_URL || '';
+const API_URL = process.env.API_URL || 'http://localhost:3000';
+const EVENTS_URL = process.env.EVENTS_URL || 'http://localhost:3001';
 
 app.get('/admin', (req, res) => {
     res.render('index');
@@ -26,14 +27,15 @@ app.get('/admin/competition', async (req, res) => {
         const competition = (await axios.get(`${API_URL}/api/competitions/${req.query.id}`)).data.data;
         competition.strDate = new Date(competition.date).toLocaleDateString('fr-BE');
         competition.date = new Date(competition.date).toISOString().split('T')[0];
-        res.render('competition', { competition: competition });
-    } catch (err) {
-        if (err.response.status === 404) {
-            return res.status(404).json({
-                status: 'error',
-                message: 'Competition not found',
-            });
+        const events = (await axios.get(`${EVENTS_URL}/api/events`)).data.data;
+        let grouping = [];
+        for (let i = 0; i < events.length; i++) {
+            if (!grouping.includes(events[i].grouping)) {
+                grouping.push(events[i].grouping);
+            }
         }
+        res.render('competition', { competition: competition, events: events, grouping: grouping });
+    } catch (err) {
         console.error(err);
         res.status(500).json({
             status: 'error',
@@ -96,6 +98,17 @@ app.put('/admin/competition', async (req, res) => {
     }
 });
 
+app.post('/admin/competition/:id', async (req, res) => {
+    try{
+        //todo
+    }catch{
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
 
 
 app.listen(port, () => {

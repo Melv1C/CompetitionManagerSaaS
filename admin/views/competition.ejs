@@ -52,10 +52,11 @@
             <span class="close-btn" id="popupAddEprClose">X</span>
             <h2>Ajouter une epreuve</h2>
             <select name="type" id="type">
-                <option value="course">Course</option>
-                <option value="saut">Saut</option>
-                <option value="lancer">Lancer</option>
+                <% for (let type of grouping) { %>
+                    <option value="<%= type %>"><%= type %></option>
+                <% } %>
             </select>
+            <select name="" id=""></select>
             <button id="cancelAddEpr" type="button">Annuler</button>
         </form>
     </div>

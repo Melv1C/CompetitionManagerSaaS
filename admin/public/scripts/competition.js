@@ -82,3 +82,8 @@ sendModifInfo.addEventListener("click", function(){
     })
     closePopup(popupModifInfo);
 });
+
+const type = document.getElementById("type");
+type.addEventListener("change", function(){
+    
+});
