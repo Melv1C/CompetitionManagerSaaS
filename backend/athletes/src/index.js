@@ -87,7 +87,7 @@ app.get('/api/athletes/:id', async (req, res) => {
         lastName: athlete.person.lastName,
         birthDate: athlete.person.birthDate,
         gender: athlete.person.gender,
-        category: null, // TODO: function to calculate category from birthDate
+        category: calculateCategory(new Date(athlete.person.birthDate), new Date(), athlete.person.gender),
         club: athlete.club ? athlete.club.abbr : null,
     } 
 
@@ -97,5 +97,35 @@ app.get('/api/athletes/:id', async (req, res) => {
         data: athlete,
     });
 });
+
+function calculateCategory(birthDate, competitionDate, gender) {
+
+    // calculate age (years, months, days)
+    let age = new Date(competitionDate - birthDate);
+    let years = age.getUTCFullYear() - 1970;
+    //let months = age.getUTCMonth();
+    //let days = age.getUTCDate();
+
+    //console.log("Age: " + years + " years, " + months + " months, " + days + " days");
+
+    // calculate category
+    if (years < 35) { // not a master
+        const dico_age = {"SEN":[20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35],"JUN":[18,19],"SCO":[16,17],"CAD":[14,15],"MIN":[12,13],"PUP":[10,11],"BEN":[8,9],"KAN":[1,2,3,4,5,6,7]}
+        const sexe = gender === "Male" ? "M" : "F";
+        const yearsDiff = (competitionDate.getMonth()>10 ? competitionDate.getFullYear()+1 : competitionDate.getFullYear()) - birthDate.getFullYear();
+        let cat = null;
+        for (let key in dico_age) {
+            if (dico_age[key].includes(yearsDiff)) {
+                cat = key;
+                break;
+            }
+        }
+        return cat + " " + sexe;
+        
+    } else { // master
+        const sexe = gender === "Male" ? "M" : "W";
+        return sexe + (parseInt(years/5) * 5);
+    }
+}
 
 app.listen(port, () => console.log(`Athletes microservice listening on port ${port}!`));
