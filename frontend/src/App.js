@@ -11,6 +11,8 @@ import { Competition } from './Pages/Competition';
 
 import { Profile } from './Pages/Profile';
 
+import { Footer } from './Components/Footer/Footer';
+
 function App() {
     return (
         <div>
@@ -23,6 +25,7 @@ function App() {
 
                     <Route path="/profile" element={<Profile />} />
                 </Routes>
+            <Footer />
             </Router>
         </div>
     );

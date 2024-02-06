@@ -41,3 +41,11 @@
     background-color: #ff4141;
 }
 
+/* Responsive design */
+
+@media screen and (max-width: 768px) {
+    .subnavbar-menu {
+        gap: 20px;
+        padding: 0;
+    }
+}
