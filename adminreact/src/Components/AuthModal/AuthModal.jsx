@@ -17,6 +17,7 @@ export const AuthModal = (props) => {
             password: password
         }).then((response) => {
             props.setShow(false);
+            props.setLoading(false);
         }).catch((error) => {
             console.log(error);
             if (error.response.status === 401) {
@@ -24,9 +25,7 @@ export const AuthModal = (props) => {
             } else if (error.response.status === 500) {
                 setError("Erreur serveur");
             }
-        });
-
-        
+        });  
     }
     if (!props.show) {
         return null;

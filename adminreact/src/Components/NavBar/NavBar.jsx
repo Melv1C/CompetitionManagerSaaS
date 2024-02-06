@@ -6,20 +6,8 @@ import { AuthModal } from '../AuthModal/AuthModal';
 axios.defaults.withCredentials = true;
 
 
-export const NavBar = () => {
+export const NavBar = (props) => {
     const [showModal, setShowModal] = useState(false);
-    const [user, setUser] = useState(null);
-    useEffect(() => {
-        axios.get('http://localhost:3000/adminAuth')
-            .then((response) => {
-                setUser(response.data.email);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [showModal])
-    console.log(showModal)
-
     return (
         <>
             <div className='navbar'>
@@ -32,10 +20,17 @@ export const NavBar = () => {
                 <div className='navbar-login-user'>
                 </div>
                 <div className='navbar-login-user'>
-                    {user === null ? <button onClick={()=>{setShowModal(true)}}>Se connecter</button>: null}
+                    {props.user.email === null ? <button onClick={()=>{setShowModal(true)}}>Se connecter</button>: null}
+                    {props.user.email !== null ? <button onClick={()=>{
+                        axios.post('http://localhost:3000/adminAuth/logout').then((response) => {
+                            props.setLoading(false);
+                        }).catch((error) => {
+                            console.log(error);
+                        });
+                    }}>Se déconnecter</button>: null}
                 </div>
             </div>
-            {user === null ? <AuthModal show={showModal} setShow={setShowModal} /> : null}
+            {props.user.email === null ? <AuthModal show={showModal} setShow={setShowModal} loading={props.loading} setLoading={props.setLoading}/> : null}
         </>
     )
 }

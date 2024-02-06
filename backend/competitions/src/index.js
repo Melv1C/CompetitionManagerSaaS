@@ -18,7 +18,7 @@ const connectMongo = async () => {
 connectMongo();
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,6 +44,18 @@ async function generateIdEvent(events) {
         id = crypto.randomBytes(5).toString('hex');
     }
     return id;
+}
+
+function onlySameIp(req, res, next) {
+    if (req.ip === '::1') {
+        console.log('Authorized')
+        next();
+    } else {
+        res.status(401).json({
+            status: 'error',
+            message: 'Unauthorized'
+        });
+    }
 }
 
 
@@ -133,6 +145,8 @@ app.get('/api/competitions/:id/events', async (req, res) => {
 });
 
 //create a new competition
+//add this middleware to the route to allow only the same ip to create a competition
+// app.use('/api/competitions', onlySameIp);
 app.post('/api/competitions', async (req, res) => {
     try{
         const name = req.body.name;

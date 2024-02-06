@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/adminAuth';
+const COMPETITION_URL = process.env.COMPETITION_URL || 'http://localhost:3001';
 
 
 const connectMongo = async () => {
@@ -161,6 +162,35 @@ app.post('/adminAuth/logout', (req, res) => {
             status: 'success',
             message: 'Logged out successfully',
         });
+    }catch(err){
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+app.post('/adminAuth/competitions', async (req, res) => {
+    try{
+        const user = await Admin.findOne({email: req.session.email});
+        if(user) {
+            if(!user.allAccess) {
+                req.body.club = user.club;
+            }
+            console.log("sending : "+JSON.stringify(req.body));
+            fetch(COMPETITION_URL+'/competitions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(req.body),
+            })
+        }else{
+            res.status(401).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
     }catch(err){
         res.status(500).json({
             status: 'error',
