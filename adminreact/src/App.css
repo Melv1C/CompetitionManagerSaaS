@@ -1,0 +1,20 @@
+
+.page {
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.page-title {
+    text-align: center;
+}
+
+.competition-page {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 20px;
+    border: 3px solid #E5F0FF;
+    border-radius: 10px;
+    margin-top: 50px;
+}
