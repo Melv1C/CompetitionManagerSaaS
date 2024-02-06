@@ -104,5 +104,23 @@
     border:2px solid #008AFF;
 }
 
+/* Responsive */
+
+@media (max-width: 768px) {
+    .progress-bar {
+        margin: 0 10px;
+    }
+
+    .control-buttons {
+        margin: 0 10px;
+    }
+
+    .step-page {
+        margin: 0 10px;
+    }
+}
+
+
+
 
 

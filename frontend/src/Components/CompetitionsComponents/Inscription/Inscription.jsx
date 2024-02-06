@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
+import axios from 'axios';
 
 import {auth} from '../../../Firebase'
+
+import { useSearchParams } from 'react-router-dom';
 
 
 import './Inscription.css'
@@ -12,6 +15,8 @@ import { faRectangleList, faUser, faPersonRunning, faStopwatch } from '@fortawes
 import { Athlete } from './Athlete/Athlete'
 import { Events } from './Events/Events'
 import { Records } from './Records/Records'
+
+
 
 function ProgressBar({step}) {
 
@@ -48,29 +53,77 @@ function ProgressBar({step}) {
     )
 }
 
-function ControlButtons({step, setStep}) {
-    return (
-        <div className='control-buttons'>
-            {step > 1 ? <button onClick={()=>{setStep(step-1)}}>Précédent</button> : null}
-            {step < 4 ? <button onClick={()=>{setStep(step+1)}}>Suivant</button> : <button onClick={()=>{setStep(step+1)}}>Terminer</button>}
-        </div>
-    )
-}
-
-
+//function ControlButtons({step, setStep}) {
+//    return (
+//        <div className='control-buttons'>
+//            {step > 1 ? <button onClick={()=>{setStep(step-1)}}>Précédent</button> : null}
+//            {step < 4 ? <button onClick={()=>{setStep(step+1)}}>Suivant</button> : <button onClick={()=>{setStep(step+1)}}>Terminer</button>}
+//        </div>
+//    )
+//}
 
 export const Inscription = ({id}) => {
 
-    const [step, setStep] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    
+    const step = parseInt(searchParams.get('step')) || 1;
+    const setStep = (step) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('step', step);
+        setSearchParams(newSearchParams);
+    }
+
+    const athleteId = searchParams.get('athleteId');
+    const setAthleteId = (athlete) => {
+
+        if (athlete === null) {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('athleteId');
+            setSearchParams(newSearchParams);
+            setAthlete(null);
+        } else {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('athleteId', athlete.id);
+            setSearchParams(newSearchParams);
+        }
+    }
+
+    //const [step, setStep] = useState(1);
 
     const [athlete, setAthlete] = useState(null);
     const [events, setEvents] = useState([]);
     const [records, setRecords] = useState([]);
 
-    if (athlete) {
-        console.log("athlete in inscription");
-        console.log(athlete);
-    }
+    // loads athlete from URL
+
+    useEffect(() => {
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/athletes' : '/api/athletes';
+        
+        if (athleteId) {
+            axios.get(`${url}/${athleteId}`)
+            .then(res => {
+                setAthlete(res.data.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    }, [athleteId])
+
+
+    useEffect(() => {
+        if (athlete === null) {
+            setEvents([]);
+            setRecords([]);
+        }
+    }, [athlete])
+
+    // if no event is selected step is max 2
+    useEffect(() => {
+        if (events.length === 0 && step > 2) {
+            setStep(2);
+        }
+    }, [events])
 
     // if no user is logged in, message is displayed
     const [user, setUser] = useState(false);
@@ -85,13 +138,6 @@ export const Inscription = ({id}) => {
         })
     }, [])
 
-    useEffect(() => {
-        if (athlete === null) {
-            setEvents([]);
-            setRecords([]);
-        }
-    }, [athlete])
-
     if (!user) {
         return (
             <div className='competition-page'>
@@ -104,8 +150,8 @@ export const Inscription = ({id}) => {
         <div className='competition-page'>
             <ProgressBar step={step} />
 
-            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthlete} setStep={setStep} /> : null}
-            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete.category} /> : null}
+            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} /> : null}
+            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={"SEN M"} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecords={setRecords} setStep={setStep} /> : null}
 
             {/*<ControlButtons step={step} setStep={setStep} />*/}

@@ -19,6 +19,8 @@ export const NavBar = () => {
 
     const [user, setUser] = useState(false);
 
+    const [menuOpen, setMenuOpen] = useState(false);
+
     useEffect(() => {
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -37,17 +39,27 @@ export const NavBar = () => {
                 <div className='navbar-logo'>
                     <img src={logo} alt="logo" />
                 </div>
-                <ul className='navbar-menu'>
-                    <li onClick={()=>{setMenu("home")}}><Link to='/'>Accueil</Link> {menu==="home" ? <hr/> : null}</li>
-                    <li onClick={()=>{setMenu("competitions")}}><Link to='/competitions'>Competitions</Link> {menu==="competitions" ? <hr/> : null}</li>
-                    {user ? <li onClick={()=>{setMenu("profile")}}><Link to='/profile'>Mon compte</Link> {menu==="profile" ? <hr/> : null}</li> : null}
-                </ul>
-                <div className='navbar-login-user'>
-                    {!user ? 
-                    <button onClick={()=>{setShowModal(true)}}>Se connecter</button>
-                    : null
-                    }
+
+                <div className={menuOpen ? 'navbar-burger open' : 'navbar-burger'} onClick={() => { setMenuOpen(!menuOpen) }}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
+
+                <div className={menuOpen ? 'navbar-menu open' : 'navbar-menu'}>
+                    <ul>
+                        <li onClick={()=>{setMenu("home")}}><Link to='/'>Accueil</Link> {menu==="home" ? <hr/> : null}</li>
+                        <li onClick={()=>{setMenu("competitions")}}><Link to='/competitions'>Competitions</Link> {menu==="competitions" ? <hr/> : null}</li>
+                        {user ? <li onClick={()=>{setMenu("profile")}}><Link to='/profile'>Mon compte</Link> {menu==="profile" ? <hr/> : null}</li> : null}
+                    </ul>
+                    <div className='navbar-login-user'>
+                        {!user ? 
+                        <button onClick={()=>{setShowModal(true)}}>Se connecter</button>
+                        : null
+                        }
+                    </div>
+                </div>
+
             </div>
             <AuthModal show={showModal} setShow={setShowModal} />
         </>

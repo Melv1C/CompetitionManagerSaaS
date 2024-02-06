@@ -5,6 +5,15 @@ import axios from 'axios'
 import './Events.css'
 
 function EventsList({availableEvents, events, setEvents}) {
+
+    if (availableEvents.length === 0) {
+        return (
+            <div className='events-list'>
+                <div className='no-events'>Aucune épreuve disponible</div>
+            </div>
+        )
+    }
+
     return (
         <div className='events-list'>
             {availableEvents.map((event, index) => {
