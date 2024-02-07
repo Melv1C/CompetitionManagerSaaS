@@ -158,6 +158,7 @@ app.post('/api/competitions', async (req, res) => {
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         if (!name && typeof name !== 'string'){
+            console.log(req.body);
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid name',
