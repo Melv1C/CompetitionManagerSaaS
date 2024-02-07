@@ -184,6 +184,18 @@ app.post('/adminAuth/competitions', async (req, res) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(req.body),
+            }).then(response => {
+                if (response.status === 200) {
+                    res.status(200).json({
+                        status: 'success',
+                        message: 'Competition created successfully',
+                    });
+                }else{
+                    res.status(400).json({
+                        status: 'error',
+                        message: 'Invalid request',
+                    });
+                }
             })
         }else{
             res.status(401).json({
