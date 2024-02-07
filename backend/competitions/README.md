@@ -235,27 +235,27 @@ This service is responsible for managing competitions.
 
 ### Create a new competition
 ```
-curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"Club 1\",\"date\":\"2021-01-01\",\"paid\":true,\"freeClub\":[\"Club 2\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 1\"}" http://localhost:3000/api/competitions
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"USTA\",\"date\":\"2024-05-05\",\"paid\":true,\"freeClub\":[\"USTA\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 1\"}" http://localhost/api/competitions
 ```
 
 ### Get all competitions
 ```
-curl -X GET http://localhost:3000/api/competitions
+curl -X GET http://localhost/api/competitions
 ```
 
 ### Get competition by id
 ```
-curl -X GET http://localhost:3000/api/competitions/{ID}
+curl -X GET http://localhost/api/competitions/{ID}
 ```
 
 ### Add an event to a competition
 ```
-curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Event 1\",\"time\":\"2021-01-01\",\"categories\":[\"Category 1\",\"Category 2\"],\"maxParticipants\":100,\"cost\":10}" http://localhost:3000/api/competitions/{ID}/events
+curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"Saut en longueur\",\"time\":\"9h00\",\"categories\":[\"SEN M\"],\"maxParticipants\":10,\"cost\":3}" http://localhost/api/competitions/{ID}/events
 ```
 
 ### Update a competition
 ```
-curl -X PUT -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"Club 1\",\"date\":\"2021-01-01\",\"paid\":true,\"freeClub\":[\"Club 2\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 2\"}" http://localhost:3000/api/competitions/{ID}
+curl -X PUT -H "Content-Type: application/json" -d "{\"name\":\"Competition 1\",\"location\":\"Location 1\",\"club\":\"Club 1\",\"date\":\"2021-01-01\",\"paid\":true,\"freeClub\":[\"Club 2\"],\"schedule\":\"http://schedule.com\",\"description\":\"Description 2\"}" http://localhost/api/competitions/{ID}
 ```
 
 
