@@ -24,9 +24,9 @@ export const CompetitionInfo = (props) => {
             schedule: event.target.schedule.value,
             description: event.target.description.value
         };
-        axios.post('http://localhost:3000/', formData)
+        axios.post('http://localhost:3000/adminAuth/competitions', formData)
             .then(response => {
-                console.log(response.data); // Handle successful response
+                window.location.href = `/competitions/${response.data.data.id}`;
             })
             .catch(error => {
                 console.error('Error:', error); // Handle error
@@ -48,7 +48,7 @@ export const CompetitionInfo = (props) => {
                 <label htmlFor="paid">Payant</label>
                 <input type="checkbox" name="paid" id="paid" required/>
                 <label htmlFor="freeClub">Gratuit pour les club : </label>
-                <input type="text" name="freeClub" id="freeClub" required/>
+                <input type="text" name="freeClub" id="freeClub"/>
                 <label htmlFor="schedule">Lien vers un horaire(optionel)</label>
                 <input type="text" name="schedule" id="schedule"/>
                 <label htmlFor="description">Description de la compétition</label>
