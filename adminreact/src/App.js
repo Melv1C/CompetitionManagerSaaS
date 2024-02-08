@@ -33,7 +33,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/create" element={<Create user={user} setUser={setUser}/>}/>
-                    <Route path="/competitions/:id" element={<Competition />} />
+                    <Route path="/competitions/:id" element={<Competition user={user} setUser={setUser}/>} />
                 </Routes>
             </Router>
         </div>

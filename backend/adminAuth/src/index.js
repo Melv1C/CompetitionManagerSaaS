@@ -5,6 +5,7 @@ const { Admin } = require("./schemas");
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const axios = require('axios');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/adminAuth';
 const COMPETITION_URL = process.env.COMPETITION_URL || 'http://localhost:3001';
@@ -177,26 +178,31 @@ app.post('/adminAuth/competitions', async (req, res) => {
             if(!user.allAccess) {
                 req.body.club = user.club;
             }
-            console.log("sending : "+JSON.stringify(req.body));
-            fetch(COMPETITION_URL+'/competitions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(req.body),
-            }).then(response => {
-                if (response.status === 200) {
-                    res.status(200).json({
-                        status: 'success',
-                        message: 'Competition created successfully',
-                    });
+            console.log(req.body)
+            let body = req.body;
+            body.method = 'POST';
+            body.headers = {
+                'Content-Type': 'application/json',
+            };
+            axios.post(COMPETITION_URL+'/api/competitions', body).then(response => {
+                if (response.status === 201) {
+                    res.status(201).json(
+                        response.data
+                    );
                 }else{
+                    console.log(response.data);
                     res.status(400).json({
                         status: 'error',
                         message: 'Invalid request',
                     });
                 }
-            })
+            }).catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    status: 'error',
+                    message: 'Internal server error',
+                });
+            });
         }else{
             res.status(401).json({
                 status: 'error',
@@ -204,6 +210,54 @@ app.post('/adminAuth/competitions', async (req, res) => {
             });
         }
     }catch(err){
+        console.log(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+//update competition
+app.put('/adminAuth/competitions/:id', async (req, res) => {
+    try{
+        const user = await Admin.findOne({email: req.session.email});
+        if(user) {
+            if(!user.allAccess) {
+                req.body.club = user.club;
+            }
+            let body = req.body;
+            body.method = 'PUT';
+            body.headers = {
+                'Content-Type': 'application/json',
+            };
+            axios.put(COMPETITION_URL+'/api/competitions/'+req.params.id, body).then(response => {
+                if (response.status === 200) {
+                    res.status(200).json(
+                        response.data
+                    );
+                }else{
+                    console.log(response.data);
+                    res.status(400).json({
+                        status: 'error',
+                        message: 'Invalid request',
+                    });
+                }
+            }).catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    status: 'error',
+                    message: 'Internal server error',
+                });
+            });
+        }else{
+            res.status(401).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
+    }catch(err){
+        console.log(err);
         res.status(500).json({
             status: 'error',
             message: 'Internal server error',

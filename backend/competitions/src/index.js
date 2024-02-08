@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
+const cors = require('cors');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -18,7 +19,7 @@ const connectMongo = async () => {
 connectMongo();
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +30,12 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
+
+app.use(cors({ //pourquoi moi je dois le mettre ??????????
+    origin: 'http://localhost:4000',
+    credentials: true
+}));
+  
 
 async function generateIdCompet() {
     let id = crypto.randomBytes(5).toString('hex');
@@ -439,7 +446,7 @@ app.put('/api/competitions/:id', async (req, res) => {
             message: 'Competition updated successfully',
             data: { id: competition.id }
         });
-    }catch{
+    }catch(err){
         console.error(err);
         res.status(500).json({
             status: 'error',
