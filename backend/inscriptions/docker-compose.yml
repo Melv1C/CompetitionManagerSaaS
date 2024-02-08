@@ -1,0 +1,18 @@
+version: "3"
+services:     # list all services for your application
+  inscriptions-db:
+    image: claesweb/cm-couchdb:latest
+    ports: ["4001:5984"]
+    networks: ["backend-networks"]
+
+  inscriptions-service:
+    image: claesweb/cm-inscriptions:latest
+    ports: ["4000:3000"]
+    environment:
+      - COUCHDB_URL=http://admin:admin@inscriptions-db:5984
+    networks: ["backend-networks"]
+    depends_on: ["inscriptions-db"]
+
+networks:
+  backend-networks:
+    driver: bridge

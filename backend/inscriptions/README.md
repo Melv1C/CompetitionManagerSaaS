@@ -6,6 +6,36 @@ This service is responsible for managing inscriptions.
 
 ## API
 
+### New competition
+
+- `POST /inscriptions`
+- Description: Create a new competition
+- Request body:
+```json
+{
+    "id": "competitionId",
+}
+```
+- Response: HTTP 201
+```json
+{
+    "status": "success",
+    "message": "Competition created successfully"
+}
+```
+
+### Delete competition
+
+- `DELETE /inscriptions/:competitionId`
+- Description: Delete a competition
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Competition deleted successfully"
+}
+```
+
 ### Get inscriptions
 
 - `GET /inscriptions/:competitionId`
@@ -87,16 +117,20 @@ This service is responsible for managing inscriptions.
 }
 ```
 
-### Get inscription by user
+### Get info of a competition
 
-- `GET /inscriptions/user/:userId`
-- Description: Get inscription by user
+- `GET /inscriptions/:competitionId/info`
+- Description: Get info of a competition
 - Response: HTTP 200
 ```json
 {
     "status": "success",
-    "message": "Inscription retrieved successfully",
-    "data": inscription
+    "message": "Competition info retrieved successfully",
+    "data": {
+        "id": "competitionId",
+        "numberOfInscriptions": 20,
+        "numberOfParticipants": 10
+    }
 }
 ```
 
