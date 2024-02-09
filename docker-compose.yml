@@ -97,10 +97,7 @@ services:     # list all services for your application
     restart: always
     ports: [ "5000:5000" ]
     environment:
-      - API_URL=http://competitions-service:3000
-      - EVENTS_URL=http://events-service:3000
-    depends_on:
-      - competitions-service
+      - GATEWAY_URL=http://localhost
     networks:
       - backend-networks  
 

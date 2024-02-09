@@ -1,0 +1,58 @@
+.overlay {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalPopup {
+    display: flex;
+    padding: 0px;
+    border-radius: 8px;
+    position: relative;
+    width: fit-content;
+    max-width: 400px;
+    max-height: 80%;
+    background-color: #f9f9f9;
+    
+} 
+
+.closeButton {
+    display: block;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.modalPopup .competInfo::-webkit-scrollbar {
+    width: 10px;
+}
+
+.modalPopup .competInfo::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: #e7e7e7;
+    border: 1px solid #cacaca;
+}
+
+.modalPopup .competInfo::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #9e9e9e;
+}
+
+.modalPopup .competInfo {
+    margin: 0px;
+    margin-top: 40px;
+    max-height: inherit;
+    overflow-y: scroll;
+    border: 0px;
+}
