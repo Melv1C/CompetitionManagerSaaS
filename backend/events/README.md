@@ -13,7 +13,7 @@ This service is responsible for managing events.
 
 ### Get events
 
-- `GET /events`
+- `GET /api/events`
 - Description: Get all events
 - Response: HTTP 200
 ```json
@@ -33,7 +33,7 @@ This service is responsible for managing events.
 
 ### Get event by id
 
-- `GET /events/:id`
+- `GET /api/events/:id`
 - Description: Get event's data by id
 - Response: HTTP 200
 ```json
@@ -57,7 +57,7 @@ This service is responsible for managing events.
 
 ### Get categories by id
 
-- `GET /categories/:id`
+- `GET /api/categories/:id`
 - Description: Get categories by id
 - Response: HTTP 200
 ```json

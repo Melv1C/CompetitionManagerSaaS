@@ -2,12 +2,14 @@ import React, { useEffect,useState } from 'react'
 import { useParams} from 'react-router-dom';
 import { Popup } from '../Components/Popup/Popup';
 import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo';
+import { AddEvent } from '../Components/AddEvent/AddEvent';
 import axios from 'axios';
 
 export const Competition = (props) => {
     const { id } = useParams();
     const [competition, setCompetition] = useState(0);
-    const [showModal, setShowModal] = useState(false);
+    const [showModalModif, setShowModalModif] = useState(false);
+    const [showModalAddEvent, setShowModalAddEvent] = useState(false);
     useEffect(() => {
         axios.get(`http://localhost:3001/api/competitions/${id}`)
             .then((response) => {
@@ -31,9 +33,13 @@ export const Competition = (props) => {
                     {competition.freeClub ? <li><strong>Gratuit pour les clubs:</strong> {competition.freeClub}</li> : null}
                     {competition.description ? <li><strong>Description:</strong> {competition.description}</li> : <li><strong>Description:</strong> Aucune</li>}
                 </ul>
-                <button onClick={() => {setShowModal(true);}}>Modifier</button>
+                <button onClick={() => {setShowModalModif(true);}}>Modifier</button>
             </div>
-            {showModal ? <Popup onClose={()=>{setShowModal(false)}}><CompetitionInfo user={props.user} setUser={props.setUser} competition={competition} setCompetition={setCompetition} setShowModal={setShowModal}/></Popup> : null}
+            <div>
+                <button onClick={() => {setShowModalAddEvent(true);}}>Ajouter une épreuves</button>
+            </div>
+            {showModalModif ? <Popup onClose={()=>{setShowModalModif(false)}}><CompetitionInfo user={props.user} setUser={props.setUser} competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModif}/></Popup> : null}
+            {showModalAddEvent ? <Popup onClose={()=>{setShowModalAddEvent(false)}}><AddEvent competition={competition} setCompetition={setCompetition} setShowModal={setShowModalAddEvent}/></Popup> : null}
         </>
     );
 };

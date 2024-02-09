@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
-const cors = require('cors');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -25,16 +24,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const allowedOrigins = ['http://localhost:4000'||process.env.FRONTEND_URL];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
-
-app.use(cors({ //pourquoi moi je dois le mettre ??????????
-    origin: 'http://localhost:4000',
-    credentials: true
-}));
   
 
 async function generateIdCompet() {
