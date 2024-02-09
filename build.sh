@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALL_SERVICES="athletes competitions events nginx couchdb inscriptions"
+ALL_SERVICES="athletes competitions events nginx couchdb inscriptions admins"
 
 # Vérifier si le nombre d'arguments est correct
 if [ "$#" -ne 2 ]; then
@@ -59,7 +59,7 @@ fi
 # Vérifier si le service spécifié est "admin"
 if [ "$SERVICE_NAME" == "admin" ]; then
     # go to the admin directory
-    cd admin
+    cd adminPanel
 
     # Vérifier si le script de build spécifié existe
     if [ -f "build.sh" ]; then

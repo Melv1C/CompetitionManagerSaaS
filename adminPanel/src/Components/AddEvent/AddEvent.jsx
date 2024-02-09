@@ -14,7 +14,7 @@ export const AddEvent = (props) => {
     const [time, setTime] = useState("10:00");
     //todo category
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3002/api/events' : process.env.GATEWAY_URL + '/api/events';
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
         axios.get(url)
             .then((response) => {
                 setEvent(response.data.data);

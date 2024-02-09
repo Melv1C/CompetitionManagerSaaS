@@ -7,8 +7,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const axios = require('axios');
 
-const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/adminAuth';
-const COMPETITION_URL = process.env.COMPETITION_URL || 'http://localhost:3001';
+const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/admins';
 
 async function generateId() {
     let id = crypto.randomBytes(10).toString('hex');
@@ -124,7 +123,7 @@ app.get('/api/admins', async (req, res) => {
         }
 
         // Check if the password is correct
-        const valid = bcrypt.compare(password, admin.password);
+        const valid = await bcrypt.compare(password, admin.password);
         if (!valid) {
             return res.status(401).json({
                 status: 'error',

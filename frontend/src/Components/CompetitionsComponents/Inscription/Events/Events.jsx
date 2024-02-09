@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import './Events.css'
 
-function EventsList({availableEvents, events, setEvents}) {
+function EventsList({availableEvents, events, setEvents, competitionId}) {
 
     if (availableEvents.length === 0) {
         return (
@@ -17,14 +17,16 @@ function EventsList({availableEvents, events, setEvents}) {
     return (
         <div className='events-list'>
             {availableEvents.map((event, index) => {
-                return <EventItem key={index} event={event} setEvents={setEvents} events={events} />
+                return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} />
             })}
         </div>
     )
 }
 
-function EventItem({event, setEvents, events}) {
+function EventItem({event, setEvents, events, competitionId}) {
     const [checked, setChecked] = useState(false);
+
+    const [place, setPlace] = useState(null);
 
     useEffect(() => {
         if (events.includes(event.name)) {
@@ -32,22 +34,50 @@ function EventItem({event, setEvents, events}) {
         }
     }, [events, event])
 
+    useEffect(() => {
+        if (event.maxParticipants !== null) {
+            axios.get(`/api/inscriptions/${competitionId}/places/${event.name}`)
+            .then(res => {
+                setPlace(event.maxParticipants - res.data.data);
+            })
+            .catch(err => {
+                console.log(err);
+                setPlace(event.maxParticipants);
+            })
+        }
+    }, [event, competitionId])
+
     return (
         <div className='event-item'>
             <div className='event-item-time'>{event.time}</div>
             <div className='event-item-name'>{event.name}</div>
+            <Place place={place} />
             <input type='checkbox' checked={checked} className='event-item-checkbox' onChange={() => {
                 if (!checked) {
-                    setEvents([...events, event.name]);
+                    setEvents([...events, event]);
                 } else {
-                    setEvents(events.filter(e => e !== event.name));
+                    setEvents(events.filter(e => e !== event));
                 }
                 setChecked(!checked);
             }} />
-            <span className='checkmark'></span>
+            {event.cost === 0 ? <div className='event-item-cost'></div> : <div className='event-item-cost'>{event.cost}€</div>}
             
         </div>
     )
+}
+
+function Place({place}) {
+    if (place === null) {
+        return <div className='event-item-place green'>Places illimitées</div>
+    } else if (place === 0) {
+        return <div className='event-item-place red'>Complet</div>
+    } else if (place > 10) {
+        return <div className='event-item-place green'>{place} places restantes</div>
+    } else if (place > 5) {
+        return <div className='event-item-place orange'>{place} places restantes</div>
+    } else {
+        return <div className='event-item-place red'>{place} places restantes</div>
+    }
 }
 
 function nextStep(setStep, events) {
@@ -88,7 +118,7 @@ export const Events = ({events, setEvents, setStep, competitionId, category}) =>
         <div className='step-page'>
             <h2>Épreuves</h2>
             <div className='events'>
-                <EventsList availableEvents={availableEvents} events={events} setEvents={setEvents} />          
+                <EventsList availableEvents={availableEvents} events={events} setEvents={setEvents} competitionId={competitionId} />       
 
             </div>
             <ControlButtons setStep={setStep} setEvents={setEvents} events={events} />

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
+const axios = require('axios');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -220,6 +221,7 @@ app.post('/api/competitions', async (req, res) => {
     }
 });
 
+//create a new event for a competition
 app.post('/api/competitions/:id/events', async (req, res) => {
     try{
         const id = req.params.id;
@@ -229,6 +231,7 @@ app.post('/api/competitions/:id/events', async (req, res) => {
         const categories = req.body.categories;
         const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
         const cost = req.body.cost ? req.body.cost : 0;
+        let type;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
                 status: 'error',
@@ -240,6 +243,9 @@ app.post('/api/competitions/:id/events', async (req, res) => {
                 status: 'error',
                 message: 'Invalid name',
             });
+        } else {
+            const url = process.env.EVENTS_URL || 'http://localhost:3000';
+            type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
         }
         if (!pseudoName && typeof pseudoName !== 'string'){
             return res.status(400).json({
@@ -271,6 +277,12 @@ app.post('/api/competitions/:id/events', async (req, res) => {
                 message: 'Invalid cost',
             });
         }
+        if (!type && typeof type !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid name',
+            });
+        }
         const competition = await Competition.findOne({id: id});
         const  events = competition.events;
         events.push({
@@ -281,6 +293,7 @@ app.post('/api/competitions/:id/events', async (req, res) => {
             categories: categories,
             maxParticipants: maxParticipants,
             cost: cost,
+            type: type,
         });
         await competition.updateOne({events: events});
 

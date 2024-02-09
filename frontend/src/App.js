@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 
 import './App.css';
+import './Colors.css';
 import { NavBar } from './Components/NavBar/NavBar';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 

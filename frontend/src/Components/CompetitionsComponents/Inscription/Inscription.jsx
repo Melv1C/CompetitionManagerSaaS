@@ -92,7 +92,7 @@ export const Inscription = ({id}) => {
 
     const [athlete, setAthlete] = useState(null);
     const [events, setEvents] = useState([]);
-    const [records, setRecords] = useState([]);
+    const [records, setRecords] = useState({});
 
     // loads athlete from URL
 

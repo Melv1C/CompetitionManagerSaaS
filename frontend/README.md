@@ -10,6 +10,7 @@
 - ![#E5F0FF](https://via.placeholder.com/15/E5F0FF/000000?text=+) `#E5F0FF`
 - ![#008AFF](https://via.placeholder.com/15/008AFF/000000?text=+) `#008AFF`
 - ![#005ADF](https://via.placeholder.com/15/005ADF/000000?text=+) `#005ADF`
+- ![#FFA500](https://via.placeholder.com/15/FFA500/000000?text=+) `#FFA500`
 
 ## Text color
 

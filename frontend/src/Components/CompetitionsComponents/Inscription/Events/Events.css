@@ -3,7 +3,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -37,19 +36,77 @@
 
 
 .events-list .event-item .event-item-time {
-    font-weight: 500;
-    width: 20%;
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 15%;
 }
 
 .events-list .event-item .event-item-name {
-    width: 60%;   
+    font-size: 1.2em;
+    width: 45%;
+}
+
+.events-list .event-item .event-item-place {
+    font-size: 0.8em;
+    width: 25%;
+    font-weight: 500;
 }
 
 /* checkbox */
 .events-list .event-item input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
+    width: 5%;
+}
+
+.events-list .event-item .event-item-cost {
+    font-size: 1.2em;
+    width: 10%;
+}
+
+
+/* Responsive */
+
+@media (max-width: 650px) {
+    .events {   
+        margin-bottom: 10px;
+    }
+
+    .events-list .event-item {
+        width: 90%;
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    .events-list .event-item .event-item-time {
+        font-size: 1em;
+        width: 20%;
+    }
+
+    .events-list .event-item .event-item-name {
+        font-size: 1em;
+        width: 60%;
+    }
+
+    .events-list .event-item .event-item-place {
+        font-size: 0.8em;
+        position: absolute;
+        width: 90%;
+        bottom: 2px;
+    }
+
+    .events-list .event-item .event-item-cost {
+        font-size: 1em;
+        width: 10%;
+    }
+
+    .events-list .event-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        width: 10%;
+    }
+
+    
 }
 
 

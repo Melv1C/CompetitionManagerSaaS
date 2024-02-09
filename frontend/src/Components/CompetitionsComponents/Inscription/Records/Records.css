@@ -1,3 +1,10 @@
+.records {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
 
 .records-list {
     display: flex;
@@ -27,10 +34,92 @@
 }
 
 .records-list .record-item .record-item-name {
-    width: 60%;   
+    width: 50%;   
+    font-size: 1.2em;
 }
 
 .records-list .record-item .record-item-input {
-    width: 40%;
+    width: 50%;
 }
 
+.record-item-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+
+
+.record-item-input .record-item-input-number {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.record-item-input .record-item-input-number-label {
+    font-size: 2em;
+}
+
+.record-item-input .record-item-input-number input[type="number"] {
+    /* Remove the arrows */ 
+    -moz-appearance: textfield;
+    width: 20px;
+    height: 30px;
+    text-align: center;
+    font-size: 0.8em;   
+    border-radius: 7px; 
+    border: 1.5px solid gray;
+    font-size: 1.2em;
+}
+
+.record-item-input .record-item-input-number input::-webkit-outer-spin-button,
+.record-item-input .record-item-input-number input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+    .records-list .record-item {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .records-list .record-item .record-item-name {
+        width: 100%;
+        font-size: 1.5em;
+    }
+
+    .record-item-input {
+        justify-content: center;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .records-list .record-item .record-item-name {
+        font-size: 1.3em;
+    }
+
+    .record-item-input .record-item-input-number-label {
+        font-size: 1.5em;
+    }
+    
+    .record-item-input .record-item-input-number input[type="number"] {
+        width: 15px;
+        height: 25px;
+        text-align: center;  
+        border-radius: 7px; 
+        border: 1.5px solid gray;
+        font-size: 1em;
+    }
+}

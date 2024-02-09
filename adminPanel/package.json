@@ -17,8 +17,8 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "dev": "set PORT=5000 && set NODE_ENV=development && react-scripts start",
-        "start": "set PORT=5000 && react-scripts start",
+        "dev": "set PORT=4748 && set NODE_ENV=development && react-scripts start",
+        "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

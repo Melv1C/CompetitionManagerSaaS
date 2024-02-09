@@ -112,7 +112,12 @@
     }
 
     .control-buttons {
-        margin: 0 10px;
+        margin: 10px;
+        gap: 10px;
+    }
+
+    .control-buttons button {
+
     }
 
     .step-page {

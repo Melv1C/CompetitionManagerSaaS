@@ -38,10 +38,12 @@ services:     # list all services for your application
     ports: [ "3001:3000" ]
     environment:
       - MONGO_URI=mongodb://competitions-db:27017/competitions
+      - EVENTS_URL=http://events-service:3000
     networks:
       - backend-networks
     depends_on:
       - competitions-db
+      - events-service
 
   events-db:
     image: mongo
@@ -92,10 +94,46 @@ services:     # list all services for your application
     networks: ["backend-networks"]
     depends_on: ["inscriptions-db"]
 
-  admin-service:
+  admins-db:
+    image: mongo
+    restart: always
+    volumes:
+      - ./db_data/:/data/./db_data/:/data/db/
+      - /ect/timezone:/ect/timezone:ro
+    ports: [ "4004:27017" ]
+    networks:
+      - backend-networks
+
+  admins-db-viewer:
+    image: mongo-express
+    restart: always
+    ports: [ "5004:8081" ]
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=admins-db
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+    networks:
+      - backend-networks
+    depends_on:
+      - admins-db
+
+  admins-service:
+    image: claesweb/cm-admins:latest
+    restart: always
+    ports: [ "3004:3000" ]
+    environment:
+      - MONGO_URI=mongodb://admins-db:27017/admins
+    networks:
+      - backend-networks
+    depends_on:
+      - admins-db
+
+  admin-panel:
     image: claesweb/cm-admin:latest
     restart: always
-    ports: [ "5000:5000" ]
+    ports: [ "5000:3000" ]
     environment:
       - GATEWAY_URL=http://localhost
     networks:
@@ -119,7 +157,7 @@ services:     # list all services for your application
       - competitions-service
       - events-service
       - inscriptions-service
-      - admin-service
+      - admins-service
       - frontend
 
 networks:
