@@ -13,7 +13,7 @@ This service is responsible for managing inscriptions.
 - Request body:
 ```json
 {
-    "id": "competitionId",
+    "competitionId": "string",
 }
 ```
 - Response: HTTP 201
@@ -36,86 +36,6 @@ This service is responsible for managing inscriptions.
 }
 ```
 
-### Get inscriptions
-
-- `GET /inscriptions/:competitionId`
-- Description: Get all inscriptions for a competition
-- Response: HTTP 200
-```json
-{
-    "status": "success",
-    "message": "Inscriptions retrieved successfully",
-    "data": [
-        inscription1,
-        inscription2,
-        ...
-    ]
-}
-```
-
-### Get inscription by id
-
-- `GET /inscriptions/:competitionId/:inscriptionId`
-- Description: Get inscription by id
-- Response: HTTP 200
-```json
-{
-    "status": "success",
-    "message": "Inscription retrieved successfully",
-    "data": inscription
-}
-```
-
-### Create inscription
-
-- `POST /inscriptions/:competitionId`
-- Description: Create inscription
-- Request body:
-```json
-{
-    some data
-}
-```
-- Response: HTTP 201
-```json
-{
-    "status": "success",
-    "message": "Inscription created successfully",
-    "data": inscription
-}
-```
-
-### Update inscription
-
-- `PUT /inscriptions/:competitionId/:inscriptionId`
-- Description: Update inscription
-- Request body:
-```json
-{
-    some data
-}
-```
-- Response: HTTP 200
-```json
-{
-    "status": "success",
-    "message": "Inscription updated successfully",
-    "data": inscription
-}
-```
-
-### Delete inscription
-
-- `DELETE /inscriptions/:competitionId/:inscriptionId`
-- Description: Delete inscription
-- Response: HTTP 200
-```json
-{
-    "status": "success",
-    "message": "Inscription deleted successfully",
-    "data": null
-}
-```
 
 ### Get info of a competition
 
@@ -133,4 +53,157 @@ This service is responsible for managing inscriptions.
     }
 }
 ```
+
+### Get inscriptions
+
+- `GET /inscriptions/:competitionId`
+- Description: Get all inscriptions for a competition
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Inscriptions retrieved successfully",
+    "data": [
+        {
+            "_id": "string",
+            "athleteId": "melvyn",
+            "athleteName": "Melvyn Claes",
+            "event": "Saut en longueur",
+            "record": "7m17"
+        },
+        ...
+    ]
+}
+```
+
+### Get inscription by id
+
+- `GET /inscriptions/:competitionId/:inscriptionId?userId=userId`  (Optional query parameter)
+- Description: Get inscription by id
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Inscription retrieved successfully",
+    "data": {
+        "_id": "string",
+        "_rev": "string", // if userId is provided and the user is the owner of the inscription
+        "athleteId": "melvyn",
+        "athleteName": "Melvyn Claes",
+        "event": "Saut en longueur",
+        "record": "7m17"
+    }
+}
+```
+
+### Create inscription
+
+- `POST /inscriptions/:competitionId`
+- Description: Create inscription
+- Request body:
+```json
+{
+    "userId": "string",
+    "athleteId": "string",
+    "athleteName": "string",
+    "event": "string",
+    "record": "string"          // Optional
+}
+```
+- Response: HTTP 201
+```json
+{
+    "status": "success",
+    "message": "Inscription created successfully"
+}
+```
+
+### Update inscription
+
+- `PUT /inscriptions/:competitionId/:inscriptionId`
+- Description: Update inscription
+- Request body:
+```json
+{
+    some data
+}
+```
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Inscription updated successfully"
+}
+```
+
+### Delete inscription
+
+- `DELETE /inscriptions/:competitionId/:inscriptionId`
+- Description: Delete inscription
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Inscription deleted successfully"
+}
+```
+
+## Admin API
+
+### Create inscription
+
+- `POST /inscriptions/:competitionId?admin=adminId`
+- Description: Create inscription as admin
+- Request body:
+```json
+{
+    "athleteId": "string",
+    "athleteName": "string",
+    "event": "string",
+    "record": "string"          // Optional
+}
+```
+- Response: HTTP 201
+```json
+{
+    "status": "success",
+    "message": "Inscription created successfully"
+}
+```
+
+### Update inscription
+
+- `PUT /inscriptions/:competitionId/:inscriptionId?admin=adminId`
+- Description: Update inscription as admin
+- Request body:
+```json
+{
+    "athleteId": "string",
+    "athleteName": "string",
+    "event": "string",
+    "record": "string"          // Optional
+}
+```
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Inscription updated successfully"
+}
+```
+
+### Delete inscription
+
+- `DELETE /inscriptions/:competitionId/:inscriptionId?admin=adminId`
+- Description: Delete inscription as admin
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Inscription deleted successfully"
+}
+```
+
+
+
 
