@@ -3,17 +3,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./AddEvent.css";
 
+import { addEvent } from "../../CompetitionsAPI";
 
-
-export const AddEvent = () => {
+export const AddEvent = (props) => {
     const [event, setEvent] = useState([]);
     const [groupings, setGrouping] = useState([]);
     const [selectedGrouping, setSelectedGrouping] = useState("0");
     const [filteredEvent, setFilteredEvent] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState("0");
+    const [time, setTime] = useState("10:00");
     //todo category
     useEffect(() => {
-        axios.get("http://localhost:3002/api/events")
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost:3002/api/events' : process.env.GATEWAY_URL + '/api/events';
+        axios.get(url)
             .then((response) => {
                 setEvent(response.data.data);
                 let groupings = [];
@@ -38,11 +40,23 @@ export const AddEvent = () => {
             setFilteredEvent(filteredEvent);
         }
     }, [selectedGrouping]);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const formData = {
+            name: selectedEvent,
+            time: time,
+            categories: ["SEN M", "SEN F"],
+            maxParticipants: 100,
+            cost: 10,
+        };
+        addEvent(props.competition.id, formData, props.setCompetition);
+        props.setShowModal(false);
+    }
 
 
     return (
         <>
-            <div>
+            <form onSubmit={handleSubmit}>
                 <h1>Ajouter un événement</h1>
                 <select name="grouping" id="grouping" onChange={
                     (e) => {
@@ -69,7 +83,14 @@ export const AddEvent = () => {
                         })
                     }
                 </select>
-            </div>
+                <input type="time" name="time" id="time" defaultValue={time} onChange={
+                    (e) => {
+                        setTime(e.target.value);
+                    }
+                }/>
+
+                <input type="submit" value="Ajouter" />
+            </form>
         </>
     )
 };

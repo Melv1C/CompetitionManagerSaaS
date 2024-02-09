@@ -5,21 +5,21 @@ import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo';
 import { AddEvent } from '../Components/AddEvent/AddEvent';
 import axios from 'axios';
 
+import { getCompetition } from '../CompetitionsAPI';
+
 export const Competition = (props) => {
     const { id } = useParams();
-    const [competition, setCompetition] = useState(0);
+    const [competition, setCompetition] = useState(null);
     const [showModalModif, setShowModalModif] = useState(false);
     const [showModalAddEvent, setShowModalAddEvent] = useState(false);
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/competitions/${id}`)
-            .then((response) => {
-                setCompetition(response.data.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
+        getCompetition(id, setCompetition);
     }, [id]);
+
+    if (!competition) {
+        return <h1>Loading...</h1>;
+    }
+
     return (
         <>
             <div>
@@ -36,6 +36,12 @@ export const Competition = (props) => {
                 <button onClick={() => {setShowModalModif(true);}}>Modifier</button>
             </div>
             <div>
+                <h2>Épreuves</h2>
+                <ul>
+                    {competition.events.map((event) => {
+                        return <li key={event.id}>{event.name}</li>;
+                    })}
+                </ul>
                 <button onClick={() => {setShowModalAddEvent(true);}}>Ajouter une épreuves</button>
             </div>
             {showModalModif ? <Popup onClose={()=>{setShowModalModif(false)}}><CompetitionInfo user={props.user} setUser={props.setUser} competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModif}/></Popup> : null}

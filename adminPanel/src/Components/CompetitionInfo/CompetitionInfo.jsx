@@ -1,11 +1,12 @@
 import React, {useEffect} from "react";
 import './CompetitionInfo.css';
 import axios from "axios";
-axios.defaults.withCredentials = true;
+
+import { createCompetition, updateCompetition } from "../../CompetitionsAPI";
 
 
 export const CompetitionInfo = (props) => {
-    //const [email, setEmail] = React.useState("");
+
     let club = props.user?.club || '';
     let compet = props.competition || null;
 
@@ -24,15 +25,10 @@ export const CompetitionInfo = (props) => {
                 paid: event.target.paid.checked,
                 freeClub: event.target.freeClub.value,
                 schedule: event.target.schedule.value,
-                description: event.target.description.value
+                description: event.target.description.value,
+                adminId: props.user.id
             };
-            axios.post('http://localhost:3000/adminAuth/competitions', formData)
-                .then(response => {
-                    window.location.href = `/competitions/${response.data.data.id}`;
-                })
-                .catch(error => {
-                    console.error('Error:', error); // Handle error
-                });
+            createCompetition(formData, props.setCompetition);
         }else{
             const formData = {
                 name: event.target.name.value,
@@ -42,17 +38,12 @@ export const CompetitionInfo = (props) => {
                 paid: event.target.paid.checked,
                 freeClub: event.target.freeClub.value,
                 schedule: event.target.schedule.value,
-                description: event.target.description.value
+                description: event.target.description.value,
+                adminId: props.user.id,
+                id: compet.id
             };
-            axios.put(`http://localhost:3000/adminAuth/competitions/${compet.id}`, formData)
-                .then(response => {
-                    formData.id = compet.id;
-                    props.setCompetition(formData);
-                    props.setShowModal(false);
-                })
-                .catch(error => {
-                    console.error('Error:', error); // Handle error
-                });
+            updateCompetition(formData, props.setCompetition);
+            props.setShowModal(false);
         }
     };
 

@@ -15,8 +15,9 @@ RUN npm install
 
 # Copy src folder 
 COPY src src
-COPY public public
-COPY views views
+
+# Expose the port on which the microservice will run
+EXPOSE 3000
 
 # Start the microservice
 CMD ["npm", "start"]

@@ -24,17 +24,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-    const allowedOrigins = ['http://localhost:4000'||process.env.FRONTEND_URL];
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
-});
-  
+}); 
 
 async function generateIdCompet() {
     let id = crypto.randomBytes(5).toString('hex');
@@ -50,18 +44,6 @@ async function generateIdEvent(events) {
         id = crypto.randomBytes(5).toString('hex');
     }
     return id;
-}
-
-function onlySameIp(req, res, next) {
-    if (req.ip === '::1') {
-        console.log('Authorized')
-        next();
-    } else {
-        res.status(401).json({
-            status: 'error',
-            message: 'Unauthorized'
-        });
-    }
 }
 
 
@@ -151,8 +133,6 @@ app.get('/api/competitions/:id/events', async (req, res) => {
 });
 
 //create a new competition
-//add this middleware to the route to allow only the same ip to create a competition
-// app.use('/api/competitions', onlySameIp);
 app.post('/api/competitions', async (req, res) => {
     try{
         const name = req.body.name;
@@ -303,13 +283,13 @@ app.post('/api/competitions/:id/events', async (req, res) => {
             cost: cost,
         });
         await competition.updateOne({events: events});
+
+        const updatedCompetition = await Competition.findOne({ id: id });
+
         res.status(201).json({
             status: 'success',
             message: 'Event created successfully',
-            data: { 
-                id: competition.id,
-                events: events,
-            }
+            data: updatedCompetition,
         });
     }catch(err){
         console.error(err);
@@ -440,10 +420,13 @@ app.put('/api/competitions/:id', async (req, res) => {
             schedule: schedule,
             description: description,
         });
+
+        const updatedCompetition = await Competition.findOne({ id: id });
+
         res.status(200).json({
             status: 'success',
             message: 'Competition updated successfully',
-            data: { id: competition.id }
+            data: updatedCompetition,
         });
     }catch(err){
         console.error(err);

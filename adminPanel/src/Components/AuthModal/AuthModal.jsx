@@ -1,7 +1,7 @@
 import React from "react";
 import './AuthModal.css';
-import axios from "axios";
-axios.defaults.withCredentials = true;
+
+import { login } from '../../Auth';
 
 
 export const AuthModal = (props) => {
@@ -12,20 +12,7 @@ export const AuthModal = (props) => {
     
     const handleLogin = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:3000/adminAuth/login', {
-            email: email,
-            password: password
-        }).then((response) => {
-            props.setShow(false);
-            props.setLoading(false);
-        }).catch((error) => {
-            console.log(error);
-            if (error.response.status === 401) {
-                setError("Mot de passe ou email incorrect");
-            } else if (error.response.status === 500) {
-                setError("Erreur serveur");
-            }
-        });  
+        login(email, password, props.setUser, setError);
     }
     if (!props.show) {
         return null;

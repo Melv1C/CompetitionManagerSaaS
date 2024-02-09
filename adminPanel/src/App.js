@@ -9,27 +9,23 @@ import { Home } from './Pages/Home';
 import { Competition } from './Pages/Competition';
 import { Create } from './Pages/Create';
 
-import axios from 'axios';
-axios.defaults.withCredentials = true;
+import { getUser } from './Auth';
 
 
 function App() {
-    const [user, setUser] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
-        axios.get('http://localhost:3000/adminAuth')
-            .then((response) => {
-                setUser(response.data);
-                setLoading(true);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [loading]);
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            getUser(userId, setUser);
+        }
+    }, []);
+        
     return (
         <div>
             <Router>
-                <NavBar user={user} setUser={setUser} loading={loading} setLoading={setLoading}/>
+                <NavBar user={user} setUser={setUser}/>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/create" element={<Create user={user} setUser={setUser}/>}/>
