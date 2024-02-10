@@ -3,14 +3,21 @@ const axios = require('axios');
 
 const { createDatabase,
         deleteDatabase,
-        addInscription,
         getInscriptions,
         getInscription,
-        updateInscription,
-        deleteInscription } = require('./utils');
+        deleteInscription,
+        freeInscriptions } = require('./utils');
 
 const app = express();
 const port = 3000;
+
+const privateFields = ['_rev', 'userId'];
+function removePrivateFields(inscription) {
+    for (field of privateFields) {
+        delete inscription[field];
+    }
+    return inscription;
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -66,7 +73,7 @@ app.get('/api/inscriptions/:competitionId', (req, res) => {
     const { competitionId } = req.params;
     getInscriptions(`competition_${competitionId}`)
         .then((inscriptions) => {
-            const data = inscriptions.map((inscription) => ({ _id: inscription._id, athleteId: inscription.athleteId, athleteName: inscription.athleteName, event: inscription.event, record: inscription.record }));
+            const data = inscriptions.map((inscription) => removePrivateFields(inscription));
             res.status(200).json({ status: 'success', message: 'Inscriptions retrieved successfully', data: data });
         })
         .catch((err) => {
@@ -78,14 +85,9 @@ app.get('/api/inscriptions/:competitionId', (req, res) => {
 // Get a single inscription for a competition
 app.get('/api/inscriptions/:competitionId/:inscriptionId', (req, res) => {
     const { competitionId, inscriptionId } = req.params;
-    const userId = req.query.userId;
     getInscription(`competition_${competitionId}`, inscriptionId)
         .then((inscription) => {
-            if (userId && userId == inscription.userId) {
-                return res.status(200).json({ status: 'success', message: 'Inscription retrieved successfully', data: inscription });
-            }
-            const data = { _id: inscription._id, athleteId: inscription.athleteId, athleteName: inscription.athleteName, event: inscription.event, record: inscription.record };
-            res.status(200).json({ status: 'success', message: 'Inscription retrieved successfully', data: data });
+            res.status(200).json({ status: 'success', message: 'Inscription retrieved successfully', data: removePrivateFields(inscription)});
         })
         .catch((err) => {
             console.error(err);
@@ -97,8 +99,7 @@ app.get('/api/inscriptions/:competitionId/:inscriptionId', (req, res) => {
 app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const { competitionId } = req.params;
     let userId = req.body.userId;
-    const { athleteId, athleteName, event, club } = req.body;
-    const record = req.body.record || '';
+    const { athleteId, events, records } = req.body;
 
     let admin = false;
 
@@ -119,38 +120,69 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     if (!athleteId || typeof athleteId !== 'string') {
         return res.status(400).json({ status: 'error', message: 'Invalid athleteId' });
     }
-    if (!athleteName || typeof athleteName !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid athleteName' });
+    if (!events || !Array.isArray(events) || events.length === 0) {
+        return res.status(400).json({ status: 'error', message: 'Invalid events' });
     }
-    if (!event || typeof event !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid event' });
-    }
-    if (!club || typeof club !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid club' });
-    }
-    if (!record || typeof record !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid record' });
+    if (!records || typeof records !== 'object' || Object.keys(records).length === 0) {
+        return res.status(400).json({ status: 'error', message: 'Invalid records' });
     }
 
-    const inscription = { userId, athleteId, athleteName, event, record, club };
+    // get info from other services
 
-    addInscription(`competition_${competitionId}`, inscription)
-        .then(() => {
-            res.status(201).json({ status: 'success', message: 'Inscription added successfully' });
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ status: 'error', message: 'An error occurred while adding inscription' });
-        });
+    // get athlete info
+    const athleteInfo = (await axios.get(`${process.env.ATHLETES_URL}/api/athletes/${athleteId}`)).data.data;
+
+    // get events info
+    const eventsInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/events?category=${athleteInfo.category}`)).data.data;
+
+    // check events
+    const validEvents = eventsInfo.map((event) => event.name);
+    for (let i = 0; i < events.length; i++) {
+        if (!validEvents.includes(events[i])) {
+            return res.status(400).json({ status: 'error', message: 'Invalid event' });
+        }
+    }
+
+    // check if athlete is already inscribed
+    const allInscriptions = await getInscriptions(`competition_${competitionId}`);
+    if (allInscriptions.some((inscription) => inscription.athleteId == athleteId)) {
+        return res.status(400).json({ status: 'error', message: 'Athlete already inscribed' });
+    }
+    
+    // check if place is available (if event.maxParticipants compare with number of inscriptions)
+    for (let i = 0; i < events.length; i++) {
+        const eventInfo = eventsInfo.find((event) => event.name == events[i]);
+        if (eventInfo.maxParticipants <= allInscriptions.filter((inscription) => inscription.event == events[i]).length) {
+            return res.status(400).json({ status: 'error', message: 'No place available for ' + events[i] });
+        }
+    }
+
+    // Insert inscriptions
+
+    let inscriptionData = [];
+    for (let i = 0; i < events.length; i++) {
+        const newInscription = { 
+            userId, 
+            athleteId, 
+            athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName, 
+            club: athleteInfo.club,
+            bib: athleteInfo.bib, 
+            event: events[i], 
+            record: records[events[i]], 
+        };
+        inscriptionData.push(newInscription);       
+    }
+
+    await freeInscriptions(`competition_${competitionId}`, inscriptionData);
+
+    res.status(201).json({ status: 'success', message: 'Inscriptions added successfully' });    
 });
 
 // Update an inscription for a competition
-app.put('/api/inscriptions/:competitionId/:inscriptionId', async (req, res) => {
-    const { competitionId, inscriptionId } = req.params;
+app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
+    const { competitionId, athleteId } = req.params;
     let userId = req.body.userId;
-    const { athleteId, athleteName, event, club } = req.body;
-    const record = req.body.record || '';
-    const _rev = req.body._rev;
+    const { events, records } = req.body;
 
     let admin = false;
 
@@ -161,49 +193,108 @@ app.put('/api/inscriptions/:competitionId/:inscriptionId', async (req, res) => {
     }
     
     // check body elements
-    if (!userId || typeof userId !== 'string') {
+    if ((!userId || typeof userId !== 'string') && !admin) {
         return res.status(400).json({ status: 'error', message: 'Invalid userId' });
     }
     if (!athleteId || typeof athleteId !== 'string') {
         return res.status(400).json({ status: 'error', message: 'Invalid athleteId' });
     }
-    if (!athleteName || typeof athleteName !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid athleteName' });
+    if (!events || !Array.isArray(events) || events.length === 0) {
+        return res.status(400).json({ status: 'error', message: 'Invalid events' });
     }
-    if (!event || typeof event !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid event' });
-    }
-    if (!club || typeof club !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid club' });
-    }
-    if (!record || typeof record !== 'string') {
-        return res.status(400).json({ status: 'error', message: 'Invalid record' });
-    }
-    if ((!_rev || typeof _rev !== 'string') && !admin) {
-        return res.status(400).json({ status: 'error', message: 'Invalid _rev' });
+    if (!records || typeof records !== 'object' || Object.keys(records).length === 0) {
+        return res.status(400).json({ status: 'error', message: 'Invalid records' });
     }
 
-    getInscription(`competition_${competitionId}`, inscriptionId)
-        .then((inscription) => {
-            if (userId != inscription.userId && !admin) {
-                return res.status(403).json({ status: 'error', message: 'Forbidden' });
+    // get info from other services
+
+    // get athlete info
+    const athleteInfo = (await axios.get(`${process.env.ATHLETES_URL}/api/athletes/${athleteId}`)).data.data;
+
+    // get events info
+    const eventsInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/events?category=${athleteInfo.category}`)).data.data;
+
+    // check events
+    const validEvents = eventsInfo.map((event) => event.name);
+    for (let i = 0; i < events.length; i++) {
+        if (!validEvents.includes(events[i])) {
+            return res.status(400).json({ status: 'error', message: 'Invalid event' });
+        }
+    }
+
+    // check if athlete is already inscribed
+    const allInscriptions = await getInscriptions(`competition_${competitionId}`);
+    const athleteInscriptions = allInscriptions.filter((inscription) => inscription.athleteId == athleteId);
+    if (athleteInscriptions.length == 0) {
+        return res.status(400).json({ status: 'error', message: 'Athlete not inscribed (not PUT but POST)' });
+    }
+
+    // check if userId corresponds to the one in the inscription
+    const userIdFromInscription = athleteInscriptions[0].userId;
+    if (!admin) {
+        if (userId != userIdFromInscription) {
+            return res.status(403).json({ status: 'error', message: 'Forbidden (userId does not correspond to the one in the inscription)' });
+        }
+    } else {
+        userId = userIdFromInscription;
+    }
+
+    // check if place is available (if event.maxParticipants compare with number of inscriptions)
+    for (let i = 0; i < events.length; i++) {
+        if (!athleteInscriptions.some((inscription) => inscription.event == events[i])) {
+            const eventInfo = eventsInfo.find((event) => event.name == events[i]);
+            if (eventInfo.maxParticipants <= allInscriptions.filter((inscription) => inscription.event == events[i]).length) {
+                return res.status(400).json({ status: 'error', message: 'No place available for ' + events[i] });
             }
-            const newInscription = { _id: inscriptionId, _rev: (admin ? inscription._rev : _rev), userId: (admin ? inscription.userId : userId), athleteId, athleteName, event, record, club };
-            return updateInscription(`competition_${competitionId}`, newInscription);
-        })
-        .then(() => {
-            res.status(200).json({ status: 'success', message: 'Inscription updated successfully' });
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ status: 'error', message: 'An error occurred while updating inscription' });
-        });    
+        }
+    }
+
+    // delete inscriptions for events not in the new list
+    for (let i = 0; i < athleteInscriptions.length; i++) {
+        if (!events.includes(athleteInscriptions[i].event)) {
+            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+        }
+    }
+
+    // Update inscriptions
+    let inscriptionData = [];
+    for (let i = 0; i < events.length; i++) {
+        if(athleteInscriptions.some((inscription) => inscription.event == events[i])) {
+            const oldinscription = athleteInscriptions.find((inscription) => inscription.event == events[i]);
+            const newInscription = { 
+                _id: oldinscription._id,
+                _rev: oldinscription._rev,
+                userId, 
+                athleteId, 
+                athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName, 
+                club: athleteInfo.club,
+                bib: athleteInfo.bib, 
+                event: events[i], 
+                record: records[events[i]], 
+            };
+            inscriptionData.push(newInscription);
+        } else {
+            const newInscription = { 
+                userId, 
+                athleteId, 
+                athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName, 
+                club: athleteInfo.club,
+                bib: athleteInfo.bib, 
+                event: events[i], 
+                record: records[events[i]], 
+            };
+            inscriptionData.push(newInscription);
+        }
+    }
+
+    await freeInscriptions(`competition_${competitionId}`, inscriptionData);
+
+    res.status(200).json({ status: 'success', message: 'Inscriptions updated successfully' });
 });
 
-// Delete an inscription for a competition
-app.delete('/api/inscriptions/:competitionId/:inscriptionId', async (req, res) => {
-    const { competitionId, inscriptionId } = req.params;
-    const _rev = req.body._rev;
+// Delete all inscriptions of an athlete for a competition
+app.delete('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
+    const { competitionId, athleteId } = req.params;
     let userId = req.body.userId;
 
     let admin = false;
@@ -213,33 +304,32 @@ app.delete('/api/inscriptions/:competitionId/:inscriptionId', async (req, res) =
     } catch (err) {
         admin = false;
     }
-    
-    if (admin) {
-        userId = "admin";
-    }
 
-    // check body elements
-    if (!userId || typeof userId !== 'string') {
+    if ((!userId || typeof userId !== 'string') && !admin) {
         return res.status(400).json({ status: 'error', message: 'Invalid userId' });
     }
-    if (!_rev || typeof _rev !== 'string' && !admin) {
-        return res.status(400).json({ status: 'error', message: 'Invalid _rev' });
+    
+    // check if athlete is already inscribed
+    const allInscriptions = await getInscriptions(`competition_${competitionId}`);
+    const athleteInscriptions = allInscriptions.filter((inscription) => inscription.athleteId == athleteId);
+    if (athleteInscriptions.length == 0) {
+        return res.status(400).json({ status: 'error', message: 'Athlete not inscribed' });
     }
 
-    getInscription(`competition_${competitionId}`, inscriptionId)
-        .then((inscription) => {
-            if (userId != inscription.userId && !admin) {
-                return res.status(403).json({ status: 'error', message: 'Forbidden' });
-            }
-            return deleteInscription(`competition_${competitionId}`, inscriptionId, (admin ? inscription._rev : _rev));
-        })
-        .then(() => {
-            res.status(200).json({ status: 'success', message: 'Inscription deleted successfully' });
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ status: 'error', message: 'An error occurred while deleting inscription' });
-        });
+    // check if userId corresponds to the one in the inscription
+    const userIdFromInscription = athleteInscriptions[0].userId;
+    if (!admin) {
+        if (userId != userIdFromInscription) {
+            return res.status(403).json({ status: 'error', message: 'Forbidden (userId does not correspond to the one in the inscription)' });
+        }
+    } 
+
+    // delete inscriptions
+    for (let i = 0; i < athleteInscriptions.length; i++) {
+        await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+    }
+
+    res.status(200).json({ status: 'success', message: 'Inscriptions deleted successfully' });
 });
 
 app.listen(port, () => console.log(`Inscriptions service listening on port ${port}!`));

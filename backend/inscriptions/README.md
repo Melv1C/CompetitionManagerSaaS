@@ -68,8 +68,10 @@ This service is responsible for managing inscriptions.
             "_id": "string",
             "athleteId": "melvyn",
             "athleteName": "Melvyn Claes",
+            "bib": "1090",
+            "club": "USTA",
             "event": "Saut en longueur",
-            "record": "7m17"
+            "record": "7.17"
         },
         ...
     ]
@@ -78,7 +80,7 @@ This service is responsible for managing inscriptions.
 
 ### Get inscription by id
 
-- `GET /inscriptions/:competitionId/:inscriptionId?userId=userId`  (Optional query parameter)
+- `GET /inscriptions/:competitionId/:inscriptionId`
 - Description: Get inscription by id
 - Response: HTTP 200
 ```json
@@ -87,11 +89,12 @@ This service is responsible for managing inscriptions.
     "message": "Inscription retrieved successfully",
     "data": {
         "_id": "string",
-        "_rev": "string", // if userId is provided and the user is the owner of the inscription
         "athleteId": "melvyn",
         "athleteName": "Melvyn Claes",
+        "bib": "1090",
+        "club": "USTA",
         "event": "Saut en longueur",
-        "record": "7m17"
+        "record": "7.17"
     }
 }
 ```
@@ -99,47 +102,58 @@ This service is responsible for managing inscriptions.
 ### Create inscription
 
 - `POST /inscriptions/:competitionId`
-- Description: Create inscription
+- Description: Create inscriptions
 - Request body:
 ```json
 {
     "userId": "string",
     "athleteId": "string",
-    "athleteName": "string",
-    "event": "string",
-    "record": "string"          // Optional
+    "events": ["string"],
+    "records": {
+        "event1": "string",
+    }
 }
 ```
 - Response: HTTP 201
 ```json
 {
     "status": "success",
-    "message": "Inscription created successfully"
+    "message": "Inscriptions created successfully"
 }
 ```
 
 ### Update inscription
 
-- `PUT /inscriptions/:competitionId/:inscriptionId`
-- Description: Update inscription
+- `PUT /inscriptions/:competitionId/:athleteId`
+- Description: Update inscriptions
 - Request body:
 ```json
 {
-    some data
+    "userId": "string",
+    "events": ["string"],
+    "records": {
+        "event1": "string",
+    }
 }
 ```
 - Response: HTTP 200
 ```json
 {
     "status": "success",
-    "message": "Inscription updated successfully"
+    "message": "Inscriptions updated successfully"
 }
 ```
 
 ### Delete inscription
 
-- `DELETE /inscriptions/:competitionId/:inscriptionId`
-- Description: Delete inscription
+- `DELETE /inscriptions/:competitionId/:athleteId`
+- Description: Delete all inscriptions of an athlete
+- Request body:
+```json
+{
+    "userId": "string"
+}
+```
 - Response: HTTP 200
 ```json
 {
@@ -159,15 +173,17 @@ This service is responsible for managing inscriptions.
 {
     "athleteId": "string",
     "athleteName": "string",
-    "event": "string",
-    "record": "string"          // Optional
+    "events": ["string"],
+    "records": {
+        "event1": "string",
+    }
 }
 ```
 - Response: HTTP 201
 ```json
 {
     "status": "success",
-    "message": "Inscription created successfully"
+    "message": "Inscriptions created successfully"
 }
 ```
 
@@ -180,15 +196,17 @@ This service is responsible for managing inscriptions.
 {
     "athleteId": "string",
     "athleteName": "string",
-    "event": "string",
-    "record": "string"          // Optional
+    "events": ["string"],
+    "records": {
+        "event1": "string",
+    }
 }
 ```
 - Response: HTTP 200
 ```json
 {
     "status": "success",
-    "message": "Inscription updated successfully"
+    "message": "Inscriptions updated successfully"
 }
 ```
 
@@ -200,7 +218,7 @@ This service is responsible for managing inscriptions.
 ```json
 {
     "status": "success",
-    "message": "Inscription deleted successfully"
+    "message": "Inscriptions deleted successfully"
 }
 ```
 

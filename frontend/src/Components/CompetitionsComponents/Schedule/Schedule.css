@@ -1,0 +1,71 @@
+.schedule {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.schedule-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid #008AFF;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.schedule-item .schedule-item-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.schedule-item .schedule-item-info .schedule-item-time {
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 20%;
+}
+
+.schedule-item .schedule-item-info .schedule-item-name {
+    font-size: 1.2em;
+    width: 50%;
+    font-weight: 500;
+}
+
+.schedule-item .schedule-item-info .schedule-item-places {
+    width: 30%;
+}
+
+.schedule-item .schedule-item-inscriptions {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    max-width: 300px;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.schedule-item .schedule-item-inscriptions.hide{
+    display: none;
+}
+
+.schedule-item .schedule-item-inscriptions.show{
+    display: flex;
+}
+
+.schedule-item .schedule-item-inscriptions .inscription-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+}

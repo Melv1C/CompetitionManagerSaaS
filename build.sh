@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALL_SERVICES="athletes competitions events nginx couchdb inscriptions admins"
+ALL_SERVICES="athletes competitions events nginx couchdb inscriptions admins stripe"
 
 # Vérifier si le nombre d'arguments est correct
 if [ "$#" -ne 2 ]; then

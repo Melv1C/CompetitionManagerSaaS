@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react'
 
+import './Overview.css'
+
+import axios from 'axios'
+
 export const Overview = ({competition}) => {
 
     console.log(competition);
@@ -7,7 +11,16 @@ export const Overview = ({competition}) => {
     const [nbrParticipants, setNbrParticipants] = React.useState(0);
 
     useEffect(() => {
-        setNbrParticipants(0);
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
+
+        axios.get(`${url}/${competition.id}/info`)
+        .then(response => {
+            console.log(response.data);
+            setNbrParticipants(response.data.data.numberOfParticipants);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }, [competition]);
 
 

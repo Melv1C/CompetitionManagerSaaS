@@ -7,6 +7,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { SubNavBar } from '../Components/CompetitionsComponents/SubNavBar/SubNavBar';
 import { Overview } from '../Components/CompetitionsComponents/Overview/Overview';
 import { Inscription } from '../Components/CompetitionsComponents/Inscription/Inscription';
+import { Schedule } from '../Components/CompetitionsComponents/Schedule/Schedule';
 
 export const Competition = () => {
 
@@ -48,7 +49,7 @@ export const Competition = () => {
                 <SubNavBar subPage={subPage} setSubPage={setSubPage} />
                 {subPage === "overview" ? <Overview competition={competition} /> : null}
                 {subPage === "inscription" ? <Inscription id={id} /> : null}
-                {subPage === "schedule" ? <p>Horaire</p> : null}
+                {subPage === "schedule" ? <Schedule competition={competition} /> : null}
             </div>
             : null}
         </div>

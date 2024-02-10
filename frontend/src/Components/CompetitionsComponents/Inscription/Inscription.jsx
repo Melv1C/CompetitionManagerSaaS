@@ -15,6 +15,8 @@ import { faRectangleList, faUser, faPersonRunning, faStopwatch } from '@fortawes
 import { Athlete } from './Athlete/Athlete'
 import { Events } from './Events/Events'
 import { Records } from './Records/Records'
+import { Summary } from './Summary/Summary'
+import { Success } from './Success/Success'
 
 
 
@@ -52,15 +54,6 @@ function ProgressBar({step}) {
         </div>
     )
 }
-
-//function ControlButtons({step, setStep}) {
-//    return (
-//        <div className='control-buttons'>
-//            {step > 1 ? <button onClick={()=>{setStep(step-1)}}>Précédent</button> : null}
-//            {step < 4 ? <button onClick={()=>{setStep(step+1)}}>Suivant</button> : <button onClick={()=>{setStep(step+1)}}>Terminer</button>}
-//        </div>
-//    )
-//}
 
 export const Inscription = ({id}) => {
 
@@ -120,7 +113,7 @@ export const Inscription = ({id}) => {
 
     // if no event is selected step is max 2
     useEffect(() => {
-        if (events.length === 0 && step > 2) {
+        if (events.length === 0 && (step > 2 && step < 5)) {
             setStep(2);
         }
     }, [events])
@@ -153,8 +146,8 @@ export const Inscription = ({id}) => {
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} /> : null}
             {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={"SEN M"} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecords={setRecords} setStep={setStep} /> : null}
-
-            {/*<ControlButtons step={step} setStep={setStep} />*/}
+            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} /> : null}
+            {step === 5 ? <Success competitionId={id} /> : null}
         </div>
     )
 }

@@ -207,6 +207,22 @@ app.post('/api/competitions', async (req, res) => {
             epreuves: [],
         });
         await competition.save();
+
+        // post to inscriptions microservice
+        if (process.env.INSCRIPTIONS_URL) {
+            try {
+                await axios.post(`${process.env.INSCRIPTIONS_URL}/api/inscriptions`, {
+                    competitionId: competition.id,
+                });
+            } catch (err) {
+                console.error(err);
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'Error posting to inscriptions microservice',
+                });
+            }
+        }
+        
         res.status(201).json({
             status: 'success',
             message: 'Competition created successfully',

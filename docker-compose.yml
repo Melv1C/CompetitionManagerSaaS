@@ -39,6 +39,7 @@ services:     # list all services for your application
     environment:
       - MONGO_URI=mongodb://competitions-db:27017/competitions
       - EVENTS_URL=http://events-service:3000
+      - INSCRIPTIONS_URL=http://inscriptions-service:3000
     networks:
       - backend-networks
     depends_on:
@@ -91,8 +92,10 @@ services:     # list all services for your application
     ports: ["3003:3000"]
     environment:
       - COUCHDB_URL=http://admin:admin@inscriptions-db:5984
+      - COMPETITIONS_URL=http://competitions-service:3000
+      - ATHLETES_URL=http://athletes-service:3000
     networks: ["backend-networks"]
-    depends_on: ["inscriptions-db"]
+    depends_on: ["inscriptions-db", "competitions-service", "athletes-service"]
 
   admins-db:
     image: mongo
