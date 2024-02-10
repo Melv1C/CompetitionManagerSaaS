@@ -12,6 +12,8 @@ export const AddEvent = (props) => {
     const [filteredEvent, setFilteredEvent] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState("0");
     const [time, setTime] = useState("10:00");
+    const [cost, setCost] = useState(0);
+    const [maxParticipants, setMaxParticipants] = useState(100);
     //todo category
     useEffect(() => {
         const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
@@ -40,14 +42,22 @@ export const AddEvent = (props) => {
             setFilteredEvent(filteredEvent);
         }
     }, [selectedGrouping]);
+
+    useEffect(() => {
+        if (props.competition.paid) {
+            setCost(3);
+        }
+    }, []);
+
+
     function handleSubmit(event) {
         event.preventDefault();
         const formData = {
             name: selectedEvent,
             time: time,
             categories: ["SEN M", "SEN F"],
-            maxParticipants: 100,
-            cost: 10,
+            maxParticipants: parseInt(maxParticipants),
+            cost: parseInt(cost),
         };
         addEvent(props.competition.id, formData, props.setCompetition);
         props.setShowModal(false);
@@ -56,7 +66,7 @@ export const AddEvent = (props) => {
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="addEventForm">
                 <h1>Ajouter un événement</h1>
                 <select name="grouping" id="grouping" onChange={
                     (e) => {
@@ -88,12 +98,34 @@ export const AddEvent = (props) => {
                         setTime(e.target.value);
                     }
                 }/>
-
+                <div>
+                    <label htmlFor="cost">Coût : </label>
+                    <Cost competition={props.competition} setCost={setCost} cost={cost}/>
+                    <label htmlFor="cost">€</label>
+                </div>
+                <div>
+                    <label htmlFor="maxParticipants">Nombre max de participants : </label>
+                    <input type="number" name="maxParticipants" id="maxParticipants" defaultValue={100} min={1} max={1000} onChange={
+                        (e) => {
+                            setMaxParticipants(e.target.value);
+                        }
+                    }/>
+                </div>
                 <input type="submit" value="Ajouter" />
             </form>
         </>
     )
 };
 
-
+function Cost (props) {
+    if (props.competition.paid) {
+        return <input type="number" name="cost" id="cost" value={props.cost} min={0} max={500} onChange={
+            (e) => {
+                props.setCost(e.target.value);
+            }
+        }/>;
+    }else{
+        return <input type="number" name="cost" id="cost" value="0" disabled/>;
+    }
+}
 
