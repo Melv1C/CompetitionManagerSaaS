@@ -1,0 +1,22 @@
+.modalPopup .addEventForm{
+  margin: 20px;
+}
+
+.modalPopup .addEventForm input[type="submit"]{
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modalPopup .addEventForm input[type="number"]{
+    max-width: 50px;
+}
+
+
+
+
+
