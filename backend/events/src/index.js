@@ -4,6 +4,7 @@ const env = require('dotenv').config();
 const { Category , Event } = require("./schemas");
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/eventcat';
 const fs = require("fs");
+const e = require('express');
 
 const connectMongo = async () => {
     try {
@@ -88,6 +89,18 @@ app.get('/api/events', async (req, res) => {
 app.get('/api/events/:name', async (req, res) => {
     try{
         const event = await Event.findOne({ name: req.params.name });
+        if (!event) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'Invalid event name',
+            });
+        }
+        let validCat = []
+        for (let i = 0; i < event.validCat.length; i++) {
+            const abbr = (await Category.findOne({ id: event.validCat[i] })).abbr;
+            validCat.push(abbr);
+        }
+        event.validCat = validCat;
         res.status(200).json({
             status: 'success',
             message: 'Event retrieved successfully',

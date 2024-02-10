@@ -5,6 +5,9 @@ import "./AddEvent.css";
 
 import { addEvent } from "../../CompetitionsAPI";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+
 export const AddEvent = (props) => {
     const [event, setEvent] = useState([]);
     const [groupings, setGrouping] = useState([]);
@@ -14,7 +17,9 @@ export const AddEvent = (props) => {
     const [time, setTime] = useState("10:00");
     const [cost, setCost] = useState(0);
     const [maxParticipants, setMaxParticipants] = useState(100);
-    //todo category
+    const [validCat, setValidCat] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [pseudo, setPseudo] = useState(null);
     useEffect(() => {
         const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
         axios.get(url)
@@ -49,13 +54,48 @@ export const AddEvent = (props) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (selectedEvent === "0") {
+            return;
+        }
+        console.log('get event');
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
+        axios.get(url + '/' + selectedEvent)
+            .then((response) => {
+                console.log(response.data.data.validCat);
+                setValidCat(response.data.data.validCat.sort());
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [selectedEvent]);
+
+    useEffect(() => {
+        setSelectedEvent("0");
+    }, [selectedGrouping]);
+
+    useEffect(() => {
+        setCategories([]);
+    }, [selectedEvent]);
+
 
     function handleSubmit(event) {
         event.preventDefault();
+        if (selectedEvent === "0") {
+            alert("Veuillez sélectionner un événement");
+            return;
+        }
+        if (categories.length === 0) {
+            alert("Veuillez sélectionner au moins une catégorie");
+            return;
+        }
+
         const formData = {
             name: selectedEvent,
+            pseudoName: pseudo,
             time: time,
-            categories: ["SEN M", "SEN F"],
+            categories: categories,
             maxParticipants: parseInt(maxParticipants),
             cost: parseInt(cost),
         };
@@ -99,6 +139,14 @@ export const AddEvent = (props) => {
                     }
                 }/>
                 <div>
+                    <label htmlFor="pseudo">Nom : </label>
+                    <input type="text" name="pseudo" id="pseudo" onChange={
+                        (e) => {
+                            setPseudo(e.target.value);
+                        }
+                    }/>
+                </div>
+                <div>
                     <label htmlFor="cost">Coût : </label>
                     <Cost competition={props.competition} setCost={setCost} cost={cost}/>
                     <label htmlFor="cost">€</label>
@@ -111,6 +159,7 @@ export const AddEvent = (props) => {
                         }
                     }/>
                 </div>
+                <CategoriesSelect validCat={validCat} categories={categories} setCategories={setCategories}/>
                 <input type="submit" value="Ajouter" />
             </form>
         </>
@@ -128,4 +177,64 @@ function Cost (props) {
         return <input type="number" name="cost" id="cost" value="0" disabled/>;
     }
 }
+
+function CategoriesSelect ({validCat, categories, setCategories}) {
+    return (
+        <div>
+            <label htmlFor="categories">Catégories : </label>
+            <select name="categories" id="categories" onChange={
+                (e) => {
+                    if (e.target.value === "0") {
+                        return;
+                    }
+                    if (!categories.includes(e.target.value)) {
+                        setCategories([...categories, e.target.value]);
+                    }
+                    e.target.value = "0";
+                }
+            }>
+                <option value="0">Ajouter une catégories</option>
+                {
+                    validCat?.map((category, index) => {
+                        return <option key={index} value={category}>{category}</option>;
+                    })
+                }
+            </select>
+            <CategoriesList categories={categories} setCategories={setCategories} />
+        </div>
+    );
+}
+
+function CategoriesList ({categories, setCategories}) {
+    return (
+        <div className="categoriesList">
+            {
+                categories?.map((category, index) => {
+                    return (
+                        <Category key={index} category={category} categories={categories} setCategories={setCategories}/>
+                    );
+                })
+            }
+        </div>
+    );
+}
+
+function Category ({category, categories, setCategories}) {
+    
+    return (
+        <div className="category">
+            {category}
+            <FontAwesomeIcon icon={faTrash} className="delTrash" onClick={
+                (e) => {
+                    let newCategories = [...categories];
+                    newCategories.splice(categories.indexOf(category), 1);
+                    setCategories(newCategories);
+                }
+            }/>
+        </div>
+    );
+
+}
+
+
 

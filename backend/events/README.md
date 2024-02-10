@@ -31,9 +31,9 @@ This service is responsible for managing events.
 }
 ```
 
-### Get event by id
+### Get event by name
 
-- `GET /api/events/:id`
+- `GET /api/events/:name`
 - Description: Get event's data by id
 - Response: HTTP 200
 ```json
@@ -41,7 +41,7 @@ This service is responsible for managing events.
     "status": "success",
     "message": "Event retrieved successfully",
     "data": {
-        "id": "string",
+        "name": "string",
         "name": "string",
         "grouping": "string",
         "validCat": [
