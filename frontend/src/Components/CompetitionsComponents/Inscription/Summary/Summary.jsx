@@ -76,7 +76,14 @@ function postInscription(athlete, events, records, competitionId, setStep) {
     })
     .then(res => {
         console.log(res);
-        setStep(5);
+        if (res.status === 200) {
+            // redirect to res.data.url
+            window.location.href = res.data.data.url;
+        } else if (res.status === 201) {
+            setStep(5);
+        } else {
+            console.log(res);
+        }
     })
     .catch(err => {
         console.log(err);

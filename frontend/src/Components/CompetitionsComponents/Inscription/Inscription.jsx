@@ -85,7 +85,25 @@ export const Inscription = ({id}) => {
 
     const [athlete, setAthlete] = useState(null);
     const [events, setEvents] = useState([]);
+    const setBackupEvents = (events) => {
+        if (events.length === 0) {
+            localStorage.removeItem('events');
+            setEvents(events);
+        } else {
+            localStorage.setItem('events', JSON.stringify(events));
+            setEvents(events);
+        }
+    }
     const [records, setRecords] = useState({});
+    const setBackupRecords = (records) => {
+        if (Object.keys(records).length === 0) {
+            localStorage.removeItem('records');
+            setRecords(records);
+        } else {
+            localStorage.setItem('records', JSON.stringify(records));
+            setRecords(records);
+        }
+    }
 
     // loads athlete from URL
 
@@ -100,16 +118,21 @@ export const Inscription = ({id}) => {
             .catch(err => {
                 console.log(err);
             })
+        } else {
+            setAthlete(null);
+            setBackupEvents([]);
+            setBackupRecords({});
         }
     }, [athleteId])
 
-
+    // loads events and records from local storage
     useEffect(() => {
-        if (athlete === null) {
-            setEvents([]);
-            setRecords([]);
-        }
-    }, [athlete])
+        const events = JSON.parse(localStorage.getItem('events')) || [];
+        setEvents(events);
+
+        const records = JSON.parse(localStorage.getItem('records')) || {};
+        setRecords(records);
+    }, [])
 
     // if no event is selected step is max 2
     useEffect(() => {

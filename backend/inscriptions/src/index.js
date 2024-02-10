@@ -6,7 +6,9 @@ const { createDatabase,
         getInscriptions,
         getInscription,
         deleteInscription,
-        freeInscriptions } = require('./utils');
+        freeInscriptions,
+        stripeInscriptions
+    } = require('./utils');
 
 const app = express();
 const port = 3000;
@@ -101,6 +103,9 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     let userId = req.body.userId;
     const { athleteId, events, records } = req.body;
 
+    const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
+    const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
+
     let admin = false;
 
     try {
@@ -157,6 +162,15 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
         }
     }
 
+    // calculate total cost
+    let totalCost = 0;
+    for (let i = 0; i < events.length; i++) {
+        const eventInfo = eventsInfo.find((event) => event.name == events[i]);
+        console.log(eventInfo.cost);
+        totalCost += eventInfo.cost;
+    }
+    console.log(totalCost);
+
     // Insert inscriptions
 
     let inscriptionData = [];
@@ -173,9 +187,15 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
         inscriptionData.push(newInscription);       
     }
 
-    await freeInscriptions(`competition_${competitionId}`, inscriptionData);
-
-    res.status(201).json({ status: 'success', message: 'Inscriptions added successfully' });    
+    if (totalCost == 0) {
+        await freeInscriptions(`competition_${competitionId}`, inscriptionData);
+        res.status(201).json({ status: 'success', message: 'Inscriptions added successfully' });
+        return;
+    } else {
+        const response = await stripeInscriptions(`competition_${competitionId}`, inscriptionData, eventsInfo.filter((event) => events.includes(event.name)), success_url, cancel_url);
+        console.log(response);
+        res.status(200).json({ status: 'success', message: 'Redirect to payment', data: response });
+    } 
 });
 
 // Update an inscription for a competition

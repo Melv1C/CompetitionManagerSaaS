@@ -6,8 +6,6 @@ import axios from 'axios'
 
 export const Overview = ({competition}) => {
 
-    console.log(competition);
-
     const [nbrParticipants, setNbrParticipants] = React.useState(0);
 
     useEffect(() => {
@@ -15,7 +13,6 @@ export const Overview = ({competition}) => {
 
         axios.get(`${url}/${competition.id}/info`)
         .then(response => {
-            console.log(response.data);
             setNbrParticipants(response.data.data.numberOfParticipants);
         })
         .catch(error => {

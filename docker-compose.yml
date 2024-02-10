@@ -94,8 +94,17 @@ services:     # list all services for your application
       - COUCHDB_URL=http://admin:admin@inscriptions-db:5984
       - COMPETITIONS_URL=http://competitions-service:3000
       - ATHLETES_URL=http://athletes-service:3000
+      - STRIPE_URL=http://stripe-service:3000
     networks: ["backend-networks"]
     depends_on: ["inscriptions-db", "competitions-service", "athletes-service"]
+
+  stripe-service:
+    image: claesweb/cm-stripe:latest
+    ports: ["3005:3000"]
+    environment:
+      - COUCHDB_URL=http://admin:admin@inscriptions-db:5984
+    networks: ["backend-networks"]
+    depends_on: ["inscriptions-db"]
 
   admins-db:
     image: mongo
@@ -160,6 +169,7 @@ services:     # list all services for your application
       - competitions-service
       - events-service
       - inscriptions-service
+      - stripe-service
       - admins-service
       - frontend
 

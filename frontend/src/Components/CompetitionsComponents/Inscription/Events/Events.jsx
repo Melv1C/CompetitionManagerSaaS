@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import './Events.css'
 
-function EventsList({availableEvents, events, setEvents, competitionId}) {
+function EventsList({availableEvents, events, setEvents, competitionId, inscriptions}) {
 
     if (availableEvents.length === 0) {
         return (
@@ -17,34 +17,26 @@ function EventsList({availableEvents, events, setEvents, competitionId}) {
     return (
         <div className='events-list'>
             {availableEvents.map((event, index) => {
-                return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} />
+                return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} inscriptions={inscriptions} />
             })}
         </div>
     )
 }
 
-function EventItem({event, setEvents, events, competitionId}) {
+function EventItem({event, setEvents, events, competitionId, inscriptions}) {
     const [checked, setChecked] = useState(false);
 
     const [place, setPlace] = useState(null);
 
     useEffect(() => {
-        if (events.includes(event.name)) {
+        if (events.map(e => e.name).includes(event.name)) {
             setChecked(true);
         }
     }, [events, event])
 
     useEffect(() => {
-        if (event.maxParticipants !== null) {
-            axios.get(`/api/inscriptions/${competitionId}/places/${event.name}`)
-            .then(res => {
-                setPlace(event.maxParticipants - res.data.data);
-            })
-            .catch(err => {
-                console.log(err);
-                setPlace(event.maxParticipants);
-            })
-        }
+        const eventInscriptions = inscriptions.filter(i => i.event === event.name);
+        setPlace(event.maxParticipants - eventInscriptions.length);
     }, [event, competitionId])
 
     return (
@@ -101,24 +93,37 @@ export const Events = ({events, setEvents, setStep, competitionId, category}) =>
 
     const [availableEvents, setAvailableEvents] = useState([]);
 
+    const [inscriptions, setInscriptions] = useState([]);
+
     useEffect(() => {
         const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : '/api/competitions';
 
         axios.get(`${url}/${competitionId}/events?category=${category}`)
         .then(res => {
-            const events = res.data.data;
-            setAvailableEvents(events);
+            setAvailableEvents(res.data.data);
         })
         .catch(err => {
             console.log(err);
         })
     }, [competitionId, category])
 
+    useEffect(() => {
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
+
+        axios.get(`${url}/${competitionId}`)
+        .then(res => {
+            setInscriptions(res.data.data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [competitionId])
+
     return (
         <div className='step-page'>
             <h2>Épreuves</h2>
             <div className='events'>
-                <EventsList availableEvents={availableEvents} events={events} setEvents={setEvents} competitionId={competitionId} />       
+                <EventsList availableEvents={availableEvents} events={events} setEvents={setEvents} competitionId={competitionId} inscriptions={inscriptions} />     
 
             </div>
             <ControlButtons setStep={setStep} setEvents={setEvents} events={events} />

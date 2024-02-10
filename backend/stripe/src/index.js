@@ -38,7 +38,7 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
                         product_data: {
                             name: event.name
                         },
-                        unit_amount: event.cost,
+                        unit_amount: event.cost*100,
                     },
                     quantity: 1,
                 };
@@ -53,7 +53,7 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
         },
     });
 
-    res.status(200).json({ id: session.id });
+    res.status(200).json({ id: session.id, url: session.url });
 });
 
 app.post('/api/stripe/webhook', async (req, res) => {

@@ -16,7 +16,6 @@ function ControlButtons({setStep, records, events}) {
 }
 
 function RecordsList({records, setRecords, events, athleteId}) {
-    console.log(records);
     return (
         <div className='records-list'>
             {events.map((event) => {
@@ -148,25 +147,17 @@ function DistanceInput({record, setRecord}) {
 }
 
 function TimeInput({record, setRecord, event}) {
-    console.log(record);
-
     // record is in milliseconds
     let time = new Date(0);
     time.setMilliseconds(record);
-
-    console.log(time.getTime());
 
     const minutes = time.getUTCMinutes();
     const seconds = time.getUTCSeconds();
     const milliseconds = time.getUTCMilliseconds();
 
-    console.log(minutes, seconds, milliseconds);
-
     const [m1, m2] = minutes.toString().padStart(2, '0').split('');
     const [s1, s2] = seconds.toString().padStart(2, '0').split('');
     const [ms1, ms2] = milliseconds.toString().padStart(3, '0').split('');
-
-
 
     return (
         <div className='record-item-input'>
@@ -273,7 +264,6 @@ function TimeInput({record, setRecord, event}) {
 }
 
 function PointsInput({record, setRecord, event}) {
-    console.log(record);
 
     // if record is not 4 digits long, add 0s at the beginning
     if (record.length < 4) {
@@ -281,8 +271,6 @@ function PointsInput({record, setRecord, event}) {
     }
 
     const [a, b, c, d] = record.split('');
-
-    console.log(a, b, c, d);
 
     return (
         <div className='record-item-input'>

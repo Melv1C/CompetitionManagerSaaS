@@ -1,5 +1,5 @@
 const nano = require('nano')(process.env.COUCHDB_URL);
-import axios from 'axios';
+const axios = require('axios');
 
 function createDatabase(dbName) {
     return new Promise((resolve, reject) => {
@@ -88,17 +88,17 @@ async function freeInscriptions(dbName, inscriptionData) {
     }
 }
 
-async function stripeInscriptions(dbName, inscriptionData, events) {
+async function stripeInscriptions(dbName, inscriptionData, events, success_url, cancel_url) {
     const url = process.env.STRIPE_URL || '';
     const stripeData = {
         events: events,
-        success_url: process.env.STRIPE_SUCCESS_URL || '',
-        cancel_url: process.env.STRIPE_CANCEL_URL || '',
+        success_url: success_url,
+        cancel_url: cancel_url,
         inscriptionData: inscriptionData,
         dbName: dbName
     };
-    const response = await axios.post(url + '/checkout-sessions', stripeData);
-
+    const response = await axios.post(url + '/api/stripe/checkout-sessions', stripeData);
+    return response.data;
 }
 
 module.exports = {
