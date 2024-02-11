@@ -58,8 +58,8 @@ export const AddEvent = (props) => {
         if (selectedEvent === "0") {
             return;
         }
-        console.log('get event');
         const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
+        console.log(url);
         axios.get(url + '/' + selectedEvent)
             .then((response) => {
                 console.log(response.data.data.validCat);

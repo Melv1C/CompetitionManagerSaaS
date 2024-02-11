@@ -8,11 +8,6 @@ import { logout } from '../../Auth';
 
 export const NavBar = (props) => {
     const [showModal, setShowModal] = useState(false);
-
-    useEffect(() => {
-        console.log(props.user);
-    }, [props.user]);
-
     return (
         <>
             <div className='navbar'>

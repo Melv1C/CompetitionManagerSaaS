@@ -47,7 +47,7 @@
 }
 
 .navbar-login-user button {
-    width: 150px;
+    min-width: 150px;
     height: 40px;
     outline: none;
     border: 1px solid #ff4141;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/admins' : process.env.GATEWAY_URL + '/api/admins';
-
+console.log(process.env);
 function logout(props) {
     localStorage.removeItem('userId');
     props.setUser(null);

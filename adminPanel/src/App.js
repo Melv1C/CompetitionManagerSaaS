@@ -27,7 +27,7 @@ function App() {
             <Router>
                 <NavBar user={user} setUser={setUser}/>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Home user={user} setUser={setUser}/>} />
                     <Route path="/create" element={<Create user={user} setUser={setUser}/>}/>
                     <Route path="/competitions/:id" element={<Competition user={user} setUser={setUser}/>} />
                 </Routes>
