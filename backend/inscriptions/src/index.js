@@ -84,6 +84,28 @@ app.get('/api/inscriptions/:competitionId', (req, res) => {
         });
 });
 
+//Get info about an athlete'
+app.get('/api/inscriptions/:competitionId/athletes/:athleteId', async (req, res) => {
+    const { competitionId, athleteId } = req.params;
+    const userId = req.query.userId;
+
+    getInscriptions(`competition_${competitionId}`)
+        .then((inscriptions) => {
+            const athleteInscriptions = inscriptions.filter((inscription) => inscription.athleteId == athleteId);
+            if (athleteInscriptions.length == 0) {
+                res.status(200).json({ status: 'success', message: 'Athlete not inscribed', data: { isInsribed: false, ownByUser: false } });
+            } else {
+                const ownByUser = inscriptions[0].userId == userId;
+                res.status(200).json({ status: 'success', message: 'Athlete inscribed', data: { isInsribed: true, ownByUser: ownByUser } });
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching athlete info' });
+        });
+});
+
+
 // Get a single inscription for a competition
 app.get('/api/inscriptions/:competitionId/:inscriptionId', (req, res) => {
     const { competitionId, inscriptionId } = req.params;

@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/admins' : process.env.GATEWAY_URL + '/api/admins';
+console.log(process.env);
+
+const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/admins' : process.env.REACT_APP_GATEWAY_URL + '/api/admins';
 
 function logout(props) {
     localStorage.removeItem('userId');
@@ -8,6 +10,7 @@ function logout(props) {
 }
 
 function login(email, password, setUser, setError) {
+    console.log(url);
     axios.get(`${url}?email=${email}&password=${password}`).then((response) => {
         console.log(response.data);
         setUser(response.data.data);

@@ -31,6 +31,8 @@ function EventItem({event, setEvents, events, competitionId, inscriptions}) {
     useEffect(() => {
         if (events.map(e => e.name).includes(event.name)) {
             setChecked(true);
+        } else {
+            setChecked(false);
         }
     }, [events, event])
 
@@ -48,7 +50,7 @@ function EventItem({event, setEvents, events, competitionId, inscriptions}) {
                 if (!checked) {
                     setEvents([...events, event]);
                 } else {
-                    setEvents(events.filter(e => e !== event));
+                    setEvents(events.filter(e => e.name !== event.name));
                 }
                 setChecked(!checked);
             }} />
@@ -100,7 +102,9 @@ export const Events = ({events, setEvents, setStep, competitionId, category}) =>
 
         axios.get(`${url}/${competitionId}/events?category=${category}`)
         .then(res => {
-            setAvailableEvents(res.data.data);
+            const availableEventsData = res.data.data;
+            setEvents(events.filter(e => availableEventsData.map(e => e.name).includes(e.name)));            
+            setAvailableEvents(availableEventsData);
         })
         .catch(err => {
             console.log(err);

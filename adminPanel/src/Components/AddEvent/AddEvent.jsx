@@ -21,7 +21,7 @@ export const AddEvent = (props) => {
     const [categories, setCategories] = useState([]);
     const [pseudo, setPseudo] = useState(null);
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.REACT_APP_GATEWAY_URL + '/api/events';
         axios.get(url)
             .then((response) => {
                 setEvent(response.data.data);
@@ -59,7 +59,7 @@ export const AddEvent = (props) => {
             return;
         }
         console.log('get event');
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
+        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.REACT_APP_GATEWAY_URL + '/api/events';
         axios.get(url + '/' + selectedEvent)
             .then((response) => {
                 console.log(response.data.data.validCat);

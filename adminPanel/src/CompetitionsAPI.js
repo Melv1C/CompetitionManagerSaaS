@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : process.env.GATEWAY_URL + '/api/competitions';
+const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : process.env.REACT_APP_GATEWAY_URL + '/api/competitions';
 
 function getCompetition(id, setCompetition) {
     axios.get(`${url}/${id}`).then((response) => {

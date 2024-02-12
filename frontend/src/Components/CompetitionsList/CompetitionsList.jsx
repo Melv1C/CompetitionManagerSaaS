@@ -11,7 +11,7 @@ export const CompetitionsList = () => {
     useEffect(() => {
 
         const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : '/api/competitions';
-
+        console.log("CompetitionsList url: " + url);
         axios.get(url)
             .then((response) => {
                 setCompetitions(response.data.data);
@@ -19,28 +19,6 @@ export const CompetitionsList = () => {
             .catch((error) => {
                 console.log(error);
             });
-
-        //const data = [
-        //    {
-        //        id: 1,
-        //        name: "Compétition 1",
-        //        date: "2021-10-01",
-        //        inscriptionDeadline: "2021-09-30",
-        //    },
-        //    {
-        //        id: 2,
-        //        name: "Compétition 2",
-        //        date: "2021-10-02",
-        //        inscriptionDeadline: "2021-10-01",
-        //    },
-        //    {
-        //        id: 3,
-        //        name: "Compétition 3",
-        //        date: "2021-10-03",
-        //        inscriptionDeadline: "2021-10-02",
-        //    }
-        //];
-        //setCompetitions(data);
     }, [])
 
   return (
