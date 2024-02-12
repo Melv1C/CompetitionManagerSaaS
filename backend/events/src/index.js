@@ -4,7 +4,6 @@ const env = require('dotenv').config();
 const { Category , Event } = require("./schemas");
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/eventcat';
 const fs = require("fs");
-const e = require('express');
 
 const connectMongo = async () => {
     try {
