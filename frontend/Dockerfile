@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copy package.json src and public to the working directory
 COPY package.json .
+COPY .env .
 COPY src src
 COPY public public
 

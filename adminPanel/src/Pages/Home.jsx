@@ -3,6 +3,8 @@ import { CompetitionsList } from '../Components/CompetitionsList/CompetitionsLis
 import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo'
 import axios from 'axios';
 
+import { COMPETITIONS_URL } from '../Gateway';
+
 
 export const Home = (props) => {
     const [compets, setCompets] = useState([]);
@@ -10,8 +12,7 @@ export const Home = (props) => {
         if (!props.user) {
             return;
         }
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : process.env.GATEWAY_URL + '/api/competitions';
-        axios.get(url).then((response) => {
+        axios.get(COMPETITIONS_URL).then((response) => {
             setCompets(response.data.data.filter((compet) => compet.club === props.user.club));
         }).catch((error) => {
             console.log(error);

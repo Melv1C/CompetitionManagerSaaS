@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { url } from '../../../Gateway'
 import './Schedule.css'
 
 import { formatRecord } from '../../../RecordsHandler'
@@ -53,9 +54,7 @@ export const Schedule = ({competition}) => {
     const [inscriptions, setInscriptions] = useState([]);
 
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
-
-        axios.get(`${url}/${competition.id}`)
+        axios.get(`${url}/inscriptions/${competition.id}`)
             .then((response) => {
                 setInscriptions(response.data.data);
             })

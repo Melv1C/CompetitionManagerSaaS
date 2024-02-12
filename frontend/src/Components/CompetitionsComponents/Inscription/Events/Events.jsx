@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import axios from 'axios'
+import { url } from '../../../../Gateway'
 
 import './Events.css'
 
@@ -98,9 +99,7 @@ export const Events = ({events, setEvents, setStep, competitionId, category}) =>
     const [inscriptions, setInscriptions] = useState([]);
 
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : '/api/competitions';
-
-        axios.get(`${url}/${competitionId}/events?category=${category}`)
+        axios.get(`${url}/competitions/${competitionId}/events?category=${category}`)
         .then(res => {
             const availableEventsData = res.data.data;
             setEvents(events.filter(e => availableEventsData.map(e => e.name).includes(e.name)));            
@@ -112,9 +111,7 @@ export const Events = ({events, setEvents, setStep, competitionId, category}) =>
     }, [competitionId, category])
 
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
-
-        axios.get(`${url}/${competitionId}`)
+        axios.get(`${url}/inscriptions/${competitionId}`)
         .then(res => {
             setInscriptions(res.data.data);
         })

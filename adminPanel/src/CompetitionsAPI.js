@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
-const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : process.env.REACT_APP_GATEWAY_URL + '/api/competitions';
+import { COMPETITIONS_URL } from './Gateway';
 
 function getCompetition(id, setCompetition) {
-    axios.get(`${url}/${id}`).then((response) => {
+    axios.get(`${COMPETITIONS_URL}/${id}`).then((response) => {
         setCompetition(response.data.data);
     }).catch((error) => {
         console.log(error);
@@ -12,7 +11,7 @@ function getCompetition(id, setCompetition) {
 }
 
 function createCompetition(competition) {
-    axios.post(url, competition).then((response) => {
+    axios.post(COMPETITIONS_URL, competition).then((response) => {
         window.location.href = `/competitions/${response.data.data.id}`;
     }).catch((error) => {
         console.log(error);
@@ -20,7 +19,7 @@ function createCompetition(competition) {
 }
 
 function updateCompetition(competition, setCompetition) {
-    axios.put(`${url}/${competition.id}`, competition).then((response) => {
+    axios.put(`${COMPETITIONS_URL}/${competition.id}`, competition).then((response) => {
         setCompetition(response.data.data);
     }).catch((error) => {
         console.log(error);
@@ -28,8 +27,7 @@ function updateCompetition(competition, setCompetition) {
 }
 
 function addEvent(competitionId, event, setCompetition) {
-    console.log(event);
-    axios.post(`${url}/${competitionId}/events`, event).then((response) => {
+    axios.post(`${COMPETITIONS_URL}/${competitionId}/events`, event).then((response) => {
         setCompetition(response.data.data);
     }).catch((error) => {
         console.log(error);

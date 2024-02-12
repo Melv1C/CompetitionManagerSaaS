@@ -3,15 +3,14 @@ import React, { useEffect } from 'react'
 import './Overview.css'
 
 import axios from 'axios'
+import { url } from '../../../Gateway'
 
 export const Overview = ({competition}) => {
 
     const [nbrParticipants, setNbrParticipants] = React.useState(0);
 
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
-
-        axios.get(`${url}/${competition.id}/info`)
+        axios.get(`${url}/inscriptions/${competition.id}/info`)
         .then(response => {
             setNbrParticipants(response.data.data.numberOfParticipants);
         })

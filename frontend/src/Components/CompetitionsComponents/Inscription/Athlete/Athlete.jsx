@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
+import { url } from '../../../../Gateway'
 import { auth } from '../../../../Firebase'
 
 import './Athlete.css'
@@ -98,9 +99,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
         
         setLoading(true);
 
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/athletes' : '/api/athletes';
-
-        axios.get(`${url}?key=${keyword}`)
+        axios.get(`${url}/athletes?key=${keyword}`)
         .then(res => {
             const athletes = res.data.data;
             setLoading(false);
@@ -118,11 +117,15 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
             return;
         }
 
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
-        axios.get(`${url}/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
+        axios.get(`${url}/inscriptions/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
         .then(res => {
-            console.log(res.data.data);
-            setEnableNext(res.data.data.isInsribed && res.data.data.ownByUser);
+            if (res.data.data.isInsribed && res.data.data.ownByUser) {
+                setEnableNext(true);
+            } else if (!res.data.data.isInsribed) {
+                setEnableNext(true);
+            } else {
+                setEnableNext(false);
+            }
         })
         .catch(err => {
             console.log(err);

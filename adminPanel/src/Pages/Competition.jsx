@@ -3,7 +3,6 @@ import { useParams} from 'react-router-dom';
 import { Popup } from '../Components/Popup/Popup';
 import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo';
 import { AddEvent } from '../Components/AddEvent/AddEvent';
-import axios from 'axios';
 
 import { getCompetition } from '../CompetitionsAPI';
 

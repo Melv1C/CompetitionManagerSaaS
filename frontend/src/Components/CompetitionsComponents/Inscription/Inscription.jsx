@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios';
+import { url } from '../../../Gateway';
 
 import {auth} from '../../../Firebase'
 
@@ -95,11 +96,9 @@ export const Inscription = ({id}) => {
     }
 
     // loads athlete from URL
-    useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/athletes' : '/api/athletes';
-        
+    useEffect(() => {        
         if (athleteId) {
-            axios.get(`${url}/${athleteId}`)
+            axios.get(`${url}/athletes/${athleteId}`)
             .then(res => {
                 setAthlete(res.data.data);
             })
