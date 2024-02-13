@@ -97,7 +97,11 @@ app.get('/api/events/:name', async (req, res) => {
         let validCat = []
         for (let i = 0; i < event.validCat.length; i++) {
             const abbr = (await Category.findOne({ id: event.validCat[i] })).abbr;
-            validCat.push(abbr);
+            if (abbr){
+                validCat.push(abbr);
+            }else{
+                console.log("Category not found : " + event.validCat[i])
+            }
         }
         event.validCat = validCat;
         res.status(200).json({
