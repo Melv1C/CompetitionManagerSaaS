@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { url } from '../../../../Gateway'
 
 import { auth } from '../../../../Firebase'
 
@@ -66,9 +67,7 @@ function ControlButtons({setStep, totalCost, athlete, events, records, competiti
 function postInscription(athlete, events, records, competitionId, setStep) {
     console.log(athlete, events, records);
 
-    const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/inscriptions' : '/api/inscriptions';
-
-    axios.post(`${url}/${competitionId}`, {
+    axios.post(`${url}//inscriptions/${competitionId}`, {
         userId: auth.currentUser.uid,
         athleteId: athlete.id,
         events: events.map(event => event.name),

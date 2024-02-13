@@ -11,7 +11,6 @@ services:     # list all services for your application
     image: mongo
     restart: always
     volumes:
-      - ./db_data/:/data/./db_data/:/data/db/
       - /ect/timezone:/ect/timezone:ro
     ports: [ "4001:27017" ]
     networks:
@@ -50,7 +49,6 @@ services:     # list all services for your application
     image: mongo
     restart: always
     volumes:
-      - ./db_data/:/data/./db_data/:/data/db/
       - /ect/timezone:/ect/timezone:ro
     ports: [ "4002:27017" ]
     networks:
@@ -110,7 +108,6 @@ services:     # list all services for your application
     image: mongo
     restart: always
     volumes:
-      - ./db_data/:/data/./db_data/:/data/db/
       - /ect/timezone:/ect/timezone:ro
     ports: [ "4004:27017" ]
     networks:
@@ -146,21 +143,19 @@ services:     # list all services for your application
     image: claesweb/cm-admin:latest
     restart: always
     ports: [ "5000:3000" ]
-    environment:
-      - GATEWAY_URL=http://localhost
     networks:
       - backend-networks  
 
   frontend:
     image: claesweb/cm-frontend:latest
-    ports: [ "8080:3000" ]
     restart: always
+    ports: [ "8080:3000" ]
     networks:
       - backend-networks
 
   gateway:
     image: claesweb/cm-nginx:latest
-    ports: [ "80:80" ]
+    ports: [ "80:80", "443:443" ]
     restart: always
     networks:
       - backend-networks

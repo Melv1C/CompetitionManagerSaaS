@@ -4,6 +4,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
+import { COMPETITIONS_URL } from '../Gateway';
+
 
 export const Home = (props) => {
     const [compets, setCompets] = useState([]);
@@ -11,8 +13,7 @@ export const Home = (props) => {
         if (!props.user) {
             return;
         }
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/competitions' : process.env.GATEWAY_URL + '/api/competitions';
-        axios.get(url).then((response) => {
+        axios.get(COMPETITIONS_URL).then((response) => {
             setCompets(response.data.data.filter((compet) => compet.club === props.user.club));
         }).catch((error) => {
             console.log(error);

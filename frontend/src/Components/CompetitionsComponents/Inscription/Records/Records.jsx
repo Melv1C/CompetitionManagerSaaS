@@ -3,10 +3,11 @@ import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom';
 
 import axios from 'axios';
+import { url } from '../../../../Gateway'
 
 import './Records.css'
 
-function ControlButtons({setStep, records, events}) {
+function ControlButtons({setStep}) {
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(2)}}>Précédent</button>
@@ -15,50 +16,60 @@ function ControlButtons({setStep, records, events}) {
     )
 }
 
-function RecordsList({records, setRecords, events, athleteId}) {
+function RecordsList({records, setRecord, events, athleteId}) {
+
     return (
         <div className='records-list'>
             {events.map((event) => {
-                return <RecordsItem record={records[event.name]} setRecords={setRecords} event={event} athleteId={athleteId} key={event.name} />
+                return <RecordsItem 
+                            record={records[event.name]} 
+                            setRecord={setRecord}
+                            event={event}
+                            athleteId={athleteId} 
+                            records={records} 
+                            key={event.name} 
+                        />
             })}
         </div>
     )
 }
 
-function RecordsItem({record, setRecords, event, athleteId}) {
+function RecordsItem({record, setRecord, event, athleteId, records}) {
 
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/athletes' : '/api/athletes';
-
-        axios.get(`${url}/${athleteId}/${event.name}?maxYears=1`)
-            .then(response => {
-                setRecords(prev => ({...prev, [event.name]: response.data.data.perf}));
-            })
-            .catch(error => {
-                // if the athlete has no record, 404 is returned
-                if (error.response.status === 404) {
-                    setRecords(prev => ({...prev, [event.name]: 0}));
-                }
-            });
-    }, [athleteId]);
+        if (record === undefined) {
+            axios.get(`${url}/athletes/${athleteId}/${event.name}?maxYears=1`)
+                .then(response => {
+                    setRecord(event.name, response.data.data.perf);
+                })
+                .catch(error => {
+                    console.log(error);
+                    // if the athlete has no record, 404 is returned
+                    if (error.response.status === 404) {
+                        setRecord(event.name, 0);
+                    }
+                });
+        }
+    }, [record]);
 
     return (
         <div className='record-item'>
             <div className='record-item-name'>{event.name}</div>
-            <RecordInput record={record} setRecord={(newRecord) => setRecords(prev => ({...prev, [event.name]: newRecord}))} event={event} />
+            <RecordInput 
+                record={record} 
+                setRecord={(newRecord) => setRecord(event.name, newRecord)} 
+                event={event} 
+            />
         </div>
     )    
 }
 
 function RecordInput({record, setRecord, event}) {
-
     if (record === undefined) {
         return <div className='record-item-input'>Chargement...</div>
     }
 
-    const type = event.type;
-
-    switch (type) {
+    switch (event.type) {
         case "distance":
             return <DistanceInput record={record} setRecord={setRecord} event={event.name} />
         case "time":
@@ -66,7 +77,7 @@ function RecordInput({record, setRecord, event}) {
         case "points":
             return <PointsInput record={record} setRecord={setRecord}/>
         default:
-            return <input type='number' className='record-item-input' value={record} onInput={(e) => setRecord(prev => ({...prev, [event.name]: e.target.value}))} />
+            return <div className='record-item-input'>Type d'épreuve inconnu</div>
     }
 }
 
@@ -338,7 +349,7 @@ function PointsInput({record, setRecord, event}) {
     )
 }
 
-export const Records = ({events, records, setRecords, setStep}) => {
+export const Records = ({events, records, setRecord, setStep}) => {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -349,7 +360,7 @@ export const Records = ({events, records, setRecords, setStep}) => {
             <h2>Records</h2>
 
             <div className='records'>
-                <RecordsList records={records} setRecords={setRecords} events={events} athleteId={athleteId} />
+                <RecordsList records={records} setRecord={setRecord} events={events} athleteId={athleteId} />
             </div>
 
             <ControlButtons setStep={setStep} records={records} events={events} />

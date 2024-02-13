@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import './CompetitionInfo.css';
-import axios from "axios";
 
 import { createCompetition, updateCompetition } from "../../CompetitionsAPI";
 

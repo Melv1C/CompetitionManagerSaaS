@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
+import { url } from '../../../../Gateway'
+import { auth } from '../../../../Firebase'
 
 import './Athlete.css'
 
@@ -72,28 +74,32 @@ function ChooseAthlete({athlete}) {
     )
 }
 
-function ControlButtons({setStep, setAthlete}) {
+function ControlButtons({setStep, setAthlete, enableNext}) {
     return (
-        <div className='control-buttons'>
-            <button onClick={()=>{setAthlete(null)}}>Changer d'athlète</button>
-            <button onClick={()=>{setStep(2)}}>Suivant</button>
-        </div>
+        <>
+            {!enableNext ? <div className='error-message'>Cet athlète est déjà inscrit à cette compétition avec un autre compte. En cas de problème, veuillez contacter l'organisateur.</div> : null}
+            <div className='control-buttons'>
+                <button onClick={()=>{setAthlete(null)}}>Changer d'athlète</button>
+                {enableNext ? <button onClick={()=>{setStep(2)}}>Suivant</button> : null}
+            </div>
+        </>
+        
     )
 }
 
 
-export const Athlete = ({athlete, setAthlete, setStep}) => {
+export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
     const [athletes, setAthletes] = useState([]);
 
     const [loading, setLoading] = useState(false);
+
+    const [enableNext, setEnableNext] = useState(false);
 
     function getAthletes(keyword) {
         
         setLoading(true);
 
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/athletes' : '/api/athletes';
-
-        axios.get(`${url}?key=${keyword}`)
+        axios.get(`${url}/athletes?key=${keyword}`)
         .then(res => {
             const athletes = res.data.data;
             setLoading(false);
@@ -102,11 +108,29 @@ export const Athlete = ({athlete, setAthlete, setStep}) => {
         .catch(err => {
             setLoading(false);
             console.log(err);
-        })
-
-        
+        }) 
     }
 
+    useEffect(() => {
+        if (athlete === null) {
+            setEnableNext(false);
+            return;
+        }
+
+        axios.get(`${url}/inscriptions/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
+        .then(res => {
+            if (res.data.data.isInsribed && res.data.data.ownByUser) {
+                setEnableNext(true);
+            } else if (!res.data.data.isInsribed) {
+                setEnableNext(true);
+            } else {
+                setEnableNext(false);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [athlete, competitionId])
 
     return (
         <div className='step-page'>
@@ -131,7 +155,7 @@ export const Athlete = ({athlete, setAthlete, setStep}) => {
             : 
             <>
                 <ChooseAthlete athlete={athlete} />
-                <ControlButtons setStep={setStep} setAthlete={setAthlete} />
+                <ControlButtons setStep={setStep} setAthlete={setAthlete} enableNext={enableNext} />
             </>
             }
 

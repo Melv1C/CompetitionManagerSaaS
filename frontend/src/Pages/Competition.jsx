@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios';
+import { url } from '../Gateway';
 
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -29,7 +30,7 @@ export const Competition = () => {
 
 
     useEffect(() => {
-            axios.get(`http://localhost/api/competitions/${id}`)
+            axios.get(`${url}/competitions/${id}`)
                 .then((response) => {
                     setCompetition(response.data.data);
                 })

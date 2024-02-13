@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import axios from "axios";
+
+import { EVENTS_URL } from "../../Gateway";
+
 import "./AddEvent.css";
 
 import { addEvent } from "../../CompetitionsAPI";
@@ -20,8 +23,7 @@ export const AddEvent = (props) => {
     const [categories, setCategories] = useState([]);
     const [pseudo, setPseudo] = useState(null);
     useEffect(() => {
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
-        axios.get(url)
+        axios.get(EVENTS_URL)
             .then((response) => {
                 setEvent(response.data.data);
                 let groupings = [];
@@ -57,9 +59,8 @@ export const AddEvent = (props) => {
         if (selectedEvent === "0") {
             return;
         }
-        const url = process.env.NODE_ENV === 'development' ? 'http://localhost/api/events' : process.env.GATEWAY_URL + '/api/events';
-        console.log(url);
-        axios.get(url + '/' + selectedEvent)
+        console.log('get event');
+        axios.get(EVENTS_URL + '/' + selectedEvent)
             .then((response) => {
                 console.log(response.data.data.validCat);
                 setValidCat(response.data.data.validCat.sort());
