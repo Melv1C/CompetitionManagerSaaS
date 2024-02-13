@@ -1,7 +1,8 @@
 import React, { useEffect,useState } from 'react';
 import { CompetitionsList } from '../Components/CompetitionsList/CompetitionsList';
-import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo'
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 
 export const Home = (props) => {
@@ -27,11 +28,14 @@ export const Home = (props) => {
     return (
     <div className='page'>
         <h1>Vos compétitions</h1>
-        <button onClick={
+        <div onClick={
             () => {
                 window.location.href = '/create';
             }
-        }>Créé une compétition</button>
+        } className='addCompetBtn'>
+            <FontAwesomeIcon icon={faPlus}/>
+            Ajouter une compétition
+        </div>
         <div className='compet-link'>
             <CompetitionsList compets={compets}/>
         </div>

@@ -4,7 +4,6 @@ import axios from "axios";
 import "./AddEvent.css";
 
 import { addEvent } from "../../CompetitionsAPI";
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 

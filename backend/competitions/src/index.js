@@ -4,6 +4,7 @@ const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
 const axios = require('axios');
+const { type } = require('os');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -175,11 +176,11 @@ app.post('/api/competitions', async (req, res) => {
                 message: 'Invalid paid',
             });
         }
-        if (!freeClub && !Array.isArray(freeClub)){
+        if (!freeClub && typeof freeClub != 'boolean'){
             return res.status(400).json({
                 status: 'error',
-                message: 'Invalid freeClub',
-            });
+                message: 'Invalid paid',
+            })
         }
         if (!schedule && typeof schedule !== 'string'){
             return res.status(400).json({
