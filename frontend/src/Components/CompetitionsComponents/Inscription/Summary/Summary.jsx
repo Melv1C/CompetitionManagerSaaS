@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { url } from '../../../../Gateway'
+import { INSCRIPTIONS_URL } from '../../../../Gateway'
 
 import { auth } from '../../../../Firebase'
 
@@ -67,7 +67,7 @@ function ControlButtons({setStep, totalCost, athlete, events, records, competiti
 function postInscription(athlete, events, records, competitionId, setStep) {
     console.log(athlete, events, records);
 
-    axios.post(`${url}//inscriptions/${competitionId}`, {
+    axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
         userId: auth.currentUser.uid,
         athleteId: athlete.id,
         events: events.map(event => event.name),

@@ -3,14 +3,14 @@ import './Competitions.css'
 
 import { CompetitionsItem } from './CompetitionsItem'
 import axios from 'axios'
-import { url } from '../../Gateway'
+import { COMPETITIONS_URL } from '../../Gateway'
 
 export const CompetitionsList = () => {
 
     const [competitions, setCompetitions] = React.useState([]);
 
     useEffect(() => {
-        axios.get(`${url}/competitions`)
+        axios.get(`${COMPETITIONS_URL}`)
             .then((response) => {
                 setCompetitions(response.data.data);
             })

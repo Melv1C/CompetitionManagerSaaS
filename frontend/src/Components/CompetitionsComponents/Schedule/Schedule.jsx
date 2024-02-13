@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { url } from '../../../Gateway'
+import { INSCRIPTIONS_URL } from '../../../Gateway'
 import './Schedule.css'
 
 import { formatRecord } from '../../../RecordsHandler'
@@ -54,7 +54,7 @@ export const Schedule = ({competition}) => {
     const [inscriptions, setInscriptions] = useState([]);
 
     useEffect(() => {
-        axios.get(`${url}/inscriptions/${competition.id}`)
+        axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
             .then((response) => {
                 setInscriptions(response.data.data);
             })

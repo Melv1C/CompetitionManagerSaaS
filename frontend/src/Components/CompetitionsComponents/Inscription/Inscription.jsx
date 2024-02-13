@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios';
-import { url } from '../../../Gateway';
+import { ATLHETES_URL } from '../../../Gateway';
 
 import {auth} from '../../../Firebase'
 
@@ -98,7 +98,7 @@ export const Inscription = ({id}) => {
     // loads athlete from URL
     useEffect(() => {        
         if (athleteId) {
-            axios.get(`${url}/athletes/${athleteId}`)
+            axios.get(`${ATLHETES_URL}/${athleteId}`)
             .then(res => {
                 setAthlete(res.data.data);
             })
