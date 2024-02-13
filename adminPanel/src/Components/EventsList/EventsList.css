@@ -1,0 +1,20 @@
+.event{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #E5F0FF;
+    max-width: 800px;
+}
+
+.event .eventTime, .event .eventCost, .event .eventMax{
+    width: 13%;
+}
+
+.event .eventName{
+    width: 48%;
+}
+

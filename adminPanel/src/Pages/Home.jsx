@@ -34,7 +34,7 @@ export const Home = (props) => {
                 window.location.href = '/create';
             }
         } className='addCompetBtn'>
-            <FontAwesomeIcon icon={faPlus}/>
+            <FontAwesomeIcon icon={faPlus} className='plusIcon'/>
             Ajouter une compétition
         </div>
         <div className='compet-link'>

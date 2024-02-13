@@ -12,11 +12,23 @@
 .addCompetBtn{
     background-color: rgb(18, 216, 0);
     color: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     gap: 15px;
     display: flex;
     flex-direction: row;
 }
 
+.addCompetBtn:hover{
+    background-color: rgb(18, 216, 0, 0.7);
+    cursor: pointer;
+}
 
+.plusIcon{
+    font-size: 25px;
+}
+
+.addCompetBtn:hover .plusIcon{
+    transition: 0.5s;
+    transform: rotate(180deg);
+}
