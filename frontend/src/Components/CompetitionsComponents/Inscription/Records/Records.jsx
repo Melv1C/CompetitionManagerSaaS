@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom';
 
 import axios from 'axios';
-import { url } from '../../../../Gateway'
+import { ATLHETES_URL } from '../../../../Gateway'
 
 import './Records.css'
 
@@ -38,7 +38,7 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
 
     useEffect(() => {
         if (record === undefined) {
-            axios.get(`${url}/athletes/${athleteId}/${event.name}?maxYears=1`)
+            axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`)
                 .then(response => {
                     setRecord(event.name, response.data.data.perf);
                 })

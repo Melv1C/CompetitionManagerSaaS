@@ -1,10 +1,10 @@
 console.log(process.env);
-const url = process.env.REACT_APP_GATEWAY_URL ? process.env.REACT_APP_GATEWAY_URL + "/api" : 'http://localhost/api';
-console.log(url);
+const URL = process.env.REACT_APP_GATEWAY_URL ? process.env.REACT_APP_GATEWAY_URL + "/api" : 'http://localhost/api';
+console.log(URL);
 
-const ATLHETES_URL = url + '/athletes';
-const COMPETITIONS_URL = url + '/competitions';
-const INSCRIPTIONS_URL = url + '/inscriptions';
-const EVENTS_URL = url + '/events';
+const ATLHETES_URL = URL + '/athletes';
+const COMPETITIONS_URL = URL + '/competitions';
+const INSCRIPTIONS_URL = URL + '/inscriptions';
+const EVENTS_URL = URL + '/events';
 
-export { url };
+export { URL, ATLHETES_URL, COMPETITIONS_URL, INSCRIPTIONS_URL, EVENTS_URL };

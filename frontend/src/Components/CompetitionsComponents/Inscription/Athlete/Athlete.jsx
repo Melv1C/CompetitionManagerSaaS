@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
-import { url } from '../../../../Gateway'
+import { ATLHETES_URL, INSCRIPTIONS_URL } from '../../../../Gateway'
 import { auth } from '../../../../Firebase'
 
 import './Athlete.css'
@@ -99,7 +99,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
         
         setLoading(true);
 
-        axios.get(`${url}/athletes?key=${keyword}`)
+        axios.get(`${ATLHETES_URL}?key=${keyword}`)
         .then(res => {
             const athletes = res.data.data;
             setLoading(false);
@@ -117,7 +117,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
             return;
         }
 
-        axios.get(`${url}/inscriptions/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
+        axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
         .then(res => {
             if (res.data.data.isInsribed && res.data.data.ownByUser) {
                 setEnableNext(true);

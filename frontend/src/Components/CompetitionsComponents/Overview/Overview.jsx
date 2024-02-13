@@ -3,14 +3,14 @@ import React, { useEffect } from 'react'
 import './Overview.css'
 
 import axios from 'axios'
-import { url } from '../../../Gateway'
+import { INSCRIPTIONS_URL } from '../../../Gateway'
 
 export const Overview = ({competition}) => {
 
     const [nbrParticipants, setNbrParticipants] = React.useState(0);
 
     useEffect(() => {
-        axios.get(`${url}/inscriptions/${competition.id}/info`)
+        axios.get(`${INSCRIPTIONS_URL}/${competition.id}/info`)
         .then(response => {
             setNbrParticipants(response.data.data.numberOfParticipants);
         })
