@@ -22,12 +22,12 @@ function RecordsList({records, setRecord, events, athleteId}) {
         <div className='records-list'>
             {events.map((event) => {
                 return <RecordsItem 
-                            record={records[event.name]} 
+                            record={records[event.pseudoName]} 
                             setRecord={setRecord}
                             event={event}
                             athleteId={athleteId} 
                             records={records} 
-                            key={event.name} 
+                            key={event.pseudoName} 
                         />
             })}
         </div>
@@ -40,13 +40,13 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
         if (record === undefined) {
             axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`)
                 .then(response => {
-                    setRecord(event.name, response.data.data.perf);
+                    setRecord(event.pseudoName, response.data.data.perf);
                 })
                 .catch(error => {
                     console.log(error);
                     // if the athlete has no record, 404 is returned
                     if (error.response.status === 404) {
-                        setRecord(event.name, 0);
+                        setRecord(event.pseudoName, 0);
                     }
                 });
         }
@@ -54,10 +54,10 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
 
     return (
         <div className='record-item'>
-            <div className='record-item-name'>{event.name}</div>
+            <div className='record-item-name'>{event.pseudoName}</div>
             <RecordInput 
                 record={record} 
-                setRecord={(newRecord) => setRecord(event.name, newRecord)} 
+                setRecord={(newRecord) => setRecord(event.pseudoName, newRecord)} 
                 event={event} 
             />
         </div>
@@ -71,7 +71,7 @@ function RecordInput({record, setRecord, event}) {
 
     switch (event.type) {
         case "distance":
-            return <DistanceInput record={record} setRecord={setRecord} event={event.name} />
+            return <DistanceInput record={record} setRecord={setRecord} event={event.pseudoName} />
         case "time":
             return <TimeInput record={record} setRecord={setRecord} />
         case "points":

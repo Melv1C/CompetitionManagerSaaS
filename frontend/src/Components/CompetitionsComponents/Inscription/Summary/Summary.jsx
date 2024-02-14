@@ -36,8 +36,8 @@ function EventItem({event, records}) {
     return (
         <div className='event-item'>
             <div className='event-item-time'>{event.time}</div>
-            <div className='event-item-name'>{event.name}</div>
-            <div className='event-item-record'>{formatRecord(event, records[event.name])}</div>
+            <div className='event-item-name'>{event.pseudoName}</div>
+            <div className='event-item-record'>{formatRecord(event, records[event.pseudoName])}</div>
             {event.cost !== 0 ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
         </div>
     )
@@ -67,11 +67,19 @@ function ControlButtons({setStep, totalCost, athlete, events, records, competiti
 function postInscription(athlete, events, records, competitionId, setStep) {
     console.log(athlete, events, records);
 
+    let newRecords = {};
+    for (let event in records) {
+        let RealEvent = events.find(e => e.pseudoName == event);
+        newRecords[RealEvent.name] = records[event];
+    }
+
+    console.log(newRecords);
+
     axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
         userId: auth.currentUser.uid,
         athleteId: athlete.id,
         events: events.map(event => event.name),
-        records: records
+        records: newRecords
     })
     .then(res => {
         console.log(res);
@@ -97,6 +105,10 @@ export const Summary = ({athlete, events, records, setStep, competitionId}) => {
     useEffect(() => {
         setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
     }, [events]);
+
+    if (!athlete) {
+        return <div>Chargement...</div>
+    }
 
 
     return (

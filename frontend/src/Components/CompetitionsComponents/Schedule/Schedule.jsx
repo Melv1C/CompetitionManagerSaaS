@@ -15,18 +15,28 @@ function ScheduleItem({event, inscriptions}) {
         setPlacesLeft(event.maxParticipants - inscriptions.length);
     }, [inscriptions, event.maxParticipants]);
 
+    console.log(inscriptions);
+
     return (
         <div className="schedule-item" onClick={() => setShowInscriptions(!showInscriptions)}>
             <div className="schedule-item-info">
                 <div className="schedule-item-time">{event.time}</div>
-                <div className="schedule-item-name">{event.name}</div>
+                <div className="schedule-item-name">{event.pseudoName}</div>
                 <PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />
             </div>
             <div className={`schedule-item-inscriptions ${showInscriptions ? 'show' : 'hide'}`}>
-                {inscriptions.map(inscription => {
+                {inscriptions.sort((a, b) => {
+                    if (event.type === 'time') {
+                        return a.record - b.record;
+                    } else {
+                        return b.record - a.record;
+                    }
+                }).map(inscription => {
                     return (
                         <div key={inscription.id} className="inscription-item">
+                            <div className="inscription-item-bib">{inscription.bib}</div>
                             <div className="inscription-item-athlete">{inscription.athleteName}</div>
+                            <div className="inscription-item-club">{inscription.club}</div>
                             <div className="inscription-item-record">{formatRecord(event, inscription.record)}</div>
                         </div>
                     )

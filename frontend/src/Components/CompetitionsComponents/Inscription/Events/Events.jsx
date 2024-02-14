@@ -45,7 +45,7 @@ function EventItem({event, setEvents, events, competitionId, inscriptions}) {
     return (
         <div className='event-item'>
             <div className='event-item-time'>{event.time}</div>
-            <div className='event-item-name'>{event.name}</div>
+            <div className='event-item-name'>{event.pseudoName}</div>
             <Place place={place} />
             <input type='checkbox' checked={checked} className='event-item-checkbox' onChange={() => {
                 if (!checked) {
