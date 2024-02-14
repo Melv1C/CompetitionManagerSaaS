@@ -5,30 +5,24 @@
 
 }
 
-.compet-link{
-    width: 80%;
+h1{
+    text-align: center;
 }
 
-.addCompetBtn{
-    background-color: rgb(18, 216, 0);
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    gap: 15px;
-    display: flex;
-    flex-direction: row;
+li{
+    list-style-type: none;
 }
 
-.addCompetBtn:hover{
+.greenBtn{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(18, 216, 0);
+  color: white;
+}
+
+.greenBtn:hover{
     background-color: rgb(18, 216, 0, 0.7);
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.plusIcon{
-    font-size: 25px;
-}
-
-.addCompetBtn:hover .plusIcon{
-    transition: 0.5s;
-    transform: rotate(180deg);
-}

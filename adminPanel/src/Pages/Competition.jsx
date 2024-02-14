@@ -6,6 +6,7 @@ import { EventInfo } from '../Components/EventInfo/EventInfo';
 import { EventsList } from '../Components/EventsList/EventsList';
 
 import { getCompetition } from '../CompetitionsAPI';
+import './Competition.css';
 
 export const Competition = (props) => {
     const { id } = useParams();
@@ -24,20 +25,30 @@ export const Competition = (props) => {
 
     return (
         <>
-            <div>
-                <h1>{competition.name}</h1>
-                <ul className="overview">
-                    <li><strong>Date:</strong> {new Date(competition.date).toLocaleDateString("fr-FR")}</li>
-                    <li><strong>Cloture des inscriptions:</strong> {new Date(competition.date).toLocaleDateString("fr-FR")}</li>
-                    <li><strong>Lieu:</strong> {competition.location} ({competition.club})</li>
-                    {competition.schedule ? <li><strong>Horaire:</strong> <a href={competition.schedule} target="_blank" rel="noreferrer">Voir l'horaire</a></li> : <li><strong>Horaire:</strong> Aucun</li>}
-                    {competition.paid ? <li><strong>Payant:</strong> Oui</li> : <li><strong>Payant:</strong> Non</li>}
-                    {competition.freeClub ? <li><strong>Gratuit pour les clubs:</strong> {competition.freeClub?"Oui":"Non"}</li> : null}
-                    {competition.description ? <li><strong>Description:</strong> {competition.description}</li> : <li><strong>Description:</strong> Aucune</li>}
-                </ul>
-                <button onClick={() => {setShowModalModif(true);}}>Modifier</button>
+            <h1>{competition.name}</h1>
+            <div className='upperPageCompetInfo'>
+                <div className='competDivInfo'>
+                    <h2>Info</h2>
+                    <ul className="overview">
+                        <li><strong>Date:</strong> {new Date(competition.date).toLocaleDateString("fr-FR")}</li>
+                        <li><strong>Cloture des inscriptions:</strong> {new Date(competition.date).toLocaleDateString("fr-FR")}</li>
+                        <li><strong>Lieu:</strong> {competition.location} ({competition.club})</li>
+                        {competition.schedule ? <li><strong>Horaire:</strong> <a href={competition.schedule} target="_blank" rel="noreferrer">Voir l'horaire</a></li> : <li><strong>Horaire:</strong> Aucun</li>}
+                        {competition.paid ? <li><strong>Payant:</strong> Oui</li> : <li><strong>Payant:</strong> Non</li>}
+                        {competition.freeClub ? <li><strong>Gratuit pour les clubs:</strong> {competition.freeClub?"Oui":"Non"}</li> : null}
+                        {competition.description ? <li><strong>Description:</strong> {competition.description}</li> : <li><strong>Description:</strong> Aucune</li>}
+                    </ul>
+                    <button className='greenBtn infoModif' onClick={() => {setShowModalModif(true);}}>Modifier</button>
+                </div>
+                <div className='upperPageCompetBtn'>
+                    <button className='greenBtn' onClick={
+                        () => {
+                            window.location.href = `/competitions/${id}/inscription`;
+                        }
+                    }>Inscrire des athlètes</button>
+                </div>
             </div>
-            <div>
+            <div className='eventDiv'>
                 <h2>Épreuves</h2>
                 <EventsList competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModifEvent} setEvent={setEvent}/>
                 <button onClick={() => {setShowModalAddEvent(true);}}>Ajouter une épreuves</button>

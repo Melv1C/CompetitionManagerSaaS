@@ -1,0 +1,164 @@
+.step-page .field .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #008AFF;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.list-athletes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0 40px;
+
+    border: 2px solid #008AFF;
+    padding: 5px 20px;
+
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 0 0 10px 10px;
+    
+    position: relative;
+    top: -2px;
+}
+
+.list-athletes .athlete-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 2px solid #E5F0FF;
+    border-radius: 10px;
+    gap: 2px;
+}
+
+.list-athletes .athlete-item:hover {
+    background-color: #E5F0FF;
+    cursor: pointer;
+}
+
+.list-athletes .athlete-item .athlete-item-bib {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border: 1px solid black;
+    border-radius: 2px;
+    padding: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+}
+
+.list-athletes .athlete-item .athlete-item-name {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.list-athletes .athlete-item .athlete-item-club {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.athlete-card {
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+
+    gap: 10px;
+    padding: 20px;
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+
+    width: 400px;
+
+}
+
+.athlete-card .athlete-card-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.athlete-card .athlete-card-label {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.athlete-card .athlete-card-value {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #008AFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    margin: 10px auto;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
+
+
+/* Responsive */
+
+@media screen and (max-width: 768px) {
+    .list-athletes {
+        margin: 0 20px;
+        padding: 5px 10px;
+    }
+
+    .athlete-card {
+        width: 300px;
+    }
+
+    .list-athletes .athlete-item .athlete-item-bib {
+        font-size: 12px;
+    }
+
+    .list-athletes .athlete-item .athlete-item-name {
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .list-athletes .athlete-item .athlete-item-club {
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .athlete-card .athlete-card-label {
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .athlete-card .athlete-card-value {
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    .athlete-card {
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+}
+
+
+
+
+

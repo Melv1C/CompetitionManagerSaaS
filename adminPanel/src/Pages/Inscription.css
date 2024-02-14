@@ -1,0 +1,131 @@
+.progress-bar {
+    display: flex;
+    align-items: center;
+    margin: 0 40px;
+    justify-content: space-between;
+
+}
+
+.progress-bar .step {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+}
+
+.progress-bar .step div * {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    padding: 5px;
+    line-height: 25px;
+    border-radius: 50%;
+    color: #ff4141;
+    border: 3px solid #ff4141;
+}
+
+.progress-bar .step.active div * {
+    color: #579B00;
+    border: 3px solid #579B00;
+}
+.progress-bar .step div:after {
+    content: '';
+    position: absolute;
+    display: block;
+    height: 3px;
+    width: calc(100% - 36px - 10px);
+    background-color: #ff4141;   
+    top: 18px;
+    right: 50%;
+    transform: translateX(calc(100% + 18px + 5px));
+}
+
+.progress-bar .step:last-child div:after {
+    height: 0;
+}
+
+.progress-bar .step.active div:after {
+    background: #579B00;
+    transform: translateX(calc(100% + 18px + 5px)) scaleX(0);
+    transform-origin: left;
+    animation: animate 0.3s linear forwards;
+}
+
+@keyframes animate {
+    100% {
+        transform: translateX(calc(100% + 18px + 5px)) scaleX(1);
+    }
+}
+
+
+.control-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 40px;
+    margin-top: 20px;
+}
+
+.control-buttons button {
+    width: 150px;
+    min-height: 40px;
+    outline: none;
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+    background-color: #008AFF;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.step-page {
+    display: flex;
+    flex-direction: column;
+    margin: 0 40px;
+    text-align: center;
+}
+
+.step-page .field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.step-page .field input {
+    height: 50px;
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+    padding: 0 10px;
+    outline: none;
+}
+
+.step-page .field input:focus {
+    border:2px solid #008AFF;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .progress-bar {
+        margin: 0 10px;
+    }
+
+    .control-buttons {
+        margin: 10px;
+        gap: 10px;
+    }
+
+    .control-buttons button {
+
+    }
+
+    .step-page {
+        margin: 0 10px;
+    }
+}
+
+
+
+
+
