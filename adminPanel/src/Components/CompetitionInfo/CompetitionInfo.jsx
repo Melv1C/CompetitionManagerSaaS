@@ -22,7 +22,7 @@ export const CompetitionInfo = (props) => {
                 club: event.target.club.value,
                 location: event.target.location.value,
                 paid: event.target.paid.checked,
-                freeClub: event.target.freeClub.value,
+                freeClub: event.target.freeClub.checked,
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
                 adminId: props.user.id
@@ -35,7 +35,7 @@ export const CompetitionInfo = (props) => {
                 club: event.target.club.value,
                 location: event.target.location.value,
                 paid: event.target.paid.checked,
-                freeClub: event.target.freeClub.value,
+                freeClub: event.target.freeClub.checked,
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
                 adminId: props.user.id,
@@ -60,8 +60,8 @@ export const CompetitionInfo = (props) => {
                 <input type="text" name="location" id="location" required defaultValue={compet?.location}/>
                 <label htmlFor="paid">Payant</label>
                 <input type="checkbox" name="paid" id="paid" defaultChecked={compet?.paid}/>
-                <label htmlFor="freeClub">Gratuit pour les club : </label>
-                <input type="text" name="freeClub" id="freeClub" defaultValue={compet?.freeClub}/>
+                <label htmlFor="freeClub">Gratuit pour les athlètes de votre club </label>
+                <input type="checkbox" name="freeClub" id="freeClub" defaultChecked={compet?.freeClub}/>
                 <label htmlFor="schedule">Lien vers un horaire(optionel)</label>
                 <input type="text" name="schedule" id="schedule" defaultValue={compet?.schedule}/>
                 <label htmlFor="description">Description de la compétition</label>

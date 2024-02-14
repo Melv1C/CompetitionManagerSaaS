@@ -4,14 +4,14 @@ import axios from "axios";
 
 import { EVENTS_URL } from "../../Gateway";
 
-import "./AddEvent.css";
+import "./EventInfo.css";
 
-import { addEvent } from "../../CompetitionsAPI";
-
+import { addEvent, modifEvent } from "../../CompetitionsAPI";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faL, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-export const AddEvent = (props) => {
+export const EventInfo = (props) => {
+    const [load, setLoad] = useState(false);
     const [event, setEvent] = useState([]);
     const [groupings, setGrouping] = useState([]);
     const [selectedGrouping, setSelectedGrouping] = useState("0");
@@ -60,10 +60,8 @@ export const AddEvent = (props) => {
         if (selectedEvent === "0") {
             return;
         }
-        console.log('get event');
         axios.get(EVENTS_URL + '/' + selectedEvent)
             .then((response) => {
-                console.log(response.data.data.validCat);
                 setValidCat(response.data.data.validCat.sort());
 
             })
@@ -80,6 +78,26 @@ export const AddEvent = (props) => {
         setCategories([]);
     }, [selectedEvent]);
 
+    useEffect(() => {
+        if (props.event && groupings.length != [] && load == false) {
+            setSelectedGrouping(event.find((element) => {
+                return element.name === props.event.name;
+            }).grouping);
+            setPseudo(props.event.pseudoName);
+            setTime(props.event.time);
+            setCost(props.event.cost);
+            setMaxParticipants(props.event.maxParticipants);
+            setSelectedEvent(props.event.name);
+            setLoad(true);
+        }
+    }, [groupings]);
+
+    useEffect(() => {
+        if (props.event) {
+            setCategories(props.event.categories);
+            setLoad(false);
+        }
+    }, [load]);
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -100,20 +118,23 @@ export const AddEvent = (props) => {
             maxParticipants: parseInt(maxParticipants),
             cost: parseInt(cost),
         };
-        addEvent(props.competition.id, formData, props.setCompetition);
+        if (props.event) {
+            formData.id = props.event.id;
+            modifEvent(props.competition.id, formData, props.setCompetition);
+        }else{
+            addEvent(props.competition.id, formData, props.setCompetition);
+        }
         props.setShowModal(false);
     }
-
-
     return (
         <>
             <form onSubmit={handleSubmit} className="addEventForm">
-                <h1>Ajouter un événement</h1>
+                {props.event ? <h1>Modifier un événement</h1> : <h1>Ajouter un événement</h1>}
                 <select name="grouping" id="grouping" onChange={
                     (e) => {
                         setSelectedGrouping(e.target.value);
                     }
-                }>
+                } value={selectedGrouping}>
                     <option value="0">Type d'événement</option>
                     {
                         groupings.map((grouping, index) => {
@@ -126,7 +147,7 @@ export const AddEvent = (props) => {
                         setSelectedEvent(e.target.value);
                     }
                 
-                }>
+                } value={selectedEvent}>
                     <option value="0">Événement</option>
                     {
                         filteredEvent.map((event, index) => {
@@ -134,7 +155,7 @@ export const AddEvent = (props) => {
                         })
                     }
                 </select>
-                <input type="time" name="time" id="time" defaultValue={time} onChange={
+                <input type="time" name="time" id="time" value={time} onChange={
                     (e) => {
                         setTime(e.target.value);
                     }
@@ -145,23 +166,23 @@ export const AddEvent = (props) => {
                         (e) => {
                             setPseudo(e.target.value);
                         }
-                    }/>
+                    } defaultValue={props.event?.pseudoName}/>
                 </div>
                 <div>
                     <label htmlFor="cost">Coût : </label>
-                    <Cost competition={props.competition} setCost={setCost} cost={cost}/>
+                    <Cost competition={props.competition} setCost={setCost} cost={cost} event={props?.event}/>
                     <label htmlFor="cost">€</label>
                 </div>
                 <div>
                     <label htmlFor="maxParticipants">Nombre max de participants : </label>
-                    <input type="number" name="maxParticipants" id="maxParticipants" defaultValue={100} min={1} max={1000} onChange={
+                    <input type="number" name="maxParticipants" id="maxParticipants" defaultValue={props.event?.maxParticipants ? props.event.maxParticipants : 100} min={1} max={1000} onChange={
                         (e) => {
                             setMaxParticipants(e.target.value);
                         }
-                    }/>
+                    } />
                 </div>
                 <CategoriesSelect validCat={validCat} categories={categories} setCategories={setCategories}/>
-                <input type="submit" value="Ajouter" />
+                {props.event ? <input type="submit" value="Modifier" /> : <input type="submit" value="Ajouter" />}
             </form>
         </>
     )
@@ -169,7 +190,7 @@ export const AddEvent = (props) => {
 
 function Cost (props) {
     if (props.competition.paid) {
-        return <input type="number" name="cost" id="cost" value={props.cost} min={0} max={500} onChange={
+        return <input type="number" name="cost" id="cost" value={props.event?.cost ? props.event.cost : props.cost} min={0} max={500} onChange={
             (e) => {
                 props.setCost(e.target.value);
             }

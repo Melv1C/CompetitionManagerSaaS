@@ -6,7 +6,7 @@
 }
 
 .navbar-logo img {
-    height: 120px;
+    height: 80px;
 }
 
 .navbar-menu {
@@ -16,28 +16,6 @@
     gap: 50px;
     font-size: 20px;
     font-weight: 500;
-}
-
-.navbar-menu li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    cursor: pointer;
-}
-
-.navbar-menu li a {
-    text-decoration: none;
-    color: black
-}
-
-.navbar-menu hr {
-    border: none;
-    width: 80%;
-    height: 3px;
-    border-radius: 10px;
-    background-color: #ff4141;
 }
 
 .navbar-login-user {
@@ -57,6 +35,10 @@
     font-size: 20px;
     font-weight: 500;
     cursor: pointer;
+}
+
+.navbar-login-user button:hover {
+    background: #f3f3f3;
 }
 
 .navbar-login-user button:active {

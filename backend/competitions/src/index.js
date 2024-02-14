@@ -4,6 +4,7 @@ const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
 const axios = require('axios');
+const { type } = require('os');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -175,11 +176,11 @@ app.post('/api/competitions', async (req, res) => {
                 message: 'Invalid paid',
             });
         }
-        if (!freeClub && !Array.isArray(freeClub)){
+        if (!freeClub && typeof freeClub != 'boolean'){
             return res.status(400).json({
                 status: 'error',
-                message: 'Invalid freeClub',
-            });
+                message: 'Invalid paid',
+            })
         }
         if (!schedule && typeof schedule !== 'string'){
             return res.status(400).json({
@@ -328,6 +329,112 @@ app.post('/api/competitions/:id/events', async (req, res) => {
         });
     }
 });
+
+app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const eventId = req.params.eventId;
+        const name = req.body.name;
+        const pseudoName = req.body.pseudoName ? req.body.pseudoName : name;
+        const time = req.body.time;
+        const categories = req.body.categories;
+        const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
+        const cost = req.body.cost ? req.body.cost : 0;
+        let type;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        if (!eventId && typeof eventId !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid eventId',
+            });
+        }
+        if (!name && typeof name !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid name',
+            });
+        } else {
+            const url = process.env.EVENTS_URL || 'http://localhost:3000';
+            type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
+        }
+        if (!pseudoName && typeof pseudoName !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid pseudoName',
+            });
+        }
+        if (!time && typeof time !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid time',
+            });
+        }
+        if (!categories && !Array.isArray(categories)){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid categories',
+            });
+        }
+        if (maxParticipants && typeof maxParticipants !== 'number'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid maxParticipants',
+            });
+        }
+        if (cost && typeof cost !== 'number'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid cost',
+            });
+        }
+        if (!type && typeof type !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid name',
+            });
+        }
+        const competition = await Competition.findOne({id: id});
+        const events = competition.events;
+        const index = events.findIndex(event => event.id === eventId);
+        if (index === -1){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Event not found',
+            });
+        }
+        events[index] = {
+            id: eventId,
+            name: name,
+            pseudoName: pseudoName,
+            time: time,
+            categories: categories,
+            maxParticipants: maxParticipants,
+            cost: cost,
+            type: type,
+        };
+        await competition.updateOne({events: events});
+        const updatedCompetition = await Competition.findOne({ id: id });
+        res.status(200).json({
+            status: 'success',
+            message: 'Event updated successfully',
+            data: updatedCompetition,
+            
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+
 
 app.delete('/api/competitions/:id/events/:eventId', async (req, res) => {
     try{

@@ -27,7 +27,7 @@ const competitionSchema = new Schema({
         required: true,
     },
     freeClub: {
-        type: Array,
+        type: Boolean,
         required: true,
     },
     schedule: {

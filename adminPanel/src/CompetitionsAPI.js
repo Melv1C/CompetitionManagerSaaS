@@ -34,4 +34,12 @@ function addEvent(competitionId, event, setCompetition) {
     });
 }
 
-export { getCompetition, createCompetition, updateCompetition, addEvent };
+function modifEvent(competitionId, event, setCompetition) {
+    axios.put(`${COMPETITIONS_URL}/${competitionId}/events/${event.id}`, event).then((response) => {
+        setCompetition(response.data.data);
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
+export { getCompetition, createCompetition, updateCompetition, addEvent, modifEvent};
