@@ -209,7 +209,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
         inscriptionData.push(newInscription);       
     }
 
-    if (totalCost == 0) {
+    if (totalCost == 0 || admin) {
         await freeInscriptions(`competition_${competitionId}`, inscriptionData);
         res.status(201).json({ status: 'success', message: 'Inscriptions added successfully' });
         return;
