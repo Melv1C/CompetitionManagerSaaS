@@ -53,16 +53,16 @@ function TotalCost({totalCost}) {
     )
 }
 
-function ControlButtons({setStep, totalCost, athlete, events, records, competitionId}) {
+function ControlButtons({setStep, totalCost, athlete, events, records, competitionId, user}) {
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(3)}}>Précédent</button>
-            <button onClick={()=>{postInscription(athlete, events, records, competitionId, setStep)}}>{totalCost === 0 ? 'Valider' : 'Payer'}</button>
+            <button onClick={()=>{postInscription(athlete, events, records, competitionId, setStep, user)}}>{totalCost === 0 ? 'Valider' : 'Payer'}</button>
         </div>
     )
 }
 
-function postInscription(athlete, events, records, competitionId, setStep) {
+function postInscription(athlete, events, records, competitionId, setStep, user) {
     console.log(athlete, events, records);
 
     let newRecords = {};
@@ -70,11 +70,10 @@ function postInscription(athlete, events, records, competitionId, setStep) {
         let RealEvent = events.find(e => e.pseudoName == event);
         newRecords[RealEvent.name] = records[event];
     }
-
     console.log(newRecords);
-    const adminqqch = 3; //todoo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
-        userId: adminqqch,
+    console.log(user)
+    axios.post(`${INSCRIPTIONS_URL}/${competitionId}?admin=${user.id}`, {
+        userId: user.id,
         athleteId: athlete.id,
         events: events.map(event => event.name),
         records: newRecords
@@ -97,12 +96,8 @@ function postInscription(athlete, events, records, competitionId, setStep) {
 }
 
 
-export const Summary = ({athlete, events, records, setStep, competitionId}) => {
+export const Summary = ({athlete, events, records, setStep, competitionId, user}) => {
     const [totalCost, setTotalCost] = useState(0);
-
-    useEffect(() => {
-        setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
-    }, [events]);
 
     if (!athlete) {
         return <div>Chargement...</div>
@@ -117,7 +112,7 @@ export const Summary = ({athlete, events, records, setStep, competitionId}) => {
                 <EventsRecordsSummary events={events} records={records} />
                 <TotalCost totalCost={totalCost} />
             </div>
-            <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} />
+            <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} user={user} />
         </div>
 
     )

@@ -54,7 +54,6 @@ function ProgressBar({step}) {
 
 export const Inscription = (props) => {
     const { id } = useParams();
-
     const [searchParams, setSearchParams] = useSearchParams();
     
     const step = parseInt(searchParams.get('step')) || 1;
@@ -159,10 +158,10 @@ export const Inscription = (props) => {
         <div className='competition-page'>
             <ProgressBar step={step} />
 
-            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} /> : null}
+            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} user={props.user}/> : null}
             {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
-            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} /> : null}
+            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} user={props.user} /> : null}
             {step === 5 ? <Success competitionId={id} /> : null}
         </div>
     )

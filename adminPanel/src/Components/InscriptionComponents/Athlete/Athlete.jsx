@@ -87,7 +87,7 @@ function ControlButtons({setStep, setAthlete, enableNext}) {
 }
 
 
-export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
+export const Athlete = ({athlete, setAthlete, setStep, competitionId, user}) => {
     const [athletes, setAthletes] = useState([]);
 
     const [loading, setLoading] = useState(false);
@@ -115,8 +115,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
             setEnableNext(false);
             return;
         }
-        const adminqqch = 3; //todoo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${adminqqch}`)
+        axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${user.id}`)
         .then(res => {
             if (res.data.data.isInsribed && res.data.data.ownByUser) {
                 setEnableNext(true);

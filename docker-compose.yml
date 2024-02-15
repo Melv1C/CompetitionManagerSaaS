@@ -92,6 +92,7 @@ services:     # list all services for your application
       - COUCHDB_URL=http://admin:admin@inscriptions-db:5984
       - COMPETITIONS_URL=http://competitions-service:3000
       - ATHLETES_URL=http://athletes-service:3000
+      - ADMINS_URL=http://admins-service:3000
       - STRIPE_URL=http://stripe-service:3000
     networks: ["backend-networks"]
     depends_on: ["inscriptions-db", "competitions-service", "athletes-service"]
