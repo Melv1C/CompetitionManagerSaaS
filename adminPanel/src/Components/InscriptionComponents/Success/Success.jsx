@@ -12,7 +12,7 @@ function NewInscriptionButton({competitionId}) {
 
 function newInscription(competitionId) {
     // redirect to the inscription page : /competitions/:id?subPage=inscription
-    window.location.href = `/competitions/${competitionId}?subPage=inscription`;
+    window.location.href = `/competitions/${competitionId}?subPage=inscriptions?step=1`;
 }
 
 export const Success = ({competitionId}) => {

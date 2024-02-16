@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Home } from './Pages/Home';
 import { Competition } from './Pages/Competition';
 import { Create } from './Pages/Create';
-import { Inscription } from './Pages/Inscription';
+import { Inscriptions } from './Pages/Inscriptions';
 import { getUser } from './Auth';
 
 
@@ -30,7 +30,7 @@ function App() {
                     <Route path="/" element={<Home user={user} setUser={setUser}/>} />
                     <Route path="/create" element={<Create user={user} setUser={setUser}/>}/>
                     <Route path="/competitions/:id" element={<Competition user={user} setUser={setUser}/>} />
-                    <Route path="/competitions/:id/inscription" element={<Inscription user={user} setUser={setUser}/>} />
+                    <Route path="/competitions/:id/inscriptions" element={<Inscriptions user={user} setUser={setUser}/>} />
                 </Routes>
             </Router>
         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react'
 import axios from 'axios';
-import { ATLHETES_URL } from '../Gateway';
+import { ATLHETES_URL } from '../../Gateway';
 
 import { useSearchParams, useParams } from 'react-router-dom';
 
@@ -9,11 +9,11 @@ import { faRectangleList, faUser, faPersonRunning, faStopwatch } from '@fortawes
 
 import './Inscription.css'
 
-import { Athlete } from '../Components/InscriptionComponents/Athlete/Athlete'
-import { Events } from '../Components/InscriptionComponents/Events/Events'
-import { Records } from '../Components/InscriptionComponents/Records/Records'
-import { Summary } from '../Components/InscriptionComponents/Summary/Summary'
-import { Success } from '../Components/InscriptionComponents/Success/Success'
+import { Athlete } from './Athlete/Athlete'
+import { Events } from './Events/Events'
+import { Records } from './Records/Records'
+import { Summary } from './Summary/Summary'
+import { Success } from './Success/Success'
 
 
 

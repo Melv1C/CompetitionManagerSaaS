@@ -76,7 +76,9 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
         userId: user.id,
         athleteId: athlete.id,
         events: events.map(event => event.name),
-        records: newRecords
+        records: newRecords,
+        success_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=5`,
+        cancel_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=4`
     })
     .then(res => {
         console.log(res);

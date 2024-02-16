@@ -43,7 +43,7 @@ export const Competition = (props) => {
                 <div className='upperPageCompetBtn'>
                     <button className='greenBtn' onClick={
                         () => {
-                            window.location.href = `/competitions/${id}/inscription`;
+                            window.location.href = `/competitions/${id}/inscriptions`;
                         }
                     }>Inscrire des athlètes</button>
                 </div>
