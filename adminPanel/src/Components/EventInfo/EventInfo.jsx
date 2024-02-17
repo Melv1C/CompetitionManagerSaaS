@@ -5,10 +5,13 @@ import axios from "axios";
 import { EVENTS_URL } from "../../Gateway";
 
 import "./EventInfo.css";
+import { SubEventInfo } from "./SubEventInfo/SubEventInfo";
 
 import { addEvent, modifEvent } from "../../CompetitionsAPI";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faL, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+
+
 
 export const EventInfo = (props) => {
     const [load, setLoad] = useState(false);
@@ -23,6 +26,7 @@ export const EventInfo = (props) => {
     const [validCat, setValidCat] = useState([]);
     const [categories, setCategories] = useState([]);
     const [pseudo, setPseudo] = useState(null);
+    const [subEvents, setSubEvents] = useState([]);
     useEffect(() => {
         axios.get(EVENTS_URL)
             .then((response) => {
@@ -39,10 +43,22 @@ export const EventInfo = (props) => {
                 console.log(error);
             });
     }, []);
+
     useEffect(() => {
         if (selectedGrouping === "0") {
             setFilteredEvent([]);
         }else{
+            if (selectedGrouping === "Epreuves multiples") {
+                setSubEvents([
+                    {
+                        name:"0",
+                        time:"10:00",
+                        grouping:"0"
+                    }
+                ]);
+            }else{
+                setSubEvents([]);
+            }
             let filteredEvent = event.filter((element) => {
                 return element.grouping === selectedGrouping;
             });
@@ -99,10 +115,15 @@ export const EventInfo = (props) => {
         }
     }, [load]);
 
+    function getMinTime(time) {
+        let minTime = time.split(":");
+        return parseInt(minTime[0])*60 + parseInt(minTime[1]);
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
         if (selectedEvent === "0") {
-            alert("Veuillez sélectionner un événement");
+            alert("Veuillez sélectionner une épreuves");
             return;
         }
         if (categories.length === 0) {
@@ -117,7 +138,20 @@ export const EventInfo = (props) => {
             categories: categories,
             maxParticipants: parseInt(maxParticipants),
             cost: parseInt(cost),
+            subEvents: subEvents
         };
+
+        if (formData.subEvents.length != 0) {
+            let firstTime = {time:formData.subEvents[0].time, value:getMinTime(formData.subEvents[0].time)};
+            for (let i = 1; i < formData.subEvents.length; i++) {
+                if (getMinTime(formData.subEvents[i].time) < firstTime.value) {
+                    firstTime = {time:formData.subEvents[i].time, value:getMinTime(formData.subEvents[i].time)};
+                }
+            }
+            formData.time = firstTime.time;
+        }
+
+        console.log(formData);
         if (props.event) {
             formData.id = props.event.id;
             modifEvent(props.competition.id, formData, props.setCompetition);
@@ -128,62 +162,65 @@ export const EventInfo = (props) => {
     }
     return (
         <>
-            <form onSubmit={handleSubmit} className="addEventForm">
-                {props.event ? <h1>Modifier un événement</h1> : <h1>Ajouter un événement</h1>}
-                <select name="grouping" id="grouping" onChange={
-                    (e) => {
-                        setSelectedGrouping(e.target.value);
-                    }
-                } value={selectedGrouping}>
-                    <option value="0">Type d'événement</option>
-                    {
-                        groupings.map((grouping, index) => {
-                            return <option key={index} value={grouping}>{grouping}</option>;
-                        })
-                    }
-                </select>
-                <select name="event" id="event" onChange={
-                    (e) => {
-                        setSelectedEvent(e.target.value);
-                    }
-                
-                } value={selectedEvent}>
-                    <option value="0">Événement</option>
-                    {
-                        filteredEvent.map((event, index) => {
-                            return <option key={index} value={event.name}>{event.name}</option>;
-                        })
-                    }
-                </select>
-                <input type="time" name="time" id="time" value={time} onChange={
-                    (e) => {
-                        setTime(e.target.value);
-                    }
-                }/>
-                <div>
-                    <label htmlFor="pseudo">Nom : </label>
-                    <input type="text" name="pseudo" id="pseudo" onChange={
+            <div className="scrollable">
+                <form onSubmit={handleSubmit} className="addEventForm">
+                    {props.event ? <h1>Modifier une épreuve</h1> : <h1>Ajouter une épreuves</h1>}
+                    <select name="grouping" id="grouping" onChange={
                         (e) => {
-                            setPseudo(e.target.value);
+                            setSelectedGrouping(e.target.value);
                         }
-                    } defaultValue={props.event?.pseudoName}/>
-                </div>
-                <div>
-                    <label htmlFor="cost">Coût : </label>
-                    <Cost competition={props.competition} setCost={setCost} cost={cost} event={props?.event}/>
-                    <label htmlFor="cost">€</label>
-                </div>
-                <div>
-                    <label htmlFor="maxParticipants">Nombre max de participants : </label>
-                    <input type="number" name="maxParticipants" id="maxParticipants" defaultValue={props.event?.maxParticipants ? props.event.maxParticipants : 100} min={1} max={1000} onChange={
+                    } value={selectedGrouping}>
+                        <option value="0">Type d'épreuve</option>
+                        {
+                            groupings.map((grouping, index) => {
+                                return <option key={index} value={grouping}>{grouping}</option>;
+                            })
+                        }
+                    </select>
+                    <select name="event" id="event" onChange={
                         (e) => {
-                            setMaxParticipants(e.target.value);
+                            setSelectedEvent(e.target.value);
                         }
-                    } />
-                </div>
-                <CategoriesSelect validCat={validCat} categories={categories} setCategories={setCategories}/>
-                {props.event ? <input type="submit" value="Modifier" /> : <input type="submit" value="Ajouter" />}
-            </form>
+                    
+                    } value={selectedEvent}>
+                        <option value="0">Epreuve</option>
+                        {
+                            filteredEvent.map((event, index) => {
+                                return <option key={index} value={event.name}>{event.name}</option>;
+                            })
+                        }
+                    </select>
+                    {selectedGrouping === "Epreuves multiples" ? null:<input type="time" name="time" id="time" value={time} onChange={
+                        (e) => {
+                            setTime(e.target.value);
+                        }
+                    }/>}
+                    <div>
+                        <label htmlFor="pseudo">Nom : </label>
+                        <input type="text" name="pseudo" id="pseudo" onChange={
+                            (e) => {
+                                setPseudo(e.target.value);
+                            }
+                        } defaultValue={props.event?.pseudoName}/>
+                    </div>
+                    <div>
+                        <label htmlFor="cost">Coût : </label>
+                        <Cost competition={props.competition} setCost={setCost} cost={cost} event={props?.event}/>
+                        <label htmlFor="cost">€</label>
+                    </div>
+                    <div>
+                        <label htmlFor="maxParticipants">Nombre max de participants : </label>
+                        <input type="number" name="maxParticipants" id="maxParticipants" defaultValue={props.event?.maxParticipants ? props.event.maxParticipants : 100} min={1} max={1000} onChange={
+                            (e) => {
+                                setMaxParticipants(e.target.value);
+                            }
+                        } />
+                    </div>
+                    <CategoriesSelect validCat={validCat} categories={categories} setCategories={setCategories}/>
+                    {selectedGrouping === "Epreuves multiples" ?<SubEventInfo groupings={groupings} events={event} subEvents={subEvents} setSubEvents={setSubEvents} />:null}
+                    {props.event ? <input type="submit" value="Modifier" /> : <input type="submit" value="Ajouter" />}
+                </form>
+            </div>
         </>
     )
 };

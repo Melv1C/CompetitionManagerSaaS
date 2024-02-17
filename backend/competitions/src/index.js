@@ -248,6 +248,7 @@ app.post('/api/competitions/:id/events', async (req, res) => {
         const categories = req.body.categories;
         const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
         const cost = req.body.cost ? req.body.cost : 0;
+        const subEvents = req.body.subEvents ? req.body.subEvents : [];
         let type;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
@@ -300,6 +301,31 @@ app.post('/api/competitions/:id/events', async (req, res) => {
                 message: 'Invalid name',
             });
         }
+        if (subEvents && !Array.isArray(subEvents)){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid subEvents',
+            });
+        }
+        for (let subevent of subEvents){
+            if (!subevent.name || typeof subevent.name !== 'string'){
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'Invalid subEvents name',
+                }); 
+            }
+            if (!subevent.time || typeof subevent.time !== 'string'){
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'Invalid subEvents time',
+                });
+            }
+            let subType;
+            const url = process.env.EVENTS_URL || 'http://localhost:3000';
+            subType = (await axios.get(`${url}/api/events/${subevent.name}`)).data.data.type;
+            subevent.type = subType;
+        }
+        console.log(subEvents);
         const competition = await Competition.findOne({id: id});
         const  events = competition.events;
         events.push({
@@ -311,6 +337,7 @@ app.post('/api/competitions/:id/events', async (req, res) => {
             maxParticipants: maxParticipants,
             cost: cost,
             type: type,
+            subEvents: subEvents,
         });
         await competition.updateOne({events: events});
 

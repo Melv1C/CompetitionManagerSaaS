@@ -133,9 +133,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     try {
         // admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
         admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
-        console.log(admin);
     } catch (err) {
-        console.log(err);
         admin = false;
     }
 

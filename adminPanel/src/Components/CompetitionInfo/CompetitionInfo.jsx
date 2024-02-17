@@ -47,7 +47,7 @@ export const CompetitionInfo = (props) => {
     };
 
     return (
-        <div className='competInfo'>
+        <div className='competInfo scrollable'>
             {compet ? <h1>Modifier la compétition</h1> : <h1>Créé une nouvelle compétition</h1>}
             <form className="createForm" onSubmit={handleSubmit}>
                 <label htmlFor="name">Nom de la compétition</label>
