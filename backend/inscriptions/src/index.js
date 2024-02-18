@@ -133,9 +133,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     try {
         // admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
         admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
-        console.log(admin);
     } catch (err) {
-        console.log(err);
         admin = false;
     }
 
@@ -166,7 +164,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const eventsInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/events?category=${athleteInfo.category}`)).data.data;
 
     // check events
-    const validEvents = eventsInfo.map((event) => event.name);
+    const validEvents = eventsInfo.map((event) => event.pseudoName);
     for (let i = 0; i < events.length; i++) {
         if (!validEvents.includes(events[i])) {
             return res.status(400).json({ status: 'error', message: 'Invalid event' });
@@ -181,7 +179,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     
     // check if place is available (if event.maxParticipants compare with number of inscriptions)
     for (let i = 0; i < events.length; i++) {
-        const eventInfo = eventsInfo.find((event) => event.name == events[i]);
+        const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
         if (eventInfo.maxParticipants <= allInscriptions.filter((inscription) => inscription.event == events[i]).length) {
             return res.status(400).json({ status: 'error', message: 'No place available for ' + events[i] });
         }
@@ -190,7 +188,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     // calculate total cost
     let totalCost = 0;
     for (let i = 0; i < events.length; i++) {
-        const eventInfo = eventsInfo.find((event) => event.name == events[i]);
+        const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
         console.log(eventInfo.cost);
         totalCost += eventInfo.cost;
     }
@@ -217,7 +215,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
         res.status(201).json({ status: 'success', message: 'Inscriptions added successfully' });
         return;
     } else {
-        const response = await stripeInscriptions(`competition_${competitionId}`, inscriptionData, eventsInfo.filter((event) => events.includes(event.name)), success_url, cancel_url);
+        const response = await stripeInscriptions(`competition_${competitionId}`, inscriptionData, eventsInfo.filter((event) => events.includes(event.pseudoName)), success_url, cancel_url);
         console.log(response);
         res.status(200).json({ status: 'success', message: 'Redirect to payment', data: response });
     } 
@@ -260,7 +258,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     const eventsInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/events?category=${athleteInfo.category}`)).data.data;
 
     // check events
-    const validEvents = eventsInfo.map((event) => event.name);
+    const validEvents = eventsInfo.map((event) => event.pseudoName);
     for (let i = 0; i < events.length; i++) {
         if (!validEvents.includes(events[i])) {
             return res.status(400).json({ status: 'error', message: 'Invalid event' });
@@ -287,7 +285,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     // check if place is available (if event.maxParticipants compare with number of inscriptions)
     for (let i = 0; i < events.length; i++) {
         if (!athleteInscriptions.some((inscription) => inscription.event == events[i])) {
-            const eventInfo = eventsInfo.find((event) => event.name == events[i]);
+            const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
             if (eventInfo.maxParticipants <= allInscriptions.filter((inscription) => inscription.event == events[i]).length) {
                 return res.status(400).json({ status: 'error', message: 'No place available for ' + events[i] });
             }

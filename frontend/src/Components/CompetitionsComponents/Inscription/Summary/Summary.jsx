@@ -67,19 +67,11 @@ function ControlButtons({setStep, totalCost, athlete, events, records, competiti
 function postInscription(athlete, events, records, competitionId, setStep) {
     console.log(athlete, events, records);
 
-    let newRecords = {};
-    for (let event in records) {
-        let RealEvent = events.find(e => e.pseudoName == event);
-        newRecords[RealEvent.name] = records[event];
-    }
-
-    console.log(newRecords);
-
     axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
         userId: auth.currentUser.uid,
         athleteId: athlete.id,
-        events: events.map(event => event.name),
-        records: newRecords
+        events: events.map(event => event.pseudoName),
+        records: records
     })
     .then(res => {
         console.log(res);
