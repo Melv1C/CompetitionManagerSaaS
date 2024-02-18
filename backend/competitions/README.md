@@ -128,6 +128,12 @@ This service is responsible for managing competitions.
     "categories": ["string"],
     "maxParticipants": "number", //optional
     "cost": "number",            //optional default 0
+    "subevents": [               //optional default empty
+        {
+            "name": "string",
+            "time": "date",
+        }
+    ]
 }
 ```
 
