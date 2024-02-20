@@ -21,12 +21,14 @@ export const AddModifEvent = (props) => {
     const [selectedGrouping, setSelectedGrouping] = useState("0");
     const [filteredEvent, setFilteredEvent] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState("0");
-    const [categories, setCategories] = useState({});
+    const [categories, setCategories] = useState([]);
+    const [filteredCategories, setFilteredCategories] = useState({});
     const [maxParticipants, setMaxParticipants] = useState(100);
     const [time, setTime] = useState("10:00");
     const [cost, setCost] = useState(0);
     const [subEvents, setSubEvents] = useState([]);
     const [pseudoName, setPseudoName] = useState("");
+    const [genre, setGenre] = useState("Mixte");
     useEffect(() => {
         getCompetition(id, setCompetition);
     }, [id]);
@@ -88,23 +90,45 @@ export const AddModifEvent = (props) => {
     //get the valid categories for the selected event
     useEffect(() => {
         if (selectedEvent === "0") {
+            setCategories([]);
             return;
         }
         axios.get(EVENTS_URL + '/' + selectedEvent)
             .then((response) => {
-                const validCat = response.data.data.validCat.sort();
-                const obj = {};
-                validCat.forEach((element) => {
-                    obj[element] = false;
-                });
-                setCategories(obj);
-
+                setCategories(response.data.data.validCat.sort());
             })
             .catch((error) => {
                 console.log(error);
             });
         setPseudoName(selectedEvent);
     }, [selectedEvent]);
+
+    useEffect(() => {
+        if (categories.length === 0) {
+            setFilteredCategories({});
+            return;
+        }
+        let newCategories = {};
+        categories.forEach((element) => {
+            switch (genre) {
+                case "Mixte":
+                    newCategories[element] = filteredCategories[element] || false;
+                    break;
+                case "Femme":
+                    if (element.startsWith("W") || element.split(" ")[1] === "F") {
+                        newCategories[element] = filteredCategories[element] || false;
+                    }
+                    break;
+                case "Homme":
+                    if (element.startsWith("M") || element.split(" ")[1] === "M") {
+                        newCategories[element] = filteredCategories[element] || false;
+                    }
+                    break;
+            }
+        });
+        setFilteredCategories(newCategories);
+    }, [genre,categories]);
+
 
     if (!competition) {
         return <h1>Loading...</h1>;
@@ -119,11 +143,19 @@ export const AddModifEvent = (props) => {
 
     function handleSubmit(event) {
         event.preventDefault();
+
+        const selecetedCategories = [];
+        Object.keys(filteredCategories).forEach((cat) => {
+            if (filteredCategories[cat]) {
+                selecetedCategories.push(cat);
+            }
+        });
+
         if (selectedEvent === "0") {
             alert("Veuillez sélectionner une épreuves");
             return;
         }
-        if (categories.length === 0) {
+        if (selecetedCategories.length === 0) {
             alert("Veuillez sélectionner au moins une catégorie");
             return;
         }
@@ -132,7 +164,7 @@ export const AddModifEvent = (props) => {
             name: selectedEvent,
             pseudoName: pseudoName,
             time: time,
-            categories: categories,
+            categories: selecetedCategories,
             maxParticipants: parseInt(maxParticipants),
             cost: parseInt(cost),
             subEvents: subEvents
@@ -151,11 +183,10 @@ export const AddModifEvent = (props) => {
         console.log(formData);
         if (props.event) {
             formData.id = props.event.id;
-            modifEvent(props.competition.id, formData, props.setCompetition);
+            modifEvent(competition.id, formData);
         }else{
-            addEvent(props.competition.id, formData, props.setCompetition);
+            addEvent(competition.id, formData);
         }
-        props.setShowModal(false);
     }
 
     return (
@@ -165,7 +196,11 @@ export const AddModifEvent = (props) => {
             <GroupingSelect groupings={groupings} setSelectedGrouping={setSelectedGrouping} selectedGrouping={selectedGrouping}/>
             <EventSelect events={filteredEvent} setSelectedEvent={setSelectedEvent} selectedEvent={selectedEvent}/>
             <GlobalInfo pseudoName={pseudoName} setPseudoName={setPseudoName} maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants} time={time} setTime={setTime} cost={cost} setCost={setCost} competition={competition}/>
-            <CategorySelect categories={categories} setCategories={setCategories}/>
+            <GenreSelect genre={genre} setGenre={setGenre}/>
+            <CategorySelect categories={filteredCategories} setCategories={setFilteredCategories}/>
+            <div className='eventStep'>
+                <button onClick={handleSubmit} className='greenBtn'>Créé</button>
+            </div>
         </div>  
     );
 }
@@ -268,6 +303,36 @@ function GlobalInfo (props) {
     );
 }
 
+function GenreSelect (props) {
+    const [show, setShow] = useState(true);
+    return (
+        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
+            if (event.target.type !== 'checkbox') {
+                if (event.target.type !== 'select-one') {
+                    setShow(!show)
+                }
+            }
+        }}>
+            <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
+            <label htmlFor="genre" className={show ? "margin-bot":""}>
+                {show ? "Genre" : "Genre : " + props.genre}
+            </label>
+            <div className='toHideInfo'>
+                <select name="genre" id="genre" value={props.genre} onChange={
+                    (e) => {
+                        setShow(false);
+                        props.setGenre(e.target.value);
+                    }
+                }>
+                    <option value="Mixte">Mixte</option>
+                    <option value="Femme">Femme</option>
+                    <option value="Homme">Homme</option>
+                </select>
+            </div>
+        </div>
+    );
+}
+
 function CategorySelect (props) {
     const [show, setShow] = useState(true);
     const [height, setHeight] = useState('height50');
@@ -279,16 +344,12 @@ function CategorySelect (props) {
 
 
     useEffect(() => {
-        if (lenghtCat === 0) {
-            setHeight('height50');
-        } else if (lenghtCat < 7) {
+        if (lenghtCat < 4) {
             setHeight('height100');
-        } else if (lenghtCat < 13) {
+        } else if (lenghtCat < 7) {
             setHeight('height150');
-        } else if (lenghtCat < 19) {
+        } else {
             setHeight('height200');
-        } else if (lenghtCat < 25) {
-            setHeight('height250');
         }
     }, [lenghtCat]);
 
@@ -301,30 +362,57 @@ function CategorySelect (props) {
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
             <label htmlFor="categories" className={show ? "margin-bot":""}>
-                {show ? "Catégories" :null}
+                {show || lenghtCat === 0 ? "Catégories" :null}
                 {!show && lenghtCat !== 0 ? "Catégories : " + Object.keys(props.categories).filter((cat) => props.categories[cat]).join(", ") : null}
             </label>
-            <div className={'toHideInfo catSelect neeHeight '+height} >
-                {lenghtCat === 0 ? <p>Selectionner d'abord une épreuve</p> : null}
-                {Object.keys(props.categories).map((categorie, index) => (
-                    <div key={index} className='category'> 
-                        <label htmlFor={categorie}>{categorie}</label>
-                        <input 
-                            type="checkbox" 
-                            id={categorie} 
-                            name={categorie} 
-                            value={categorie} 
-                            onChange={(e) => {
-
-                                const newCategories = {...props.categories};
-                                newCategories[e.target.value] = e.target.checked;
+            <div className={'toHideInfo '+height} >
+                {lenghtCat !== 0 && (
+                    <div className='btnDiv'>
+                        <button className='categoryBtn' onClick={
+                            (e) => {
+                                e.preventDefault();
+                                let newCategories = {...props.categories};
+                                Object.keys(newCategories).forEach((cat) => {
+                                    newCategories[cat] = true;
+                                });
                                 props.setCategories(newCategories);
-                            }} 
-                            checked={props.categories[categorie].selected}
-                        />
+                            }
+                        }>Tout</button>
+                        <button className='categoryBtn resteBtn' onClick={
+                            (e) => {
+                                e.preventDefault();
+                                let newCategories = {...props.categories};
+                                Object.keys(newCategories).forEach((cat) => {
+                                    newCategories[cat] = false;
+                                });
+                                props.setCategories(newCategories);
+                            }
+                        }>Reset</button>
                     </div>
-                ))}
+                )}
+                {lenghtCat === 0 ? <p>Selectionner d'abord une épreuve</p> : null}
+                <div className='catSelect'>
+                    {Object.keys(props.categories).map((categorie, index) => (
+                        <div key={index} className='category'> 
+                            <label htmlFor={categorie}>{categorie}</label>
+                            <input 
+                                type="checkbox" 
+                                id={categorie} 
+                                name={categorie} 
+                                value={categorie} 
+                                onChange={(e) => {
+
+                                    const newCategories = {...props.categories};
+                                    newCategories[e.target.value] = e.target.checked;
+                                    props.setCategories(newCategories);
+                                }} 
+                                checked={props.categories[categorie]}
+                            />
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
 }
+
