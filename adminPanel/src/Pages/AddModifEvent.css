@@ -69,13 +69,19 @@
 }
 
 .toHideInfo select {
-    border: 3px solid #000000;
+    border: 2px solid #000000;
     border-radius: 0;
     font-weight: 400;
     color: inherit;
     padding: 11px 15px;
     line-height: normal;
     transition: border-color 0.2s ease, outline 0.2s ease;
+}
+
+.toHideInfo .subEventSelect{
+    padding: 0;
+    margin-right: 5px;
+    width: 215px;
 }
 
 .globalInfo{
@@ -172,4 +178,9 @@
 
 .resteBtn:hover{
     background-color: #ff8c00;
+}
+
+
+.subEvent{
+    margin-bottom: 10px;
 }

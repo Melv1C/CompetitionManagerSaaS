@@ -9,7 +9,7 @@ import { getCompetition,addEvent, modifEvent } from '../CompetitionsAPI';
 import './Competition.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import './AddModifEvent.css';
 
@@ -198,6 +198,7 @@ export const AddModifEvent = (props) => {
             <GlobalInfo pseudoName={pseudoName} setPseudoName={setPseudoName} maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants} time={time} setTime={setTime} cost={cost} setCost={setCost} competition={competition}/>
             <GenreSelect genre={genre} setGenre={setGenre}/>
             <CategorySelect categories={filteredCategories} setCategories={setFilteredCategories}/>
+            {selectedGrouping === "Epreuves multiples" ? <SubEventsInfo events={events} subEvents={subEvents} setSubEvents={setSubEvents} groupings={groupings}/> : null}
             <div className='eventStep'>
                 <button onClick={handleSubmit} className='greenBtn'>Créé</button>
             </div>
@@ -415,4 +416,114 @@ function CategorySelect (props) {
         </div>
     );
 }
+
+function SubEventsInfo (props) {
+    const [show, setShow] = useState(true);
+    const height = props.subEvents.length*35+45;
+    return (
+        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
+            if (event.target.type !== 'select-one' && event.target.type !== 'time' && event.target.type !== 'submit' && event.target.type !== 'button') {
+                setShow(!show)
+            }
+        }}>
+            <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
+            <label htmlFor="subEvent" className={show ? "margin-bot":""}>
+                {show ? "Sous-épreuve" : "Sous-épreuve : "+" to do"}
+            </label>
+            <div className='toHideInfo' style={
+                !show ? {} : {height:height+"px"}
+            }>
+                {props.subEvents.map((subEvent, index) => (
+                    <SubEvent 
+                        key={index} 
+                        index={index}
+                        groupings={props.groupings} 
+                        events={props.events} 
+                        subEvent={subEvent} 
+                        setSubEvents={props.setSubEvents}
+                    />
+                ))}
+                <button onClick={
+                    (e) => {
+                        props.setSubEvents([...props.subEvents, {name:"0",time:"10:00",grouping:"0"}]);
+                    }
+                }>Ajouter une sous-épreuve</button>
+            </div>
+        </div>
+    );
+}
+
+function SubEvent (props) {
+    const [selectedGrouping, setSelectedGrouping] = useState("0");
+    const [filteredEvent, setFilteredEvent] = useState([]);
+    const [selectedEvent, setSelectedEvent] = useState("0");
+    const [time, setTime] = useState("10:00");
+    useEffect(() => {
+        setSelectedEvent(props.subEvent.name);
+        setSelectedGrouping(props.subEvent.grouping);
+        setTime(props.subEvent.time);
+    }, [props.subEvent]);
+
+    useEffect(() => {
+        if (selectedGrouping === "0") {
+            setFilteredEvent([]);
+        }else{
+            let filteredEvent = props.events.filter((element) => {
+                return element.grouping === selectedGrouping;
+            });
+            setFilteredEvent(filteredEvent);
+        }
+        setSelectedEvent("0");
+    }, [selectedGrouping]);
+
+    useEffect(() => {
+        props.setSubEvents(subEvents => {
+            let newSubEvents = [...subEvents];
+            newSubEvents[props.index].name = selectedEvent;
+            newSubEvents[props.index].grouping = selectedGrouping;
+            newSubEvents[props.index].time = time;
+            return newSubEvents;
+        });
+    }, [selectedEvent, selectedGrouping, time]);
+
+    return (
+        <div className='subEvent'>
+            <select className='subEventSelect' name="grouping" id="grouping" onChange={
+                (e) => {
+                    setSelectedGrouping(e.target.value);
+                }
+            } value={selectedGrouping}>
+                <option value="0">Selectionner le type de l'épreuve</option>
+                {
+                    props.groupings.map((grouping, index) => {
+                        return <option key={index} value={grouping}>{grouping}</option>;
+                    })
+                }
+            </select>
+            <select className='subEventSelect' name="event" id="event" onChange={
+                (e) => {
+                    setSelectedEvent(e.target.value);
+                }
+            } value={selectedEvent}>
+                <option value="0">Selectionner une épreuve</option>
+                {
+                    filteredEvent.map((event, index) => {
+                        return <option key={index} value={event.name}>{event.name}</option>;
+                    })
+                }
+            </select>
+            <input type="time" id="time" name="time" value={time} onChange={(e) => setTime(e.target.value)}/>
+            <FontAwesomeIcon icon={faTrash} className="delTrash" onClick={
+                (e) => {
+                    props.setSubEvents(subEvents => {
+                        let newSubEvents = [...subEvents];
+                        newSubEvents.splice(props.index, 1);
+                        return newSubEvents;
+                    });
+                }
+            }/>
+        </div>
+    );
+}
+
 
