@@ -13,6 +13,14 @@ li{
     list-style-type: none;
 }
 
+.center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
 .greenBtn{
   padding: 10px;
   border: none;

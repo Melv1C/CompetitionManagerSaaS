@@ -10,6 +10,8 @@ import { Competition } from './Pages/Competition';
 import { Create } from './Pages/Create';
 import { Inscriptions } from './Pages/Inscriptions';
 import { getUser } from './Auth';
+import { AddModifEvent } from './Pages/AddModifEvent';
+import { Footer } from './Components/Footer/Footer';
 
 
 function App() {
@@ -30,8 +32,10 @@ function App() {
                     <Route path="/" element={<Home user={user} setUser={setUser}/>} />
                     <Route path="/create" element={<Create user={user} setUser={setUser}/>}/>
                     <Route path="/competitions/:id" element={<Competition user={user} setUser={setUser}/>} />
+                    <Route path="/competitions/:id/addEvent" element={<AddModifEvent user={user} setUser={setUser}/>} />
                     <Route path="/competitions/:id/inscriptions" element={<Inscriptions user={user} setUser={setUser}/>} />
                 </Routes>
+                <Footer />
             </Router>
         </div>
     );

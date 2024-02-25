@@ -28,7 +28,7 @@ function updateCompetition(competition, setCompetition) {
 
 function addEvent(competitionId, event, setCompetition) {
     axios.post(`${COMPETITIONS_URL}/${competitionId}/events`, event).then((response) => {
-        setCompetition(response.data.data);
+        window.location = "/competitions/"+competitionId;
     }).catch((error) => {
         console.log(error);
     });
@@ -36,7 +36,7 @@ function addEvent(competitionId, event, setCompetition) {
 
 function modifEvent(competitionId, event, setCompetition) {
     axios.put(`${COMPETITIONS_URL}/${competitionId}/events/${event.id}`, event).then((response) => {
-        setCompetition(response.data.data);
+        window.location = "/competitions/"+competitionId;
     }).catch((error) => {
         console.log(error);
     });

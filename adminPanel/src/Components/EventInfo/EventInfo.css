@@ -28,14 +28,6 @@
   max-width: 100%;
 }
 
-.category{
-  font-size: 0.8em;
-  margin: 10px;
-  padding: 5px;
-  border: 1px solid #000;
-  border-radius: 8px;
-}
-
 .delTrash{
   color: red;
   margin-left: 3px;
