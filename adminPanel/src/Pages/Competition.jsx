@@ -51,7 +51,9 @@ export const Competition = (props) => {
             <div className='eventDiv'>
                 <h2>Épreuves</h2>
                 <EventsList competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModifEvent} setEvent={setEvent}/>
-                <button onClick={() => {setShowModalAddEvent(true);}}>Ajouter une épreuves</button>
+                <button onClick={() => {
+                    window.location.href = `/competitions/${id}/addEvent`;
+                }}>Ajouter une épreuves</button>
             </div>
             {showModalModif ? <Popup onClose={()=>{setShowModalModif(false)}}><CompetitionInfo user={props.user} setUser={props.setUser} competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModif}/></Popup> : null}
             {showModalAddEvent ? <Popup onClose={()=>{setShowModalAddEvent(false)}}><EventInfo competition={competition} setCompetition={setCompetition} setShowModal={setShowModalAddEvent}/></Popup> : null}

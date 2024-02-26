@@ -27,6 +27,9 @@ export const EventInfo = (props) => {
     const [categories, setCategories] = useState([]);
     const [pseudo, setPseudo] = useState(null);
     const [subEvents, setSubEvents] = useState([]);
+    
+
+
     useEffect(() => {
         axios.get(EVENTS_URL)
             .then((response) => {
