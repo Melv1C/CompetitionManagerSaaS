@@ -42,7 +42,7 @@
     align-items: center;
     margin-bottom: 0px;
     transition-property: height;
-    transition-duration: 1s;
+    transition-duration: 0.5s;
     transition-timing-function: ease-in-out; 
     transition-delay: 0s;
     overflow: hidden;
@@ -154,7 +154,7 @@
     height: 200px;
 }
 
-.categoryBtn { 
+.categoryBtn, .addSubEventBtn { 
     background-color: #4CAF50;
     color: white;
     min-width: 60px;
@@ -168,7 +168,7 @@
     margin:0px 5px 10px 5px;
 }
 
-.categoryBtn:hover{
+.categoryBtn:hover, .addSubEventBtn:hover{
     background-color: #45a049;
 }
 
@@ -180,6 +180,13 @@
     background-color: #ff8c00;
 }
 
+.validStep{
+    background-color: #c6ffc8;
+}
+
+.invalidStep{
+    background-color: #ff9e97;
+}
 
 .subEvent{
     margin-bottom: 10px;

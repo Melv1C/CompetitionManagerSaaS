@@ -29,6 +29,21 @@ export const AddModifEvent = (props) => {
     const [subEvents, setSubEvents] = useState([]);
     const [pseudoName, setPseudoName] = useState("");
     const [genre, setGenre] = useState("Mixte");
+    const [showStep, setShowStep] = useState({
+        "grouping":true,
+        "event":false,
+        "globalInfo":false,
+        "genre":false,
+        "category":false,
+        "subEvent":false
+    });
+    const listStep = ["grouping", "event", "globalInfo", "genre", "category", "subEvent"];
+
+    function changeStep(step) {
+        const next = listStep[listStep.indexOf(step)+1];
+        setShowStep({...showStep, [step]:!showStep[step], [next]:showStep[step]});
+    }
+
     useEffect(() => {
         getCompetition(id, setCompetition);
     }, [id]);
@@ -193,12 +208,12 @@ export const AddModifEvent = (props) => {
         <div className='multiStepEvent'>
             <h1>{competition.name}</h1>
             <h2 className='center'>Nouvelle épreuve</h2>
-            <GroupingSelect groupings={groupings} setSelectedGrouping={setSelectedGrouping} selectedGrouping={selectedGrouping}/>
-            <EventSelect events={filteredEvent} setSelectedEvent={setSelectedEvent} selectedEvent={selectedEvent}/>
-            <GlobalInfo pseudoName={pseudoName} setPseudoName={setPseudoName} maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants} time={time} setTime={setTime} cost={cost} setCost={setCost} competition={competition}/>
-            <GenreSelect genre={genre} setGenre={setGenre}/>
-            <CategorySelect categories={filteredCategories} setCategories={setFilteredCategories}/>
-            {selectedGrouping === "Epreuves multiples" ? <SubEventsInfo events={events} subEvents={subEvents} setSubEvents={setSubEvents} groupings={groupings}/> : null}
+            <GroupingSelect groupings={groupings} setSelectedGrouping={setSelectedGrouping} selectedGrouping={selectedGrouping} showStep={showStep} setShowStep={setShowStep} changeStep={changeStep}/>
+            <EventSelect events={filteredEvent} setSelectedEvent={setSelectedEvent} selectedEvent={selectedEvent} showStep={showStep} setShowStep={setShowStep} changeStep={changeStep}/>
+            <GlobalInfo pseudoName={pseudoName} setPseudoName={setPseudoName} maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants} time={time} setTime={setTime} cost={cost} setCost={setCost} competition={competition} showStep={showStep} changeStep={changeStep}/>
+            <GenreSelect genre={genre} setGenre={setGenre} showStep={showStep} setShowStep={setShowStep} changeStep={changeStep}/>
+            <CategorySelect categories={filteredCategories} setCategories={setFilteredCategories} showStep={showStep} setShowStep={setShowStep} changeStep={changeStep}/>
+            {selectedGrouping === "Epreuves multiples" ? <SubEventsInfo events={events} subEvents={subEvents} setSubEvents={setSubEvents} groupings={groupings} showStep={showStep} setShowStep={setShowStep}/> : null}
             <div className='eventStep'>
                 <button onClick={handleSubmit} className='greenBtn'>Créé</button>
             </div>
@@ -207,22 +222,27 @@ export const AddModifEvent = (props) => {
 }
 
 function GroupingSelect (props) {
-    const [show, setShow] = useState(true);
+    let valid = props.selectedGrouping !== "0";
+    let className = "eventStep ";
+    className += props.showStep.grouping ? 'displayStep ' : 'hideStep ';
+    if (!props.showStep.grouping){
+        className += valid ? "validStep" : "invalidStep";
+    }
     return (
-        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
+        <div className={className} onClick={(event) => {
             if (event.target.type !== 'select-one') {
-                setShow(!show)
+                props.setShowStep({...props.showStep, "grouping":!props.showStep.grouping});
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="grouping" className={show ? "margin-bot":""}>
-                {show || props.selectedGrouping === "0" ? "Type de l'épreuve" : "Type de l'épreuve : "+props.selectedGrouping}
+            <label htmlFor="grouping" className={props.showStep.grouping ? "margin-bot":""}>
+                {props.showStep.grouping || props.selectedGrouping === "0" ? "Type de l'épreuve" : "Type de l'épreuve : "+props.selectedGrouping}
             </label>
             <div className='toHideInfo'>
                 <select name="grouping" id="grouping" onChange={
                     (e) => {
                         if (e.target.value !== "0") {
-                            setShow(false);
+                            props.changeStep("grouping");
                         }
                         props.setSelectedGrouping(e.target.value);
                     }
@@ -240,22 +260,27 @@ function GroupingSelect (props) {
 }
 
 function EventSelect (props) {
-    const [show, setShow] = useState(true);
+    let valid = props.selectedEvent !== "0";
+    let className = "eventStep ";
+    className += props.showStep.event ? 'displayStep ' : 'hideStep ';
+    if (!props.showStep.event){
+        className += valid ? "validStep" : "invalidStep";
+    }
     return (
-        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
+        <div className={className} onClick={(event) => {
             if (event.target.type !== 'select-one') {
-                setShow(!show)
+                props.setShowStep({...props.showStep, "event":!props.showStep.event});
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="event" className={show ? "margin-bot":""}>
-                {show || props.selectedEvent === "0" ? "Epreuve" : "Epreuve : "+props.selectedEvent}
+            <label htmlFor="event" className={props.showStep.event ? "margin-bot":""}>
+                {props.showStep.event || props.selectedEvent === "0" ? "Epreuve" : "Epreuve : "+props.selectedEvent}
             </label>
             <div className='toHideInfo'>
                 <select name="event" id="event" onChange={
                     (e) => {
                         if (e.target.value !== "0") {
-                            setShow(false);
+                            props.changeStep("event");
                         }
                         props.setSelectedEvent(e.target.value);
                     }
@@ -273,16 +298,21 @@ function EventSelect (props) {
 }
 
 function GlobalInfo (props) {
-    const [show, setShow] = useState(true);
+    let valid = props.pseudoName !== "" && props.maxParticipants !== "" && props.cost !== "" && props.time !== "";
+    let className = "eventStep ";
+    className += props.showStep.globalInfo ? 'displayStep ' : 'hideStep ';
+    if (!props.showStep.globalInfo){
+        className += valid ? "validStep" : "invalidStep";
+    }
     return (
-        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
+        <div className={className} onClick={(event) => {
             if (!['text', 'number', 'time'].includes(event.target.type)) {
-                setShow(!show)
+                props.changeStep("globalInfo");
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="pseudoName" className={show ? "margin-bot":""}>
-                {show || props.pseudoName === "" || props.maxParticipants === "" || props.cost === "" ? "Info" : "Info : "+props.pseudoName+" / "+props.time+" / "+props.maxParticipants+"places" + (props.competition.paid ? " / "+props.cost+"€" : "")}
+            <label htmlFor="pseudoName" className={props.showStep.globalInfo ? "margin-bot":""}>
+                {props.showStep.globalInfo || props.pseudoName === "" || props.maxParticipants === "" || props.cost === "" ? "Info" : "Info : "+props.pseudoName+" / "+props.time+" / "+props.maxParticipants+"places" + (props.competition.paid ? " / "+props.cost+"€" : "")}
             </label>
             <div className='toHideInfo globalInfo'>
                 <label htmlFor="pseudoName">Nom : </label>
@@ -305,23 +335,27 @@ function GlobalInfo (props) {
 }
 
 function GenreSelect (props) {
-    const [show, setShow] = useState(true);
     return (
-        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
+        <div className={props.showStep.genre ? 'displayStep eventStep' : 'hideStep eventStep validStep'} onClick={(event) => {
             if (event.target.type !== 'checkbox') {
                 if (event.target.type !== 'select-one') {
-                    setShow(!show)
+                    props.changeStep("genre");
                 }
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="genre" className={show ? "margin-bot":""}>
-                {show ? "Genre" : "Genre : " + props.genre}
+            <label htmlFor="genre" className={props.showStep.genre ? "margin-bot":""}>
+                {props.showStep.genre ? "Genre" : "Genre : " + props.genre}
             </label>
             <div className='toHideInfo'>
-                <select name="genre" id="genre" value={props.genre} onChange={
+                <select name="genre" id="genre" value={props.genre} onInput={
                     (e) => {
-                        setShow(false);
+                        console.log("change")
+                    }
+                } onChange={
+                    (e) => {
+                        console.log(e.target.value);
+                        props.changeStep("genre");
                         props.setGenre(e.target.value);
                     }
                 }>
@@ -335,7 +369,6 @@ function GenreSelect (props) {
 }
 
 function CategorySelect (props) {
-    const [show, setShow] = useState(true);
     const [height, setHeight] = useState('height50');
     const [lenghtCat, setLenghtCat] = useState(0);
 
@@ -354,17 +387,28 @@ function CategorySelect (props) {
         }
     }, [lenghtCat]);
 
+    let valid = false;
+    Object.keys(props.categories).forEach((cat) => {
+        if (props.categories[cat]) {
+            valid = true;
+        }
+    });
+    let className = "eventStep ";
+    className += props.showStep.category ? 'displayStep ' : 'hideStep ';
+    if (!props.showStep.category){
+        className += valid ? "validStep" : "invalidStep";
+    }
 
     return (
-        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
-            if (event.target.type !== 'checkbox') {
-                setShow(!show)
+        <div className={className} onClick={(event) => {
+            if (event.target.type !== 'checkbox' && event.target.type !== 'submit') {
+                props.changeStep("category");
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="categories" className={show ? "margin-bot":""}>
-                {show || lenghtCat === 0 ? "Catégories" :null}
-                {!show && lenghtCat !== 0 ? "Catégories : " + Object.keys(props.categories).filter((cat) => props.categories[cat]).join(", ") : null}
+            <label htmlFor="categories" className={props.showStep.category ? "margin-bot":""}>
+                {props.showStep.category || lenghtCat === 0 ? "Catégories" :null}
+                {!props.showStep.category && lenghtCat !== 0 ? "Catégories : " + Object.keys(props.categories).filter((cat) => props.categories[cat]).join(", ") : null}
             </label>
             <div className={'toHideInfo '+height} >
                 {lenghtCat !== 0 && (
@@ -418,20 +462,31 @@ function CategorySelect (props) {
 }
 
 function SubEventsInfo (props) {
-    const [show, setShow] = useState(true);
     const height = props.subEvents.length*35+45;
+    let valid = true;
+    for (let subEvent of props.subEvents) {
+        if (subEvent.grouping === "0" || subEvent.name === "0") {
+            valid = false;
+            break;
+        }
+    }
+    let className = "eventStep "
+    className += props.showStep.subEvent ? 'displayStep ' : 'hideStep ';
+    if (!props.showStep.subEvent){
+        className += valid ? "validStep" : "invalidStep";
+    }
     return (
-        <div className={show ? 'displayStep eventStep' : 'hideStep eventStep'} onClick={(event) => {
-            if (event.target.type !== 'select-one' && event.target.type !== 'time' && event.target.type !== 'submit' && event.target.type !== 'button') {
-                setShow(!show)
+        <div className={className} onClick={(event) => {
+            if (event.target.type !== 'select-one' && event.target.type !== 'time' && event.target.type !== 'submit' && typeof(event.target.className) !== 'object') {
+                props.setShowStep({...props.showStep, "subEvent":!props.showStep.subEvent});
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="subEvent" className={show ? "margin-bot":""}>
-                {show ? "Sous-épreuve" : "Sous-épreuve : "+" to do"}
+            <label htmlFor="subEvent" className={props.showStep.subEvent ? "margin-bot":""}>
+                {props.showStep.subEvent ? "Sous-épreuve" : "Sous-épreuve : "+ props.subEvents.length+" sous-épreuves"}
             </label>
             <div className='toHideInfo' style={
-                !show ? {} : {height:height+"px"}
+                !props.showStep.subEvent ? {} : {height:height+"px"}
             }>
                 {props.subEvents.map((subEvent, index) => (
                     <SubEvent 
@@ -443,7 +498,7 @@ function SubEventsInfo (props) {
                         setSubEvents={props.setSubEvents}
                     />
                 ))}
-                <button onClick={
+                <button className='addSubEventBtn' onClick={
                     (e) => {
                         props.setSubEvents([...props.subEvents, {name:"0",time:"10:00",grouping:"0"}]);
                     }
@@ -459,9 +514,9 @@ function SubEvent (props) {
     const [selectedEvent, setSelectedEvent] = useState("0");
     const [time, setTime] = useState("10:00");
     useEffect(() => {
-        setSelectedEvent(props.subEvent.name);
         setSelectedGrouping(props.subEvent.grouping);
         setTime(props.subEvent.time);
+        setSelectedEvent(props.subEvent.name);
     }, [props.subEvent]);
 
     useEffect(() => {
@@ -473,7 +528,7 @@ function SubEvent (props) {
             });
             setFilteredEvent(filteredEvent);
         }
-        setSelectedEvent("0");
+        setSelectedEvent(props.subEvent.name);
     }, [selectedGrouping]);
 
     useEffect(() => {
