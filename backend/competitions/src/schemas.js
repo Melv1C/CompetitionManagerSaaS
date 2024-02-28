@@ -45,6 +45,10 @@ const competitionSchema = new Schema({
         type: Array,
         required: true,
     },
+    adminId: {
+        type: String,
+        required: true,
+    },
 });
 const Competition = mongoose.model("competitions", competitionSchema);
 

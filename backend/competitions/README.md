@@ -43,6 +43,23 @@ This service is responsible for managing competitions.
 }
 ```
 
+### Get competitions filtered by adminId
+- `GET /api/competitions/admin/:adminId`
+- Description: Get all competitions filtered by adminId
+- Response: HTTP 200
+```json
+{
+    "status": "success",
+    "message": "Competitions retrieved successfully",
+    "data": [
+        competition1,
+        competition2,
+        ...
+    ]
+}
+```
+
+
 ### Get competition by id
 
 - `GET /api/competitions/:id`
@@ -99,7 +116,7 @@ This service is responsible for managing competitions.
     "club": "string",
     "date": "string",
     "paid": "boolean",          //true if athletes have to pay to participate
-    "freeClub": ["string"],     //list of clubs that don't have to pay (optional)
+    "freeClub": "boolean",      //true if the club doesn't have to pay (optional)
     "schedule": "string",       //link to the schedule pdf (optional)
     "description": "string",    //(optional)
 }

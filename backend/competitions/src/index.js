@@ -52,6 +52,27 @@ async function generateIdEvent(events) {
 app.get("/api/competitions", async (req, res) => {
     try{
         const competitions = await Competition.find({});
+        //take adminId off the response
+        competitions.forEach(competition => {
+            delete competition.adminId;
+        });
+        res.status(200).json({
+            status: 'success',
+            message: 'Competitions retrieved successfully',
+            data: competitions,
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+app.get('/api/competitions/admin/:adminId', async (req, res) => {
+    try{
+        const competitions = await Competition.findAll({ adminId: req.params.adminId });
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
@@ -145,6 +166,7 @@ app.post('/api/competitions', async (req, res) => {
         const freeClub = req.body.freeClub ? req.body.freeClub : [];
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
+        const adminId = req.body.adminId;
         if (!name && typeof name !== 'string'){
             console.log(req.body);
             return res.status(400).json({
@@ -194,6 +216,12 @@ app.post('/api/competitions', async (req, res) => {
                 message: 'Invalid description',
             });
         }
+        if (!adminId && typeof adminId !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid adminId',
+            });
+        }
         const competition = new Competition({
             id: await generateIdCompet(),
             name: name,
@@ -205,6 +233,7 @@ app.post('/api/competitions', async (req, res) => {
             schedule: schedule,
             description: description,
             open: false,
+            adminId: adminId,
             epreuves: [],
         });
         await competition.save();
