@@ -6,39 +6,35 @@ import { createCompetition, updateCompetition } from "../../CompetitionsAPI";
 
 export const CompetitionInfo = (props) => {
 
-    let club = props.user?.club || '';
     let compet = props.competition || null;
-
-    useEffect(() => {
-        club = props.user?.club || '';
-    }, [props.user?.club]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!compet) {
+            console.log(props.user.uid);
             const formData = {
                 name: event.target.name.value,
                 date: event.target.date.value,
-                club: event.target.club.value,
+                club: event.target.club.value.toUpperCase(),
                 location: event.target.location.value,
                 paid: event.target.paid.checked,
                 freeClub: event.target.freeClub.checked,
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
-                adminId: props.user.id
+                adminId: props.user.uid
             };
-            createCompetition(formData, props.setCompetition);
+            createCompetition(formData);
         }else{
             const formData = {
                 name: event.target.name.value,
                 date: event.target.date.value,
-                club: event.target.club.value,
+                club: event.target.club.value.toUpperCase(),
                 location: event.target.location.value,
                 paid: event.target.paid.checked,
                 freeClub: event.target.freeClub.checked,
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
-                adminId: props.user.id,
+                adminId: props.user.uid,
                 id: compet.id
             };
             updateCompetition(formData, props.setCompetition);
@@ -55,7 +51,7 @@ export const CompetitionInfo = (props) => {
                 <label htmlFor="date">Date de la compétition</label>
                 <input type="date" name="date" id="date" required defaultValue={compet?.date.substring(0,10)} />
                 <label htmlFor="club">Club organisateur</label>
-                <input type="text" name="club" id="club" required value={club} readOnly/>
+                <input type="text" name="club" id="club" required defaultValue={compet?.club}/>
                 <label htmlFor="location">Lieu de la compétition</label>
                 <input type="text" name="location" id="location" required defaultValue={compet?.location}/>
                 <label htmlFor="paid">Payant</label>

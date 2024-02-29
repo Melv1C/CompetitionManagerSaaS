@@ -129,17 +129,25 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
 
     let admin = false;
+    const competInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}`)).data.data;
+    if (competInfo.adminId == userId) {
+        admin = true;
+    }
+    console.log(admin);
 
+    /*
     try {
         admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
         // admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
     } catch (err) {
         admin = false;
     }
+    */
 
     if (admin) {
         userId = "admin";
     }
+
 
     // check body elements
     if (!userId || typeof userId !== 'string') {

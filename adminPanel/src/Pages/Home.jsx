@@ -7,19 +7,21 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { COMPETITIONS_URL } from '../Gateway';
 
 
-export const Home = (props) => {
+export const Home = ({user}) => {
     const [compets, setCompets] = useState([]);
     useEffect(() => {
-        if (!props.user) {
+        console.log(user)
+        if (!user.uid) {
             return;
         }
-        axios.get(COMPETITIONS_URL).then((response) => {
-            setCompets(response.data.data.filter((compet) => compet.club === props.user.club));
+        axios.get(COMPETITIONS_URL+"/admin/"+user.uid).then((response) => {
+            console.log(response)
+            setCompets(response.data.data);
         }).catch((error) => {
             console.log(error);
         });
-    }, [props.user]);
-    if (!props.user) {
+    }, [user]);
+    if (!user.uid) {
         return (
             <div className='page'>
                 <div className='no-competitions'>Vous n'êtes pas connecté</div>

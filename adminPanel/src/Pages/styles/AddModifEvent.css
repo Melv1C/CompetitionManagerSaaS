@@ -191,3 +191,13 @@
 .subEvent{
     margin-bottom: 10px;
 }
+
+.delTrash{
+    color: red;
+    margin-left: 5px;
+    padding-top: 3px;
+}
+
+.delTrash:hover{
+    cursor: pointer;
+}

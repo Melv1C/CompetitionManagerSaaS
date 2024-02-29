@@ -1,11 +1,13 @@
 import React, { useEffect,useState } from 'react'
 import { INSCRIPTIONS_URL } from '../../Gateway'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 import "./EventsList.css"
 
 
 export const EventsList = (props) => {
+    const navigate = useNavigate();
     const [inscriptions, setInscriptions] = useState([]);
     const competitionId = props.competition.id;
     useEffect(() => {
@@ -29,9 +31,7 @@ export const EventsList = (props) => {
                         <div className='eventMax'>{participants.length}/{event.maxParticipants}</div>
                         <button onClick={
                             () => {
-                                console.log("click");
-                                props.setEvent(event);
-                                props.setShowModal(true);
+                                navigate(`/competitions/${competitionId}/events/${event.id}`);
                             }
                         
                         }>Modifier</button>

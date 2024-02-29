@@ -1,10 +1,10 @@
 import React from 'react'
 import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo'
 
-export const Create = (props) => {
+export const Create = ({user}) => {
   return (
     
-    <CompetitionInfo user={props.user} setUser={props.setUser}/>
+    <CompetitionInfo user={user}/>
     
   )
 }

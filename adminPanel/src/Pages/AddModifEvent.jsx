@@ -1,20 +1,21 @@
-import React, { useEffect,useState } from 'react'
-import { useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom';
 
 
-import { EVENTS_URL } from "../Gateway";
+import { EVENTS_URL, COMPETITIONS_URL } from "../Gateway";
 import axios from "axios";
 
-import { getCompetition,addEvent, modifEvent } from '../CompetitionsAPI';
-import './Competition.css';
+import { getCompetition, addEvent, modifEvent } from '../CompetitionsAPI';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-import './AddModifEvent.css';
+import './styles/AddModifEvent.css';
 
 export const AddModifEvent = (props) => {
-    const { id } = useParams();
+    const { id, eventId } = useParams();
+    const navigate = useNavigate();
+    const [exisingEvent, setExistingEvent] = useState(false);
     const [events, setEvents] = useState([]);
     const [competition, setCompetition] = useState(null);
     const [groupings, setGrouping] = useState([]);
@@ -76,13 +77,34 @@ export const AddModifEvent = (props) => {
             });
     }, []);
 
+    useEffect(() => {
+        if (eventId && events.length !== 0) {
+            axios.get(COMPETITIONS_URL + '/' + id + '/events/' + eventId).then((response) => {
+                const data = response.data.data;
+                setExistingEvent(response.data.data);
+                const eventInfo = events.find((element) => {
+                    return element.name === data.name;
+                });
+                setSubEvents(data.subEvents);
+                setSelectedGrouping(eventInfo.grouping);
+                setMaxParticipants(data.maxParticipants);
+                setTime(data.time);
+                setCost(data.cost);
+                setSelectedEvent(data.name);
+                setPseudoName(data.pseudoName);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }, [eventId, events]);
+
     //when the selectedGrouping change, filter the events
     useEffect(() => {
         if (selectedGrouping === "0") {
             setFilteredEvent([]);
         }else{
             //if the selectedGrouping is "Epreuves multiples", add a subEvent
-            if (selectedGrouping === "Epreuves multiples") {
+            if (selectedGrouping === "Epreuves multiples" && subEvents.length === 0) {
                 setSubEvents([
                     {
                         name:"0",
@@ -90,7 +112,7 @@ export const AddModifEvent = (props) => {
                         grouping:"0"
                     }
                 ]);
-            }else{
+            }else if (selectedGrouping !== "Epreuves multiples") {
                 setSubEvents([]);
             }
             let filteredEvent = events.filter((element) => {
@@ -115,7 +137,9 @@ export const AddModifEvent = (props) => {
             .catch((error) => {
                 console.log(error);
             });
-        setPseudoName(selectedEvent);
+        if (!eventId || !exisingEvent || exisingEvent.name !== selectedEvent) {
+            setPseudoName(selectedEvent);
+        }
     }, [selectedEvent]);
 
     useEffect(() => {
@@ -127,7 +151,12 @@ export const AddModifEvent = (props) => {
         categories.forEach((element) => {
             switch (genre) {
                 case "Mixte":
-                    newCategories[element] = filteredCategories[element] || false;
+                    if (eventId && exisingEvent && exisingEvent.name === selectedEvent) {
+                        newCategories[element] = exisingEvent.categories.includes(element);
+                    }else{
+
+                        newCategories[element] = filteredCategories[element] || false;
+                    }  
                     break;
                 case "Femme":
                     if (element.startsWith("W") || element.split(" ")[1] === "F") {
@@ -156,7 +185,7 @@ export const AddModifEvent = (props) => {
     }
 
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
 
         const selecetedCategories = [];
@@ -182,7 +211,8 @@ export const AddModifEvent = (props) => {
             categories: selecetedCategories,
             maxParticipants: parseInt(maxParticipants),
             cost: parseInt(cost),
-            subEvents: subEvents
+            subEvents: subEvents,
+            adminId: props.user.uid
         };
 
         if (formData.subEvents.length !== 0) {
@@ -195,12 +225,22 @@ export const AddModifEvent = (props) => {
             formData.time = firstTime.time;
         }
 
-        console.log(formData);
-        if (props.event) {
-            formData.id = props.event.id;
-            modifEvent(competition.id, formData);
+        if (eventId) {
+            formData.id = eventId;
+            const succes = await modifEvent(competition.id, formData);
+            if (succes){
+                navigate(`/competitions/${competition.id}`);
+            }else{
+                alert("Une erreur est survenue");
+            
+            };
         }else{
-            addEvent(competition.id, formData);
+            const succes = await addEvent(competition.id, formData);
+            if (succes){
+                navigate(`/competitions/${competition.id}`);
+            }else{
+                alert("Une erreur est survenue");
+            }
         }
     }
 
@@ -215,7 +255,7 @@ export const AddModifEvent = (props) => {
             <CategorySelect categories={filteredCategories} setCategories={setFilteredCategories} showStep={showStep} setShowStep={setShowStep} changeStep={changeStep}/>
             {selectedGrouping === "Epreuves multiples" ? <SubEventsInfo events={events} subEvents={subEvents} setSubEvents={setSubEvents} groupings={groupings} showStep={showStep} setShowStep={setShowStep}/> : null}
             <div className='eventStep'>
-                <button onClick={handleSubmit} className='greenBtn'>Créé</button>
+                <button onClick={handleSubmit} className={eventId?"modifBtn":"greenBtn"}>{eventId?"Modifier":"Créé"}</button>
             </div>
         </div>  
     );
@@ -496,6 +536,7 @@ function SubEventsInfo (props) {
                         events={props.events} 
                         subEvent={subEvent} 
                         setSubEvents={props.setSubEvents}
+                        subEvents={props.subEvents}
                     />
                 ))}
                 <button className='addSubEventBtn' onClick={
@@ -509,9 +550,9 @@ function SubEventsInfo (props) {
 }
 
 function SubEvent (props) {
-    const [selectedGrouping, setSelectedGrouping] = useState("0");
+    const [selectedGrouping, setSelectedGrouping] = useState(props.subEvent.grouping);
     const [filteredEvent, setFilteredEvent] = useState([]);
-    const [selectedEvent, setSelectedEvent] = useState("0");
+    const [selectedEvent, setSelectedEvent] = useState(props.subEvent.name);
     const [time, setTime] = useState("10:00");
     useEffect(() => {
         setSelectedGrouping(props.subEvent.grouping);
