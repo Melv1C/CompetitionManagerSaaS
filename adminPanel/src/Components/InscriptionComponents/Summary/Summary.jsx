@@ -53,7 +53,7 @@ function TotalCost({totalCost}) {
     )
 }
 
-function ControlButtons({setStep, totalCost, athlete, events, records, competitionId, user}) {
+function ControlButtons({setStep, totalCost, athlete, events, records, competitionId,user}) {
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(3)}}>Précédent</button>
@@ -72,8 +72,8 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
     }
     console.log(newRecords);
     console.log(user)
-    axios.post(`${INSCRIPTIONS_URL}/${competitionId}?admin=${user.id}`, {
-        userId: user.id,
+    axios.post(`${INSCRIPTIONS_URL}/${competitionId}?admin=${user.uid}`, {
+        userId: user.uid,
         athleteId: athlete.id,
         events: events.map(event => event.name),
         records: newRecords,
@@ -101,6 +101,10 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
 export const Summary = ({athlete, events, records, setStep, competitionId, user}) => {
     const [totalCost, setTotalCost] = useState(0);
 
+    useEffect(() => {
+        setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
+    }, [events]);
+
     if (!athlete) {
         return <div>Chargement...</div>
     }
@@ -114,7 +118,7 @@ export const Summary = ({athlete, events, records, setStep, competitionId, user}
                 <EventsRecordsSummary events={events} records={records} />
                 <TotalCost totalCost={totalCost} />
             </div>
-            <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} user={user} />
+            <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} user={user}/>
         </div>
 
     )

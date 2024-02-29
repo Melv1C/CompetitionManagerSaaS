@@ -1,23 +1,20 @@
 import React, { useEffect,useState } from 'react'
-import { useParams} from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Popup } from '../Components/Popup/Popup';
 import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo';
-import { EventInfo } from '../Components/EventInfo/EventInfo';
 import { EventsList } from '../Components/EventsList/EventsList';
 
 import { getCompetition } from '../CompetitionsAPI';
-import './Competition.css';
+import './styles/Competition.css';
 
 export const Competition = (props) => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [competition, setCompetition] = useState(null);
     const [showModalModif, setShowModalModif] = useState(false);
-    const [showModalAddEvent, setShowModalAddEvent] = useState(false);
-    const [showModalModifEvent, setShowModalModifEvent] = useState(false);
-    const [event, setEvent] = useState(null);
     useEffect(() => {
         getCompetition(id, setCompetition);
-    }, [id]);
+    }, []);
 
     if (!competition) {
         return <h1>Loading...</h1>;
@@ -43,21 +40,19 @@ export const Competition = (props) => {
                 <div className='upperPageCompetBtn'>
                     <button className='greenBtn' onClick={
                         () => {
-                            window.location.href = `/competitions/${id}/inscriptions`;
+                            navigate(`/competitions/${id}/inscriptions`);
                         }
                     }>Inscrire des athlètes</button>
                 </div>
             </div>
             <div className='eventDiv'>
                 <h2>Épreuves</h2>
-                <EventsList competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModifEvent} setEvent={setEvent}/>
+                <EventsList competition={competition} setCompetition={setCompetition}/>
                 <button onClick={() => {
-                    window.location.href = `/competitions/${id}/addEvent`;
+                    navigate(`/competitions/${id}/addEvent`)
                 }}>Ajouter une épreuves</button>
             </div>
             {showModalModif ? <Popup onClose={()=>{setShowModalModif(false)}}><CompetitionInfo user={props.user} setUser={props.setUser} competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModif}/></Popup> : null}
-            {showModalAddEvent ? <Popup onClose={()=>{setShowModalAddEvent(false)}}><EventInfo competition={competition} setCompetition={setCompetition} setShowModal={setShowModalAddEvent}/></Popup> : null}
-            {showModalModifEvent ? <Popup onClose={()=>{setShowModalModifEvent(false)}}><EventInfo competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModifEvent} event={event}/></Popup> : null}
         </>
     );
 };

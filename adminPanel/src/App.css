@@ -1,22 +1,22 @@
 .page{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
 }
 
 h1{
-    text-align: center;
+  text-align: center;
 }
 
 li{
-    list-style-type: none;
+  list-style-type: none;
 }
 
 .center{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 
@@ -30,7 +30,20 @@ li{
 }
 
 .greenBtn:hover{
-    background-color: rgb(18, 216, 0, 0.7);
+  background-color: rgb(18, 216, 0, 0.7);
+  cursor: pointer;
+}
+
+.modifBtn{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: orange;
+  color: white;
+}
+
+.modifBtn:hover{
+  background-color: rgba(255, 166, 0, 0.7);
   cursor: pointer;
 }
 

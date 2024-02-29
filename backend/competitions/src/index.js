@@ -72,7 +72,7 @@ app.get("/api/competitions", async (req, res) => {
 
 app.get('/api/competitions/admin/:adminId', async (req, res) => {
     try{
-        const competitions = await Competition.findAll({ adminId: req.params.adminId });
+        const competitions = await Competition.find({ adminId: req.params.adminId });
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
@@ -155,6 +155,40 @@ app.get('/api/competitions/:id/events', async (req, res) => {
     }
 });
 
+//Get event's data by id
+app.get('/api/competitions/:id/events/:eventId', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const eventId = req.params.eventId;
+        const competition = await Competition.findOne({ id: id});
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+            });
+        }
+        const event = competition.events.find(event => event.id === eventId);
+        if (!event){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Event not found',
+            });
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'Event retrieved successfully',
+            data: event,
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+
 //create a new competition
 app.post('/api/competitions', async (req, res) => {
     try{
@@ -168,7 +202,6 @@ app.post('/api/competitions', async (req, res) => {
         const description = req.body.description ? req.body.description : "";
         const adminId = req.body.adminId;
         if (!name && typeof name !== 'string'){
-            console.log(req.body);
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid name',
@@ -354,8 +387,13 @@ app.post('/api/competitions/:id/events', async (req, res) => {
             subType = (await axios.get(`${url}/api/events/${subevent.name}`)).data.data.type;
             subevent.type = subType;
         }
-        console.log(subEvents);
         const competition = await Competition.findOne({id: id});
+        if (competition.adminId !== req.body.adminId){
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
         const  events = competition.events;
         events.push({
             id: await generateIdEvent(events),
@@ -396,6 +434,7 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
         const categories = req.body.categories;
         const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
         const cost = req.body.cost ? req.body.cost : 0;
+        const subEvents = req.body.subEvents ? req.body.subEvents : [];
         let type;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
@@ -454,6 +493,24 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
                 message: 'Invalid name',
             });
         }
+        for (let subevent of subEvents){
+            if (!subevent.name || typeof subevent.name !== 'string'){
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'Invalid subEvents name',
+                }); 
+            }
+            if (!subevent.time || typeof subevent.time !== 'string'){
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'Invalid subEvents time',
+                });
+            }
+            let subType;
+            const url = process.env.EVENTS_URL || 'http://localhost:3000';
+            subType = (await axios.get(`${url}/api/events/${subevent.name}`)).data.data.type;
+            subevent.type = subType;
+        }
         const competition = await Competition.findOne({id: id});
         const events = competition.events;
         const index = events.findIndex(event => event.id === eventId);
@@ -472,6 +529,7 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
             maxParticipants: maxParticipants,
             cost: cost,
             type: type,
+            subEvents: subEvents,
         };
         await competition.updateOne({events: events});
         const updatedCompetition = await Competition.findOne({ id: id });
@@ -602,6 +660,18 @@ app.put('/api/competitions/:id', async (req, res) => {
             });
         }
         const competition = await Competition.findOne({ id: id });
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+            });
+        }
+        if (competition.adminId !== req.body.adminId){
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
         await competition.updateOne({
             name: name,
             location: location,
