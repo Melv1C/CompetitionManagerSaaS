@@ -131,8 +131,8 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     let admin = false;
 
     try {
-        // admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
-        admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
+        admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
+        // admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
     } catch (err) {
         admin = false;
     }
@@ -163,6 +163,9 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     // get events info
     const eventsInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/events?category=${athleteInfo.category}`)).data.data;
 
+    // get competition info
+    const competition = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}`)).data.data;
+
     // check events
     const validEvents = eventsInfo.map((event) => event.pseudoName);
     for (let i = 0; i < events.length; i++) {
@@ -187,28 +190,48 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
 
     // calculate total cost
     let totalCost = 0;
-    for (let i = 0; i < events.length; i++) {
-        const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
-        console.log(eventInfo.cost);
-        totalCost += eventInfo.cost;
+    if (!(competition.freeClub && athleteInfo.club == competition.club)) {
+        for (let i = 0; i < events.length; i++) {
+            const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
+            totalCost += eventInfo.cost;
+        }
     }
-    console.log(totalCost);
 
     // Insert inscriptions
 
+    const fullEvents = eventsInfo.filter((event) => events.includes(event.pseudoName));
+
     let inscriptionData = [];
-    for (let i = 0; i < events.length; i++) {
-        const newInscription = { 
+    for (let fullEvent of fullEvents) {
+
+        inscriptionData.push({ 
             userId, 
             athleteId, 
             athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName, 
             club: athleteInfo.club,
             bib: athleteInfo.bib, 
-            event: events[i], 
-            record: records[events[i]], 
-        };
-        inscriptionData.push(newInscription);       
+            event: fullEvent.pseudoName, 
+            record: (fullEvent.subEvents.length == 0) ? records[fullEvent.pseudoName] : records[fullEvent.pseudoName]["total"],
+            eventType: (fullEvent.subEvents.length == 0) ? "event" : "multiEvent",
+            parentEvent: null
+        });   
+        
+        for (let subEvent of fullEvent.subEvents) {
+            inscriptionData.push({
+                userId,
+                athleteId,
+                athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName,
+                club: athleteInfo.club,
+                bib: athleteInfo.bib,
+                event: `${fullEvent.pseudoName} - ${subEvent.name}`,
+                record: records[fullEvent.pseudoName][subEvent.name],
+                eventType: "subEvent",
+                parentEvent: fullEvent.pseudoName
+            });
+        }
     }
+
+    console.log(inscriptionData);
 
     if (totalCost == 0 || admin) {
         await freeInscriptions(`competition_${competitionId}`, inscriptionData);
@@ -226,14 +249,19 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     const { competitionId, athleteId } = req.params;
     let userId = req.body.userId;
     const { events, records } = req.body;
+    
+    const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
+    const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
 
     let admin = false;
-
+   
     try {
-        admin = req.query.admin ? (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/admins?userId=${req.query.admin}`)).data.data : false;
+        admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
+        // admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
     } catch (err) {
         admin = false;
     }
+
     
     // check body elements
     if ((!userId || typeof userId !== 'string') && !admin) {
@@ -257,6 +285,9 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     // get events info
     const eventsInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/events?category=${athleteInfo.category}`)).data.data;
 
+    // get competition info
+    const competition = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}`)).data.data;
+
     // check events
     const validEvents = eventsInfo.map((event) => event.pseudoName);
     for (let i = 0; i < events.length; i++) {
@@ -269,7 +300,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     const allInscriptions = await getInscriptions(`competition_${competitionId}`);
     const athleteInscriptions = allInscriptions.filter((inscription) => inscription.athleteId == athleteId);
     if (athleteInscriptions.length == 0) {
-        return res.status(400).json({ status: 'error', message: 'Athlete not inscribed (not PUT but POST)' });
+        return res.status(400).json({ status: 'error', message: 'Athlete not inscribed' });
     }
 
     // check if userId corresponds to the one in the inscription
@@ -278,11 +309,9 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         if (userId != userIdFromInscription) {
             return res.status(403).json({ status: 'error', message: 'Forbidden (userId does not correspond to the one in the inscription)' });
         }
-    } else {
-        userId = userIdFromInscription;
     }
 
-    // check if place is available (if event.maxParticipants compare with number of inscriptions)
+    // check if place is available for new events (if event.maxParticipants compare with number of inscriptions)
     for (let i = 0; i < events.length; i++) {
         if (!athleteInscriptions.some((inscription) => inscription.event == events[i])) {
             const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
@@ -292,47 +321,94 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         }
     }
 
-    // delete inscriptions for events not in the new list
+    // calculate total cost
+    let totalCost = 0;
+    if (!(competition.freeClub && athleteInfo.club == competition.club)) {
+        for (let i = 0; i < events.length; i++) {
+            if (!athleteInscriptions.some((inscription) => inscription.event == events[i])) {
+                const eventInfo = eventsInfo.find((event) => event.pseudoName == events[i]);
+                totalCost += eventInfo.cost;
+            }
+        }
+    }
+    console.log("Total cost: " + totalCost);
+
+    // Delete inscriptions for events that are not in the new list
     for (let i = 0; i < athleteInscriptions.length; i++) {
-        if (!events.includes(athleteInscriptions[i].event)) {
+        if (athleteInscriptions[i].eventType == "event" && !events.includes(athleteInscriptions[i].event)) {
+            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+        } else if (athleteInscriptions[i].eventType == "multiEvent" && !events.includes(athleteInscriptions[i].event)) {
+            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+        } else if (athleteInscriptions[i].eventType == "subEvent" && !events.includes(athleteInscriptions[i].parentEvent)) {
             await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
         }
     }
 
-    // Update inscriptions
+    // Insert inscriptions
+    const fullEvents = eventsInfo.filter((event) => events.includes(event.pseudoName));
+
     let inscriptionData = [];
-    for (let i = 0; i < events.length; i++) {
-        if(athleteInscriptions.some((inscription) => inscription.event == events[i])) {
-            const oldinscription = athleteInscriptions.find((inscription) => inscription.event == events[i]);
-            const newInscription = { 
-                _id: oldinscription._id,
-                _rev: oldinscription._rev,
+    for (let fullEvent of fullEvents) {
+        if (!athleteInscriptions.some((inscription) => inscription.event == fullEvent.pseudoName)) {
+
+            inscriptionData.push({ 
                 userId, 
                 athleteId, 
                 athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName, 
                 club: athleteInfo.club,
                 bib: athleteInfo.bib, 
-                event: events[i], 
-                record: records[events[i]], 
-            };
-            inscriptionData.push(newInscription);
+                event: fullEvent.pseudoName, 
+                record: (fullEvent.subEvents.length == 0) ? records[fullEvent.pseudoName] : records[fullEvent.pseudoName]["total"],
+                eventType: (fullEvent.subEvents.length == 0) ? "event" : "multiEvent",
+                parentEvent: null
+            });   
+            
+            for (let subEvent of fullEvent.subEvents) {
+                inscriptionData.push({
+                    userId,
+                    athleteId,
+                    athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName,
+                    club: athleteInfo.club,
+                    bib: athleteInfo.bib,
+                    event: `${fullEvent.pseudoName} - ${subEvent.name}`,
+                    record: records[fullEvent.pseudoName][subEvent.name],
+                    eventType: "subEvent",
+                    parentEvent: fullEvent.pseudoName
+                });
+            }
         } else {
-            const newInscription = { 
-                userId, 
-                athleteId, 
-                athleteName: athleteInfo.firstName + ' ' + athleteInfo.lastName, 
-                club: athleteInfo.club,
-                bib: athleteInfo.bib, 
-                event: events[i], 
-                record: records[events[i]], 
-            };
-            inscriptionData.push(newInscription);
+            let inscription = athleteInscriptions.find((inscription) => inscription.event == fullEvent.pseudoName);
+            inscription.record = (fullEvent.subEvents.length == 0) ? records[fullEvent.pseudoName] : records[fullEvent.pseudoName]["total"];
+            inscriptionData.push(inscription);
+
+            for (let subEvent of fullEvent.subEvents) {
+                let subInscription = athleteInscriptions.find((inscription) => inscription.event == `${fullEvent.pseudoName} - ${subEvent.name}`);
+                subInscription.record = records[fullEvent.pseudoName][subEvent.name];
+                inscriptionData.push(subInscription);
+            }
         }
     }
 
-    await freeInscriptions(`competition_${competitionId}`, inscriptionData);
+    console.log(inscriptionData);
 
-    res.status(200).json({ status: 'success', message: 'Inscriptions updated successfully' });
+    if (totalCost == 0 || admin) {
+        await freeInscriptions(`competition_${competitionId}`, inscriptionData);
+        res.status(200).json({ status: 'success', message: 'Inscriptions updated successfully' });
+        return;
+    } else {
+        let eventsForStripe = [];
+        for (let i = 0; i < fullEvents.length; i++) {
+            if (!athleteInscriptions.some((inscription) => inscription.event == fullEvents[i].pseudoName)) {
+                eventsForStripe.push(fullEvents[i]);
+            } else {
+                let freeEvent = fullEvents[i];
+                freeEvent.cost = 0;
+                eventsForStripe.push(freeEvent);
+            }
+        }
+        const response = await stripeInscriptions(`competition_${competitionId}`, inscriptionData, eventsForStripe, success_url, cancel_url);
+        res.status(200).json({ status: 'success', message: 'Redirect to payment', data: response });
+    }
 });
 
 // Delete all inscriptions of an athlete for a competition

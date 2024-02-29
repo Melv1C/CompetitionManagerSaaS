@@ -5,7 +5,7 @@ import { COMPETITIONS_URL, INSCRIPTIONS_URL } from '../../../../Gateway'
 
 import './Events.css'
 
-function EventsList({availableEvents, events, setEvents, competitionId, inscriptions}) {
+function EventsList({availableEvents, events, setEvents, competitionId, inscriptions, free}) {
 
     if (availableEvents.length === 0) {
         return (
@@ -18,13 +18,13 @@ function EventsList({availableEvents, events, setEvents, competitionId, inscript
     return (
         <div className='events-list'>
             {availableEvents.map((event, index) => {
-                return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} inscriptions={inscriptions} />
+                return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} inscriptions={inscriptions} free={free} />
             })}
         </div>
     )
 }
 
-function EventItem({event, setEvents, events, competitionId, inscriptions}) {
+function EventItem({event, setEvents, events, competitionId, inscriptions, free}) {
     const [checked, setChecked] = useState(false);
 
     const [place, setPlace] = useState(null);
@@ -55,7 +55,7 @@ function EventItem({event, setEvents, events, competitionId, inscriptions}) {
                 }
                 setChecked(!checked);
             }} />
-            {event.cost === 0 ? <div className='event-item-cost'></div> : <div className='event-item-cost'>{event.cost}€</div>}
+            {(event.cost === 0 || free) ? <div className='event-item-cost'></div> : <div className='event-item-cost'>{event.cost}€</div>}
             
         </div>
     )
@@ -92,7 +92,7 @@ function ControlButtons({setStep, events}) {
     )
 }
 
-export const Events = ({events, setEvents, setStep, competitionId, category}) => {
+export const Events = ({events, setEvents, setStep, competitionId, category, free}) => {
 
     const [availableEvents, setAvailableEvents] = useState([]);
 
@@ -124,7 +124,7 @@ export const Events = ({events, setEvents, setStep, competitionId, category}) =>
         <div className='step-page'>
             <h2>Épreuves</h2>
             <div className='events'>
-                <EventsList availableEvents={availableEvents} events={events} setEvents={setEvents} competitionId={competitionId} inscriptions={inscriptions} />     
+                <EventsList availableEvents={availableEvents} events={events} setEvents={setEvents} competitionId={competitionId} inscriptions={inscriptions} free={free} />    
 
             </div>
             <ControlButtons setStep={setStep} setEvents={setEvents} events={events} />

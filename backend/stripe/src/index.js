@@ -28,6 +28,11 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
         return;
     }
 
+    const metadata = { dbName: dbName };
+    for (let i = 0; i < inscriptionData.length; i++) {
+        metadata[`inscriptionData${i}`] = JSON.stringify(inscriptionData[i]);
+    }
+
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card', 'bancontact'],
         line_items: events.map(event => {
@@ -47,10 +52,7 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
         mode: 'payment',
         success_url: req.body.success_url,
         cancel_url: req.body.cancel_url,
-        metadata: {
-            inscriptionData: JSON.stringify(inscriptionData),
-            dbName: dbName,
-        },
+        metadata: metadata
     });
 
     res.status(200).json({ id: session.id, url: session.url });
@@ -62,7 +64,12 @@ app.post('/api/stripe/webhook', async (req, res) => {
         switch (stripeEvent.type) {
             case 'checkout.session.completed':
                 const metadata = stripeEvent.data.object.metadata;
-                const inscriptionData = JSON.parse(metadata.inscriptionData);
+                const inscriptionData = [];
+                for (let key in metadata) {
+                    if (key.startsWith('inscriptionData')) {
+                        inscriptionData.push(JSON.parse(metadata[key]));
+                    }
+                }
                 const dbName = metadata.dbName;
 
                 await freeInscriptions(dbName, inscriptionData);

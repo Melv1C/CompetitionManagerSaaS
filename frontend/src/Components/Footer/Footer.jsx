@@ -11,7 +11,7 @@ export const Footer = () => {
         <div className='footer-content'>
             <div className='left'>
                 <div className='text'>
-                    Ce site a été réaliser par 2 étudiants universitaires. Il a évolué depuis sa première version en 2020 et nous continuons à l'améliorer pour vous offrir une expérience de qualité ainsi que pour apprendre de nouvelles technologies.
+                    Ce site a été réalisé par 2 étudiants universitaires. Il a évolué depuis sa première version en 2020 et nous continuons à l'améliorer pour vous offrir une expérience de qualité ainsi que pour apprendre de nouvelles technologies.
                 </div>
                 <div className='certification'>
                     <span>©  </span> 2023 ClaesWeb - Tous droits réservés

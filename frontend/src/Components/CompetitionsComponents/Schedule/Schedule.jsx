@@ -73,13 +73,31 @@ export const Schedule = ({competition}) => {
             });
     }, [competition.id]);
 
+    let events = [];
+    for (let event of competition.events) {
+        events.push(event);
+        for (let subEvent of event.subEvents) {
+            events.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.name, maxParticipants: event.maxParticipants});
+        }
+    }
+
+    console.log(events);
+
     return (
         <div className="competition-page">
             <div className="schedule">
                 
-                {competition.events.map(event => {
+                {events.sort((a, b) => {
+                    if (a.time < b.time) {
+                        return -1;
+                    } else if (a.time > b.time) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }).map(event => {
                     return (
-                        <ScheduleItem key={event.id} event={event} inscriptions={inscriptions.filter(inscription => inscription.event===event.name)} />
+                        <ScheduleItem key={event.id} event={event} inscriptions={inscriptions.filter(inscription => inscription.event===event.pseudoName)} />
                     )
                 })}
             </div>

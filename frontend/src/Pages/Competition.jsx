@@ -49,7 +49,7 @@ export const Competition = () => {
                 <h1>{competition.name}</h1>
                 <SubNavBar subPage={subPage} setSubPage={setSubPage} />
                 {subPage === "overview" ? <Overview competition={competition} /> : null}
-                {subPage === "inscription" ? <Inscription id={id} /> : null}
+                {subPage === "inscription" ? <Inscription competition={competition} /> : null}
                 {subPage === "schedule" ? <Schedule competition={competition} /> : null}
             </div>
             : null}

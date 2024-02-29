@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import axios from 'axios';
-import { ATLHETES_URL } from '../../../Gateway';
+import { ATLHETES_URL, INSCRIPTIONS_URL, COMPETITIONS_URL } from '../../../Gateway'
 
 import {auth} from '../../../Firebase'
 
@@ -56,7 +56,9 @@ function ProgressBar({step}) {
     )
 }
 
-export const Inscription = ({id}) => {
+export const Inscription = ({competition}) => {
+
+    const id = competition.id;
 
     const [searchParams, setSearchParams] = useSearchParams();
     
@@ -86,11 +88,13 @@ export const Inscription = ({id}) => {
     const [events, setEvents] = useState([]);
     const [records, setRecords] = useState({});
 
-    const setRecord = (event, record) => {
+    const setRecord = (event, record, subEvent=null) => {
+
         setRecords((prevRecords) => {
-            return {
-                ...prevRecords,
-                [event]: record
+            if (subEvent) {
+                return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
+            } else {
+                return {...prevRecords, [event]: record}
             }
         })
     }
@@ -108,7 +112,9 @@ export const Inscription = ({id}) => {
         } else {
             setAthlete(null);
             setEvents([]);
+            localStorage.removeItem('events');
             setRecords({});
+            localStorage.removeItem('records');
             setStep(1);
         }
     }, [athleteId])
@@ -135,9 +141,11 @@ export const Inscription = ({id}) => {
         }
 
         // delete records for events that are not in events
-        for (let event in records) {
-            if (!events.map(e => e.name).includes(event)) {
-                delete records[event];
+        if (Object.keys(records).length != 0) {
+            for (let event in records) {
+                if (!events.map(e => e.pseudoName).includes(event)) {
+                    delete records[event];
+                }
             }
         }
     }, [events])
@@ -163,6 +171,61 @@ export const Inscription = ({id}) => {
         })
     }, [])
 
+    // load information if already inscribed
+    useEffect(() => {
+        if (athlete) {
+            axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
+            .then(async res => {
+                const inscriptions = res.data.data;
+                const athleteInscriptions = inscriptions.filter(i => i.athleteId === athlete.id);
+                // set events and records
+                if (athleteInscriptions.length > 0) {
+
+                    // add to url isInsribed to true
+                    const newSearchParams = new URLSearchParams(searchParams);
+                    newSearchParams.set('isInscribed', 'true');
+                    setSearchParams(newSearchParams);
+                    
+
+                    const events = (await axios.get(`${COMPETITIONS_URL}/${competition.id}/events?category=${athlete.category}`)).data.data;
+                    for (let i of athleteInscriptions) {
+                        const event = events.find(e => e.pseudoName === i.event);
+                        if (event) {
+                            setEvents((prevEvents) => {
+                                if (prevEvents.find(e => e.pseudoName === event.pseudoName)) {
+                                    return prevEvents;
+                                } else {
+                                    return [...prevEvents, event];
+                                }
+                            })
+                        }
+
+                        switch (i.eventType) {
+                            case 'event':
+                                setRecord(i.event, i.record);
+                                break;
+                            case 'multiEvent':
+                                setRecord(i.event, i.record, "total");
+                                break;
+                            case 'subEvent':
+                                setRecord(i.parentEvent, i.record, i.event.replace(i.parentEvent + ' - ', ''));
+                                break;
+                            default:
+                                break;
+                        }
+
+                        
+                    }
+                }
+                
+            })
+        }
+    }, [athlete])
+
+    console.log(events);
+    console.log(records);
+
+
     if (!user) {
         return (
             <div className='competition-page'>
@@ -176,10 +239,11 @@ export const Inscription = ({id}) => {
             <ProgressBar step={step} />
 
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} /> : null}
-            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} /> : null}
+            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
-            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} /> : null}
+            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}
             {step === 5 ? <Success competitionId={id} /> : null}
         </div>
     )
 }
+

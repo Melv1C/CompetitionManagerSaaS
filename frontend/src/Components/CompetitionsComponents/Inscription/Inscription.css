@@ -79,6 +79,13 @@
     cursor: pointer;
 }
 
+.control-buttons button:disabled {
+    background-color: #E5F0FF;
+    border: 2px solid #E5F0FF;
+    color: white;
+    cursor: progress;
+}
+
 .step-page {
     display: flex;
     flex-direction: column;

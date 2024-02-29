@@ -7,11 +7,12 @@ import { ATLHETES_URL } from '../../../../Gateway'
 
 import './Records.css'
 
-function ControlButtons({setStep}) {
+function ControlButtons({setStep, records, events}) {
+    const nextEnabled = Object.keys(records).length === events.length;
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(2)}}>Précédent</button>
-            <button onClick={()=>{setStep(4)}}>Suivant</button>
+            <button onClick={()=>{setStep(4)}} disabled={!nextEnabled}>Suivant</button>
         </div>
     )
 }
@@ -36,17 +37,31 @@ function RecordsList({records, setRecord, events, athleteId}) {
 
 function RecordsItem({record, setRecord, event, athleteId, records}) {
 
+    const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
+    const isSubEvent = event.superEvent !== undefined;
+
     useEffect(() => {
         if (record === undefined) {
             axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`)
                 .then(response => {
-                    setRecord(event.pseudoName, response.data.data.perf);
+                    if (isMultiEvent) {
+                        setRecord(event.pseudoName, response.data.data.perf, "total");
+                    } else if (isSubEvent) {
+                        setRecord(event.superEvent, response.data.data.perf, event.name);
+                    } else {
+                        setRecord(event.pseudoName, response.data.data.perf);
+                    }
                 })
                 .catch(error => {
-                    console.log(error);
                     // if the athlete has no record, 404 is returned
                     if (error.response.status === 404) {
-                        setRecord(event.pseudoName, 0);
+                        if (isMultiEvent) {
+                            setRecord(event.pseudoName, "0", "total");
+                        } else if (isSubEvent) {
+                            setRecord(event.superEvent, "0", event.name);
+                        } else {
+                            setRecord(event.pseudoName, "0");
+                        }
                     }
                 });
         }
@@ -56,9 +71,14 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
         <div className='record-item'>
             <div className='record-item-name'>{event.pseudoName}</div>
             <RecordInput 
-                record={record} 
-                setRecord={(newRecord) => setRecord(event.pseudoName, newRecord)} 
-                event={event} 
+                record={isMultiEvent ? record?.total : (isSubEvent && records[event.superEvent]) ? records[event.superEvent][event.name] : record}
+                setRecord={(newRecord) => {
+                    console.log("setting record of", event.pseudoName, "to", newRecord);
+                    if (isMultiEvent) {setRecord(event.pseudoName, newRecord, "total")}
+                    else if (isSubEvent) {setRecord(event.superEvent, newRecord, event.name)}
+                    else {setRecord(event.pseudoName, newRecord)}
+                }} 
+                event={event}
             />
         </div>
     )    
@@ -82,7 +102,13 @@ function RecordInput({record, setRecord, event}) {
 }
 
 function DistanceInput({record, setRecord}) {
-    let [meters, centimeters] = record.split('.');
+    let [meters, centimeters] = [0, 0];
+    if (record.includes('.')) {
+        [meters, centimeters] = record.split('.');
+    } else {
+        meters = record;
+        centimeters = '0';
+    }
 
     const decameters = parseInt(meters/10);
     meters = meters%10;
@@ -351,16 +377,27 @@ function PointsInput({record, setRecord, event}) {
 
 export const Records = ({events, records, setRecord, setStep}) => {
 
+    console.log(events);
+    console.log(records);
+
     const [searchParams, setSearchParams] = useSearchParams();
 
     const athleteId = searchParams.get('athleteId');
+
+    let eventsList = [];
+    for (let event of events) {
+        eventsList.push(event);
+        for (let subEvent of event.subEvents) {
+            eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.name});
+        }
+    }
 
     return (
         <div className='step-page'>
             <h2>Records</h2>
 
             <div className='records'>
-                <RecordsList records={records} setRecord={setRecord} events={events} athleteId={athleteId} />
+                <RecordsList records={records} setRecord={setRecord} events={eventsList} athleteId={athleteId} />
             </div>
 
             <ControlButtons setStep={setStep} records={records} events={events} />
