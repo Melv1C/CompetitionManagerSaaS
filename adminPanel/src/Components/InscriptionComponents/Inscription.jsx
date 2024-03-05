@@ -159,6 +159,7 @@ export const Inscription = (props) => {
             .then(async res => {
                 const inscriptions = res.data.data;
                 const athleteInscriptions = inscriptions.filter(i => i.athleteId === athlete.id);
+                console.log(athleteInscriptions);
                 // set events and records
                 if (athleteInscriptions.length > 0) {
 
@@ -195,6 +196,11 @@ export const Inscription = (props) => {
                                 break;
                         }
                     }
+                }else{
+                    // add to url isInsribed to false
+                    const newSearchParams = new URLSearchParams(searchParams);
+                    newSearchParams.set('isInscribed', 'false');
+                    setSearchParams(newSearchParams);
                 }
                 
             })

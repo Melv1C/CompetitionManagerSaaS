@@ -6,6 +6,7 @@ const { createDatabase,
         getInscriptions,
         getInscription,
         deleteInscription,
+        updateInscription,
         freeInscriptions,
         stripeInscriptions
     } = require('./utils');
@@ -418,6 +419,42 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         res.status(200).json({ status: 'success', message: 'Redirect to payment', data: response });
     }
 });
+
+// Update the name of a event for all inscriptions of a competition
+app.put('/api/inscriptions/:competitionId/event/:oldEventName/:newEventName', async (req, res) => {
+    const { competitionId, oldEventName, newEventName} = req.params;
+    const { adminId, isMulti } = req.body;
+
+    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${adminId}`);
+
+    if (!check.data.data) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
+    }
+
+    const allInscriptions = await getInscriptions(`competition_${competitionId}`);
+    for (let i = 0; i < allInscriptions.length; i++) {
+        if (allInscriptions[i].event == oldEventName) {
+            allInscriptions[i].event = newEventName;
+            await updateInscription(`competition_${competitionId}`, allInscriptions[i]);
+        }
+    }
+
+    if (isMulti) {
+        for (let i = 0; i < allInscriptions.length; i++) {
+            if (allInscriptions[i].parentEvent == oldEventName) {
+                allInscriptions[i].parentEvent = newEventName;
+                allInscriptions[i].event = allInscriptions[i].event.replace(oldEventName, newEventName);
+                await updateInscription(`competition_${competitionId}`, allInscriptions[i]);
+            }
+        }
+    }
+
+    res.status(200).json({ status: 'success', message: 'Event name updated successfully' });
+});
+
+
+
+
 
 // Delete all inscriptions of an athlete for a competition
 app.delete('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {

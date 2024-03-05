@@ -87,8 +87,8 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
             userId: user.uid,
             events: events.map(event => event.pseudoName),
             records: records,
-            success_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=5`,
-            cancel_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=4`
+            success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
+            cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
         })
         .then(res => {
             console.log(res);
@@ -111,8 +111,8 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
         athleteId: athlete.id,
         events: events.map(event => event.pseudoName),
         records: records,
-        success_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=5`,
-        cancel_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=4`
+        success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
+        cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
     })
     .then(res => {
         console.log(res);

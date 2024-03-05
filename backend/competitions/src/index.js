@@ -4,7 +4,6 @@ const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
 const axios = require('axios');
-const { type } = require('os');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -73,6 +72,10 @@ app.get("/api/competitions", async (req, res) => {
 app.get('/api/competitions/admin/:adminId', async (req, res) => {
     try{
         const competitions = await Competition.find({ adminId: req.params.adminId });
+        //take adminId off the response
+        competitions.forEach(competition => {
+            delete competition.adminId;
+        });
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
@@ -105,6 +108,8 @@ app.get('/api/competitions/:id', async (req, res) => {
                 message: 'Competition not found',
             });
         }
+        //take adminId off the response
+        delete competition.adminId;
         res.status(200).json({
             status: 'success',
             message: 'Competition retrieved successfully',
@@ -435,6 +440,7 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
         const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
         const cost = req.body.cost ? req.body.cost : 0;
         const subEvents = req.body.subEvents ? req.body.subEvents : [];
+        const adminId = req.body.adminId;
         let type;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
@@ -512,6 +518,12 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
             subevent.type = subType;
         }
         const competition = await Competition.findOne({id: id});
+        if (competition.adminId !== req.body.adminId){
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
         const events = competition.events;
         const index = events.findIndex(event => event.id === eventId);
         if (index === -1){
@@ -520,6 +532,16 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
                 message: 'Event not found',
             });
         }
+        //change the name in the existing inscriptions
+        if (events[index].pseudoName !== pseudoName){
+            const isMulti = events[index].subEvents.length > 0;
+            const body = {
+                adminId: competition.adminId,
+                isMulti: isMulti
+            }
+            axios.put(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}/event/${events[index].pseudoName}/${pseudoName}`, body).catch(err => console.log("error : "+err.response.data.message));
+        }
+        
         events[index] = {
             id: eventId,
             name: name,
@@ -699,7 +721,48 @@ app.put('/api/competitions/:id', async (req, res) => {
     }
 });
 
-
+//Check the adminId of a competition
+app.get('/api/competitions/:id/:adminId', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const adminId = req.params.adminId;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+                data: false
+            });
+        }
+        const competition = await Competition.findOne({ id: id });
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+                data: false
+            });
+        }
+        if (competition.adminId !== adminId){
+            console.log("Try to access with adminId: ", adminId, " but the adminId of the competition is: ", competition.adminId, "for competition: ", competition.id);
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+                data: false
+            });
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'AdminId verified',
+            data: true
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+            data: false
+        });
+    }
+});
 
 
 app.listen(port, () => console.log(`Competitions microservice listening on port ${port}!`));

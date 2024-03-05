@@ -50,10 +50,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home user={user} />} />
                     <Route path="/create" element={<Create user={user}/>} />
-                    <Route path="/competitions/:id" element={<Competition  user={user}/>} />
-                    <Route path="/competitions/:id/addEvent" element={<AddModifEvent  user={user}/>} />
-                    <Route path="/competitions/:id/events/:eventId" element={<AddModifEvent  user={user}/>} />
-                    <Route path="/competitions/:id/inscriptions" element={<Inscriptions user={user}/>} />
+                    <Route path="/competition/:id/:subpage" element={<Competition  user={user}/>} />
+                    <Route path="/competition/:id/addEvent" element={<AddModifEvent  user={user}/>} />
+                    <Route path="/competition/:id/events/:eventId" element={<AddModifEvent  user={user}/>} />
                 </Routes>
                 <Footer />
             </Router>

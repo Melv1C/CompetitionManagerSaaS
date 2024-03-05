@@ -19,7 +19,7 @@ function CompetitionsList(props) {
 
 function CompetitionsItem(props) {
     return (
-        <Link to={`/competitions/${props.competition.id}`}>
+        <Link to={`/competition/${props.competition.id}/infos`}>
             <div className="competitions-item">
                 <div className="competitions-item-info">
                     <div className="competitions-item-date">{new Date(props.competition.date).toLocaleDateString("fr-FR")}</div>

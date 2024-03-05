@@ -22,7 +22,8 @@ export const EventsList = (props) => {
     return (
         <div>
             {props.competition.events.map((event) => {
-                const participants = inscriptions.filter(i => i.event === event.name);
+                const participants = inscriptions.filter(i => i.event === event.pseudoName);
+                console.log(participants);
                 return (
                     <div key={event.id} className="event">
                         <div className='eventName'>{event.pseudoName}</div>
@@ -31,7 +32,7 @@ export const EventsList = (props) => {
                         <div className='eventMax'>{participants.length}/{event.maxParticipants}</div>
                         <button onClick={
                             () => {
-                                navigate(`/competitions/${competitionId}/events/${event.id}`);
+                                navigate(`/competition/${competitionId}/events/${event.id}`);
                             }
                         
                         }>Modifier</button>

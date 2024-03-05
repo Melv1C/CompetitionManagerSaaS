@@ -229,7 +229,7 @@ export const AddModifEvent = (props) => {
             formData.id = eventId;
             const succes = await modifEvent(competition.id, formData);
             if (succes){
-                navigate(`/competitions/${competition.id}`);
+                navigate(`/competition/${competition.id}/infos`);
             }else{
                 alert("Une erreur est survenue");
             
@@ -237,7 +237,7 @@ export const AddModifEvent = (props) => {
         }else{
             const succes = await addEvent(competition.id, formData);
             if (succes){
-                navigate(`/competitions/${competition.id}`);
+                navigate(`/competition/${competition.id}/infos`);
             }else{
                 alert("Une erreur est survenue");
             }

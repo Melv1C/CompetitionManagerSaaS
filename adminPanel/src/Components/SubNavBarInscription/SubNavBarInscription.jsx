@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import './SubNavBar.css'
+import './SubNavBarInscription.css'
 import { Link } from 'react-router-dom';
 
-export const SubNavBar = ({subPage, setSubPage}) => {
+export const SubNavBarInscription = ({subPage, setSubPage}) => {
     return (
         <>
             <div className='subnavbar'>
