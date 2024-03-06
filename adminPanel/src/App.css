@@ -19,7 +19,13 @@ li{
   align-items: center;
 }
 
+.marginRight{
+  margin-right: 10px;
+}
 
+.margin{
+  margin: 10px;
+}
 
 .greenBtn{
   padding: 10px;
@@ -31,6 +37,18 @@ li{
 
 .greenBtn:hover{
   background-color: rgb(18, 216, 0, 0.7);
+  cursor: pointer;
+}
+.orangeBtn{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: orange;
+  color: white;
+}
+
+.orangeBtn:hover{
+  background-color: rgba(255, 166, 0, 0.7);
   cursor: pointer;
 }
 

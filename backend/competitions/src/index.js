@@ -201,8 +201,9 @@ app.post('/api/competitions', async (req, res) => {
         const location = req.body.location;
         const club = req.body.club;
         const date = req.body.date;
+        const closeDate = req.body.closeDate;
         const paid = req.body.paid ? req.body.paid : false;
-        const freeClub = req.body.freeClub ? req.body.freeClub : [];
+        const freeClub = req.body.freeClub;
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         const adminId = req.body.adminId;
@@ -228,6 +229,12 @@ app.post('/api/competitions', async (req, res) => {
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid date',
+            });
+        }
+        if (!closeDate && typeof closeDate !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid closeDate',
             });
         }
         if (!paid && typeof paid !== 'boolean'){
@@ -266,6 +273,7 @@ app.post('/api/competitions', async (req, res) => {
             location: location,
             club: club,
             date: date,
+            closeDate: closeDate,
             paid: paid,
             freeClub: freeClub,
             schedule: schedule,
@@ -273,6 +281,7 @@ app.post('/api/competitions', async (req, res) => {
             open: false,
             adminId: adminId,
             epreuves: [],
+            open: false,
         });
         await competition.save();
 
@@ -616,6 +625,40 @@ app.delete('/api/competitions/:id/events/:eventId', async (req, res) => {
     }
 });
 
+//change the open status of a competition
+app.put('/api/competitions/:id/open', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const adminId = req.body.adminId;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        const competition = await Competition.findOne({id: id});
+        if (competition.adminId !== adminId){
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
+        const open = !competition.open;
+        await competition.updateOne({open: open});
+        res.status(200).json({
+            status: 'success',
+            message: 'Open status updated successfully',
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+//update a competition
 app.put('/api/competitions/:id', async (req, res) => {
     try{
         const id = req.params.id;
@@ -623,8 +666,9 @@ app.put('/api/competitions/:id', async (req, res) => {
         const location = req.body.location;
         const club = req.body.club;
         const date = req.body.date;
+        const closeDate = req.body.closeDate;
         const paid = req.body.paid ? req.body.paid : false;
-        const freeClub = req.body.freeClub ? req.body.freeClub : [];
+        const freeClub = req.body.freeClub;
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         if (!id && typeof id !== 'string'){
@@ -655,6 +699,12 @@ app.put('/api/competitions/:id', async (req, res) => {
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid date',
+            });
+        }
+        if (!closeDate && typeof closeDate !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid closeDate',
             });
         }
         if (!paid && typeof paid !== 'boolean'){
@@ -699,6 +749,7 @@ app.put('/api/competitions/:id', async (req, res) => {
             location: location,
             club: club,
             date: date,
+            closeDate: closeDate,
             paid: paid,
             freeClub: freeClub,
             schedule: schedule,

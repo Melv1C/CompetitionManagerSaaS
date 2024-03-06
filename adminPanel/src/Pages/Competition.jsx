@@ -1,12 +1,10 @@
 import React, { useEffect,useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Popup } from '../Components/Popup/Popup';
-import { CompetitionInfo } from '../Components/CompetitionInfo/CompetitionInfo';
-import { EventsList } from '../Components/EventsList/EventsList';
 import { SubNavBarCompet } from '../Components/SubNavbarCompet/SubNavBarCompet';
 
 import { InfoCompet } from '../Components/CompetitionSubpage/InfoCompet';
 import { Inscriptions } from '../Components/CompetitionSubpage/Inscriptions';
+import { Events } from '../Components/CompetitionSubpage/Events';
 
 import { getCompetition } from '../CompetitionsAPI';
 import './styles/Competition.css';
@@ -37,6 +35,7 @@ export const Competition = (props) => {
             <SubNavBarCompet subPage={subPage} setSubPage={setSubPage} />
             {subPage === "infos" ? <InfoCompet competition={competition} user={props.user} setCompetition={setCompetition}/> : null}
             {subPage === "inscriptions" ? <Inscriptions user={props.user} setUser={props.setUser}/> : null}
+            {subPage === "events" ? <Events competition={competition}/> : null}
         </>    
     );
 };

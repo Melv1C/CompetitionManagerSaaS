@@ -23,7 +23,6 @@ export const EventsList = (props) => {
         <div>
             {props.competition.events.map((event) => {
                 const participants = inscriptions.filter(i => i.event === event.pseudoName);
-                console.log(participants);
                 return (
                     <div key={event.id} className="event">
                         <div className='eventName'>{event.pseudoName}</div>
