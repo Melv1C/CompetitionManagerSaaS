@@ -580,7 +580,7 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
 });
 
 
-
+//delete a event from a competition
 app.delete('/api/competitions/:id/events/:eventId', async (req, res) => {
     try{
         const id = req.params.id;
@@ -811,6 +811,56 @@ app.get('/api/competitions/:id/:adminId', async (req, res) => {
             status: 'error',
             message: 'Internal server error',
             data: false
+        });
+    }
+});
+
+//delete a competition
+app.delete('/api/competitions/:id/:adminId', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const adminId = req.params.adminId;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        const competition = await Competition.findOne({ id: id });
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+            });
+        }
+        if (competition.adminId !== adminId){
+            console.log("Try to access with adminId: ", adminId, " but the adminId of the competition is: ", competition.adminId, "for competition: ", competition.id);
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
+        const delIsncr = await axios.delete(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}?adminId=${adminId}`).catch((err) => {
+                console.error(err);
+                return false;
+            }
+        );
+        if (!delIsncr){
+            return res.status(500).json({
+                status: 'error',
+                message: 'Error deleting inscriptions',
+            });
+        }
+        await competition.deleteOne();
+        res.status(200).json({
+            status: 'success',
+            message: 'Competition deleted successfully',
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
         });
     }
 });
