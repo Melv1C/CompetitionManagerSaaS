@@ -11,9 +11,11 @@ export const Events = ({competition}) => {
         <>
             <div className='eventDiv'>
                 <EventsList competition={competition}/>
-                <button onClick={() => {
-                    navigate(`/competition/${id}/addEvent`)
-                }}>Ajouter une épreuves</button>
+                <div className='center'>
+                    <button className='greenBtn' onClick={() => {
+                        navigate(`/competition/${id}/addEvent`)
+                    }}>Ajouter une épreuves</button>
+                </div>
             </div>
         </>
     );

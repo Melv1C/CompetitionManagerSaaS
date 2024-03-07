@@ -281,7 +281,6 @@ app.post('/api/competitions', async (req, res) => {
             open: false,
             adminId: adminId,
             epreuves: [],
-            open: false,
         });
         await competition.save();
 

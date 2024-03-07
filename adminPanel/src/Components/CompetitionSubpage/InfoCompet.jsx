@@ -56,7 +56,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     </div>
                     <div className='margin center'>
                         <label>Copier les mails des participants</label>
-                        <button className='' onClick={(e) => {
+                        <button className='greenBtn' onClick={(e) => {
                             //change the innnerHTML of the button to "copié"
                             e.target.innerHTML = "Copié !!!";
                             setTimeout(() => {
@@ -67,7 +67,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     </div>
                     <div className='margin center'>
                         <label>Télécharger le ficher des inscritpions</label>
-                        <button className='' onClick={(e) => {
+                        <button className='greenBtn' onClick={(e) => {
                             axios.get(`${INSCRIPTIONS_URL}/${id}/`).then((response) => {
                                 const inscriptions = response.data.data;
                                 let fileData = "";
@@ -79,6 +79,12 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                                 console.log(error);
                             });
                         }}>Télécharger</button>
+                    </div>
+                    <div className='margin center'>
+                        <label>Voir la compétition sur le site</label>
+                        <button className='greenBtn' onClick={(e) => {
+                            window.open(`https://competitionmanager.be/competitions/${id}`);
+                        }}>Voir</button>
                     </div>
                     <div className='margin center'>
                         <label>Supprimer la compétition</label>

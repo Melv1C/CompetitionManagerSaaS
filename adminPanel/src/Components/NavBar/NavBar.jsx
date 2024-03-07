@@ -8,7 +8,6 @@ import { auth } from '../../Firebase'
 
 
 export const NavBar = (props) => {
-    console.log(props.user)
     return (
         <>
             <div className='navbar'>

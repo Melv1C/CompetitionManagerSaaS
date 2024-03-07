@@ -8,7 +8,9 @@ export const Inscriptions = (props) => {
     const [subPage, setSubPage] = useState("one");
     return (
         <div>
-            <SubNavBarInscription subPage={subPage} setSubPage={setSubPage} />
+            <div className='margin'>
+                <SubNavBarInscription subPage={subPage} setSubPage={setSubPage} />
+            </div>
             {subPage === "one" ? <Inscription user={props.user} setUser={props.setUser}/> : null}
             {subPage === "multi" ? <InscriptionMulti user={props.user} setUser={props.setUser}/> : null}
         </div>

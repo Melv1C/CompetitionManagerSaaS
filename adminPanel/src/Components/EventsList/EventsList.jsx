@@ -19,6 +19,9 @@ export const EventsList = (props) => {
             console.log(err);
         })
     }, [competitionId]);
+    if (props.competition.events.length === 0) {
+        return <div className="margin">Aucune épreuve</div>;
+    }
     return (
         <div>
             {props.competition.events.map((event) => {
@@ -29,7 +32,7 @@ export const EventsList = (props) => {
                         <div className='eventTime'>{event.time}</div>
                         <div className='eventCost'>{event.cost}€</div>
                         <div className='eventMax'>{participants.length}/{event.maxParticipants}</div>
-                        <button onClick={
+                        <button className='orangeBtn' onClick={
                             () => {
                                 navigate(`/competition/${competitionId}/events/${event.id}`);
                             }
