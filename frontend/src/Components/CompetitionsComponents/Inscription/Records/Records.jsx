@@ -105,6 +105,7 @@ function DistanceInput({record, setRecord}) {
     let [meters, centimeters] = [0, 0];
     if (record.includes('.')) {
         [meters, centimeters] = record.split('.');
+        centimeters = centimeters.padEnd(2, '0');
     } else {
         meters = record;
         centimeters = '0';

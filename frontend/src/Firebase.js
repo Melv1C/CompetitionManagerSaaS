@@ -8,9 +8,7 @@ import { getAuth } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyDX5BCIaNZrWZxR1l2qvYmmpreyPlGcdwo",
   authDomain: "inscription-2089c.firebaseapp.com",
-  databaseURL: "https://inscription-2089c-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "inscription-2089c",
-  storageBucket: "inscription-2089c.appspot.com",
   messagingSenderId: "936892592945",
   appId: "1:936892592945:web:af222a24a52d0a33727610"
 };

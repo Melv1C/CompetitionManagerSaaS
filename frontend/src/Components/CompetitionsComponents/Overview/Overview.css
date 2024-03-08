@@ -1,0 +1,82 @@
+.overview {
+    display: flex;
+    gap: 50px;
+}
+
+.overview .card {
+    width: 50%;
+    border: 3px solid #E5F0FF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 10px;
+}
+.overview .card div {
+    display: flex;
+    align-items: center;  
+    gap: 10px;
+}
+
+.overview .card div .label {
+    gap: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #515151;
+    text-align: left;
+    
+    width: 50%;
+
+}
+
+.overview .card div .label .icon {
+    width: 20px;
+}
+
+.overview .card div .value {
+    font-size: 20px;
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+    overflow-wrap: break-word;
+}
+
+.overview .card div .value a {
+    overflow-wrap: break-word;
+}
+
+.overview .description {
+    width: 50%;
+    border: 3px solid #E5F0FF;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    white-space: pre-wrap;
+}
+
+.overview .description .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #515151;
+}
+
+
+/* Responsive */
+
+@media screen and (max-width: 900px) {
+    .overview {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .overview .card {
+        width: 80%;
+    }
+
+    .overview .description {
+        width: 80%;
+    }
+}

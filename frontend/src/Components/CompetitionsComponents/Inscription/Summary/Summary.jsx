@@ -43,7 +43,7 @@ function EventItem({event, records, free}) {
     } else if (isMultiEvent) {
         record = records[event.pseudoName]["total"]
     } else {
-        record = records[event.name];
+        record = records[event.pseudoName];
     }
 
     return (

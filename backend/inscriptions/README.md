@@ -4,38 +4,44 @@
 
 This service is responsible for managing inscriptions.
 
-## API
+## Authors
 
-### New competition
+- Claes Melvyn
 
-- `POST /inscriptions`
-- Description: Create a new competition
-- Request body:
-```json
-{
-    "competitionId": "string",
-}
-```
-- Response: HTTP 201
-```json
-{
-    "status": "success",
-    "message": "Competition created successfully"
-}
-```
+## Technologies
 
-### Delete competition
+- Node.js (Express)
+- CouchDB (nano)
 
-- `DELETE /inscriptions/:competitionId`
-- Description: Delete a competition
-- Response: HTTP 200
-```json
-{
-    "status": "success",
-    "message": "Competition deleted successfully"
-}
+## Environment variables
+
+- `PORT`: Port number for the server (Default: 3000)
+- `COUCHDB_URL`: URL of the CouchDB server
+- `COMPETITIONS_URL`: URL of the competitions service
+- `ATHLETES_URL`: URL of the athletes service
+- `STRIPE_URL`: URL of the stripe service
+
+## Dockerization
+
+The service is dockerized. You can build the image using the [build.sh](build.sh) script.
+
+```bash
+./build.sh $DOCKER_ID
 ```
 
+To run the container:
+
+```bash
+docker run -d -e PORT='$PORT' -e COUCHDB_URL='$COUCHDB_URL' -e COMPETITIONS_URL='$COMPETITIONS_URL' -e ATHLETES_URL='$ATHLETES_URL' -e STRIPE_URL='$STRIPE_URL' -p $HOST_PORT:$PORT --name $CONTAINER_NAME $IMAGE_NAME
+```
+
+Example:
+
+```bash
+docker run -d -e PORT='3000' -e COUCHDB_URL='http://xxxx:xxxx@competitionmanager.be:4003' -e COMPETITIONS_URL='https://competitionmanager.be/' -e ATHLETES_URL='https://competitionmanager.be/' -e STRIPE_URL='https://competitionmanager.be/' -p 80:3000 --name inscriptions-service claesweb/cm-inscriptions
+```
+
+## API for the Frontend
 
 ### Get info of a competition
 
@@ -162,66 +168,39 @@ This service is responsible for managing inscriptions.
 }
 ```
 
-## Admin API
+## API for Competitions service
 
-### Create inscription
+### New competition
 
-- `POST /inscriptions/:competitionId?admin=adminId`
-- Description: Create inscription as admin
+- `POST /inscriptions`
+- Description: Create a new competition
 - Request body:
 ```json
 {
-    "athleteId": "string",
-    "athleteName": "string",
-    "events": ["string"],
-    "records": {
-        "event1": "string",
-    }
+    "competitionId": "string",
 }
 ```
 - Response: HTTP 201
 ```json
 {
     "status": "success",
-    "message": "Inscriptions created successfully"
+    "message": "Competition created successfully"
 }
 ```
 
-### Update inscription
+### Delete competition
 
-- `PUT /inscriptions/:competitionId/:inscriptionId?admin=adminId`
-- Description: Update inscription as admin
-- Request body:
-```json
-{
-    "athleteId": "string",
-    "athleteName": "string",
-    "events": ["string"],
-    "records": {
-        "event1": "string",
-    }
-}
-```
+- `DELETE /inscriptions/:competitionId`
+- Description: Delete a competition
 - Response: HTTP 200
 ```json
 {
     "status": "success",
-    "message": "Inscriptions updated successfully"
+    "message": "Competition deleted successfully"
 }
 ```
 
-### Delete inscription
-
-- `DELETE /inscriptions/:competitionId/:inscriptionId?admin=adminId`
-- Description: Delete inscription as admin
-- Response: HTTP 200
-```json
-{
-    "status": "success",
-    "message": "Inscriptions deleted successfully"
-}
-```
-
+## API for Admin Panel
 
 
 

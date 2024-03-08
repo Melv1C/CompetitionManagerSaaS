@@ -1,47 +1,35 @@
 import React, { useEffect, useState } from 'react'
+
+import { Link } from 'react-router-dom'
+
 import axios from 'axios'
 import { INSCRIPTIONS_URL } from '../../../Gateway'
 import './Schedule.css'
 
 import { formatRecord } from '../../../RecordsHandler'
 
-function ScheduleItem({event, inscriptions}) {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
-    const [showInscriptions, setShowInscriptions] = useState(false);
-
+function ScheduleItem({event, inscriptions, competition}) {
     const [placesLeft, setPlacesLeft] = useState(event.maxParticipants - inscriptions.length);
 
     useEffect(() => {
         setPlacesLeft(event.maxParticipants - inscriptions.length);
     }, [inscriptions, event.maxParticipants]);
 
-    console.log(inscriptions);
-
     return (
-        <div className="schedule-item" onClick={() => setShowInscriptions(!showInscriptions)}>
-            <div className="schedule-item-info">
-                <div className="schedule-item-time">{event.time}</div>
-                <div className="schedule-item-name">{event.pseudoName}</div>
-                <PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />
-            </div>
-            <div className={`schedule-item-inscriptions ${showInscriptions ? 'show' : 'hide'}`}>
-                {inscriptions.sort((a, b) => {
-                    if (event.type === 'time') {
-                        return a.record - b.record;
-                    } else {
-                        return b.record - a.record;
-                    }
-                }).map(inscription => {
-                    return (
-                        <div key={inscription.id} className="inscription-item">
-                            <div className="inscription-item-bib">{inscription.bib}</div>
-                            <div className="inscription-item-athlete">{inscription.athleteName}</div>
-                            <div className="inscription-item-club">{inscription.club}</div>
-                            <div className="inscription-item-record">{formatRecord(event, inscription.record)}</div>
-                        </div>
-                    )
-                })}
-            </div>
+        <div className="schedule-item">
+            <Link to={`/competitions/${competition.id}/${event.pseudoName}`} key={event.pseudoName}>
+                <div className="schedule-item-info">
+                    <div className="schedule-item-time">{event.time}</div>
+                    <div className="schedule-item-name">{event.pseudoName}</div>
+                    <PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />
+                    <div className="schedule-item-icon">
+                        <FontAwesomeIcon icon={faUsers} /> Participants 
+                    </div>
+                </div>
+            </Link>
         </div>
     )
 }
@@ -81,8 +69,6 @@ export const Schedule = ({competition}) => {
         }
     }
 
-    console.log(events);
-
     return (
         <div className="competition-page">
             <div className="schedule">
@@ -97,7 +83,7 @@ export const Schedule = ({competition}) => {
                     }
                 }).map(event => {
                     return (
-                        <ScheduleItem key={event.id} event={event} inscriptions={inscriptions.filter(inscription => inscription.event===event.pseudoName)} />
+                        <ScheduleItem key={event.id} event={event} inscriptions={inscriptions.filter(inscription => inscription.event===event.pseudoName)} competition={competition} />
                     )
                 })}
             </div>
