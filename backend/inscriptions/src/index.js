@@ -31,6 +31,35 @@ app.use((req, res, next) => {
     next();
 });
 
+// Get all inscriptions for a userId
+app.get('/api/inscriptions', (req, res) => {
+    const userId = req.query.userId;
+    
+    axios.get(`${process.env.COMPETITIONS_URL}/api/competitions`)
+        .then(async (response) => {
+            const competitions = response.data.data;
+            let inscriptions = [];
+            for (let i = 0; i < competitions.length; i++) {
+                const competitionId = competitions[i].id;
+                let competitionInscriptions = await getInscriptions(`competition_${competitionId}`);
+                competitionInscriptions = competitionInscriptions.filter((inscription) => inscription.userId == userId);
+                competitionInscriptions = competitionInscriptions.map((inscription) => {
+                    inscription.competitionId = competitionId;
+                    inscription.competitionName = competitions[i].name;
+                    inscription.competitionDate = competitions[i].date;
+                    return inscription;
+                });
+                inscriptions = inscriptions.concat(competitionInscriptions);
+            }
+            const data = inscriptions.map((inscription) => removePrivateFields(inscription));
+            res.status(200).json({ status: 'success', message: 'Inscriptions retrieved successfully', data: data });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching inscriptions' });
+        });
+});
+
 // Create a database for a new competition
 app.post('/api/inscriptions', (req, res) => {
     const { competitionId } = req.body;

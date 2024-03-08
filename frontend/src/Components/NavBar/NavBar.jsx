@@ -15,7 +15,7 @@ export const NavBar = () => {
     const location = useLocation();
     const path = location.pathname;
 
-    const [menu, setMenu] = useState(path.split("/")[1] === "" ? "home" : path.split("/")[1]);
+    const [menu, setMenu] = useState("");
 
     const [user, setUser] = useState(false);
 
@@ -30,6 +30,15 @@ export const NavBar = () => {
             }
         })
     }, [])
+
+    useEffect(() => {
+        const list_path = path.split("/");
+        if (list_path.length == 2) {
+            setMenu(list_path[1] === "" ? "home" : list_path[1]);
+        } else {
+            setMenu("");
+        }
+    }, [path])
 
     const [showModal, setShowModal] = useState(false);
 
@@ -48,9 +57,9 @@ export const NavBar = () => {
 
                 <div className={menuOpen ? 'navbar-menu open' : 'navbar-menu'}>
                     <ul>
-                        <li onClick={()=>{setMenu("home")}}><Link to='/'>Accueil</Link> {menu==="home" ? <hr/> : null}</li>
-                        <li onClick={()=>{setMenu("competitions")}}><Link to='/competitions'>Competitions</Link> {menu==="competitions" ? <hr/> : null}</li>
-                        {user ? <li onClick={()=>{setMenu("profile")}}><Link to='/profile'>Mon compte</Link> {menu==="profile" ? <hr/> : null}</li> : null}
+                        <li><Link to='/'>Accueil</Link> {menu==="home" ? <hr/> : null}</li>
+                        <li><Link to='/competitions'>Competitions</Link> {menu==="competitions" ? <hr/> : null}</li>
+                        {user ? <li><Link to='/profile'>Mon compte</Link> {menu==="profile" ? <hr/> : null}</li> : null}
                     </ul>
                     <div className='navbar-login-user'>
                         {!user ? 
