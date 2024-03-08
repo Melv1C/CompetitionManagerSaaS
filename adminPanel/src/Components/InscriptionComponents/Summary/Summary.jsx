@@ -17,26 +17,39 @@ function AthleteSummary({athlete}) {
     )
 }
 
-function EventsRecordsSummary({events, records}) {
+function EventsRecordsSummary({events, records, free}) {
     return (
         <div className='events-records-summary'>
             <h3>Épreuves</h3>
             <div className='events-records-summary-content'>
                 {events.map((event, index) => {
-                    return <EventItem key={index} event={event} records={records} />
+                    return <EventItem key={index} event={event} records={records} free={free} />
                 })}
             </div>
         </div>
     )
 }
 
-function EventItem({event, records}) {
+function EventItem({event, records, free}) {
+
+    const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
+    const isSubEvent = event.superEvent !== undefined;
+
+    let record;
+    if (isSubEvent) {
+        record = records[event.superEvent][event.name]
+    } else if (isMultiEvent) {
+        record = records[event.pseudoName]["total"]
+    } else {
+        record = records[event.name];
+    }
+
     return (
         <div className='event-item'>
             <div className='event-item-time'>{event.time}</div>
             <div className='event-item-name'>{event.pseudoName}</div>
-            <div className='event-item-record'>{formatRecord(event, records[event.pseudoName])}</div>
-            {event.cost !== 0 ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
+            <div className='event-item-record'>{formatRecord(event, record)}</div>
+            {(event.cost !== 0 && !free) ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
         </div>
     )
 }
@@ -63,22 +76,43 @@ function ControlButtons({setStep, totalCost, athlete, events, records, competiti
 }
 
 function postInscription(athlete, events, records, competitionId, setStep, user) {
-    console.log(athlete, events, records);
 
-    let newRecords = {};
-    for (let event in records) {
-        let RealEvent = events.find(e => e.pseudoName == event);
-        newRecords[RealEvent.name] = records[event];
+    // get isInscribed from url
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const isInscribed = urlSearchParams.get('isInscribed');
+
+    if (isInscribed === 'true') {
+        console.log(`PUT ${INSCRIPTIONS_URL}/${competitionId}/${athlete.id}`);
+        axios.put(`${INSCRIPTIONS_URL}/${competitionId}/${athlete.id}`, {
+            userId: user.uid,
+            events: events.map(event => event.pseudoName),
+            records: records,
+            success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
+            cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
+        })
+        .then(res => {
+            console.log(res);
+            if (res.status === 200) {
+                // if url returned, redirect to url
+                try {
+                    window.location.href = res.data.data.url;
+                } catch (err) {
+                    setStep(5);
+                }
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        return;
     }
-    console.log(newRecords);
-    console.log(user)
-    axios.post(`${INSCRIPTIONS_URL}/${competitionId}?admin=${user.uid}`, {
+    axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
         userId: user.uid,
         athleteId: athlete.id,
-        events: events.map(event => event.name),
-        records: newRecords,
-        success_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=5`,
-        cancel_url: `/competitions/${competitionId}?subPage=inscription&athleteId=${athlete.id}&step=4`
+        events: events.map(event => event.pseudoName),
+        records: records,
+        success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
+        cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
     })
     .then(res => {
         console.log(res);
@@ -98,24 +132,34 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
 }
 
 
-export const Summary = ({athlete, events, records, setStep, competitionId, user}) => {
+export const Summary = ({athlete, events, records, setStep, competitionId, user, free}) => {
     const [totalCost, setTotalCost] = useState(0);
-
     useEffect(() => {
-        setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
-    }, [events]);
+        if (free) {
+            setTotalCost(0);
+        } else {
+            setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
+        }
+    }, [events, free])
 
     if (!athlete) {
         return <div>Chargement...</div>
     }
 
+    let eventsList = [];
+    for (let event of events) {
+        eventsList.push(event);
+        for (let subEvent of event.subEvents) {
+            eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
+        }
+    }
 
     return (
         <div className='step-page'>
             <h2>Récapitulatif</h2>
             <div className='summary'>
                 <AthleteSummary athlete={athlete} />
-                <EventsRecordsSummary events={events} records={records} />
+                <EventsRecordsSummary events={eventsList} records={records} free={free} />
                 <TotalCost totalCost={totalCost} />
             </div>
             <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} user={user}/>

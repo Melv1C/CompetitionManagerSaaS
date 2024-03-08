@@ -4,7 +4,6 @@ const env = require('dotenv').config();
 const { Competition } = require("./schemas");
 const crypto = require('crypto');
 const axios = require('axios');
-const { type } = require('os');
 
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
@@ -73,6 +72,10 @@ app.get("/api/competitions", async (req, res) => {
 app.get('/api/competitions/admin/:adminId', async (req, res) => {
     try{
         const competitions = await Competition.find({ adminId: req.params.adminId });
+        //take adminId off the response
+        competitions.forEach(competition => {
+            delete competition.adminId;
+        });
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
@@ -105,6 +108,8 @@ app.get('/api/competitions/:id', async (req, res) => {
                 message: 'Competition not found',
             });
         }
+        //take adminId off the response
+        delete competition.adminId;
         res.status(200).json({
             status: 'success',
             message: 'Competition retrieved successfully',
@@ -196,8 +201,9 @@ app.post('/api/competitions', async (req, res) => {
         const location = req.body.location;
         const club = req.body.club;
         const date = req.body.date;
+        const closeDate = req.body.closeDate;
         const paid = req.body.paid ? req.body.paid : false;
-        const freeClub = req.body.freeClub ? req.body.freeClub : [];
+        const freeClub = req.body.freeClub;
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         const adminId = req.body.adminId;
@@ -223,6 +229,12 @@ app.post('/api/competitions', async (req, res) => {
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid date',
+            });
+        }
+        if (!closeDate && typeof closeDate !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid closeDate',
             });
         }
         if (!paid && typeof paid !== 'boolean'){
@@ -261,6 +273,7 @@ app.post('/api/competitions', async (req, res) => {
             location: location,
             club: club,
             date: date,
+            closeDate: closeDate,
             paid: paid,
             freeClub: freeClub,
             schedule: schedule,
@@ -435,6 +448,7 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
         const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
         const cost = req.body.cost ? req.body.cost : 0;
         const subEvents = req.body.subEvents ? req.body.subEvents : [];
+        const adminId = req.body.adminId;
         let type;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
@@ -512,6 +526,12 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
             subevent.type = subType;
         }
         const competition = await Competition.findOne({id: id});
+        if (competition.adminId !== req.body.adminId){
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
         const events = competition.events;
         const index = events.findIndex(event => event.id === eventId);
         if (index === -1){
@@ -520,6 +540,16 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
                 message: 'Event not found',
             });
         }
+        //change the name in the existing inscriptions
+        if (events[index].pseudoName !== pseudoName){
+            const isMulti = events[index].subEvents.length > 0;
+            const body = {
+                adminId: competition.adminId,
+                isMulti: isMulti
+            }
+            axios.put(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}/event/${events[index].pseudoName}/${pseudoName}`, body).catch(err => console.log("error : "+err.response.data.message));
+        }
+        
         events[index] = {
             id: eventId,
             name: name,
@@ -549,7 +579,7 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
 });
 
 
-
+//delete a event from a competition
 app.delete('/api/competitions/:id/events/:eventId', async (req, res) => {
     try{
         const id = req.params.id;
@@ -594,6 +624,40 @@ app.delete('/api/competitions/:id/events/:eventId', async (req, res) => {
     }
 });
 
+//change the open status of a competition
+app.put('/api/competitions/:id/open', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const adminId = req.body.adminId;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        const competition = await Competition.findOne({id: id});
+        if (competition.adminId !== adminId){
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
+        const open = !competition.open;
+        await competition.updateOne({open: open});
+        res.status(200).json({
+            status: 'success',
+            message: 'Open status updated successfully',
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
+
+//update a competition
 app.put('/api/competitions/:id', async (req, res) => {
     try{
         const id = req.params.id;
@@ -601,8 +665,9 @@ app.put('/api/competitions/:id', async (req, res) => {
         const location = req.body.location;
         const club = req.body.club;
         const date = req.body.date;
+        const closeDate = req.body.closeDate;
         const paid = req.body.paid ? req.body.paid : false;
-        const freeClub = req.body.freeClub ? req.body.freeClub : [];
+        const freeClub = req.body.freeClub;
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         if (!id && typeof id !== 'string'){
@@ -633,6 +698,12 @@ app.put('/api/competitions/:id', async (req, res) => {
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid date',
+            });
+        }
+        if (!closeDate && typeof closeDate !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid closeDate',
             });
         }
         if (!paid && typeof paid !== 'boolean'){
@@ -677,6 +748,7 @@ app.put('/api/competitions/:id', async (req, res) => {
             location: location,
             club: club,
             date: date,
+            closeDate: closeDate,
             paid: paid,
             freeClub: freeClub,
             schedule: schedule,
@@ -699,7 +771,98 @@ app.put('/api/competitions/:id', async (req, res) => {
     }
 });
 
+//Check the adminId of a competition
+app.get('/api/competitions/:id/:adminId', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const adminId = req.params.adminId;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+                data: false
+            });
+        }
+        const competition = await Competition.findOne({ id: id });
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+                data: false
+            });
+        }
+        if (competition.adminId !== adminId){
+            console.log("Try to access with adminId: ", adminId, " but the adminId of the competition is: ", competition.adminId, "for competition: ", competition.id);
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+                data: false
+            });
+        }
+        res.status(200).json({
+            status: 'success',
+            message: 'AdminId verified',
+            data: true
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+            data: false
+        });
+    }
+});
 
+//delete a competition
+app.delete('/api/competitions/:id/:adminId', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const adminId = req.params.adminId;
+        if (!id && typeof id !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid id',
+            });
+        }
+        const competition = await Competition.findOne({ id: id });
+        if (!competition){
+            return res.status(404).json({
+                status: 'error',
+                message: 'Competition not found',
+            });
+        }
+        if (competition.adminId !== adminId){
+            console.log("Try to access with adminId: ", adminId, " but the adminId of the competition is: ", competition.adminId, "for competition: ", competition.id);
+            return res.status(403).json({
+                status: 'error',
+                message: 'Unauthorized',
+            });
+        }
+        const delIsncr = await axios.delete(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}?adminId=${adminId}`).catch((err) => {
+                console.error(err);
+                return false;
+            }
+        );
+        if (!delIsncr){
+            return res.status(500).json({
+                status: 'error',
+                message: 'Error deleting inscriptions',
+            });
+        }
+        await competition.deleteOne();
+        res.status(200).json({
+            status: 'success',
+            message: 'Competition deleted successfully',
+        });
+    }catch(err){
+        console.error(err);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error',
+        });
+    }
+});
 
 
 app.listen(port, () => console.log(`Competitions microservice listening on port ${port}!`));

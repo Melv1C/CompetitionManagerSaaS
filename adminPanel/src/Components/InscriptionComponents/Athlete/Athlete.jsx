@@ -117,13 +117,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, user}) => 
         }
         axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${user.uid}`)
         .then(res => {
-            if (res.data.data.isInsribed && res.data.data.ownByUser) {
-                setEnableNext(true);
-            } else if (!res.data.data.isInsribed) {
-                setEnableNext(true);
-            } else {
-                setEnableNext(false);
-            }
+            setEnableNext(true);
         })
         .catch(err => {
             console.log(err);

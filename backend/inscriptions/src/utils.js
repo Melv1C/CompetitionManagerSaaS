@@ -81,6 +81,33 @@ function deleteInscription(dbName, inscriptionId, rev) {
     });
 }
 
+async function updateInscription(dbName, inscription) {
+    const db = nano.use(dbName);
+    return new Promise((resolve, reject) => {
+        db.insert(inscription, (err, body) => {
+            if (err) {
+                // Handle conflict error
+                if (err.statusCode === 409) {
+                    // Fetch the latest revision token for the document
+                    getInscription(dbName, inscription._id)
+                        .then(doc => {
+                            // Retry the update with the latest revision token
+                            inscription._rev = doc._rev;
+                            updateInscription(dbName, inscription)
+                                .then(resolve)
+                                .catch(reject);
+                        })
+                        .catch(reject);
+                } else {
+                    reject(err);
+                }
+            } else {
+                resolve(body);
+            }
+        });
+    });
+}
+
 
 async function freeInscriptions(dbName, inscriptionData) {
     for (let i = 0; i < inscriptionData.length; i++) {
@@ -107,6 +134,7 @@ module.exports = {
     getInscriptions,
     getInscription,
     deleteInscription,
+    updateInscription,
     freeInscriptions,
     stripeInscriptions
 };

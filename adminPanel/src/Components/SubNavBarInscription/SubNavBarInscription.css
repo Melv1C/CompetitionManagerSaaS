@@ -28,16 +28,10 @@
     cursor: pointer;
 }
 
-.subnavbar-menu li a {
-    text-decoration: none;
-    color: black
-}
-
 .subnavbar-menu hr {
     border: none;
     width: 80%;
     height: 3px;
-    border-radius: 10px;
     background-color: #ff4141;
 }
 

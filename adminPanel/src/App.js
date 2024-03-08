@@ -27,7 +27,7 @@ function App() {
     if (user === null) {
         return (
             <>
-                <NavBar />
+                <NavBar  user={user}/>
                 <div className='center'>
                     <Audio height="80" width="80" radius="9" color="green" ariaLabel="loading" wrapperStyle wrapperClass/>
                 </div>
@@ -37,7 +37,7 @@ function App() {
     }else if (user.uid === undefined) {
         return (
             <>
-                <NavBar />
+                <NavBar  user={user}/>
                 <Auth />
                 <Footer />
             </>
@@ -46,14 +46,13 @@ function App() {
     return (
         <div>
             <Router>
-                <NavBar />
+                <NavBar  user={user}/>
                 <Routes>
                     <Route path="/" element={<Home user={user} />} />
                     <Route path="/create" element={<Create user={user}/>} />
-                    <Route path="/competitions/:id" element={<Competition  user={user}/>} />
-                    <Route path="/competitions/:id/addEvent" element={<AddModifEvent  user={user}/>} />
-                    <Route path="/competitions/:id/events/:eventId" element={<AddModifEvent  user={user}/>} />
-                    <Route path="/competitions/:id/inscriptions" element={<Inscriptions user={user}/>} />
+                    <Route path="/competition/:id/:subpage" element={<Competition  user={user}/>} />
+                    <Route path="/competition/:id/addEvent" element={<AddModifEvent  user={user}/>} />
+                    <Route path="/competition/:id/events/:eventId" element={<AddModifEvent  user={user}/>} />
                 </Routes>
                 <Footer />
             </Router>

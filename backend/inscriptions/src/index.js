@@ -6,6 +6,7 @@ const { createDatabase,
         getInscriptions,
         getInscription,
         deleteInscription,
+        updateInscription,
         freeInscriptions,
         stripeInscriptions
     } = require('./utils');
@@ -74,8 +75,16 @@ app.post('/api/inscriptions', (req, res) => {
 });
 
 // Delete a database for a competition
-app.delete('/api/inscriptions/:competitionId', (req, res) => {
+app.delete('/api/inscriptions/:competitionId', async (req, res) => {
     const { competitionId } = req.params;
+    const check = req.query.adminId ? await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${req.query.adminId}`).catch((err) => { 
+        console.error(err);
+        return false; 
+    }) : false;
+    const admin = check ? check.data.data : false;
+    if (!admin) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
+    }
     deleteDatabase(`competition_${competitionId}`)
         .then(() => {
             res.status(200).json({ status: 'success', message: 'Competition deleted successfully' });
@@ -157,26 +166,18 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
 
-    let admin = false;
-    const competInfo = (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}`)).data.data;
-    if (competInfo.adminId == userId) {
-        admin = true;
+    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${userId}`).catch((err) => { 
+        console.error(err);
+        return false; 
+    });
+    const admin = check ? check.data.data : false;
+    if (!admin) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
     }
-    console.log(admin);
-
-    /*
-    try {
-        admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
-        // admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
-    } catch (err) {
-        admin = false;
-    }
-    */
 
     if (admin) {
         userId = "admin";
     }
-
 
     // check body elements
     if (!userId || typeof userId !== 'string') {
@@ -290,13 +291,13 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
 
-    let admin = false;
-   
-    try {
-        admin = req.query.admin ? (await axios.get(`${process.env.ADMINS_URL}/api/admins/${req.query.admin}`)).data.data : false;
-        // admin = req.query.admin ? (await axios.get(`http://admins-service:3000/api/admins/${req.query.admin}`)).data.data : false;
-    } catch (err) {
-        admin = false;
+    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${userId}`).catch((err) => { 
+        console.error(err);
+        return false; 
+    });
+    const admin = check ? check.data.data : false;
+    if (!admin) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
     }
 
     
@@ -448,17 +449,57 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     }
 });
 
+// Update the name of a event for all inscriptions of a competition
+app.put('/api/inscriptions/:competitionId/event/:oldEventName/:newEventName', async (req, res) => {
+    const { competitionId, oldEventName, newEventName} = req.params;
+    const { adminId, isMulti } = req.body;
+
+    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${adminId}`).catch((err) => {
+        console.error(err);
+        return false;
+    });
+
+    if (!check || !check.data.data) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
+    }
+
+    const allInscriptions = await getInscriptions(`competition_${competitionId}`);
+    for (let i = 0; i < allInscriptions.length; i++) {
+        if (allInscriptions[i].event == oldEventName) {
+            allInscriptions[i].event = newEventName;
+            await updateInscription(`competition_${competitionId}`, allInscriptions[i]);
+        }
+    }
+
+    if (isMulti) {
+        for (let i = 0; i < allInscriptions.length; i++) {
+            if (allInscriptions[i].parentEvent == oldEventName) {
+                allInscriptions[i].parentEvent = newEventName;
+                allInscriptions[i].event = allInscriptions[i].event.replace(oldEventName, newEventName);
+                await updateInscription(`competition_${competitionId}`, allInscriptions[i]);
+            }
+        }
+    }
+
+    res.status(200).json({ status: 'success', message: 'Event name updated successfully' });
+});
+
+
+
+
+
 // Delete all inscriptions of an athlete for a competition
 app.delete('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     const { competitionId, athleteId } = req.params;
     let userId = req.body.userId;
-
-    let admin = false;
-
-    try {
-        admin = req.query.admin ? (await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/admins?userId=${req.query.admin}`)).data.data : false;
-    } catch (err) {
-        admin = false;
+    console.log(athleteId);
+    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${userId}`).catch((err) => { 
+        console.error(err);
+        return false; 
+    });
+    const admin = check ? check.data.data : false;
+    if (!admin) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
     }
 
     if ((!userId || typeof userId !== 'string') && !admin) {

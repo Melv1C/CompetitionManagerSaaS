@@ -16,7 +16,7 @@ export const NavBar = (props) => {
                     <label>Admin panel</label>
                 </div>
                 <div className='navbar-login-user'>
-                    {props.user !== null ? <button onClick={()=>{signOut(auth)}}>Se déconnecter</button>: null}
+                    {props.user !== null && props.user?.uid !== undefined ? <button onClick={()=>{signOut(auth)}}>Se déconnecter</button>: null}
                 </div>
             </div>
         </>

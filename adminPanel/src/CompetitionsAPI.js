@@ -10,12 +10,11 @@ async function getCompetition(id, setCompetition) {
     });
 }
 
-async function createCompetition(competition) {
-    return await axios.post(COMPETITIONS_URL, competition).then((response) => {
-        return true; //history.push(`/competitions/${response.data.data.id}`);
+function createCompetition(competition, navigate) {
+    axios.post(COMPETITIONS_URL, competition).then((response) => {
+        navigate(`/competition/${response.data.data.id}/infos`);
     }).catch((error) => {
         console.log(error);
-        return false;
     });
 }
 
@@ -45,4 +44,13 @@ async function modifEvent(competitionId, event) {
     });
 }
 
-export { getCompetition, createCompetition, updateCompetition, addEvent, modifEvent};
+function openCompetition(competition, setCompetition, body) {
+    axios.put(`${COMPETITIONS_URL}/${competition.id}/open`, body).then((response) => {
+        //set competition.open to !competition.open
+        setCompetition({ ...competition, open: !competition.open });
+    }).catch((error) => {
+        console.log(error);
+    });
+}   
+
+export { getCompetition, createCompetition, updateCompetition, addEvent, modifEvent, openCompetition };

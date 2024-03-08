@@ -388,7 +388,7 @@ export const Records = ({events, records, setRecord, setStep}) => {
     for (let event of events) {
         eventsList.push(event);
         for (let subEvent of event.subEvents) {
-            eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.name});
+            eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
         }
     }
 

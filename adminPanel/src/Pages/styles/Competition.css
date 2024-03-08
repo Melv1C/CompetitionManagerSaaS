@@ -36,14 +36,23 @@
 }
 
 .competDivInfo{
-    width: 60%;
-    max-width: 800px;
+    width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
     padding: 20px;
     margin: 10px;
 }
+
+@media screen and (max-width: 700px) {
+    .upperPageCompetInfo{
+        flex-direction: column;
+    }
+    .competDivInfo{
+        width: auto;
+    }
+}
+
 
 .eventDiv{
     margin: 10px;
@@ -65,4 +74,3 @@
     margin-left: 50%;
     transform: translateX(-50%);
 }
-

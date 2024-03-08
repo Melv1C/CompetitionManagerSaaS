@@ -19,7 +19,21 @@ li{
   align-items: center;
 }
 
+.marginRight{
+  margin-right: 10px;
+}
 
+.margin{
+  margin: 10px;
+}
+
+.marginBottom40{
+  margin-bottom: 40px;
+}
+
+.padding{
+  padding: 10px;
+}
 
 .greenBtn{
   padding: 10px;
@@ -31,6 +45,18 @@ li{
 
 .greenBtn:hover{
   background-color: rgb(18, 216, 0, 0.7);
+  cursor: pointer;
+}
+.orangeBtn{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: orange;
+  color: white;
+}
+
+.orangeBtn:hover{
+  background-color: rgba(255, 166, 0, 0.7);
   cursor: pointer;
 }
 
@@ -47,6 +73,33 @@ li{
   cursor: pointer;
 }
 
+.deleteBtn{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: red;
+  color: rgb(255, 255, 255);
+}
+
+.deleteBtn:hover{
+  background-color: rgba(255, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+.greyBtn{
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(104, 101, 101);
+  color: white;
+}
+
+.greyBtn:hover{
+  background-color: rgba(104, 101, 101, 0.7);
+  cursor: pointer;
+}
+
+
 .competition-page {
   display: flex;
   flex-direction: column;
@@ -55,4 +108,18 @@ li{
   border: 3px solid #E5F0FF;
   border-radius: 10px;
   margin-top: 50px;
+}
+
+.displayRow{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.width50{
+  width: 50%;
+}
+
+.right{
+  float: right;
 }

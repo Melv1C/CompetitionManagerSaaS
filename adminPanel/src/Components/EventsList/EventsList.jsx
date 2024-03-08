@@ -19,19 +19,22 @@ export const EventsList = (props) => {
             console.log(err);
         })
     }, [competitionId]);
+    if (props.competition.events.length === 0) {
+        return <div className="margin">Aucune épreuve</div>;
+    }
     return (
         <div>
             {props.competition.events.map((event) => {
-                const participants = inscriptions.filter(i => i.event === event.name);
+                const participants = inscriptions.filter(i => i.event === event.pseudoName);
                 return (
                     <div key={event.id} className="event">
                         <div className='eventName'>{event.pseudoName}</div>
                         <div className='eventTime'>{event.time}</div>
                         <div className='eventCost'>{event.cost}€</div>
                         <div className='eventMax'>{participants.length}/{event.maxParticipants}</div>
-                        <button onClick={
+                        <button className='orangeBtn' onClick={
                             () => {
-                                navigate(`/competitions/${competitionId}/events/${event.id}`);
+                                navigate(`/competition/${competitionId}/events/${event.id}`);
                             }
                         
                         }>Modifier</button>
