@@ -2,22 +2,41 @@
 
 ## Table of contents
 
-- [TODO](#todo)
-- [Description](#description)
-- [API](#api)
-  - [Get athletes](#get-athletes)
-  - [Get athlete by id](#get-athlete-by-id)
-  - [Get athlete"s results](#get-athletes-results)
-- [Testing](#testing)
-
-
-## TODO
-
-- Check categories for [Get athletes by id](#get-athletes-by-id)
-
 ## Description
 
-This service is responsible for managing athletes. It will use beathletics api for retrieving athletes data.
+This service is responsible for retrieving information about athletes. It will use beathletics api for getting athletes data.
+
+## Authors
+
+- Claes Melvyn
+
+## Technologies
+
+- Node.js (Express)
+
+## Environment variables
+
+- `PORT`: Port number for the server (Default: 3000)
+
+## Dockerization
+
+The service is dockerized. You can build the image using the [build.sh](build.sh) script.
+
+```bash
+./build.sh $DOCKER_ID
+```
+
+To run the container:
+
+```bash
+docker run -d -e PORT='$PORT' -p $HOST_PORT:$PORT --name $CONTAINER_NAME $IMAGE_NAME
+```
+
+Example:
+
+```bash
+docker run -d -e PORT='3000' -p 80:3000 --name athletes-service claesweb/cm-athletes
+```
 
 ## API
 
@@ -68,7 +87,7 @@ This service is responsible for managing athletes. It will use beathletics api f
 }
 ```
 
-### Get athlete"s results
+### Get athlete's results
 
 - `GET /athletes/:id/:event?maxYears=number`
 - Description: Get athlete"s personal bests by event
@@ -117,7 +136,7 @@ curl -X GET "http://localhost/api/athletes?key=Melvyn"
 curl -X GET "http://localhost/api/athletes/212092339195"
 ```
 
-### Get athlete"s results
+### Get athlete's results
 
 ```bash
 curl -X GET "http://localhost/api/athletes/212092339195/60%20mètres"
