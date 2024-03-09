@@ -39,11 +39,11 @@ function EventItem({event, records, free}) {
 
     let record;
     if (isSubEvent) {
-        record = records[event.superEvent][event.name]
+        record = records[event.superEvent][event.pseudoName]
     } else if (isMultiEvent) {
         record = records[event.pseudoName]["total"]
     } else {
-        record = records[event.name];
+        record = records[event.pseudoName];
     }
 
     return (
