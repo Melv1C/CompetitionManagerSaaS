@@ -116,6 +116,10 @@ export const Inscription = ({competition}) => {
             setRecords({});
             localStorage.removeItem('records');
             setStep(1);
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('isInscribed');
+            setSearchParams(newSearchParams);
+            
         }
     }, [athleteId])
 
@@ -171,6 +175,8 @@ export const Inscription = ({competition}) => {
         })
     }, [])
 
+    const [freeEvents, setFreeEvents] = useState(new Set());
+
     // load information if already inscribed
     useEffect(() => {
         if (athlete) {
@@ -178,6 +184,7 @@ export const Inscription = ({competition}) => {
             .then(async res => {
                 const inscriptions = res.data.data;
                 const athleteInscriptions = inscriptions.filter(i => i.athleteId === athlete.id);
+                setFreeEvents(new Set(athleteInscriptions.map(i => i.event)));
                 // set events and records
                 if (athleteInscriptions.length > 0) {
 
@@ -222,10 +229,6 @@ export const Inscription = ({competition}) => {
         }
     }, [athlete])
 
-    console.log(events);
-    console.log(records);
-
-
     if (!user) {
         return (
             <div className='competition-page'>
@@ -239,7 +242,7 @@ export const Inscription = ({competition}) => {
             <ProgressBar step={step} />
 
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} /> : null}
-            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}
+            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} freeEvents={freeEvents} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
             {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}
             {step === 5 ? <Success competitionId={id} /> : null}

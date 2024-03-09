@@ -22,11 +22,13 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/competitions" element={<Competitions />} />
-                    <Route path="/competitions/:id" element={<Competition />} />
-
+                    <Route path="/competitions/:competitionId" element={<Competition subPage="overview" />} />
+                    <Route path="/competitions/:competitionId/inscription" element={<Competition subPage="inscription" />} />
+                    <Route path="/competitions/:competitionId/schedule" element={<Competition subPage="schedule" />} />
+                    <Route path="/competitions/:competitionId/:eventName" element={<Competition subPage="event" />} />
                     <Route path="/profile" element={<Profile />} />
                 </Routes>
-            <Footer />
+                <Footer />
             </Router>
         </div>
     );

@@ -1,0 +1,40 @@
+.participants {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.participants-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    width: 100%;
+    padding: 5px;
+}
+
+.participants-item .participants-item-bib {
+    font-size: 1.2em;
+    font-weight: bold;
+    width: 15%;
+    text-align: center;
+}
+
+.participants-item .participants-item-athlete {
+    font-size: 1.2em;
+    width: 50%;
+}
+
+.participants-item .participants-item-club {
+    font-size: 1.2em;
+    width: 15%;
+    text-align: center;
+}
+
+.participants-item .participants-item-record {
+    font-size: 1.2em;
+    width: 20%;
+    text-align: center;
+}
