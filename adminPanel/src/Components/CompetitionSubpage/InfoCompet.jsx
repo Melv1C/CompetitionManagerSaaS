@@ -2,7 +2,7 @@ import React, { useEffect,useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import { Popup } from '../Popup/Popup';
 import { CompetitionInfo } from '../CompetitionInfo/CompetitionInfo';
-import { DeleteConfirmation } from '../ConfirmationComponent/DeleteConfirmation';
+import { DeleteAlert } from '../AlertComponent/DeleteAlert';
 import { openCompetition } from '../../CompetitionsAPI';
 import Switch from '@mui/material/Switch';
 import axios from 'axios';
@@ -95,7 +95,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                 </div>
             </div>
             {showModalModif ? <Popup onClose={()=>{setShowModalModif(false)}}><CompetitionInfo user={user} competition={competition} setCompetition={setCompetition} setShowModal={setShowModalModif}/></Popup> : null}
-            {showModalDelete ? <Popup onClose={()=>{setShowModalDelete(false)}}><DeleteConfirmation id={id} navigate={navigate} setShowModalDelete={setShowModalDelete} user={user}/></Popup> : null}
+            {showModalDelete ? <Popup onClose={()=>{setShowModalDelete(false)}}><DeleteAlert id={id} navigate={navigate} setShowModalDelete={setShowModalDelete} user={user}/></Popup> : null}
         </>
     );
 };

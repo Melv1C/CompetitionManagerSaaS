@@ -3,7 +3,7 @@ import axios from 'axios';
 import { COMPETITIONS_URL } from '../../Gateway';
 
 
-export const DeleteConfirmation = ({id, navigate, setShowModalDelete, user}) => {
+export const DeleteAlert = ({id, navigate, setShowModalDelete, user}) => {
 
     return (
         <div className='padding margin'>
