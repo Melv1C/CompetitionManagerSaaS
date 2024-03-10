@@ -14,7 +14,7 @@ const { checkParams, checkEvents, checkInscriptions, checkPlaceAvailable, calcul
 app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const { competitionId } = req.params;
     let userId = req.body.userId;
-    const { athleteId, events, records } = req.body;
+    const { athleteId, events, records, email } = req.body;
 
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
@@ -63,32 +63,47 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     // calculate total cost
     const totalCost = calculateTotalCost(eventsInfo, competition, athlete);
 
+    // Timestamp
+    const timestamp = new Date();
+
     let inscriptionData = [];
     for (let event of eventsInfo) {
 
         inscriptionData.push({ 
+            timestamp,
             userId, 
+            email,
             athleteId, 
             athleteName: athlete.firstName + ' ' + athlete.lastName, 
             club: athlete.club,
             bib: athlete.bib, 
+            category: athlete.category,
             event: event.pseudoName, 
             record: (event.subEvents.length == 0) ? records[event.pseudoName] : records[event.pseudoName]["total"],
+            recordType: event.type,
             eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
-            parentEvent: null
+            parentEvent: null,
+            cost: (totalCost==0 || admin) ? 0 : event.cost, 
+            confirmed: false
         });   
         
         for (let subEvent of event.subEvents) {
             inscriptionData.push({
+                timestamp,
                 userId,
+                email,
                 athleteId,
                 athleteName: athlete.firstName + ' ' + athlete.lastName,
                 club: athlete.club,
                 bib: athlete.bib,
+                category: athlete.category,
                 event: `${event.pseudoName} - ${subEvent.name}`,
                 record: records[event.pseudoName][subEvent.name],
+                recordType: subEvent.type,
                 eventType: "subEvent",
-                parentEvent: event.pseudoName
+                parentEvent: event.pseudoName,
+                cost: 0,
+                confirmed: false
             });
         }
     }
@@ -108,7 +123,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
 app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     const { competitionId, athleteId } = req.params;
     let userId = req.body.userId;
-    const { events, records } = req.body;
+    const { events, records, email } = req.body;
     
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
@@ -175,36 +190,52 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         }
     }
 
+    // Timestamp
+    const timestamp = new Date();
+
     // Add inscriptions for new events
     let inscriptionData = [];
     for (let event of eventsInfo) {
         if (!athleteInscriptions.some((inscription) => inscription.event == event.pseudoName)) {
 
             inscriptionData.push({ 
+                timestamp,
                 userId, 
+                email,
                 athleteId, 
                 athleteName: athlete.firstName + ' ' + athlete.lastName, 
                 club: athlete.club,
                 bib: athlete.bib, 
+                category: athlete.category,
                 event: event.pseudoName, 
                 record: (event.subEvents.length == 0) ? records[event.pseudoName] : records[event.pseudoName]["total"],
+                recordType: event.type,
                 eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
-                parentEvent: null
+                parentEvent: null,
+                cost: (totalCost==0 || admin) ? 0 : event.cost,
+                confirmed: false
             });   
             
             for (let subEvent of event.subEvents) {
                 inscriptionData.push({
+                    timestamp,
                     userId,
+                    email,
                     athleteId,
                     athleteName: athlete.firstName + ' ' + athlete.lastName,
                     club: athlete.club,
                     bib: athlete.bib,
+                    category: athlete.category,
                     event: `${event.pseudoName} - ${subEvent.name}`,
                     record: records[event.pseudoName][subEvent.name],
+                    recordType: subEvent.type,
                     eventType: "subEvent",
-                    parentEvent: event.pseudoName
+                    parentEvent: event.pseudoName,
+                    cost: 0,
+                    confirmed: false
                 });
             }
+
         } else {
             let inscription = athleteInscriptions.find((inscription) => inscription.event == event.pseudoName);
             inscription.record = (event.subEvents.length == 0) ? records[event.pseudoName] : records[event.pseudoName]["total"];

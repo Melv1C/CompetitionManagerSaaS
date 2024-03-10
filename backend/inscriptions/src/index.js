@@ -4,18 +4,14 @@ const axios = require('axios');
 const { competitionsRouter } = require('./Routers/competitions');
 const { inscriptionsRouter } = require('./Routers/inscriptions');
 
-const { createDatabase,
-        deleteDatabase,
-        getInscriptions,
+const { getInscriptions,
         getInscription,
-        deleteInscription,
         updateInscription
     } = require('./nano');
 
-const { freeInscriptions,
-        stripeInscriptions,
-        removePrivateFields
-    } = require('./utils');
+const { removePrivateFields } = require('./utils');
+
+const {getGroupedView} = require('./views');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -63,16 +59,16 @@ app.get('/api/inscriptions', (req, res) => {
 });
 
 //Get information about a competition
-app.get('/api/inscriptions/:competitionId/info', (req, res) => {
+app.get('/api/inscriptions/:competitionId/info', async (req, res) => {
     const competitionId = req.params.competitionId;
-    getInscriptions(`competition_${competitionId}`)
-        .then((inscriptions) => {
-            res.status(200).json({ status: 'success', message: 'Competition info retrieved successfully', data: { id: competitionId, numberOfInscriptions: inscriptions.length, numberOfParticipants: new Set(inscriptions.map((inscription) => inscription.athleteId)).size } });
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).json({ status: 'error', message: 'An error occurred while fetching competition info' });
-        });    
+
+    const NumberOfAthletesByClub = await getGroupedView(`competition_${competitionId}`, 'NumberOfAthletesByClub');
+    console.log(NumberOfAthletesByClub);
+    const NumberOfParticipants = NumberOfAthletesByClub.reduce((acc, cur) => acc + cur.value, 0);
+    const NumberOfAthletesByCategory = await getGroupedView(`competition_${competitionId}`, 'NumberOfAthletesByCategory');
+    const NumberOfAthletesByEvent = await getGroupedView(`competition_${competitionId}`, 'NumberOfAthletesByEvent');
+
+    res.status(200).json({ status: 'success', message: 'Competition info retrieved successfully', data: { id: competitionId, NumberOfParticipants: NumberOfParticipants, NumberOfAthletesByClub: NumberOfAthletesByClub, NumberOfAthletesByCategory: NumberOfAthletesByCategory, NumberOfAthletesByEvent: NumberOfAthletesByEvent } });  
 });
 
 // Get all inscriptions for a competition

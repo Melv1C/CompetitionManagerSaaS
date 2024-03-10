@@ -3,10 +3,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { INSCRIPTIONS_URL } from '../Gateway'
 
-import { formatRecord } from '../RecordsHandler'
-
 import {auth} from '../Firebase'
-import { redirect } from 'react-router-dom'
+
+import { ProfileInscriptions } from '../Components/ProfileInscriptions/ProfileInscriptions'
 
 export const Profile = () => {
 
@@ -36,48 +35,67 @@ export const Profile = () => {
         })
     }, [])
 
+    function addToDict(dict, competitionId, athleteId, value) {
+        if (dict[competitionId]) {
+            if (dict[competitionId][athleteId]) {
+                dict[competitionId][athleteId].push(value);
+            } else {
+                dict[competitionId][athleteId] = [value];
+            }
+        } else {
+            dict[competitionId] = {};
+            dict[competitionId][athleteId] = [value];
+        }
+    }
+
     useEffect(() => {
         // fetch inscriptions
         if (!user) return;
         axios.get(`${INSCRIPTIONS_URL}?userId=${user.uid}`)
         .then((response) => {
-            console.log(response.data);
-            setInscriptions(response.data.data);
+
+            let modifiedInscriptions = {};
+
+            for (let inscription of response.data.data) {
+                if (inscription.eventType !== "subEvent") {
+                    addToDict(modifiedInscriptions, inscription.competitionId, inscription.athleteId, inscription);
+                }
+            }
+
+            setInscriptions(modifiedInscriptions);
         })
         .catch((error) => {
             console.log(error);
         })
     }, [user])
+    
+    console.log(inscriptions);
 
     return (
         <div className="page">
-            <h1>Mon compte</h1>
+            <div className="account-info">
+                <h1>Mon compte</h1>
 
-            <h2>Informations personnelles</h2>
-            <p>Email: {user?.email}</p>
-            {user?.emailVerified ? null
-                : <p>
-                    Votre email n'est pas vérifié. 
-                    <button onClick={() => {user?.sendEmailVerification()}}>Renvoyer l'email de vérification</button>
-                </p>
-            }
+                <h2>Informations personnelles</h2>
+                <p>Email: {user?.email}</p>
+                {user?.emailVerified ? null
+                    : <p>
+                        Votre email n'est pas vérifié. 
+                        <button onClick={() => {user?.sendEmailVerification()}}>Renvoyer l'email de vérification</button>
+                    </p>
+                }
 
-            <button onClick={handleLogout}>Se déconnecter</button>
-            <button>Modifier mon mot de passe</button>
-
-            <h2>Mes inscriptions</h2>
-            <ul>
-                {inscriptions.map((inscription) => {
-                    return (
-                        <li key={inscription._id}>
-                            <p>{inscription.competitionDate}</p>
-                            <p>{inscription.competitionName}</p>
-                            <p>{inscription.event}</p>
-                            <p>{inscription.record}</p>
-                        </li>
-                    )
-                })}
-            </ul>
+                <button onClick={handleLogout}>Se déconnecter</button>
+                <button>Modifier mon mot de passe</button>
+            </div>
+            <div className="inscriptions">
+                <h2>Mes inscriptions</h2>
+                <ProfileInscriptions inscriptions={inscriptions} />
+            </div>
+            
         </div>
     )
 }
+
+
+

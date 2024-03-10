@@ -38,3 +38,36 @@
     width: 20%;
     text-align: center;
 }
+
+/* Responsive */
+
+@media (max-width: 550px) {
+    .participants-item {
+        flex-wrap: wrap;
+        padding: 0;
+    }
+
+    .participants-item .participants-item-bib {
+        font-size: 1em;
+        width: 30%;
+        text-align: left;
+    }
+
+    .participants-item .participants-item-athlete {
+        font-size: 1em;
+        width: 70%;
+        text-align: right;
+    }
+
+    .participants-item .participants-item-club {
+        font-size: 1em;
+        width: 30%;
+        text-align: left;
+    }
+
+    .participants-item .participants-item-record {
+        font-size: 1em;
+        width: 70%;
+        text-align: right;
+    }
+}

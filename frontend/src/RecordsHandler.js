@@ -1,7 +1,7 @@
 
-function formatRecord(event, record) {
+function formatRecord(eventType, record) {
     record = parseFloat(record);
-    switch (event.type) {
+    switch (eventType) {
         case 'time':
             return formatTime(record);
         case 'distance':

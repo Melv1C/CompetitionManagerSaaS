@@ -19,7 +19,7 @@ export const Participants = ({event, inscriptions}) => {
                         <div className="participants-item-bib">{inscription.bib}</div>
                         <div className="participants-item-athlete">{inscription.athleteName}</div>
                         <div className="participants-item-club">{inscription.club}</div>
-                        <div className="participants-item-record">{formatRecord(event, inscription.record)}</div>
+                        <div className="participants-item-record">{formatRecord(event.type, inscription.record)}</div>
                     </div>
                 )
             })}

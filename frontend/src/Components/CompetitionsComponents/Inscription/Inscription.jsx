@@ -195,6 +195,7 @@ export const Inscription = ({competition}) => {
                     
 
                     const events = (await axios.get(`${COMPETITIONS_URL}/${competition.id}/events?category=${athlete.category}`)).data.data;
+                    console.log(events);
                     for (let i of athleteInscriptions) {
                         const event = events.find(e => e.pseudoName === i.event);
                         if (event) {

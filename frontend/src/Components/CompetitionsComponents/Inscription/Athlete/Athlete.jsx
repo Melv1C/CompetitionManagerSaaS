@@ -116,11 +116,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
             setEnableNext(false);
             return;
         }
-
-        console.log(athlete.id);
-        console.log(auth.currentUser.uid);
-        console.log(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`);
-
+        
         axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
         .then(res => {
             console.log(res.data.data);

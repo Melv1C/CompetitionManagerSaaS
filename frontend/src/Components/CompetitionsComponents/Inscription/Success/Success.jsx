@@ -1,19 +1,18 @@
 import React from 'react'
 
+import { Link } from 'react-router-dom'
+
 import './Success.css'
 
 function NewInscriptionButton({competitionId}) {
     return (
         <div className='control-buttons newInscription-button'>
-            <button onClick={() => newInscription(competitionId)}>Inscrire un autre athlète</button>
+            <Link to={`/competitions/${competitionId}/inscription`}><button>Inscrire un autre athlète</button></Link>
         </div>
     )
 }
 
-function newInscription(competitionId) {
-    // redirect to the inscription page : /competitions/:id?subPage=inscription
-    window.location.href = `/competitions/${competitionId}?subPage=inscription`;
-}
+
 
 export const Success = ({competitionId}) => {
   return (

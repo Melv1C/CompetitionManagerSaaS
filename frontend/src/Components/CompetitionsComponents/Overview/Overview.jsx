@@ -8,14 +8,19 @@ import { INSCRIPTIONS_URL } from '../../../Gateway'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkerAlt, faCalendarAlt, faClock, faUsers, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
+import { PieChart } from '../../PieChart/PieChart'
+
 export const Overview = ({competition}) => {
 
     const [nbrParticipants, setNbrParticipants] = React.useState(0);
+    const [competitionInfo, setCompetitionInfo] = React.useState({});
 
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${competition.id}/info`)
         .then(response => {
-            setNbrParticipants(response.data.data.numberOfParticipants);
+            console.log(response.data.data);
+            setCompetitionInfo(response.data.data);
+            setNbrParticipants(response.data.data.NumberOfParticipants);
         })
         .catch(error => {
             console.log(error);
@@ -77,15 +82,24 @@ export const Overview = ({competition}) => {
                         <div className='value'>{nbrParticipants}</div>
                     </div>
                 </div>
-                <div className="description">
-                    <div className='title'>Description:</div>
-                    {competition.description}
+                {competition.description ?
+                    <div className="description card">
+                        <div className='title'>Description:</div>
+                        {competition.description}
+                    </div>
+                : null}
+                <div className="pie-chart card">
+                    <div className='center title'>Athlètes par club:</div>
+                    <PieChart data={competitionInfo.NumberOfAthletesByClub}/>
                 </div>
+
+                {/*<div className="pie-chart card">
+                    <div className='center title'>Athlètes par catégorie:</div>
+                    <PieChart data={competitionInfo.NumberOfAthletesByCategory}/>
+                </div>*/}
+
                 
             </div>
-            
-
-            
         </div>
     )
 }

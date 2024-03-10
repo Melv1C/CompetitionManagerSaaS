@@ -40,6 +40,8 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
     const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
     const isSubEvent = event.superEvent !== undefined;
 
+    console.log(event);
+
     useEffect(() => {
         if (record === undefined) {
             axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`)
@@ -73,7 +75,6 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
             <RecordInput 
                 record={isMultiEvent ? record?.total : (isSubEvent && records[event.superEvent]) ? records[event.superEvent][event.name] : record}
                 setRecord={(newRecord) => {
-                    console.log("setting record of", event.pseudoName, "to", newRecord);
                     if (isMultiEvent) {setRecord(event.pseudoName, newRecord, "total")}
                     else if (isSubEvent) {setRecord(event.superEvent, newRecord, event.name)}
                     else {setRecord(event.pseudoName, newRecord)}

@@ -50,7 +50,7 @@ function EventItem({event, records, free}) {
         <div className='event-item'>
             <div className='event-item-time'>{event.time}</div>
             <div className='event-item-name'>{event.pseudoName}</div>
-            <div className='event-item-record'>{formatRecord(event, record)}</div>
+            <div className='event-item-record'>{formatRecord(event.type, record)}</div>
             {(event.cost !== 0 && !free) ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
         </div>
     )
@@ -153,7 +153,7 @@ export const Summary = ({athlete, events, records, setStep, competitionId, free}
     for (let event of events) {
         eventsList.push(event);
         for (let subEvent of event.subEvents) {
-            eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.name});
+            eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
         }
     }
 

@@ -18,10 +18,25 @@ export const Event = ({competition}) => {
         axios.get(`${COMPETITIONS_URL}/${competition.id}`)
             .then((response) => {
                 let event = response.data.data.events.filter((event) => {
-                    return event.pseudoName === eventName;
-                });
+                    return event.pseudoName === eventName || eventName.startsWith(`${event.pseudoName} - `);
+                })[0];
 
-                setEvent(event[0]);
+                console.log(event);
+
+                if (event.pseudoName !== eventName) {
+                    for (let subEvent of event.subEvents) {
+                        if (eventName === `${event.pseudoName} - ${subEvent.name}`) {
+                            event.name = subEvent.name;
+                            event.pseudoName = `${event.pseudoName} - ${subEvent.name}`;
+                            event.time = subEvent.time;
+                            event.type = subEvent.type;
+                            delete event.id 
+                            event.subEvents = [];
+                            break;
+                        }
+                    }
+                }
+                setEvent(event);
             })
             .catch((error) => {
                 console.log(error);
@@ -51,12 +66,21 @@ export const Event = ({competition}) => {
             });
     }, [competition.id, eventName]);
 
-    console.log(event);
-    console.log(inscriptions);
+
     
     return (
         <div className="competition-page">
-            <h2 className="event-title">{event?.pseudoName}</h2>
+            <div className="event-header">
+                <div className='time'>
+                    {event?.time}
+                </div>
+                <div className='name'>
+                    {event?.pseudoName}
+                </div>
+                <div className='nb-participants'>
+                    {inscriptions.length} / {event?.maxParticipants} athlètes
+                </div>
+            </div>
 
             <Participants event={event} inscriptions={inscriptions} />                
 

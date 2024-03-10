@@ -38,9 +38,9 @@ function EventItem({event, setEvents, events, competitionId, inscriptions, free}
     }, [events, event])
 
     useEffect(() => {
-        const eventInscriptions = inscriptions.filter(i => i.event === event.name);
+        const eventInscriptions = inscriptions.filter(i => i.event === event.pseudoName);
         setPlace(event.maxParticipants - eventInscriptions.length);
-    }, [event, competitionId])
+    }, [event, competitionId, inscriptions])
 
     return (
         <div className='event-item'>

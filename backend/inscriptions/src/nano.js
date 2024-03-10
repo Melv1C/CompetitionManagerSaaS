@@ -48,7 +48,9 @@ function getInscriptions(dbName) {
             if (err) {
                 reject(err);
             } else {
-                resolve(body.rows.map((row) => row.doc));
+                let inscriptions = body.rows.map((row) => row.doc);
+                inscriptions = inscriptions.filter((inscription) => !inscription._id.startsWith('_design'));
+                resolve(inscriptions);
             }
         });
     });

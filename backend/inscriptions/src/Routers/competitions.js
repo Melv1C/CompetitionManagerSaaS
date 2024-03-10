@@ -2,10 +2,13 @@ const express = require('express');
 
 const app = express.Router();
 
-const { createDatabase, deleteDatabase } = require('../nano');
+const {  createDatabase, deleteDatabase } = require('../nano');
+const { addViews } = require('../views');
+
+
 
 // Create a database for a new competition
-app.post('/api/inscriptions', (req, res) => {
+app.post('/api/inscriptions', async (req, res) => {
     console.log('Creating competition');
     const { competitionId } = req.body;
 
@@ -15,7 +18,12 @@ app.post('/api/inscriptions', (req, res) => {
 
     createDatabase(`competition_${competitionId}`)
         .then(() => {
-            res.status(201).json({ status: 'success', message: 'Competition created successfully' });
+            addViews(`competition_${competitionId}`).then(() => {
+                res.status(201).json({ status: 'success', message: 'Competition created successfully' });
+            }).catch((err) => {
+                console.error(err);
+                res.status(500).json({ status: 'error', message: 'An error occurred while creating views' });
+            });
         })
         .catch((err) => {
             console.error(err);

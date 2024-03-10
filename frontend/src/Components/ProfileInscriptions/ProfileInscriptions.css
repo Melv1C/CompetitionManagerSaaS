@@ -1,0 +1,135 @@
+.profileInscriptions {
+    
+}
+
+.profileInscriptions .competitions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;    
+}
+
+.profileInscriptions .competitions .competition {
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.profileInscriptions .competitions .competition .competitionTitle{
+    text-align: center;
+    border-bottom: 2px solid #008AFF;
+    padding: 10px;
+
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+
+.profileInscriptions .competition .athletes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.profileInscriptions .athletes .athlete {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: 1px solid #008AFF;
+
+    padding: 10px 0;
+}
+
+.profileInscriptions .athlete .athleteName {
+    width: 30%;
+    margin-left: 10px;
+
+}
+
+.profileInscriptions .athlete .inscriptions {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.profileInscriptions .athlete .controls {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.profileInscriptions .athlete .controls a{
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.profileInscriptions .athlete .controls .modify {
+    width: 80%;
+    color: #FFA500;
+    border: 1px solid #FFA500;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.profileInscriptions .athlete .controls .modify:hover {
+    background-color: #FFA500;
+    color: white;
+}
+
+
+
+.profileInscriptions .athlete .controls .delete {
+    width: 80%;
+    color: #FF4141;   
+    border: 1px solid #FF4141;
+    border-radius: 5px; 
+    padding: 5px;
+}
+
+.profileInscriptions .athlete .controls .delete:hover {
+    background-color: #FF4141;
+    color: white;
+}
+
+
+
+.profileInscriptions .inscriptions .inscription {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.profileInscriptions .inscriptions a {
+    text-decoration: none;
+    color: black;
+}
+
+.profileInscriptions .inscription .event:hover {
+    color: #008AFF;
+}
+
+.profileInscriptions .inscription .record{
+
+}
+
+.profileInscriptions .athlete .modify {
+
+}
+
+.profileInscriptions .athlete .delete {
+    
+}
