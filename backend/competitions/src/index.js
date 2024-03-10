@@ -207,6 +207,7 @@ app.post('/api/competitions', async (req, res) => {
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         const adminId = req.body.adminId;
+        const email = req.body.email;
         if (!name && typeof name !== 'string'){
             return res.status(400).json({
                 status: 'error',
@@ -267,6 +268,12 @@ app.post('/api/competitions', async (req, res) => {
                 message: 'Invalid adminId',
             });
         }
+        if (!email && typeof email !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid email',
+            });
+        }
         const competition = new Competition({
             id: await generateIdCompet(),
             name: name,
@@ -280,6 +287,7 @@ app.post('/api/competitions', async (req, res) => {
             description: description,
             open: false,
             adminId: adminId,
+            email: email,
             epreuves: [],
         });
         await competition.save();
@@ -448,7 +456,6 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
         const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
         const cost = req.body.cost ? req.body.cost : 0;
         const subEvents = req.body.subEvents ? req.body.subEvents : [];
-        const adminId = req.body.adminId;
         let type;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
@@ -668,6 +675,7 @@ app.put('/api/competitions/:id', async (req, res) => {
         const closeDate = req.body.closeDate;
         const paid = req.body.paid ? req.body.paid : false;
         const freeClub = req.body.freeClub;
+        const email = req.body.email;
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
         if (!id && typeof id !== 'string'){
@@ -730,6 +738,12 @@ app.put('/api/competitions/:id', async (req, res) => {
                 message: 'Invalid description',
             });
         }
+        if (!email && typeof email !== 'string'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid email',
+            });
+        }
         const competition = await Competition.findOne({ id: id });
         if (!competition){
             return res.status(404).json({
@@ -753,6 +767,7 @@ app.put('/api/competitions/:id', async (req, res) => {
             freeClub: freeClub,
             schedule: schedule,
             description: description,
+            email: email,
         });
 
         const updatedCompetition = await Competition.findOne({ id: id });

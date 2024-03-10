@@ -18,6 +18,8 @@ function AthleteSummary({athlete}) {
 }
 
 function EventsRecordsSummary({events, records, free}) {
+    console.log(events);
+    console.log(records);
     return (
         <div className='events-records-summary'>
             <h3>Épreuves</h3>
@@ -37,11 +39,11 @@ function EventItem({event, records, free}) {
 
     let record;
     if (isSubEvent) {
-        record = records[event.superEvent][event.name]
+        record = records[event.superEvent][event.pseudoName]
     } else if (isMultiEvent) {
         record = records[event.pseudoName]["total"]
     } else {
-        record = records[event.name];
+        record = records[event.pseudoName];
     }
 
     return (
@@ -117,7 +119,6 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
     .then(res => {
         console.log(res);
         if (res.status === 200) {
-            // redirect to res.data.url
             window.location.href = res.data.data.url;
         } else if (res.status === 201) {
             setStep(5);

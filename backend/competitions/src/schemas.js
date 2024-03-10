@@ -56,6 +56,10 @@ const competitionSchema = new Schema({
     closeDate:{
         type: Date,
     },
+    email:{
+        type: String,
+        required: true,
+    },
 });
 const Competition = mongoose.model("competitions", competitionSchema);
 

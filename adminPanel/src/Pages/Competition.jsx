@@ -5,6 +5,7 @@ import { SubNavBarCompet } from '../Components/SubNavbarCompet/SubNavBarCompet';
 import { InfoCompet } from '../Components/CompetitionSubpage/InfoCompet';
 import { Inscriptions } from '../Components/CompetitionSubpage/Inscriptions';
 import { Events } from '../Components/CompetitionSubpage/Events';
+import { Confirmations } from '../Components/CompetitionSubpage/Confirmations';
 
 import { getCompetition } from '../CompetitionsAPI';
 import './styles/Competition.css';
@@ -36,6 +37,7 @@ export const Competition = (props) => {
             {subPage === "infos" ? <InfoCompet competition={competition} user={props.user} setCompetition={setCompetition}/> : null}
             {subPage === "inscriptions" ? <Inscriptions user={props.user} setUser={props.setUser}/> : null}
             {subPage === "events" ? <Events competition={competition}/> : null}
+            {subPage === "confirmations" ? <Confirmations competition={competition}/> : null}
         </>    
     );
 };

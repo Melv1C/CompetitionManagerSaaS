@@ -19,12 +19,3 @@ export const Inscriptions = (props) => {
 
 
 
-
-
-
-
-
-
-
-
-

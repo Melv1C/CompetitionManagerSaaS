@@ -21,6 +21,7 @@
 }
 
 .competInfo input[type="text"],
+.competInfo input[type="email"],
 .competInfo input[type="date"],
 .competInfo textarea {
     width: 100%;
