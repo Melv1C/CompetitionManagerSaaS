@@ -52,13 +52,14 @@ app.get("/api/competitions", async (req, res) => {
     try{
         const competitions = await Competition.find({});
         //take adminId off the response
-        competitions.forEach(competition => {
-            delete competition.adminId;
+        const publicCompetitions = competitions.map(competition => {
+            const { adminId, ...publicCompetition } = competition.toObject();
+            return publicCompetition;
         });
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
-            data: competitions,
+            data: publicCompetitions,
         });
     }catch(err){
         console.error(err);
@@ -72,10 +73,6 @@ app.get("/api/competitions", async (req, res) => {
 app.get('/api/competitions/admin/:adminId', async (req, res) => {
     try{
         const competitions = await Competition.find({ adminId: req.params.adminId });
-        //take adminId off the response
-        competitions.forEach(competition => {
-            delete competition.adminId;
-        });
         res.status(200).json({
             status: 'success',
             message: 'Competitions retrieved successfully',
@@ -109,11 +106,11 @@ app.get('/api/competitions/:id', async (req, res) => {
             });
         }
         //take adminId off the response
-        delete competition.adminId;
+        const { adminId, ...publicCompetition } = competition.toObject();
         res.status(200).json({
             status: 'success',
             message: 'Competition retrieved successfully',
-            data: competition,
+            data: publicCompetition,
         });
     }catch(err){
         console.error(err);
