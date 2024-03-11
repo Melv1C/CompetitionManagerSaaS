@@ -1,0 +1,54 @@
+.fullScreenDiv{
+    margin: 10px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    height: 30px;
+}
+
+.fullScreenDiv .fullScreenIcon{
+    height: 25px;
+    transition: height 0,5s ease-in-out;
+}
+
+.fullScreenDiv .fullScreenIcon:hover{
+    height: 28px;
+}
+
+#comfirmations{
+    background-color: white;
+}
+
+.searchDiv .field .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #008AFF;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.searchDiv{
+    display: flex;
+    flex-direction: column;
+    margin: 0 40px;
+    text-align: center;
+}
+
+.searchDiv .field {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.searchDiv .field input {
+    height: 50px;
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+    padding: 0 10px;
+    outline: none;
+}
+
+.searchDiv .field input:focus {
+    border:2px solid #008AFF;
+}

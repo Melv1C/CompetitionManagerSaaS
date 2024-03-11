@@ -22,12 +22,16 @@ app.use((req, res, next) => {
 
 function matching(inscription, key) {
     const splitKey = key.split(' ');
-    if (inscription.bib === key) {
+    if (inscription.bib == key) {
         return true;
-    }else if (all(splitKey, (word) => inscription.athleteName.lowerCase().includes(word.toLowerCase()))) {
+    } else {
+        for (const word of splitKey) {
+            if (!inscription.athleteName.toLowerCase().includes(word.toLowerCase())) {
+                return false;
+            }
+        }
         return true;
     }
-    return false
 }
 
 app.get('/api/confirmations/:competId', async (req, res) => {

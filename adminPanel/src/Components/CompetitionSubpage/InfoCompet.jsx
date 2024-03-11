@@ -29,7 +29,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
     return (
         <>
             <div className='upperPageCompetInfo'>
-                <div className='competDivInfo'>
+                <div className={`competDivInfo ${competition.open ? 'openInscr': 'closeInscr'}`}>
                     <h2>Infos</h2>
                     <ul className="overview">
                         <li><strong>Date:</strong> {new Date(competition.date).toLocaleDateString("fr-FR")}</li>
@@ -42,7 +42,10 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     </ul>
                     <button className='orangeBtn infoModif' onClick={() => {setShowModalModif(true);}}>Modifier</button>
                 </div>
-                <div className='competDivInfo center'>
+                <div className={`competDivInfo center ${competition.open ? 'openInscr': 'closeInscr'}`}>
+                    <div className='center margin'>
+                        Les inscriptions sont {competition.open ? "ouvertes" : "fermées"}
+                    </div>
                     <div className='margin center'>
                         <label>Ouvrir les inscriptions</label>
                         <Switch checked={competition.open} onChange={
@@ -57,12 +60,23 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     <div className='margin center'>
                         <label>Copier les mails des participants</label>
                         <button className='greenBtn' onClick={(e) => {
-                            //change the innnerHTML of the button to "copié"
-                            e.target.innerHTML = "Copié !!!";
+                            axios.get(`${INSCRIPTIONS_URL}/${id}?adminId=${user.uid}`).then((response) => {
+                                const inscriptions = response.data.data;
+                                let mails = [];
+                                let text = "";
+                                console.log(inscriptions);
+                                inscriptions.forEach((inscription) => {
+                                    mails.push(inscription.athleteId);
+                                });
+                                text = mails.join("; ");
+                                navigator.clipboard.writeText(text);
+                                e.target.innerHTML = "Copié !!!";
                             setTimeout(() => {
                                 e.target.innerHTML = "Copier";
                             }, 1000);
-                            navigator.clipboard.writeText("todo");
+                            }).catch((error) => {
+                                console.log(error);
+                            });
                         }}>Copier</button>
                     </div>
                     <div className='margin center'>

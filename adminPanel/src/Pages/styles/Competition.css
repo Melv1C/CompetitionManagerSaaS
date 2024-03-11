@@ -74,3 +74,11 @@
     margin-left: 50%;
     transform: translateX(-50%);
 }
+
+.openInscr{
+    border: 1px solid #51ca01;
+}
+
+.closeInscr{
+    border: 1px solid #ff0000;
+}

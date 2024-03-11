@@ -72,11 +72,27 @@ app.get('/api/inscriptions/:competitionId/info', async (req, res) => {
 });
 
 // Get all inscriptions for a competition
-app.get('/api/inscriptions/:competitionId', (req, res) => {
+app.get('/api/inscriptions/:competitionId', async (req, res) => {
     const { competitionId } = req.params;
+    const { adminId } = req.query;
+    let adminCheck;
+    if (adminId) {
+        adminCheck = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${adminId}`).catch((err) => {
+            console.error(err);
+            return false;
+        });
+    }else{
+        adminCheck = false;
+    }
+
     getInscriptions(`competition_${competitionId}`)
         .then((inscriptions) => {
-            const data = inscriptions.map((inscription) => removePrivateFields(inscription));
+            let data;
+            if (!adminCheck) {
+                data = inscriptions.map((inscription) => removePrivateFields(inscription));
+            }else {
+                data = inscriptions;
+            }
             res.status(200).json({ status: 'success', message: 'Inscriptions retrieved successfully', data: data });
         })
         .catch((err) => {
