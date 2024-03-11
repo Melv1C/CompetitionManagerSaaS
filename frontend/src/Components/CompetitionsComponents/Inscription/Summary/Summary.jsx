@@ -39,7 +39,7 @@ function EventItem({event, records, free}) {
 
     let record;
     if (isSubEvent) {
-        record = records[event.superEvent][event.pseudoName]
+        record = records[event.superEvent][event.name]
     } else if (isMultiEvent) {
         record = records[event.pseudoName]["total"]
     } else {
@@ -51,7 +51,7 @@ function EventItem({event, records, free}) {
             <div className='event-item-time'>{event.time}</div>
             <div className='event-item-name'>{event.pseudoName}</div>
             <div className='event-item-record'>{formatRecord(event.type, record)}</div>
-            {(event.cost !== 0 && !free) ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
+            {(event.cost && event.cost !== 0 && !free) ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
         </div>
     )
 }
@@ -156,6 +156,10 @@ export const Summary = ({athlete, events, records, setStep, competitionId, free}
             eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
         }
     }
+
+    console.log(eventsList);
+    console.log(records);
+
 
     return (
         <div className='step-page'>

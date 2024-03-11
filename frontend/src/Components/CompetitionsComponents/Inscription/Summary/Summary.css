@@ -108,6 +108,7 @@
     }
     .event-item {
         flex-wrap: wrap;
+        gap: 0;
     }
 
     .event-item-time {

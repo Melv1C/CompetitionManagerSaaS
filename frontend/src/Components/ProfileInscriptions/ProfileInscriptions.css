@@ -49,6 +49,9 @@
     width: 30%;
     margin-left: 10px;
 
+    font-size: 1.2em;
+    font-weight: bold;
+
 }
 
 .profileInscriptions .athlete .inscriptions {
@@ -72,7 +75,7 @@
     text-decoration: none;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: center;    
 }
 
 .profileInscriptions .athlete .controls .modify {
@@ -108,12 +111,16 @@
 .profileInscriptions .inscriptions .inscription {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
+.profileInscriptions .inscription .time {
+    width: 20%;
+}
+
 .profileInscriptions .inscriptions a {
+    width: 50%;
     text-decoration: none;
     color: black;
 }
@@ -123,13 +130,59 @@
 }
 
 .profileInscriptions .inscription .record{
-
+    width: 30%;
+    text-align: center;
 }
 
-.profileInscriptions .athlete .modify {
+/* Responsive */
 
-}
+@media (max-width: 800px) {
 
-.profileInscriptions .athlete .delete {
+    .profileInscriptions .athletes .athlete {
+        flex-direction: column;
+        align-items: center;
+
+        gap: 10px;
+    }
+
+    .profileInscriptions .athlete .athleteName {
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .profileInscriptions .athlete .controls {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .profileInscriptions .athlete .controls a {
+        width: auto;
+    }
+
+    .profileInscriptions .athlete .controls .modify {
+        width: auto;
+        padding: 10px 20px;
+    }
+
+    .profileInscriptions .athlete .controls .delete {
+        width: auto;
+        padding: 10px 20px;
+    }
+
+    .profileInscriptions .athlete .inscriptions {
+        width: 90%;
+    }
+
+    .profileInscriptions .inscription a {
+        width: 60%;
+    }
+
+    .profileInscriptions .inscription .record {
+        width: 20%;
+        text-align: right;
+    }
     
 }
+

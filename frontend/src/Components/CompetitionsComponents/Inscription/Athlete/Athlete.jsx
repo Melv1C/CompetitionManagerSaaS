@@ -95,7 +95,23 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
 
     const [enableNext, setEnableNext] = useState(false);
 
+    let lastChange = new Date();
+
+    function onChange(e) {
+        lastChange = new Date();
+        setTimeout(() => {
+            if (new Date() - lastChange >= 599) {
+                getAthletes(e.target.value);
+            }
+        }, 600);
+    }
+
     function getAthletes(keyword) {
+
+        if (keyword === '') {
+            setAthletes([]);
+            return;
+        }
         
         setLoading(true);
 
@@ -143,7 +159,13 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
                     <input 
                         type='text' 
                         placeholder='Nom, Prénom ou dossard'
-                        onKeyDown={(e)=>{if(e.key === 'Enter'){getAthletes(e.target.value)}}} 
+                        onKeyDown={(e)=>{
+                            if(e.key === 'Enter'){
+                                lastChange = new Date();
+                                getAthletes(e.target.value)
+                            }
+                        }} 
+                        onChange={onChange}
                     />
                     <div className='search-icon' 
                         onClick={()=>{getAthletes(document.querySelector('.field input').value)}}

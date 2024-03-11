@@ -12,7 +12,8 @@ export const CompetitionsList = () => {
     useEffect(() => {
         axios.get(`${COMPETITIONS_URL}`)
             .then((response) => {
-                setCompetitions(response.data.data);
+                const data = response.data.data;
+                setCompetitions(data.filter(competition => competition.open === true));
             })
             .catch((error) => {
                 console.log(error);

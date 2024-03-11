@@ -6,8 +6,10 @@ import './Success.css'
 
 function NewInscriptionButton({competitionId}) {
     return (
-        <div className='control-buttons newInscription-button'>
+        <div className='control-buttons-success'>
             <Link to={`/competitions/${competitionId}/inscription`}><button>Inscrire un autre athlète</button></Link>
+            <Link to={`/competitions/${competitionId}/schedule`}><button>Consulter l'horaire</button></Link>
+            <Link to={`/profile`}><button>Voir mes inscriptions</button></Link>
         </div>
     )
 }

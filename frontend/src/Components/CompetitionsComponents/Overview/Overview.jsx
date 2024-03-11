@@ -34,7 +34,7 @@ export const Overview = ({competition}) => {
     return (
         <div className="competition-page">
             <div className="overview">
-                <div className="card">
+                <div className="card info">
                     <div className="date">
                         <div className='label'>
                             <FontAwesomeIcon icon={faCalendarAlt} className='icon' /> 
@@ -88,7 +88,7 @@ export const Overview = ({competition}) => {
                         {competition.description}
                     </div>
                 : null}
-                <div className="pie-chart card">
+                <div className="card pie-chart">
                     <div className='center title'>Athlètes par club:</div>
                     <PieChart data={competitionInfo.NumberOfAthletesByClub}/>
                 </div>
@@ -97,7 +97,6 @@ export const Overview = ({competition}) => {
                     <div className='center title'>Athlètes par catégorie:</div>
                     <PieChart data={competitionInfo.NumberOfAthletesByCategory}/>
                 </div>*/}
-
                 
             </div>
         </div>

@@ -1,84 +1,104 @@
 .overview {
+    width: 100%;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
     gap: 50px;
     flex-wrap: wrap;
 }
 
 .overview .card {
-    width: 50%;
+    background-color: #F5F5F5;
     border: 3px solid #E5F0FF;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: 20px;
     padding: 20px;
     border-radius: 10px;
 }
-.overview .card div {
+
+.overview .info {
+    width: 500px;
+    justify-content: space-between;
+}
+
+.overview .info div {
     display: flex;
-    align-items: center;  
+    flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
 }
 
-.overview .card div .label {
+.overview .info div .label {
     gap: 10px;
     font-size: 20px;
     font-weight: bold;
     color: #515151;
     text-align: left;
-    
-    width: 50%;
-
+    max-width: 50%;
 }
 
-.overview .card div .label .icon {
+.overview .info div .label .icon {
     width: 20px;
 }
 
-.overview .card div .value {
+.overview .info div .value {
     font-size: 20px;
-    display: flex;
-    justify-content: flex-end;
-    width: 50%;
+    max-width: 50%;
     overflow-wrap: break-word;
+    text-align: right;
 }
 
-.overview .card div .value a {
+.overview .info div .value a {
     overflow-wrap: break-word;
-}
-
-.overview .card .title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #515151;
-    width: 100%;
-}
-
-.overview .card .center{
-    text-align: center;
-    justify-content: center;
+    max-width: 100%;
 }
 
 .overview .description {
+    max-width: 500px;
     white-space: pre-wrap;
 }
 
 .overview .pie-chart {
-    width: fit-content !important;
+    display: flex;
+    align-items: center;
+}
+
+.overview .pie-chart .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #515151;
+    width: 100%;
+    text-align: center;
 }
 
 
 /* Responsive */
 
-@media screen and (max-width: 900px) {
-    .overview {
-    }
+@media (max-width: 650px) {
+
 
     .overview .card {
-        width: 80%;
+        width: 100%;
+        gap: 10px;
     }
 
-    .overview .description {
-        width: 80%;
+    .overview .info div {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .overview .info div .label {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .overview .info div .value {
+        text-align: center;
+        width: 100%;
+        max-width: 100%;
     }
 }

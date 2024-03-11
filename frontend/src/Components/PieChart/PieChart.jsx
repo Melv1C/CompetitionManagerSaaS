@@ -17,12 +17,14 @@ export const PieChart = ({data, title}) => {
 
     const values = Object.values(data).map(val => val.value);
     const labels = Object.values(data).map(val => val.key);
+
+    const total = values.reduce((a, b) => a + b, 0);
     
     const chartdata = {
         labels: labels,
         datasets: [
           {
-            label: '# of Athletes',
+            label: 'Athlètes',
             data: values,
             backgroundColor: [
               'rgba(255, 99, 132, 0.5)',
@@ -55,9 +57,10 @@ export const PieChart = ({data, title}) => {
                                 datalabels: {
                                     color: 'black',
                                     formatter: (value, ctx) => {
-
-                                        // if (value)
-
+                                        // si moins de 5% on n'affiche pas
+                                        if (value/total < 0.05) {
+                                            return '';
+                                        }
                                         const label = ctx.chart.legend.legendItems[ctx.dataIndex].text;
                                         return label;
                                     },

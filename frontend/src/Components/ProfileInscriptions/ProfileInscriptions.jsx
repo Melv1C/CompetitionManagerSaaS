@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+
+import { COMPETITIONS_URL } from '../../Gateway'
 
 import { formatRecord } from '../../RecordsHandler'
 
@@ -22,13 +24,41 @@ export const ProfileInscriptions = ({inscriptions}) => {
 }
 
 const Competition = ({competitionId, inscriptions}) => {
-    const firstInscription = Object.values(inscriptions)[0][0];
+
+    const [competition, setCompetition] = useState(null);
+
+    const [inscriptionsWithHours, setInscriptionsWithHours] = useState(inscriptions);
+
+    useEffect(() => {
+        fetch(`${COMPETITIONS_URL}/${competitionId}`)
+            .then(response => response.json())
+            .then(data => {
+                const competitionData = data.data;
+                setCompetition(competitionData);
+
+                const events = competitionData.events;
+
+                for (let athleteId in inscriptions) {
+                    for (let inscription of inscriptions[athleteId]) {
+                        const event = events.find(event => event.pseudoName === inscription.event);
+                        if (event) {
+                            inscription.time = event.time;
+                        }
+                    }
+                }
+            })
+    }, [competitionId])
+
+    console.log(competition)
+
+    
+
     return (
         <div className="competition">
             <div className="competitionTitle">
-                {firstInscription.competitionName}
+                {competition?.name}
             </div>
-            <Athletes inscriptions={inscriptions} />
+            <Athletes inscriptions={inscriptionsWithHours} />
         </div>
     )
 }
@@ -52,7 +82,7 @@ const Athlete = ({athleteId, inscriptions}) => {
             </div>
             <Inscriptions inscriptions={inscriptions} />
             <div className="controls">
-                <Link to={`/competitions/${firstInscription.competitionId}/inscription?athleteId=${athleteId}`}>
+                <Link to={`/competitions/${firstInscription.competitionId}/inscription?athleteId=${athleteId}&step=2`}>
                     <div className="modify">
                         <FontAwesomeIcon icon={faEdit} /> Modifier
                     </div>
@@ -78,6 +108,9 @@ const Inscriptions = ({inscriptions}) => {
 const Inscription = ({inscription}) => {
     return (
         <div className="inscription">
+            <div className="time">
+                {inscription?.time}
+            </div>
             <Link to={`/competitions/${inscription.competitionId}/${inscription.event}`}>
                 <div className="event">
                     {inscription.event}
