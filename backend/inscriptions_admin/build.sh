@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 # Define the service name and Docker ID
-SERVICE_NAME="cm-admins"
+SERVICE_NAME="cm-inscriptions_admin"
 DOCKER_ID=$1
 
 # Build the Docker image
