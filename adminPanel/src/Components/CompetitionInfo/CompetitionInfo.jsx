@@ -10,6 +10,18 @@ function changeTimeToMinutes(time) {
     return parseInt(hours) * 60 + parseInt(minutes);
 }
 
+function changeMinutesToTime(minutes) {
+    let hours = Math.floor(minutes / 60).toString();
+    let min = (minutes % 60).toString();
+    if (hours.length === 1) {
+        hours = "0" + hours;
+    }
+    if (min.length === 1) {
+        min = "0" + min;
+    }
+    return `${hours}:${min}`;
+}
+
 
 export const CompetitionInfo = (props) => {
     const navigate = useNavigate();
@@ -57,6 +69,7 @@ export const CompetitionInfo = (props) => {
             props.setShowModal(false);
         }
     };
+    console.log(compet);
     return (
         <div className='competInfo scrollable'>
             {compet ? <h1>Modifier la compétition</h1> : <h1>Créé une nouvelle compétition</h1>}
@@ -82,7 +95,7 @@ export const CompetitionInfo = (props) => {
                 <label htmlFor="freeClub">Gratuit pour les athlètes de votre club </label>
                 <Switch defaultChecked={compet?.freeClub} name="freeClub" id="freeClub"/>
                 <label htmlFor="confirmation">Confirmation</label>
-                <input type="time" name="confirmation" id="confirmation" required defaultValue={compet ? compet?.confirmation : "00:30"}/> avant l'épreuve
+                <input type="time" name="confirmation" id="confirmation" required defaultValue={compet ? changeMinutesToTime(compet?.confirmationTime) : "00:30"}/> avant l'épreuve
                 <label htmlFor="schedule">Lien vers un horaire(optionel)</label>
                 <input type="text" name="schedule" id="schedule" defaultValue={compet?.schedule} maxLength={80}/>
                 <label htmlFor="description">Description de la compétition</label>

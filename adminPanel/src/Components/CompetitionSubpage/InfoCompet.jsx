@@ -38,6 +38,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                         {competition.schedule ? <li><strong>Horaire:</strong> <a href={competition.schedule} target="_blank" rel="noreferrer">Voir l'horaire</a></li> : <li><strong>Horaire:</strong> Aucun</li>}
                         {competition.paid ? <li><strong>Payant:</strong> Oui</li> : <li><strong>Payant:</strong> Non</li>}
                         {competition.freeClub ? <li><strong>Gratuit pour les clubs:</strong> {competition.freeClub?"Oui":"Non"}</li> : null}
+                        <li><strong>Confirmation:</strong>{` ${competition.confirmationTime} minutes avant l'épreuve`}</li>
                         {competition.description ? <li><strong>Description:</strong> {competition.description}</li> : <li><strong>Description:</strong> Aucune</li>}
                     </ul>
                     <button className='orangeBtn infoModif' onClick={() => {setShowModalModif(true);}}>Modifier</button>

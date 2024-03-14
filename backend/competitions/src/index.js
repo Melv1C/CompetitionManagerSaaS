@@ -781,6 +781,7 @@ app.put('/api/competitions/:id', async (req, res) => {
             schedule: schedule,
             description: description,
             email: email,
+            confirmationTime: confirmationTime,
         });
 
         const updatedCompetition = await Competition.findOne({ id: id });
