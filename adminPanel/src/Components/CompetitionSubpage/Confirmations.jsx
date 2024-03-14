@@ -72,12 +72,16 @@ function InscriptionList({inscriptions}) {
 }
 
 function InscriptionItem({inscription}) {
+    console.log(inscription);
     return (
         <div className='inscriptionItem'>
-            
+            <div className='inscriptionEvent'>{inscription.event}</div>
+            <div className='inscriptionRecord'>{inscription.record}</div>
         </div>
     )
 }
+
+
 
 export const Confirmations = (props) => {
     const { id } = useParams();

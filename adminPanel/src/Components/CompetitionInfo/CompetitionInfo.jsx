@@ -5,6 +5,11 @@ import Switch from '@mui/material/Switch';
 
 import { createCompetition, updateCompetition } from "../../CompetitionsAPI";
 
+function changeTimeToMinutes(time) {
+    const [hours, minutes] = time.split(':');
+    return parseInt(hours) * 60 + parseInt(minutes);
+}
+
 
 export const CompetitionInfo = (props) => {
     const navigate = useNavigate();
@@ -14,6 +19,7 @@ export const CompetitionInfo = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const confirmationTime = changeTimeToMinutes(event.target.confirmation.value);
         if (!compet) {
             console.log(props.user.uid);
             const formData = {
@@ -27,6 +33,7 @@ export const CompetitionInfo = (props) => {
                 freeClub: event.target.freeClub.checked,
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
+                confirmationTime: confirmationTime,
                 adminId: props.user.uid
             };
             createCompetition(formData, navigate);
@@ -43,6 +50,7 @@ export const CompetitionInfo = (props) => {
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
                 adminId: props.user.uid,
+                confirmationTime: confirmationTime,
                 id: compet.id
             };
             updateCompetition(formData, props.setCompetition);
@@ -73,6 +81,8 @@ export const CompetitionInfo = (props) => {
                 <Switch defaultChecked={compet?.paid} name="paid" id="paid"/>
                 <label htmlFor="freeClub">Gratuit pour les athlètes de votre club </label>
                 <Switch defaultChecked={compet?.freeClub} name="freeClub" id="freeClub"/>
+                <label htmlFor="confirmation">Confirmation</label>
+                <input type="time" name="confirmation" id="confirmation" required defaultValue={compet ? compet?.confirmation : "00:30"}/> avant l'épreuve
                 <label htmlFor="schedule">Lien vers un horaire(optionel)</label>
                 <input type="text" name="schedule" id="schedule" defaultValue={compet?.schedule} maxLength={80}/>
                 <label htmlFor="description">Description de la compétition</label>

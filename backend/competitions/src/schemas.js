@@ -60,6 +60,10 @@ const competitionSchema = new Schema({
         type: String,
         required: true,
     },
+    confirmationTime:{
+        type: Number,
+        required: true,
+    }
 });
 const Competition = mongoose.model("competitions", competitionSchema);
 

@@ -205,6 +205,7 @@ app.post('/api/competitions', async (req, res) => {
         const description = req.body.description ? req.body.description : "";
         const adminId = req.body.adminId;
         const email = req.body.email;
+        const confirmationTime = req.body.confirmationTime;
         if (!name && typeof name !== 'string'){
             return res.status(400).json({
                 status: 'error',
@@ -271,6 +272,12 @@ app.post('/api/competitions', async (req, res) => {
                 message: 'Invalid email',
             });
         }
+        if (!confirmationTime && typeof confirmationTime !== 'number'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid confirmationTime',
+            });
+        }
         const competition = new Competition({
             id: await generateIdCompet(),
             name: name,
@@ -285,6 +292,7 @@ app.post('/api/competitions', async (req, res) => {
             open: false,
             adminId: adminId,
             email: email,
+            confirmationTime: confirmationTime,
             epreuves: [],
         });
         await competition.save();
@@ -442,6 +450,7 @@ app.post('/api/competitions/:id/events', async (req, res) => {
     }
 });
 
+//update a event for a competition
 app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
     try{
         const id = req.params.id;
@@ -675,6 +684,7 @@ app.put('/api/competitions/:id', async (req, res) => {
         const email = req.body.email;
         const schedule = req.body.schedule ? req.body.schedule : "";
         const description = req.body.description ? req.body.description : "";
+        const confirmationTime = req.body.confirmationTime;
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
                 status: 'error',
@@ -739,6 +749,12 @@ app.put('/api/competitions/:id', async (req, res) => {
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid email',
+            });
+        }
+        if (!confirmationTime && typeof confirmationTime !== 'number'){
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid confirmationTime',
             });
         }
         const competition = await Competition.findOne({ id: id });

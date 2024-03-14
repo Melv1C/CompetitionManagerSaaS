@@ -44,10 +44,12 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                 </div>
                 <div className={`competDivInfo center ${competition.open ? 'openInscr': 'closeInscr'}`}>
                     <div className='center margin'>
-                        Les inscriptions sont {competition.open ? "ouvertes" : "fermées"}
+                        <div>
+                            La compétition est {competition.open ? <span className='green'>ouverte</span> : <span className='red'>fermée</span>}
+                        </div>
                     </div>
                     <div className='margin center'>
-                        <label>Ouvrir les inscriptions</label>
+                        <label>Ouvrir la compétition</label>
                         <Switch checked={competition.open} onChange={
                             () => {
                                 const body = {
