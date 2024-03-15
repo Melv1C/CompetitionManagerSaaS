@@ -30,6 +30,7 @@
 .footer .footer-content .right {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 10px;
     padding: 0 10px;
 }
@@ -39,18 +40,23 @@
     font-weight: 500;
 }
 
+.footer .footer-content .right .name {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+}
+
 .footer .footer-content .right ul {
     list-style: none;
     padding: 0;
 }
 
-.footer .footer-content .right ul * {
-    margin: 5px 0;
-}
 
 .footer .footer-content .right li {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     gap: 5px;
 }
 
@@ -59,9 +65,7 @@
     color: black;
 }
 
-.footer .footer-content .right .name {
-    
-}
+
 
 .footer .footer-content .right .social {
     display: flex;

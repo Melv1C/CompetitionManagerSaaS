@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import axios from 'axios'
+import axios from 'axios';
+
 import { ATLHETES_URL, INSCRIPTIONS_URL } from '../../../../Gateway'
 import { auth } from '../../../../Firebase'
 
@@ -88,7 +89,7 @@ function ControlButtons({setStep, setAthlete, enableNext}) {
 }
 
 
-export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
+export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay}) => {
     const [athletes, setAthletes] = useState([]);
 
     const [loading, setLoading] = useState(false);
@@ -181,6 +182,17 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId}) => {
                 <ControlButtons setStep={setStep} setAthlete={setAthlete} enableNext={enableNext} />
             </>
             }
+
+            {oneDay ? 
+            <div className='one-day-link'>
+                <button onClick={()=>{
+                        console.log('click');
+                        setStep(-1)
+                    }}>
+                    Je n'ai pas de dossard
+                </button>         
+            </div> 
+            : null}
 
         </div>
     )

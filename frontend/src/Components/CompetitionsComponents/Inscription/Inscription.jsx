@@ -13,6 +13,7 @@ import './Inscription.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleList, faUser, faPersonRunning, faStopwatch } from '@fortawesome/free-solid-svg-icons'
 
+import { OneDayAthlete } from '../OneDayAthlete/OneDayAthlete';
 import { Athlete } from './Athlete/Athlete'
 import { Events } from './Events/Events'
 import { Records } from './Records/Records'
@@ -62,7 +63,7 @@ export const Inscription = ({competition}) => {
 
     const [searchParams, setSearchParams] = useSearchParams();
     
-    const step = parseInt(searchParams.get('step')) || 1;
+    let step = parseInt(searchParams.get('step')) || 1;
     const setStep = (step) => {
         const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.set('step', step);
@@ -230,6 +231,10 @@ export const Inscription = ({competition}) => {
         }
     }, [athlete])
 
+    useEffect(() => {
+        console.log(step);
+    }, [step])
+
     if (!user) {
         return (
             <div className='competition-page'>
@@ -241,8 +246,9 @@ export const Inscription = ({competition}) => {
     return (
         <div className='competition-page'>
             <ProgressBar step={step} />
+            {step === -1 ? <OneDayAthlete competitionId={id} /> : null}
 
-            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} /> : null}
+            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} /> : null}
             {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} freeEvents={freeEvents} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
             {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}

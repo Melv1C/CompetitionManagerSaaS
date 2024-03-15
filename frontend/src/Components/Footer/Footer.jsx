@@ -40,7 +40,7 @@ export const Footer = () => {
                     Contactez-nous
                 </div>
                 <div className='email'>
-                    <a href='mailto:claesweb@gmail.com'>claesweb@gmail.com</a>
+                    <a href='mailto:claeswebcreations@gmail.com'>claeswebcreations@gmail.com</a>
                 </div>
             </div>
         </div>

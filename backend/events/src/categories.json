@@ -1,24 +1,24 @@
 {
     "categories": [
         {
-            "id": "7ee93ac1-7219-4a06-8b9b-3e4289134ae2",
-            "categoryId": 1095,
-            "nationalCode": "S",
-            "name": "Toutes catégories (F)",
-            "abbr": "TC F",
+            "id": "c6c69477-2577-448e-9805-f89c5423ec01",
+            "categoryId": 1052,
+            "nationalCode": "B",
+            "name": "kangourous (F)",
+            "abbr": "KAN F",
             "requiredGender": "Female",
-            "requiredMinAge": 14,
-            "requiredMaxAge": 0
+            "requiredMinAge": 8,
+            "requiredMaxAge": 9
         },
         {
-            "id": "ee913501-89e6-4aa9-ae37-c3308ff72437",
-            "categoryId": 1045,
-            "nationalCode": "S",
-            "name": "Toutes catégories (M)",
-            "abbr": "TC M",
+            "id": "d2c7f62d-2a5f-4107-980b-dd2e1b53d6f8",
+            "categoryId": 1002,
+            "nationalCode": "B",
+            "name": "kangourous (M)",
+            "abbr": "KAN M",
             "requiredGender": "Male",
-            "requiredMinAge": 14,
-            "requiredMaxAge": 0
+            "requiredMinAge": 8,
+            "requiredMaxAge": 9
         },
         {
             "id": "c6c69477-2577-448e-9805-f89c5423ec01",

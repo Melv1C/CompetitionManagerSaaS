@@ -84,9 +84,14 @@ async function getResultsByEvent(athleteId, event) {
     return results.filter(result => result.discipline === event);
 }
 
+function isOneDayAthlete(athleteId) {
+    return athleteId.startsWith('C');
+}
+
 
 module.exports = {
     calculateCategory,
     getResults,
-    getResultsByEvent
+    getResultsByEvent,
+    isOneDayAthlete
 }
