@@ -2,14 +2,12 @@
     "events": [
         {
             "grouping": "Sprint",
-            "name": "35 mètres",
+            "name": "35 métres",
             "validCat": [
                 "BEN F",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -51,7 +49,7 @@
         },
         {
             "grouping": "Sprint",
-            "name": "40 mètres",
+            "name": "40 métres",
             "validCat": [
                 "BEN F",
                 "BEN M",
@@ -64,14 +62,12 @@
         },
         {
             "grouping": "Sprint",
-            "name": "50 mètres",
+            "name": "50 métres",
             "validCat": [
                 "BEN F",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -113,14 +109,12 @@
         },
         {
             "grouping": "Sprint",
-            "name": "55 mètres",
+            "name": "55 métres",
             "validCat": [
                 "BEN F",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -162,16 +156,14 @@
         },
         {
             "grouping": "Sprint",
-            "name": "60 mètres",
+            "name": "60 métres",
             "validCat": [
                 "BEN F",
                 "BEN F",
                 "BEN M",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -215,7 +207,7 @@
         },
         {
             "grouping": "Sprint",
-            "name": "80 mètres",
+            "name": "80 métres",
             "validCat": [
                 "MIN F",
                 "MIN M"
@@ -224,12 +216,10 @@
         },
         {
             "grouping": "Sprint",
-            "name": "100 mètres",
+            "name": "100 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -267,12 +257,10 @@
         },
         {
             "grouping": "Sprint",
-            "name": "150 mètres",
+            "name": "150 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -316,16 +304,12 @@
         },
         {
             "grouping": "Sprint",
-            "name": "200 mètres",
+            "name": "200 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -395,16 +379,12 @@
         },
         {
             "grouping": "Sprint",
-            "name": "300 mètres",
+            "name": "300 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -478,16 +458,12 @@
         },
         {
             "grouping": "Sprint",
-            "name": "400 mètres",
+            "name": "400 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -557,10 +533,9 @@
         },
         {
             "grouping": "Sprint",
-            "name": "500 mètres",
+            "name": "500 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "JUN M",
                 "M35",
                 "M40",
@@ -582,16 +557,14 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "600 mètres",
+            "name": "600 métres",
             "validCat": [
                 "BEN F",
                 "BEN F",
                 "BEN M",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -629,16 +602,12 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "800 mètres",
+            "name": "800 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -733,16 +702,12 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "1000 mètres",
+            "name": "1000 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -820,16 +785,12 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "1500 mètres",
+            "name": "1500 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -899,7 +860,7 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "1500 mètres steeple 0,762m",
+            "name": "1500 métres steeple 0,762m",
             "validCat": [
                 "CAD M",
                 "CAD F"
@@ -911,13 +872,9 @@
             "name": "Mile",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -1001,12 +958,10 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "2000 mètres",
+            "name": "2000 métres",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -1044,10 +999,9 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "2000 mètres steeple 0,762m",
+            "name": "2000 métres steeple 0,762m",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -1068,10 +1022,9 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "2000 mètres steeple 0,914m",
+            "name": "2000 métres steeple 0,914m",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -1106,7 +1059,6 @@
             "validCat": [
                 "CAD M",
                 "CAD F",
-                "TC F",
                 "CAD F",
                 "JUN F",
                 "W35",
@@ -1132,16 +1084,12 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "3000 mètres",
+            "name": "3000 métres",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W35",
                 "W40",
@@ -1207,10 +1155,9 @@
         },
         {
             "grouping": "Demi-fond",
-            "name": "3000 mètres steeple 0,762m",
+            "name": "3000 métres steeple 0,762m",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -1225,17 +1172,15 @@
                 "W90",
                 "W95",
                 "SCO M",
-                "TC M",
                 "SEN F"
             ],
             "type": "time"
         },
         {
             "grouping": "Demi-fond",
-            "name": "3000 mètres steeple 0,914m",
+            "name": "3000 métres steeple 0,914m",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -1251,9 +1196,7 @@
             "name": "Deux miles",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1292,9 +1235,7 @@
             "name": "5 km Marche s-route",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -1335,11 +1276,8 @@
             "name": "5.000m Marche",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "JUN M",
@@ -1393,12 +1331,10 @@
         },
         {
             "grouping": "Fond",
-            "name": "5000 mètres",
+            "name": "5000 métres",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1468,9 +1404,7 @@
             "name": "10 km Marche s-route",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN M",
                 "W35",
@@ -1508,12 +1442,10 @@
         },
         {
             "grouping": "Fond",
-            "name": "10.000 mètres",
+            "name": "10.000 métres",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1550,9 +1482,7 @@
             "name": "10.000m Marche",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1660,9 +1590,7 @@
             "name": "1h Marche",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1741,12 +1669,10 @@
         },
         {
             "grouping": "Fond",
-            "name": "20.000 mètres",
+            "name": "20.000 métres",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1783,9 +1709,7 @@
             "name": "20.000m Marche",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "W35",
-                "TC F",
                 "W40",
                 "W45",
                 "W50",
@@ -1821,9 +1745,7 @@
             "name": "Semi-marathon",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1857,12 +1779,10 @@
         },
         {
             "grouping": "Fond",
-            "name": "25.000 mètres",
+            "name": "25.000 métres",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1931,12 +1851,10 @@
         },
         {
             "grouping": "Fond",
-            "name": "30.000 mètres",
+            "name": "30.000 métres",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -1973,7 +1891,6 @@
             "name": "30.000m Marche",
             "validCat": [
                 "M35",
-                "TC M",
                 "M40",
                 "M45",
                 "M50",
@@ -2016,7 +1933,6 @@
             "name": "2h Marche",
             "validCat": [
                 "M35",
-                "TC M",
                 "M40",
                 "M45",
                 "M50",
@@ -2059,9 +1975,7 @@
             "name": "Marathon",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -2133,7 +2047,6 @@
             "name": "50.000m Marche",
             "validCat": [
                 "M35",
-                "TC M",
                 "M40",
                 "M45",
                 "M50",
@@ -2176,7 +2089,6 @@
             "name": "100.000m Marche",
             "validCat": [
                 "M35",
-                "TC M",
                 "M40",
                 "M45",
                 "M50",
@@ -2240,9 +2152,7 @@
             "name": "Course de l'heure",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
-                "TC M",
                 "W35",
                 "W40",
                 "W45",
@@ -2323,7 +2233,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "40 mètres haies",
+            "name": "40 métres haies",
             "validCat": [
                 "MIN F",
                 "MIN M",
@@ -2334,11 +2244,10 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies",
+            "name": "50 métres haies",
             "validCat": [
                 "CAD F",
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -2350,7 +2259,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies 0,686m",
+            "name": "50 métres haies 0,686m",
             "validCat": [
                 "W60",
                 "W65",
@@ -2369,7 +2278,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies 0,762m",
+            "name": "50 métres haies 0,762m",
             "validCat": [
                 "W50",
                 "W55",
@@ -2383,7 +2292,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies 0,838m",
+            "name": "50 métres haies 0,838m",
             "validCat": [
                 "M60",
                 "M65",
@@ -2393,7 +2302,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies 0,914m",
+            "name": "50 métres haies 0,914m",
             "validCat": [
                 "CAD M",
                 "M50",
@@ -2403,7 +2312,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies 0,991m",
+            "name": "50 métres haies 0,991m",
             "validCat": [
                 "JUN M",
                 "M35",
@@ -2414,7 +2323,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "50 mètres haies 1,067m",
+            "name": "50 métres haies 1,067m",
             "validCat": [
                 "SEN M"
             ],
@@ -2422,12 +2331,11 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies",
+            "name": "60 métres haies",
             "validCat": [
                 "CAD M",
                 "CAD M",
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -2449,7 +2357,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies 0,686m",
+            "name": "60 métres haies 0,686m",
             "validCat": [
                 "W60",
                 "W65",
@@ -2474,7 +2382,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies 0,762m",
+            "name": "60 métres haies 0,762m",
             "validCat": [
                 "BEN M",
                 "CAD F",
@@ -2496,7 +2404,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies 0,838m",
+            "name": "60 métres haies 0,838m",
             "validCat": [
                 "M60",
                 "M65",
@@ -2506,7 +2414,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies 0,914m",
+            "name": "60 métres haies 0,914m",
             "validCat": [
                 "M50",
                 "M55",
@@ -2516,7 +2424,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies 0,991m",
+            "name": "60 métres haies 0,991m",
             "validCat": [
                 "JUN M",
                 "M35",
@@ -2527,10 +2435,9 @@
         },
         {
             "grouping": "Haies",
-            "name": "60 mètres haies 1,067m",
+            "name": "60 métres haies 1,067m",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -2551,7 +2458,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "80 mètres haies 0,686m",
+            "name": "80 métres haies 0,686m",
             "validCat": [
                 "W60",
                 "W65",
@@ -2570,7 +2477,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "80 mètres haies 0,762m",
+            "name": "80 métres haies 0,762m",
             "validCat": [
                 "CAD F",
                 "W40",
@@ -2585,7 +2492,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "80 mètres haies 0,838m",
+            "name": "80 métres haies 0,838m",
             "validCat": [
                 "MIN M"
             ],
@@ -2593,7 +2500,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "100 mètres haies 0,762m",
+            "name": "100 métres haies 0,762m",
             "validCat": [
                 "SCO F"
             ],
@@ -2601,11 +2508,10 @@
         },
         {
             "grouping": "Haies",
-            "name": "100 mètres haies 0,838m",
+            "name": "100 métres haies 0,838m",
             "validCat": [
                 "CAD M",
                 "JUN F",
-                "TC F",
                 "W35",
                 "M60",
                 "M65",
@@ -2616,7 +2522,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "100 mètres haies 0,914m",
+            "name": "100 métres haies 0,914m",
             "validCat": [
                 "M50",
                 "M55"
@@ -2625,7 +2531,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "110 mètres haies 0,914m",
+            "name": "110 métres haies 0,914m",
             "validCat": [
                 "SCO M"
             ],
@@ -2633,7 +2539,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "110 mètres haies 0,991m",
+            "name": "110 métres haies 0,991m",
             "validCat": [
                 "JUN M",
                 "M35",
@@ -2644,10 +2550,9 @@
         },
         {
             "grouping": "Haies",
-            "name": "110 mètres haies 1,067m",
+            "name": "110 métres haies 1,067m",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "SCO M",
                 "SEN M"
             ],
@@ -2655,7 +2560,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "150 mètres haies 0,762m",
+            "name": "150 métres haies 0,762m",
             "validCat": [
                 "MIN F",
                 "MIN M"
@@ -2664,7 +2569,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "200 mètres haies 0,686m",
+            "name": "200 métres haies 0,686m",
             "validCat": [
                 "W70",
                 "W75",
@@ -2681,7 +2586,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "300 mètres haies 0,686m",
+            "name": "300 métres haies 0,686m",
             "validCat": [
                 "W60",
                 "W65",
@@ -2692,7 +2597,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "300 mètres haies 0,762m",
+            "name": "300 métres haies 0,762m",
             "validCat": [
                 "CAD M",
                 "CAD F",
@@ -2705,10 +2610,9 @@
         },
         {
             "grouping": "Haies",
-            "name": "400 mètres haies 0,762m",
+            "name": "400 métres haies 0,762m",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -2719,7 +2623,7 @@
         },
         {
             "grouping": "Haies",
-            "name": "400 mètres haies 0,838m",
+            "name": "400 métres haies 0,838m",
             "validCat": [
                 "M50",
                 "M55",
@@ -2729,10 +2633,9 @@
         },
         {
             "grouping": "Haies",
-            "name": "400 mètres haies 0,914m",
+            "name": "400 métres haies 0,914m",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -2746,13 +2649,9 @@
             "name": "Saut à la perche",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -2829,17 +2728,13 @@
             "name": "Saut en hauteur",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "BEN F",
                 "BEN F",
                 "BEN M",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -2920,17 +2815,13 @@
             "name": "Saut en longueur",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "BEN F",
                 "BEN F",
                 "BEN M",
                 "BEN M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -3011,13 +2902,9 @@
             "name": "Triple saut",
             "validCat": [
                 "CAD M",
-                "TC M",
                 "CAD M",
-                "TC M",
                 "CAD F",
-                "TC F",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "JUN F",
                 "JUN M",
@@ -3189,7 +3076,6 @@
             "validCat": [
                 "CAD M",
                 "CAD F",
-                "TC F",
                 "JUN F",
                 "W35",
                 "W40",
@@ -3240,7 +3126,6 @@
             "name": "Lancer du disque 2,000kg",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -3325,7 +3210,6 @@
             "validCat": [
                 "CAD M",
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -3361,7 +3245,6 @@
             "name": "Lancer du javelot 800g",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -3416,7 +3299,6 @@
             "validCat": [
                 "CAD M",
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -3461,7 +3343,6 @@
             "name": "Lancer du marteau 7,260kg",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "M35",
                 "M40",
                 "M45",
@@ -3558,7 +3439,6 @@
             "validCat": [
                 "CAD M",
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -3574,7 +3454,6 @@
             "validCat": [
                 "CAD M",
                 "JUN F",
-                "TC F",
                 "W35",
                 "W40",
                 "W45",
@@ -3626,9 +3505,7 @@
             "name": "Lancer du poids 7,260kg",
             "validCat": [
                 "JUN M",
-                "TC M",
                 "JUN M",
-                "TC M",
                 "M35",
                 "M35",
                 "M40",
@@ -3654,10 +3531,9 @@
         },
         {
             "grouping": "Epreuves multiples",
-            "name": "Décathlon",
+            "name": "Dècathlon",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
                 "W35",
                 "W40",
@@ -3685,7 +3561,6 @@
                 "M85",
                 "M90",
                 "M95",
-                "TC M",
                 "SCO M",
                 "SEN F",
                 "SEN M"
@@ -3694,7 +3569,7 @@
         },
         {
             "grouping": "Epreuves multiples",
-            "name": "Ennéathlon",
+            "name": "Ennèathlon",
             "validCat": [
                 "SCO M"
             ],
@@ -3705,7 +3580,6 @@
             "name": "Heptathlon",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
                 "W35",
                 "W40",
@@ -3725,8 +3599,7 @@
                 "SCO F",
                 "SCO M",
                 "SEN F",
-                "SEN M",
-                "TC M"
+                "SEN M"
             ],
             "type": "points"
         },
@@ -3755,9 +3628,7 @@
                 "CAD F",
                 "CAD F",
                 "JUN F",
-                "TC F",
                 "JUN F",
-                "TC F",
                 "JUN M",
                 "W35",
                 "W35",
@@ -3786,7 +3657,6 @@
                 "W95",
                 "W95",
                 "M35",
-                "TC M",
                 "M35",
                 "M40",
                 "M40",
@@ -3829,7 +3699,6 @@
             "name": "Pentathlon de lancers",
             "validCat": [
                 "JUN F",
-                "TC F",
                 "JUN M",
                 "W35",
                 "W40",
@@ -3845,7 +3714,6 @@
                 "W90",
                 "W95",
                 "M35",
-                "TC M",
                 "M40",
                 "M45",
                 "M50",
@@ -3865,7 +3733,7 @@
         },
         {
             "grouping": "Epreuves multiples",
-            "name": "Tétrathlon",
+            "name": "Tètrathlon",
             "validCat": [
                 "BEN F",
                 "BEN M",
@@ -3881,9 +3749,7 @@
             "name": "Triathlon",
             "validCat": [
                 "M35",
-                "TC M",
                 "M35",
-                "TC M",
                 "M40",
                 "M40",
                 "M45",
