@@ -35,7 +35,6 @@ export const AddModifEvent = (props) => {
     const { id, eventId } = useParams();
     const navigate = useNavigate();
     const [exisingEvent, setExistingEvent] = useState(false);
-    const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState([]);
     const [competition, setCompetition] = useState(null);
     const [groupings, setGrouping] = useState([]);
@@ -142,7 +141,7 @@ export const AddModifEvent = (props) => {
             setFilteredEvent(filteredEvent);
         }
         //reset the selected event
-        if (!eventId || !loading){
+        if (!eventId){
             setSelectedEvent("0");
         }
     }, [selectedGrouping]);
