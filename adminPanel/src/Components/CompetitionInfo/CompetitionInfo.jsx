@@ -27,6 +27,7 @@ export const CompetitionInfo = (props) => {
     const navigate = useNavigate();
     let compet = props.competition || null;
     const [date, setDate] = useState(compet ? compet.date : null);
+    const [oneDay, setOneDay] = useState(compet ? compet.oneDay : false);
 
 
     const handleSubmit = async (event) => {
@@ -96,6 +97,16 @@ export const CompetitionInfo = (props) => {
                 <Switch defaultChecked={compet?.freeClub} name="freeClub" id="freeClub"/>
                 <label htmlFor="confirmation">Confirmation</label>
                 <input type="time" name="confirmation" id="confirmation" required defaultValue={compet ? changeMinutesToTime(compet?.confirmationTime) : "00:30"}/> avant l'épreuve
+                <label htmlFor="oneDay">Autoriser les dossards d'un jour</label>
+                <Switch defaultChecked={compet?.oneDay} onChange={
+                    (e) => {
+                        setOneDay(e.target.checked);
+                    }
+                } name="oneDay" id="oneDay"/>
+                {oneDay && <div>
+                    <label htmlFor="oneDayBIB">N° de départ des dossards d'un jour</label>
+                    <input type="number" name="oneDayBIB" id="oneDayBIB" defaultValue={compet?.oneDayBIB || 9000} min={9000} max={9999}/>
+                </div>}
                 <label htmlFor="schedule">Lien vers un horaire(optionel)</label>
                 <input type="text" name="schedule" id="schedule" defaultValue={compet?.schedule} maxLength={80}/>
                 <label htmlFor="description">Description de la compétition</label>
