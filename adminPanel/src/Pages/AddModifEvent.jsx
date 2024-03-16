@@ -12,6 +12,25 @@ import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import './styles/AddModifEvent.css';
 
+const dicoCat = {
+    "KAN M":1,
+    "KAN F":2,
+    "BEN M":3,
+    "BEN F":4,
+    "PUP M":5,
+    "PUP F":6,
+    "MIN M":7,
+    "MIN F":8,
+    "CAD M":9,
+    "CAD F":10,
+    "SCO M":11,
+    "SCO F":12,
+    "JUN M":13,
+    "JUN F":14,
+    "SEN M":15,
+    "SEN F":16,
+}
+
 export const AddModifEvent = (props) => {
     const { id, eventId } = useParams();
     const navigate = useNavigate();
@@ -85,8 +104,8 @@ export const AddModifEvent = (props) => {
                 const eventInfo = events.find((element) => {
                     return element.name === data.name;
                 });
-                setSubEvents(data.subEvents);
                 setSelectedGrouping(eventInfo.grouping);
+                setSubEvents(data.subEvents);
                 setMaxParticipants(data.maxParticipants);
                 setTime(data.time);
                 setCost(data.cost);
@@ -130,13 +149,12 @@ export const AddModifEvent = (props) => {
             setCategories([]);
             return;
         }
-        axios.get(EVENTS_URL + '/' + selectedEvent)
-            .then((response) => {
-                setCategories(response.data.data.validCat.sort());
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        axios.get(`${EVENTS_URL}/${selectedEvent}`).then((response) => {
+            console.log(response.data.data);
+            setCategories(response.data.data.validCat);
+        }).catch((error) => {
+            console.log(error);
+        });
         if (!eventId || !exisingEvent || exisingEvent.name !== selectedEvent) {
             setPseudoName(selectedEvent);
         }
@@ -148,7 +166,19 @@ export const AddModifEvent = (props) => {
             return;
         }
         let newCategories = {};
-        categories.forEach((element) => {
+        categories.sort(
+            (a, b) => {
+                if (dicoCat[a] !== undefined && dicoCat[b] !== undefined) {
+                    return dicoCat[a] - dicoCat[b];
+                }else if (dicoCat[a] !== undefined) {
+                    return -1000;
+                }else if (dicoCat[b] !== undefined) {
+                    return 1000;
+                }else{
+                    return a.localeCompare(b);
+                }
+            }
+        ).forEach((element) => {
             switch (genre) {
                 case "Mixte":
                     if (eventId && exisingEvent && exisingEvent.name === selectedEvent) {

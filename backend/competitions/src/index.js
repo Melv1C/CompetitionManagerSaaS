@@ -5,6 +5,8 @@ const { Competition } = require("./schemas");
 const crypto = require('crypto');
 const axios = require('axios');
 
+const { checkInputCompetitions, checkInputEvents } = require('./outils');
+
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/competitions';
 
 
@@ -194,105 +196,34 @@ app.get('/api/competitions/:id/events/:eventId', async (req, res) => {
 //create a new competition
 app.post('/api/competitions', async (req, res) => {
     try{
-        const name = req.body.name;
-        const location = req.body.location;
-        const club = req.body.club;
-        const date = req.body.date;
-        const closeDate = req.body.closeDate;
-        const paid = req.body.paid ? req.body.paid : false;
-        const freeClub = req.body.freeClub;
-        const schedule = req.body.schedule ? req.body.schedule : "";
-        const description = req.body.description ? req.body.description : "";
-        const adminId = req.body.adminId;
-        const email = req.body.email;
-        const confirmationTime = req.body.confirmationTime;
-        if (!name && typeof name !== 'string'){
+        const competInfo = {
+            name : req.body.name,
+            location : req.body.location,
+            club : req.body.club,
+            date : req.body.date,
+            closeDate : req.body.closeDate,
+            paid : req.body.paid ? req.body.paid : false,
+            freeClub : req.body.freeClub,
+            schedule : req.body.schedule ? req.body.schedule : "",
+            description : req.body.description ? req.body.description : "",
+            adminId : req.body.adminId,
+            email : req.body.email,
+            confirmationTime : req.body.confirmationTime,
+            oneDay : req.body.oneDay || false,
+            oneDayBIB : req.body.oneDayBIB || 0,
+        }
+        const check = checkInputCompetitions(competInfo);
+        if (check[0] === false){
             return res.status(400).json({
                 status: 'error',
-                message: 'Invalid name',
+                message: check[1],
             });
         }
-        if (!location && typeof location !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid location',
-            });
-        }
-        if (!club && typeof club !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid club',
-            });
-        }
-        if (!date && typeof date !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid date',
-            });
-        }
-        if (!closeDate && typeof closeDate !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid closeDate',
-            });
-        }
-        if (!paid && typeof paid !== 'boolean'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid paid',
-            });
-        }
-        if (!freeClub && typeof freeClub != 'boolean'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid paid',
-            })
-        }
-        if (!schedule && typeof schedule !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid schedule',
-            });
-        }
-        if (!description && typeof description !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid description',
-            });
-        }
-        if (!adminId && typeof adminId !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid adminId',
-            });
-        }
-        if (!email && typeof email !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid email',
-            });
-        }
-        if (!confirmationTime && typeof confirmationTime !== 'number'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid confirmationTime',
-            });
-        }
+        
         const competition = new Competition({
+            ...competInfo,
             id: await generateIdCompet(),
-            name: name,
-            location: location,
-            club: club,
-            date: date,
-            closeDate: closeDate,
-            paid: paid,
-            freeClub: freeClub,
-            schedule: schedule,
-            description: description,
             open: false,
-            adminId: adminId,
-            email: email,
-            confirmationTime: confirmationTime,
             epreuves: [],
         });
         await competition.save();
@@ -330,72 +261,34 @@ app.post('/api/competitions', async (req, res) => {
 app.post('/api/competitions/:id/events', async (req, res) => {
     try{
         const id = req.params.id;
-        const name = req.body.name;
-        const pseudoName = req.body.pseudoName ? req.body.pseudoName : name;
-        const time = req.body.time;
-        const categories = req.body.categories;
-        const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
-        const cost = req.body.cost ? req.body.cost : 0;
-        const subEvents = req.body.subEvents ? req.body.subEvents : [];
-        let type;
+        let eventInfo = {
+            name : req.body.name,
+            pseudoName : req.body.pseudoName ? req.body.pseudoName : name,
+            time : req.body.time,
+            categories : req.body.categories,
+            maxParticipants : req.body.maxParticipants ? req.body.maxParticipants : null,
+            cost : req.body.cost ? req.body.cost : 0,
+            subEvents : req.body.subEvents ? req.body.subEvents : [],
+            type : null,
+        }
+
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid id',
             });
         }
-        if (!name && typeof name !== 'string'){
+        const check = checkInputEvents(req.body);
+        if (check[0] === false){
             return res.status(400).json({
                 status: 'error',
-                message: 'Invalid name',
-            });
-        } else {
-            const url = process.env.EVENTS_URL || 'http://localhost:3000';
-            type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
-        }
-        if (!pseudoName && typeof pseudoName !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid pseudoName',
+                message: check[1],
             });
         }
-        if (!time && typeof time !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid time',
-            });
-        }
-        if (!categories && !Array.isArray(categories)){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid categories',
-            });
-        }
-        if (maxParticipants && typeof maxParticipants !== 'number'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid maxParticipants',
-            });
-        }
-        if (cost && typeof cost !== 'number'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid cost',
-            });
-        }
-        if (!type && typeof type !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid name',
-            });
-        }
-        if (subEvents && !Array.isArray(subEvents)){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid subEvents',
-            });
-        }
-        for (let subevent of subEvents){
+        const url = process.env.EVENTS_URL || 'http://localhost:3000';
+        eventInfo.type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
+        
+        for (let subevent of eventInfo.subEvents){
             if (!subevent.name || typeof subevent.name !== 'string'){
                 return res.status(400).json({
                     status: 'error',
@@ -422,15 +315,8 @@ app.post('/api/competitions/:id/events', async (req, res) => {
         }
         const  events = competition.events;
         events.push({
+            ...eventInfo,
             id: await generateIdEvent(events),
-            name: name,
-            pseudoName: pseudoName,
-            time: time,
-            categories: categories,
-            maxParticipants: maxParticipants,
-            cost: cost,
-            type: type,
-            subEvents: subEvents,
         });
         await competition.updateOne({events: events});
 
@@ -455,72 +341,34 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
     try{
         const id = req.params.id;
         const eventId = req.params.eventId;
-        const name = req.body.name;
-        const pseudoName = req.body.pseudoName ? req.body.pseudoName : name;
-        const time = req.body.time;
-        const categories = req.body.categories;
-        const maxParticipants = req.body.maxParticipants ? req.body.maxParticipants : null;
-        const cost = req.body.cost ? req.body.cost : 0;
-        const subEvents = req.body.subEvents ? req.body.subEvents : [];
-        let type;
+        let eventInfo = {
+            name : req.body.name,
+            pseudoName : req.body.pseudoName ? req.body.pseudoName : name,
+            time : req.body.time,
+            categories : req.body.categories,
+            maxParticipants : req.body.maxParticipants ? req.body.maxParticipants : null,
+            cost : req.body.cost ? req.body.cost : 0,
+            subEvents : req.body.subEvents ? req.body.subEvents : [],
+            type : null,
+        }
+
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid id',
             });
         }
-        if (!eventId && typeof eventId !== 'string'){
+        const check = checkInputEvents(req.body);
+        if (check[0] === false){
             return res.status(400).json({
                 status: 'error',
-                message: 'Invalid eventId',
+                message: check[1],
             });
         }
-        if (!name && typeof name !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid name',
-            });
-        } else {
-            const url = process.env.EVENTS_URL || 'http://localhost:3000';
-            type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
-        }
-        if (!pseudoName && typeof pseudoName !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid pseudoName',
-            });
-        }
-        if (!time && typeof time !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid time',
-            });
-        }
-        if (!categories && !Array.isArray(categories)){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid categories',
-            });
-        }
-        if (maxParticipants && typeof maxParticipants !== 'number'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid maxParticipants',
-            });
-        }
-        if (cost && typeof cost !== 'number'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid cost',
-            });
-        }
-        if (!type && typeof type !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid name',
-            });
-        }
-        for (let subevent of subEvents){
+        const url = process.env.EVENTS_URL || 'http://localhost:3000';
+        eventInfo.type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
+
+        for (let subevent of eventInfo.subEvents){
             if (!subevent.name || typeof subevent.name !== 'string'){
                 return res.status(400).json({
                     status: 'error',
@@ -564,15 +412,8 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
         }
         
         events[index] = {
+            ...eventInfo,
             id: eventId,
-            name: name,
-            pseudoName: pseudoName,
-            time: time,
-            categories: categories,
-            maxParticipants: maxParticipants,
-            cost: cost,
-            type: type,
-            subEvents: subEvents,
         };
         await competition.updateOne({events: events});
         const updatedCompetition = await Competition.findOne({ id: id });
@@ -674,87 +515,33 @@ app.put('/api/competitions/:id/open', async (req, res) => {
 app.put('/api/competitions/:id', async (req, res) => {
     try{
         const id = req.params.id;
-        const name = req.body.name;
-        const location = req.body.location;
-        const club = req.body.club;
-        const date = req.body.date;
-        const closeDate = req.body.closeDate;
-        const paid = req.body.paid ? req.body.paid : false;
-        const freeClub = req.body.freeClub;
-        const email = req.body.email;
-        const schedule = req.body.schedule ? req.body.schedule : "";
-        const description = req.body.description ? req.body.description : "";
-        const confirmationTime = req.body.confirmationTime;
+        const competInfo = {
+            name : req.body.name,
+            location : req.body.location,
+            club : req.body.club,
+            date : req.body.date,
+            closeDate : req.body.closeDate,
+            paid : req.body.paid ? req.body.paid : false,
+            freeClub : req.body.freeClub,
+            schedule : req.body.schedule ? req.body.schedule : "",
+            description : req.body.description ? req.body.description : "",
+            adminId : req.body.adminId,
+            email : req.body.email,
+            confirmationTime : req.body.confirmationTime,
+            oneDay : req.body.oneDay || false,
+            oneDayBIB : req.body.oneDayBIB || 0,
+        }
+        const check = checkInputCompetitions(competInfo);
+        if (check[0] === false){
+            return res.status(400).json({
+                status: 'error',
+                message: check[1],
+            });
+        }
         if (!id && typeof id !== 'string'){
             return res.status(400).json({
                 status: 'error',
                 message: 'Invalid id',
-            });
-        }
-        if (!name && typeof name !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid name',
-            });
-        }
-        if (!location && typeof location !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid location',
-            });
-        }
-        if (!club && typeof club !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid club',
-            });
-        }
-        if (!date && typeof date !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid date',
-            });
-        }
-        if (!closeDate && typeof closeDate !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid closeDate',
-            });
-        }
-        if (!paid && typeof paid !== 'boolean'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid paid',
-            });
-        }
-        if (!freeClub && !Array.isArray(freeClub)){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid freeClub',
-            });
-        }
-        if (!schedule && typeof schedule !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid schedule',
-            });
-        }
-        if (!description && typeof description !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid description',
-            });
-        }
-        if (!email && typeof email !== 'string'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid email',
-            });
-        }
-        if (!confirmationTime && typeof confirmationTime !== 'number'){
-            return res.status(400).json({
-                status: 'error',
-                message: 'Invalid confirmationTime',
             });
         }
         const competition = await Competition.findOne({ id: id });
@@ -770,19 +557,7 @@ app.put('/api/competitions/:id', async (req, res) => {
                 message: 'Unauthorized',
             });
         }
-        await competition.updateOne({
-            name: name,
-            location: location,
-            club: club,
-            date: date,
-            closeDate: closeDate,
-            paid: paid,
-            freeClub: freeClub,
-            schedule: schedule,
-            description: description,
-            email: email,
-            confirmationTime: confirmationTime,
-        });
+        await competition.updateOne(competInfo);
 
         const updatedCompetition = await Competition.findOne({ id: id });
 

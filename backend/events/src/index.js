@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const env = require('dotenv').config();
-const { Category , Event } = require("./schemas");
+const { Event } = require("./schemas");
 const MONGO_URI = process.env.MONGO_URI|| 'mongodb://localhost:27017/eventcat';
 const fs = require("fs");
 
@@ -39,16 +39,6 @@ function readJsonFileSync(filepath, encoding){
 }
 
 async function initDB(){
-    const categories = readJsonFileSync('src/categories.json');
-    const bulkOps = categories.categories.map(cat => ({
-        updateOne: {
-            filter: { id: cat.id },
-            update: { $set: cat },
-            upsert: true,
-        }
-    }));
-    console.log("Creating events ...");
-    await Category.bulkWrite(bulkOps);
     const events = readJsonFileSync('src/epreuves.json');
     const bulkOps2 = events.events.map(event => ({
         updateOne: {
@@ -94,16 +84,6 @@ app.get('/api/events/:name', async (req, res) => {
                 message: 'Invalid event name',
             });
         }
-        let validCat = []
-        for (let i = 0; i < event.validCat.length; i++) {
-            const abbr = await Category.findOne({ id: event.validCat[i] })
-            if (abbr) {
-                validCat.push(abbr.abbr);
-            }else{
-                console.log("Invalid category id: " + event.validCat[i]);
-            }
-        }
-        event.validCat = validCat;
         res.status(200).json({
             status: 'success',
             message: 'Event retrieved successfully',
@@ -117,24 +97,5 @@ app.get('/api/events/:name', async (req, res) => {
         });
     }
 });
-
-app.get('/api/categories/:id', async (req, res) => {
-    try{
-        const category = await Category.findOne({ id: req.params.id });
-        res.status(200).json({
-            status: 'success',
-            message: 'Category retrieved successfully',
-            data: category,
-        });
-    }catch(err){
-        console.error(err);
-        res.status(500).json({
-            status: 'error',
-            message: 'Internal server error',
-        });
-    }
-});
-
-
 
 app.listen(port, () => console.log(`Event app listening on port ${port}!`));
