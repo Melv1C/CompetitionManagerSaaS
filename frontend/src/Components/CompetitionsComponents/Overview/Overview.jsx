@@ -89,17 +89,19 @@ export const Overview = ({competition}) => {
                         {competition.description}
                     </div>
                 : null}
+                {nbrParticipants != 0 ?
                 <div className="card pie-chart">
                     <div className='center title'>Athlètes par club:</div>
                     <PieChart data={competitionInfo.NumberOfAthletesByClub}/>
                 </div>
+                : null}
 
                 {/*<div className="pie-chart card">
                     <div className='center title'>Athlètes par catégorie:</div>
                     <PieChart data={competitionInfo.NumberOfAthletesByCategory}/>
                 </div>*/}
 
-                <div className="card">
+                <div className="card width-100">
                     <div className='center title'>Epreuves:</div>
                     <EventsByCat events={competition.events}/>
                 </div>

@@ -1,3 +1,15 @@
+:root {
+    --primary-color: #008AFF;
+    --light-primary-color: #E5F0FF;
+    --secondary-color: #FF4141;;
+    --light-grey: #F5F5F5;
+    --dark-grey: #515151;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+}
+
 
 .page {
     margin: 0 auto 50px;
@@ -22,5 +34,9 @@
 .error-message {
     color: red;
     text-align: center;
+}
+
+.width-100 {
+    width: 100%;
 }
 

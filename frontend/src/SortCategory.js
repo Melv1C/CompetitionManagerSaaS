@@ -1,29 +1,35 @@
-const dico = {
-    "BEN": 0,
-    "PUP": 1,
-    "MIN": 2,
-    "CAD": 3,
-    "SCO": 4,
-    "JUN": 5,
-    "SEN": 6
+const dicoCat = {
+    "KAN M":1,
+    "KAN F":2,
+    "BEN M":3,
+    "BEN F":4,
+    "PUP M":5,
+    "PUP F":6,
+    "MIN M":7,
+    "MIN F":8,
+    "CAD M":9,
+    "CAD F":10,
+    "SCO M":11,
+    "SCO F":12,
+    "JUN M":13,
+    "JUN F":14,
+    "SEN M":15,
+    "SEN F":16,
 }
 
 export const SortCategory = (categories) => {
-    console.log(categories);
     let uniqueCategories = [...new Set(categories)];
-    console.log(uniqueCategories);
     uniqueCategories.sort((a, b) => {
-        let aCat = a.split(" ")[0];
-        let bCat = b.split(" ")[0];
-        if (dico[aCat] < dico[bCat]) {
-            return -1;
+        if (dicoCat[a] !== undefined && dicoCat[b] !== undefined) {
+            return dicoCat[a] - dicoCat[b];
+        }else if (dicoCat[a] !== undefined) {
+            return -1000;
+        }else if (dicoCat[b] !== undefined) {
+            return 1000;
+        }else{
+            return a.localeCompare(b);
         }
-        if (dico[aCat] > dico[bCat]) {
-            return 1;
-        }
-        return 0;
     });
-    console.log(uniqueCategories);
     return uniqueCategories;
 }
 
@@ -31,10 +37,10 @@ export const groupByGender = (categories) => {
     let male = [];
     let female = [];
     categories.forEach(category => {
-        if (category.includes("M")) {
-            male.push(category);
-        } else if (category.includes("F") || category.includes("W")) {
+        if (category.includes("F") || category.includes("W")) {
             female.push(category);
+        } else if (category.includes("M")) {
+            male.push(category);
         }
     });
     return { male, female };
