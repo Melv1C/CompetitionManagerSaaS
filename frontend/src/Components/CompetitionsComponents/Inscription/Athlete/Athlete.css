@@ -158,6 +158,26 @@
 
 }
 
+.new-athletes-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.new-athletes-link button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #008AFF;
+    background-color: white;
+
+}
+
+.new-athletes-link button:hover {
+    background-color: #008AFF;
+    color: white;
+}
+
 
 
 

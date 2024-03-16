@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkerAlt, faCalendarAlt, faClock, faUsers, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 import { PieChart } from '../../PieChart/PieChart'
+import { EventsByCat } from './EventsByCat/EventsByCat'
 
 export const Overview = ({competition}) => {
 
@@ -97,6 +98,11 @@ export const Overview = ({competition}) => {
                     <div className='center title'>Athlètes par catégorie:</div>
                     <PieChart data={competitionInfo.NumberOfAthletesByCategory}/>
                 </div>*/}
+
+                <div className="card">
+                    <div className='center title'>Epreuves:</div>
+                    <EventsByCat events={competition.events}/>
+                </div>
                 
             </div>
         </div>

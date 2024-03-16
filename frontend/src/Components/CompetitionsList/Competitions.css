@@ -39,6 +39,8 @@
 
 .competitions-item .competitions-item-date {
     width: 20%;
+    font-size: 1.2rem;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,12 +48,14 @@
 
 .competitions-item .competitions-item-name {
     width: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.competitions-item .competitions-item-inscription {
+.competitions-item .competitions-item-inscription-deadline {
     width: 20%;
     display: flex;
     align-items: center;
@@ -92,7 +96,8 @@
 @media (max-width: 900px) {
 
     .competitions-item {
-        height: 100px;
+        min-height: 100px;
+        padding: 30px 0;
     }
 
     .competitions-item-info {
@@ -101,9 +106,25 @@
         justify-content: center;
         margin-bottom: 10px;
         width: 100%;
+        text-align: left;
         gap: 10px;
-
     }
+
+    .competitions-item .competitions-item-date {
+        justify-content: left;
+        width: 90%;
+    }
+
+    .competitions-item .competitions-item-name {
+        justify-content: left;
+        width: 90%;
+    }
+
+    .competitions-item .competitions-item-inscription-deadline {
+        justify-content: left;
+        width: 90%;
+    }
+
 }
 
 

@@ -214,11 +214,15 @@ app.post(`${prefix}`, async (req, res) => {
     }
 
     athlete = {
-        ...athlete,
+        firstName: athlete.firstName,
+        lastName: athlete.lastName,
+        birthDate: athlete.birthDate,
+        gender: athlete.gender,
+        club: athlete.club || "NA", // "NA" is the default value for "club" if it is not provided
+        optionals: athlete.optionals || {},
         bib,
         id: `C_${competitionId}_${bib}`,
         _id: `C_${competitionId}_${bib}`,
-        club: "NA",
         category: calculateCategory(new Date(athlete.birthDate), new Date(), athlete.gender),
     };
 

@@ -175,6 +175,18 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay}) =
                     </div>
                 </div>
                 <ListAthletes athletes={athletes} setAthlete={setAthlete} loading={loading} />
+
+                {oneDay ? 
+                <div className='new-athletes-link'>
+                    <button onClick={()=>{
+                            console.log('click');
+                            setStep(-1)
+                        }}>
+                        Je n'ai pas de dossard
+                    </button>         
+                </div> 
+                : null}
+
             </>
             : 
             <>
@@ -182,17 +194,6 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay}) =
                 <ControlButtons setStep={setStep} setAthlete={setAthlete} enableNext={enableNext} />
             </>
             }
-
-            {oneDay ? 
-            <div className='one-day-link'>
-                <button onClick={()=>{
-                        console.log('click');
-                        setStep(-1)
-                    }}>
-                    Je n'ai pas de dossard
-                </button>         
-            </div> 
-            : null}
 
         </div>
     )

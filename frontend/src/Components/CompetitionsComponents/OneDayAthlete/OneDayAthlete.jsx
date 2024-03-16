@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import { ATLHETES_URL } from '../../../Gateway'
 
+import './OneDayAthlete.css'
+
 export const OneDayAthlete = ({competitionId}) => {
 
     const [firstName, setFirstName] = useState('');
@@ -33,8 +35,8 @@ export const OneDayAthlete = ({competitionId}) => {
     }
 
     return (
-        <div className='one-day-athlete'>
-            <h2></h2>
+        <div className='one-day-athlete step-page'>
+            <h2>Athlète</h2>
             <div className='form'>
                 <div className='form-group'>
                     <label htmlFor="firstName">Prénom</label>
@@ -48,7 +50,7 @@ export const OneDayAthlete = ({competitionId}) => {
                     <label htmlFor="birthDate">Date de naissance</label>
                     <input type="date" id='birthDate' value={birthDate} onChange={(e)=>{setBirthDate(e.target.value)}} />
                 </div>
-                <div className='form-group'>
+                <div className='form-group radio'>
                     <label htmlFor="male">Homme</label>
                     <input type="radio" id="male" name='gender' value="Male" onChange={(e)=>{setGender(e.target.value)} } />
                     <label htmlFor="female">Femme</label>
