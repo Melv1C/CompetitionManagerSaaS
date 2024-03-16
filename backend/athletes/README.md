@@ -17,6 +17,10 @@ This service is responsible for retrieving information about athletes. It will u
 ## Environment variables
 
 - `PORT`: Port number for the server (Default: 3000)
+- `PREFIX`: Prefix for the API (Default: /api/athletes)
+- `COUCHDB_URL`: URL of the CouchDB database
+- `GATEWAY_URL`: URL of the gateway service
+- `COMPETITIONS_URL`: URL of the competitions service (if no gateway url is provided)
 
 ## Dockerization
 
@@ -119,6 +123,38 @@ docker run -d -e PORT='3000' -p 80:3000 --name athletes-service claesweb/cm-athl
     }
 }
 ```
+
+### Add athlete
+
+- `POST /api/athletes?competitionId=string`
+- Description: Add athlete to the database
+- Request body:
+```json
+{
+    "firstName": "Melvyn",
+    "lastName": "Claes",
+    "birthDate": "2001-10-21T00:00:00.000",
+    "gender": "Male"
+}
+```
+- Response: HTTP 201
+```json
+{
+    "status": "success",
+    "message": "Athlete added successfully",
+    "data": {
+        "id": "212092339195",
+        "bib": 1090,
+        "firstName": "Melvyn",
+        "lastName": "Claes",
+        "birthDate": "2001-10-21T00:00:00.000Z",
+        "gender": "Male",
+        "category": "SEN M", 
+        "club": "USTA"
+    }
+}
+```
+
 
 ## Testing
 

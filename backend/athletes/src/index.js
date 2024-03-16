@@ -1,11 +1,17 @@
 const express = require('express');
 const axios = require('axios');
 
+require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT || 3000;
+const prefix = process.env.PREFIX || '/api/athletes';
+const competitionsUrl = process.env.GATEWAY_URL || process.env.COMPETITIONS_URL || 'http://localhost:3000';
+
 
 // import function from utils.js
-const { calculateCategory, getResults, getResultsByEvent } = require('./utils');
+const { calculateCategory, getResults, getResultsByEvent, isOneDayAthlete } = require('./utils');
+const { createDatabase, deleteDatabase, getDatabase, addAthlete, getAthletes, getAthlete } = require('./nano');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,7 +23,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/api/athletes', async (req, res) => {
+app.get(`${prefix}`, async (req, res) => {
     const key = req.query.key;
     if (!key) {
         res.status(400).json({
@@ -59,12 +65,22 @@ app.get('/api/athletes', async (req, res) => {
     });
 });
 
-app.get('/api/athletes/:id', async (req, res) => {
+app.get(`${prefix}/:id`, async (req, res) => {
     const id = req.params.id;
     if (!id) {
         res.status(400).json({
             status: 'error',
             message: 'Missing required parameter: id',
+        });
+        return;
+    }
+
+    if (isOneDayAthlete(id)) {
+        const OneDayathlete = await getAthlete(`competition_${id.split('_')[1]}`, id);
+        res.status(200).json({
+            status: 'success',
+            message: 'Athlete retrieved successfully',
+            data: OneDayathlete,
         });
         return;
     }
@@ -99,7 +115,7 @@ app.get('/api/athletes/:id', async (req, res) => {
     });
 });
 
-app.get('/api/athletes/:id/:event', async (req, res) => {
+app.get(`${prefix}/:id/:event`, async (req, res) => {
 
 
     const id = req.params.id;
@@ -112,6 +128,14 @@ app.get('/api/athletes/:id/:event', async (req, res) => {
         res.status(400).json({
             status: 'error',
             message: 'Missing required parameter: id or event',
+        });
+        return;
+    }
+
+    if (isOneDayAthlete(id)) {
+        res.status(404).json({
+            status: 'error',
+            message: 'Results not found',
         });
         return;
     }
@@ -156,5 +180,56 @@ app.get('/api/athletes/:id/:event', async (req, res) => {
         data: personalBests,
     });
 });
+
+
+app.post(`${prefix}`, async (req, res) => {
+    const { competitionId } = req.query;
+    let athlete = req.body;
+
+    if (!athlete || !athlete.firstName || !athlete.lastName || !athlete.birthDate || !athlete.gender) {
+        return res.status(400).json({ status: 'error', message: 'Invalid athlete' });
+    }
+
+    if (!competitionId) {
+        return res.status(400).json({ status: 'error', message: 'Invalid competitionId' });
+    }
+
+    const competition = (await axios.get(`${competitionsUrl}/api/competitions/${competitionId}`)).data.data;
+
+    const oneDay = true; //competition.oneDay;
+    if (!oneDay) {
+        return res.status(400).json({ status: 'error', message: 'Competition does not allow one day athletes' });
+    }
+
+    const oneDayBIB = 9000; //competition.oneDayBIB;
+    // get next available bib number by check
+    let bib = oneDayBIB;
+    
+
+    if (!(await getDatabase(`competition_${competitionId}`))) {
+        await createDatabase(`competition_${competitionId}`);        
+    } else {
+        const athletes = await getAthletes(`competition_${competitionId}`);
+        bib = athletes.length + oneDayBIB;
+    }
+
+    athlete = {
+        ...athlete,
+        bib,
+        id: `C_${competitionId}_${bib}`,
+        _id: `C_${competitionId}_${bib}`,
+        club: "NA",
+        category: calculateCategory(new Date(athlete.birthDate), new Date(), athlete.gender),
+    };
+
+    // Add athlete to database
+    await addAthlete(`competition_${competitionId}`, athlete);
+
+    res.status(201).json({ status: 'success', message: 'Athlete added successfully', data: athlete });
+});
+
+
+
+
 
 app.listen(port, () => console.log(`Athletes microservice listening on port ${port}!`));

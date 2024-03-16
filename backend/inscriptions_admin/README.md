@@ -17,7 +17,7 @@ This service is responsible for managing the admin actions for the inscriptions 
 
 - `PORT`: Port number for the server (Default: 3000)
 - `PREFIX`: Prefix for the service (Default: /api/admin/inscriptions)
-- `COUCHDB_URL`: URL of the CouchDB server
+- `COUCHDB_URL`: URL of the CouchDB database
 - `GATEWAY_URL`: URL of the gateway service
 - `COMPETITIONS_URL`: URL of the competitions service (if no gateway url is provided)
 
