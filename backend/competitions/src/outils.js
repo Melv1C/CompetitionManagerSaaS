@@ -46,28 +46,28 @@ function checkInputEvents(input) {
     if (!input.name && typeof input.name !== 'string'){
         return (false, 'Invalid name');
     }
-    if (!pseudoName && typeof pseudoName !== 'string'){
+    if (!input.pseudoName && typeof input.pseudoName !== 'string'){
         return (false, 'Invalid pseudoName');
     }
-    if (!time && typeof time !== 'string'){
+    if (!input.time && typeof input.time !== 'string'){
         return (false, 'Invalid time');
     }
-    if (!categories && !Array.isArray(categories)){
+    if (!input.categories && !Array.isArray(input.categories)){
         return (false, 'Invalid categories');
     }
-    if (!maxParticipants && typeof maxParticipants !== 'number'){
+    if (!input.maxParticipants && typeof input.maxParticipants !== 'number'){
         return (false, 'Invalid maxParticipants');
     }
-    if (!cost && typeof cost !== 'number'){
+    if (!input.cost && typeof input.cost !== 'number'){
         return (false, 'Invalid cost');
     }
-    if (!type && typeof type !== 'string'){
+    if (!input.type && typeof input.type !== 'string'){
         return (false, 'Invalid name');
     }
-    if (!subEvents && !Array.isArray(subEvents)){
+    if (!input.subEvents && !Array.isArray(input.subEvents)){
         return (false, 'Invalid subEvents');
     }
-    if (!categories && !Array.isArray(categories)){
+    if (!input.categories && !Array.isArray(input.categories)){
         return res.status(400).json({
             status: 'error',
             message: 'Invalid categories',

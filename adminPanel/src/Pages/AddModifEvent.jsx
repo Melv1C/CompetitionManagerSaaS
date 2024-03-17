@@ -104,6 +104,7 @@ export const AddModifEvent = (props) => {
                 const eventInfo = events.find((element) => {
                     return element.name === data.name;
                 });
+                console.log(eventInfo);
                 setSelectedGrouping(eventInfo.grouping);
                 setSubEvents(data.subEvents);
                 setMaxParticipants(data.maxParticipants);
@@ -140,7 +141,9 @@ export const AddModifEvent = (props) => {
             setFilteredEvent(filteredEvent);
         }
         //reset the selected event
-        setSelectedEvent("0");
+        if (!eventId){
+            setSelectedEvent("0");
+        }
     }, [selectedGrouping]);
 
     //get the valid categories for the selected event
@@ -194,7 +197,7 @@ export const AddModifEvent = (props) => {
                     }
                     break;
                 case "Homme":
-                    if (element.startsWith("M") || element.split(" ")[1] === "M") {
+                    if ((element.startsWith("M") && !element.includes(' ') )|| element.split(" ")[1] === "M") {
                         newCategories[element] = filteredCategories[element] || false;
                     }
                     break;

@@ -286,7 +286,9 @@ app.post('/api/competitions/:id/events', async (req, res) => {
             });
         }
         const url = process.env.EVENTS_URL || 'http://localhost:3000';
-        eventInfo.type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
+        const staticInfo = (await axios.get(`${url}/api/events/${eventInfo.name}`)).data.data;
+        eventInfo.type = staticInfo.type;
+        eventInfo.abbr = staticInfo.abbr;
         
         for (let subevent of eventInfo.subEvents){
             if (!subevent.name || typeof subevent.name !== 'string'){
@@ -366,7 +368,9 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
             });
         }
         const url = process.env.EVENTS_URL || 'http://localhost:3000';
-        eventInfo.type = (await axios.get(`${url}/api/events/${name}`)).data.data.type;
+        const staticInfo = (await axios.get(`${url}/api/events/${eventInfo.name}`)).data.data;
+        eventInfo.type = staticInfo.type;
+        eventInfo.abbr = staticInfo.abbr;
 
         for (let subevent of eventInfo.subEvents){
             if (!subevent.name || typeof subevent.name !== 'string'){
@@ -402,13 +406,13 @@ app.put('/api/competitions/:id/events/:eventId', async (req, res) => {
             });
         }
         //change the name in the existing inscriptions
-        if (events[index].pseudoName !== pseudoName){
+        if (events[index].pseudoName !== eventInfo.pseudoName){
             const isMulti = events[index].subEvents.length > 0;
             const body = {
                 adminId: competition.adminId,
                 isMulti: isMulti
             }
-            axios.put(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}/event/${events[index].pseudoName}/${pseudoName}`, body).catch(err => console.log("error : "+err.response.data.message));
+            axios.put(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}/event/${events[index].pseudoName}/${eventInfo.pseudoName}`, body).catch(err => console.log("error : "+err.response.data.message));
         }
         
         events[index] = {
