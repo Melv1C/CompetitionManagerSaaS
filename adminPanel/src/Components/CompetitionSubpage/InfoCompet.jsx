@@ -6,7 +6,7 @@ import { DeleteAlert } from '../AlertComponent/DeleteAlert';
 import { openCompetition } from '../../CompetitionsAPI';
 import Switch from '@mui/material/Switch';
 import axios from 'axios';
-import { INSCRIPTIONS_URL } from '../../Gateway';
+import { INSCRIPTIONS_URL, INSCRIPTIONS_ADMIN_URL } from '../../Gateway';
 
 
 export const InfoCompet = ({competition, user, setCompetition}) => {
@@ -63,13 +63,13 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     <div className='margin center'>
                         <label>Copier les mails des participants</label>
                         <button className='greenBtn' onClick={(e) => {
-                            axios.get(`${INSCRIPTIONS_URL}/${id}?adminId=${user.uid}`).then((response) => {
+                            axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}?adminId=${user.uid}`).then((response) => {
                                 const inscriptions = response.data.data;
                                 let mails = [];
                                 let text = "";
                                 console.log(inscriptions);
                                 inscriptions.forEach((inscription) => {
-                                    mails.push(inscription.athleteId);
+                                    mails.push(inscription.athleteId);//change to email when available
                                 });
                                 text = mails.join("; ");
                                 navigator.clipboard.writeText(text);
@@ -85,7 +85,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     <div className='margin center'>
                         <label>Télécharger le ficher des inscritpions</label>
                         <button className='greenBtn' onClick={(e) => {
-                            axios.get(`${INSCRIPTIONS_URL}/${id}/`).then((response) => {
+                            axios.get(`${INSCRIPTIONS_URL}/${id}`).then((response) => {
                                 const inscriptions = response.data.data;
                                 let fileData = "";
                                 inscriptions.forEach((inscription) => {

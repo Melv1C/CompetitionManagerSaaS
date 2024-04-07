@@ -171,7 +171,9 @@ app.get('/api/competitions/:id/events/:eventId', async (req, res) => {
                 message: 'Competition not found',
             });
         }
-        const event = competition.events.find(event => event.id === eventId);
+        console.log(eventId);
+        console.log(competition.events);
+        const event = competition.events.find(event => event.id === eventId || event.pseudoName === eventId);
         if (!event){
             return res.status(404).json({
                 status: 'error',

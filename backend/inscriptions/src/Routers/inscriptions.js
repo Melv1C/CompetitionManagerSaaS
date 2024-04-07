@@ -19,16 +19,6 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
 
-    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${userId}`).catch((err) => { 
-        console.error(err);
-        return false; 
-    });
-
-    const admin = check ? check.data.data : false;
-    if (admin) {
-        userId = "admin";
-    }
-
     // check body elements
     const checkParamsResult = checkParams(userId, athleteId, events, records, success_url, cancel_url);
     if (checkParamsResult) {
@@ -83,7 +73,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
             recordType: event.type,
             eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
             parentEvent: null,
-            cost: (totalCost==0 || admin) ? 0 : event.cost, 
+            cost: totalCost==0 ? 0 : event.cost, 
             confirmed: false
         });   
         
@@ -108,7 +98,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
         }
     }
 
-    if (totalCost == 0 || admin) {
+    if (totalCost == 0) {
         await freeInscriptions(`competition_${competitionId}`, inscriptionData);
         res.status(201).json({ status: 'success', message: 'Inscriptions added successfully' });
         return;
