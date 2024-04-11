@@ -12,7 +12,8 @@
     align-items: center;
     border-radius: 5px;
     width: 100%;
-    padding: 5px;
+    padding: 5px 0px;
+    margin-bottom: 2px;
 }
 
 .participants-item .participants-item-bib {
@@ -135,3 +136,67 @@
         padding-right: 10px;
     }
 }
+
+.event-div{
+    margin: 30px 20px;
+    border: 2px solid #008AFF;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.fieldFilterEvent {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 20px;
+}
+
+.fieldFilterEvent input {
+    height: 50px;
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+    padding: 0 10px;
+    outline: none;
+}
+
+.fieldFilterEvent input:focus {
+    border:2px solid #008AFF;
+}
+
+.fieldFilterEvent .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #008AFF;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.schedule{
+    width: 100%;
+}
+
+.pl-close-btn{
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(255, 0, 0);
+}
+
+.pl-close-btn:hover{
+    background-color: rgb(219, 0, 0);
+    cursor: pointer;
+}
+
+.pl-open-btn{
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(190, 190, 190);
+}
+
+.pl-open-btn:hover{
+    background-color: rgba(104, 101, 101, 0.7);
+    cursor: pointer;
+}
+

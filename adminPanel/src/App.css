@@ -131,3 +131,30 @@ li{
 .red{
   color: red;
 }
+
+.Confirmed{
+  background-color: green;
+  color: white;
+}
+
+.Pending{
+  background-color: white;
+}
+
+.Removed{
+  background-color: red;
+  color: white;
+}
+
+.Absent{
+  background-color: rgb(80, 0, 0);
+  color: white;
+}
+
+.Changed{
+  background-color: yellow;
+  color: white;
+}
+
+
+

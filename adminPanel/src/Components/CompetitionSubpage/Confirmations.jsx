@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { COMPETITIONS_URL, CONFIRMATIONS_URL } from '../../Gateway';
 import axios from 'axios';
+import { getGlobalStatus } from '../../Status';
 
 import './styles/Confirmations.css';
 
@@ -80,35 +81,6 @@ function AthleteItem({athlete, setAthlete, setAthletes}) {
             <div className='athlete-item-club'>{athlete.club}</div>
         </div>
     )
-}
-
-function getStatus(inscriptions){
-    if (inscriptions == null || inscriptions.length === 0) {
-        return 'Loading...';
-    }
-
-    const confirmed = inscriptions[0].confirmed
-    let status = confirmed ? 'Confirmé' : 'Non confirmé';
-    if (inscriptions[0].absent) {
-        status = 'Absent';
-        return status;
-    }
-
-    for (const inscription of inscriptions) {
-        if (!inscription.absent && status === 'Absent') {
-            status = 'Erreur partiellement absent';
-            return status;
-        }
-        else if (inscription.absent && status !== 'Absent') {
-            status = 'Erreur partiellement absent';
-            return status;
-        }
-        else if (inscription.confirmed !== confirmed) {
-            status = 'Erreur Partiellement confirmé';
-            return status;
-        }
-    }
-    return status;
 }
 
 function getColorStatus(status) {
@@ -254,7 +226,7 @@ export const Confirmations = (props) => {
     }, [inscriptions]);
 
     useEffect(() => {
-        setStatus(getStatus(inscriptions));
+        setStatus(getGlobalStatus(inscriptions));
     }, [inscriptions]);
 
 

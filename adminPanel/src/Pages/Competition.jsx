@@ -39,7 +39,7 @@ export const Competition = (props) => {
             {subPage === "inscriptions" ? <Inscriptions user={props.user} setUser={props.setUser}/> : null}
             {subPage === "events" ? <Events competition={competition}/> : null}
             {subPage === "confirmations" ? <Confirmations competition={competition} user={props.user}/> : null}
-            {subPage === "schedule" ? <Schedule competition={competition}/> : null}
+            {subPage === "schedule" ? <Schedule competition={competition} user={props.user}/> : null}
         </>    
     );
 };
