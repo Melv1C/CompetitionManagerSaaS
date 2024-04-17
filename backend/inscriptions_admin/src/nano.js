@@ -1,4 +1,3 @@
-require('dotenv').config();
 const nano = require('nano')(process.env.COUCHDB_URL);
 
 function createDatabase(dbName) {

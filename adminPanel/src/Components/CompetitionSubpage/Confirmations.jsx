@@ -1,17 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { INSCRIPTIONS_URL, CONFIRMATIONS_URL } from '../../Gateway';
+import { COMPETITIONS_URL, CONFIRMATIONS_URL } from '../../Gateway';
 import axios from 'axios';
+import { getGlobalStatus } from '../../Status';
 
 import './styles/Confirmations.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faExpand } from '@fortawesome/free-solid-svg-icons'
 
+
+function timeToMin(time) {
+    const [hours, minutes] = time.split(':');
+    return parseInt(hours) * 60 + parseInt(minutes);
+}
+
+function minToTime(min) {
+    const hours = Math.floor(min / 60);
+    const minutes = min % 60;
+    return `${hours}:${minutes}`;
+}
+
+function validTime(time) {
+    if (time === null) {
+        return false;
+    }
+    const now = new Date();
+    const [hours, minutes] = time.split(':');
+    const timeDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    return timeDate > now;
+}
+
 function ListAthletes({athletes, setAthlete, loading, setAthletes}) {
     if (document.querySelector('.field input')?.value === '') {
         return (
-            <div className='list-athletes'>
+            <div >
             </div>
         )
     }
@@ -60,24 +83,108 @@ function AthleteItem({athlete, setAthlete, setAthletes}) {
     )
 }
 
-function InscriptionList({inscriptions}) {
-    console.log(inscriptions);
+function getColorStatus(status) {
+    if (status === 'Confirmé') {
+        return 'green';
+    } else if (status === 'Non confirmé') {
+        return '';
+    } else {
+        return 'red';
+    }
+}
+
+
+function SelectedAthlete({athlete, status}) {
+    return (
+        <div className='selected-athlete'>
+            <div className='selected-athlete-name'>Nom : {athlete.athleteName}</div>
+            <div className='selected-athlete-bib'>Dossard : {athlete.bib}</div>
+            <div className='selected-athlete-club'>Club : {athlete.club}</div>
+            <div className='selected-athlete-category'>Catégorie : {athlete.category}</div>
+            <div className={getColorStatus(status)}>Status : {status}</div>
+
+        </div>
+    )
+}
+
+
+function InscriptionList({inscriptions, id, confirmationTime}) {
     return (
         <div className='inscriptionList'>
             {inscriptions.map((inscription, index) => {
-                return <InscriptionItem key={index} inscription={inscription} />
+                return <InscriptionItem key={index} inscription={inscription} id={id} confirmationTime={confirmationTime} />
             })}
         </div>
     )
 }
 
-function InscriptionItem({inscription}) {
-    console.log(inscription);
+function InscriptionItem({inscription, id, confirmationTime}) {
+    const [time, setTime] = useState(null);
+    useEffect(() => {
+        axios.get(`${COMPETITIONS_URL}/${id}/events/${inscription.event}`).then((response) => {
+            setTime(minToTime(timeToMin(response.data.data.time) - confirmationTime));
+        }).catch((error) => {
+            console.log(error);
+        });
+    });
     return (
         <div className='inscriptionItem'>
             <div className='inscriptionEvent'>{inscription.event}</div>
-            <div className='inscriptionRecord'>{inscription.record}</div>
+            <div className='inscriptionRecord'>PB : {inscription.record === 0 ? "Aucun" : inscription.record}</div>
+            <div className={validTime(time) ? "green": "red"}>Avant : {time}</div>
         </div>
+    )
+}
+
+function ConfBtn({id, athleteId, setAthlete, setInscriptions,userId}) {
+    return (
+        <button className='greenBtn' onClick={()=>{
+            axios.post(`${CONFIRMATIONS_URL}/${id}/${athleteId}`,{userId:userId}).then((response) => {
+                setAthlete(null);
+                setInscriptions([]);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }}>Confirmer</button>
+    )
+}
+
+function UnConfBtn({id, athleteId, setAthlete, setInscriptions,userId}) {
+    return (
+        <button className='deleteBtn' onClick={()=>{
+            axios.delete(`${CONFIRMATIONS_URL}/${id}/${athleteId}/${userId}`).then((response) => {
+                setAthlete(null);
+                setInscriptions([]);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }}>Déconfirmer</button>
+    )
+}
+
+function AbsentBtn({id, athleteId, setAthlete, setInscriptions, userId}) {
+    return (
+        <button className='deleteBtn' onClick={()=>{
+            axios.delete(`${CONFIRMATIONS_URL}/absent/${id}/${athleteId}/${userId}`).then((response) => {
+                setAthlete(null);
+                setInscriptions([]);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }}>Absent</button>
+    )
+}
+
+function PresentBtn({id, athleteId, setAthlete, setInscriptions, userId}) {
+    return (
+        <button className='orangeBtn' onClick={()=>{
+            axios.post(`${CONFIRMATIONS_URL}/absent/${id}/${athleteId}/${userId}`).then((response) => {
+                setAthlete(null);
+                setInscriptions([]);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }}>Present</button>
     )
 }
 
@@ -89,9 +196,10 @@ export const Confirmations = (props) => {
     const [athletes, setAthletes] = useState([]);
     const [athlete, setAthlete] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState(null);
+    const confirmationTime = props.competition.confirmationTime;
 
     function getMatchingAthletes(keyword) {
-        console.log(`${CONFIRMATIONS_URL}/${id}?key=${keyword}`);
         axios.get(`${CONFIRMATIONS_URL}/${id}?key=${keyword}`).then((response) => {
             console.log(response.data.data);
             setInscriptions(response.data.data);
@@ -116,6 +224,11 @@ export const Confirmations = (props) => {
         };
         setAthletes(athletes);
     }, [inscriptions]);
+
+    useEffect(() => {
+        setStatus(getGlobalStatus(inscriptions));
+    }, [inscriptions]);
+
 
     return (
         <div id='comfirmations'>
@@ -155,8 +268,17 @@ export const Confirmations = (props) => {
                 </div>
                 <ListAthletes athletes={athletes} setAthlete={setAthlete} loading={loading} setAthletes={setAthletes} />
             </div>
+            <div className='selectedAthleteDiv'>
+                {athlete ? <SelectedAthlete athlete={athlete} status={status}/> : null}
+            </div>
             <div className='inscriptionsDiv'>
-                <InscriptionList inscriptions={inscriptions.filter(inscription => inscription.athleteId === athlete?.athleteId)} />
+                <InscriptionList inscriptions={inscriptions.filter(inscription => inscription.athleteId === athlete?.athleteId)} id={id} confirmationTime={confirmationTime}/>
+            </div>
+            <div className='btnDiv'>
+                {athlete && status !== "Confirmé" ? <ConfBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
+                {athlete && status === "Confirmé" ? <UnConfBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
+                {athlete && status === "Absent" ? <PresentBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
+                {athlete && status !== "Absent" ? <AbsentBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
             </div>
         </div>
     )

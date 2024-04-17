@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { INSCRIPTIONS_URL } from '../Gateway';
+import React, { useState } from 'react';
 
 import { SubNavBarInscription } from '../Components/SubNavBarInscription/SubNavBarInscription';
 import { Inscription } from '../Components/InscriptionComponents/Inscription';

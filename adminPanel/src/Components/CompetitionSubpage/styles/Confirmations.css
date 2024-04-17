@@ -52,3 +52,40 @@
 .searchDiv .field input:focus {
     border:2px solid #008AFF;
 }
+
+.selectedAthleteDiv {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.selected-athlete {
+    font-size: 15px;
+}
+
+.inscriptionList {
+    display: flex;
+    flex-direction: column;
+    margin: 0 40px;
+    text-align: center;
+}
+
+.inscriptionList .inscriptionItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+}
+
+.btnDiv{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btnDiv button{
+    min-width: 100px;
+}
