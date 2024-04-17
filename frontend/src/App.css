@@ -40,3 +40,16 @@
     width: 100%;
 }
 
+.logout-btn {
+    width: 200px;
+    height: 40px;
+    outline: none;
+    border: 1px solid #ff4141;
+    border-radius: 75px;
+    background-color: white;
+    color: #515151;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+

@@ -89,7 +89,7 @@ function ControlButtons({setStep, setAthlete, enableNext}) {
 }
 
 
-export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay}) => {
+export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, setIsForeignAthlete}) => {
     const [athletes, setAthletes] = useState([]);
 
     const [loading, setLoading] = useState(false);
@@ -179,13 +179,22 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay}) =
                 {oneDay ? 
                 <div className='new-athletes-link'>
                     <button onClick={()=>{
-                            console.log('click');
+                            setIsForeignAthlete(false)
                             setStep(-1)
                         }}>
                         Je n'ai pas de dossard
                     </button>         
                 </div> 
                 : null}
+
+                <div className='new-athletes-link'>
+                    <button onClick={()=>{
+                            setIsForeignAthlete(true)
+                            setStep(-1)
+                        }}>
+                        Athlète étranger
+                    </button>         
+                </div> 
 
             </>
             : 

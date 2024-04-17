@@ -85,8 +85,8 @@ export const Profile = () => {
                     </p>
                 }
 
-                <button onClick={handleLogout}>Se déconnecter</button>
-                <button>Modifier mon mot de passe</button>
+                <button onClick={handleLogout} className="logout-btn">Se déconnecter</button>
+                {/*<button>Modifier mon mot de passe</button>*/}
             </div>
             <div className="inscriptions">
                 <h2>Mes inscriptions</h2>

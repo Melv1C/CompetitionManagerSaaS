@@ -65,23 +65,26 @@ export const Inscription = ({competition}) => {
     
     let step = parseInt(searchParams.get('step')) || 1;
     const setStep = (step) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set('step', step);
-        setSearchParams(newSearchParams);
+        setSearchParams((prev) => {
+            prev.set('step', step);
+            return prev;
+        });
     }
 
     const athleteId = searchParams.get('athleteId');
     const setAthleteId = (athlete) => {
-
+        console.log(athlete);
         if (athlete === null) {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.delete('athleteId');
-            setSearchParams(newSearchParams);
+            setSearchParams(prev => {
+                prev.delete('athleteId');
+                return prev;
+            });
             setAthlete(null);
         } else {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set('athleteId', athlete.id);
-            setSearchParams(newSearchParams);
+            setSearchParams(prev => {
+                prev.set('athleteId', athlete.id);
+                return prev;
+            });
         }
     }
 
@@ -178,6 +181,8 @@ export const Inscription = ({competition}) => {
 
     const [freeEvents, setFreeEvents] = useState(new Set());
 
+    const [isForeignAthlete, setIsForeignAthlete] = useState(false);
+
     // load information if already inscribed
     useEffect(() => {
         if (athlete) {
@@ -246,9 +251,9 @@ export const Inscription = ({competition}) => {
     return (
         <div className='competition-page'>
             <ProgressBar step={step} />
-            {step === -1 ? <OneDayAthlete competitionId={id} /> : null}
+            {step === -1 ? <OneDayAthlete competitionId={id} isForeignAthlete={isForeignAthlete} setStep={setStep} setAthleteId={setAthleteId} /> : null}
 
-            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} /> : null}
+            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} setIsForeignAthlete={setIsForeignAthlete} /> : null}
             {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} freeEvents={freeEvents} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
             {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}
