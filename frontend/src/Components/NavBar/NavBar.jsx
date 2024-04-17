@@ -19,7 +19,7 @@ export const NavBar = () => {
 
     const [user, setUser] = useState(false);
 
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [burger, setBurger] = useState(false)
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
@@ -49,21 +49,21 @@ export const NavBar = () => {
                     <img src={logo} alt="logo" />
                 </div>
 
-                <div className={menuOpen ? 'navbar-burger open' : 'navbar-burger'} onClick={() => { setMenuOpen(!menuOpen) }}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div className={`burger ${burger ? 'open' : 'close'}`} onClick={() => setBurger(!burger)}>
+                    <div className='burger-bar'></div>           
+                    <div className='burger-bar'></div>           
+                    <div className='burger-bar'></div>           
                 </div>
 
-                <div className={menuOpen ? 'navbar-menu open' : 'navbar-menu'}>
+                <div className={`navbar-menu ${burger ? 'open' : 'close'}`}>
                     <ul>
-                        <li><Link to='/'>Accueil</Link> {menu==="home" ? <hr/> : null}</li>
-                        <li><Link to='/competitions'>Competitions</Link> {menu==="competitions" ? <hr/> : null}</li>
-                        {user ? <li><Link to='/profile'>Mon compte</Link> {menu==="profile" ? <hr/> : null}</li> : null}
+                        <li onClick={() => setBurger(false)}><Link to='/'>Accueil</Link> {menu==="home" ? <hr/> : null}</li>
+                        <li onClick={() => setBurger(false)}><Link to='/competitions'>Competitions</Link> {menu==="competitions" ? <hr/> : null}</li>
+                        {user ? <li onClick={() => setBurger(false)}><Link to='/profile'>Mon compte</Link> {menu==="profile" ? <hr/> : null}</li> : null}
                     </ul>
                     <div className='navbar-login-user'>
                         {!user ? 
-                        <button onClick={()=>{setShowModal(true)}}>Se connecter</button>
+                        <button onClick={()=>{setBurger(false); setShowModal(true)}}>Se connecter</button>
                         : null
                         }
                     </div>

@@ -41,6 +41,14 @@ function addInscription(dbName, inscription) {
     });
 }
 
+function getUsefullInscriptions(inscriptions) {
+    return inscriptions.filter((inscription) => !inscription._id.startsWith('_design'));
+}
+
+function RemoveUninscribedInscriptions(inscriptions) {
+    return inscriptions.filter((inscription) => inscription.inscribed);
+}
+
 function getInscriptions(dbName) {
     const db = nano.use(dbName);
     return new Promise((resolve, reject) => {
@@ -48,8 +56,8 @@ function getInscriptions(dbName) {
             if (err) {
                 reject(err);
             } else {
-                let inscriptions = body.rows.map((row) => row.doc);
-                inscriptions = inscriptions.filter((inscription) => !inscription._id.startsWith('_design'));
+                let inscriptions = getUsefullInscriptions(body.rows.map((row) => row.doc));
+                inscriptions = RemoveUninscribedInscriptions(inscriptions);
                 resolve(inscriptions);
             }
         });
@@ -69,17 +77,11 @@ function getInscription(dbName, inscriptionId) {
     });
 }
 
-function deleteInscription(dbName, inscriptionId, rev) {
-    const db = nano.use(dbName);
-    return new Promise((resolve, reject) => {
-        db.destroy(inscriptionId, rev, (err, body) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(body);
-            }
-        });
-    });
+async function deleteInscription(dbName, inscriptionId) {
+    // change the data field inscribed to false in the database
+    const inscription = await getInscription(dbName, inscriptionId);
+    inscription.inscribed = false;
+    return await addInscription(dbName, inscription);
 }
 
 async function updateInscription(dbName, inscription) {

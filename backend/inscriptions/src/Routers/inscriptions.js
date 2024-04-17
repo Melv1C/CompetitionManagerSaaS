@@ -20,7 +20,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
 
     const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${userId}`).catch((err) => { 
-        console.error(err);
+        //console.error(err);
         return false; 
     });
 
@@ -84,6 +84,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
             eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
             parentEvent: null,
             cost: (totalCost==0 || admin) ? 0 : event.cost, 
+            inscribed: true,
             confirmed: false
         });   
         
@@ -103,6 +104,7 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
                 eventType: "subEvent",
                 parentEvent: event.pseudoName,
                 cost: 0,
+                inscribed: true,
                 confirmed: false
             });
         }
@@ -182,11 +184,11 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     // Delete inscriptions for events that are not in the new list
     for (let i = 0; i < athleteInscriptions.length; i++) {
         if (athleteInscriptions[i].eventType == "event" && !events.includes(athleteInscriptions[i].event)) {
-            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id);
         } else if (athleteInscriptions[i].eventType == "multiEvent" && !events.includes(athleteInscriptions[i].event)) {
-            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id);
         } else if (athleteInscriptions[i].eventType == "subEvent" && !events.includes(athleteInscriptions[i].parentEvent)) {
-            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+            await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id);
         }
     }
 
@@ -213,6 +215,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
                 eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
                 parentEvent: null,
                 cost: (totalCost==0 || admin) ? 0 : event.cost,
+                inscribed: true,
                 confirmed: false
             });   
             
@@ -232,6 +235,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
                     eventType: "subEvent",
                     parentEvent: event.pseudoName,
                     cost: 0,
+                    inscribed: true,
                     confirmed: false
                 });
             }
@@ -304,7 +308,7 @@ app.delete('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
 
     // delete inscriptions
     for (let i = 0; i < athleteInscriptions.length; i++) {
-        await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id, athleteInscriptions[i]._rev);
+        await deleteInscription(`competition_${competitionId}`, athleteInscriptions[i]._id);
     }
 
     res.status(200).json({ status: 'success', message: 'Inscriptions deleted successfully' });
