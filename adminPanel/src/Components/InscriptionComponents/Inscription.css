@@ -86,7 +86,6 @@
     cursor: progress;
 }
 
-
 .step-page {
     display: flex;
     flex-direction: column;
@@ -122,6 +121,10 @@
     .control-buttons {
         margin: 10px;
         gap: 10px;
+    }
+
+    .control-buttons button {
+
     }
 
     .step-page {

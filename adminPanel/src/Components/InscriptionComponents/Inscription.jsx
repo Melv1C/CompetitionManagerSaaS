@@ -3,12 +3,12 @@ import axios from 'axios';
 import { ATLHETES_URL, INSCRIPTIONS_URL, COMPETITIONS_URL } from '../../Gateway';
 
 import { useSearchParams, useParams } from 'react-router-dom';
+import './Inscription.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRectangleList, faUser, faPersonRunning, faStopwatch } from '@fortawesome/free-solid-svg-icons'
 
-import './Inscription.css'
-
+import { OneDayAthlete } from './OneDayAthlete/OneDayAthlete';
 import { Athlete } from './Athlete/Athlete'
 import { Events } from './Events/Events'
 import { Records } from './Records/Records'
@@ -55,35 +55,29 @@ function ProgressBar({step}) {
 export const Inscription = (props) => {
     const { id } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [competition, setCompetition] = useState({});
-
-    useEffect(() => {
-        axios.get(`${COMPETITIONS_URL}/${id}`).then(res => {
-            setCompetition(res.data.data);
-        }).catch(err => {
-            console.log(err);
-        });
-    }, [id])
     
-    const step = parseInt(searchParams.get('step')) || 1;
+    let step = parseInt(searchParams.get('step')) || 1;
     const setStep = (step) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set('step', step);
-        setSearchParams(newSearchParams);
+        setSearchParams((prev) => {
+            prev.set('step', step);
+            return prev;
+        });
     }
 
     const athleteId = searchParams.get('athleteId');
     const setAthleteId = (athlete) => {
-
+        console.log(athlete);
         if (athlete === null) {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.delete('athleteId');
-            setSearchParams(newSearchParams);
+            setSearchParams(prev => {
+                prev.delete('athleteId');
+                return prev;
+            });
             setAthlete(null);
         } else {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set('athleteId', athlete.id);
-            setSearchParams(newSearchParams);
+            setSearchParams(prev => {
+                prev.set('athleteId', athlete.id);
+                return prev;
+            });
         }
     }
 
@@ -119,6 +113,10 @@ export const Inscription = (props) => {
             setRecords({});
             localStorage.removeItem('records');
             setStep(1);
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('isInscribed');
+            setSearchParams(newSearchParams);
+            
         }
     }, [athleteId])
 
@@ -154,12 +152,25 @@ export const Inscription = (props) => {
     }, [events])
 
     useEffect(() => {
+        if (Object.keys(records).length === 0) {
+            localStorage.removeItem('records');
+        } else {
+            localStorage.setItem('records', JSON.stringify(records));
+        }
+    }, [records])
+
+    const [freeEvents, setFreeEvents] = useState(new Set());
+
+    const [isForeignAthlete, setIsForeignAthlete] = useState(false);
+
+    // load information if already inscribed
+    useEffect(() => {
         if (athlete) {
-            axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
+            axios.get(`${INSCRIPTIONS_URL}/${id}`)
             .then(async res => {
                 const inscriptions = res.data.data;
                 const athleteInscriptions = inscriptions.filter(i => i.athleteId === athlete.id);
-                console.log(athleteInscriptions);
+                setFreeEvents(new Set(athleteInscriptions.map(i => i.event)));
                 // set events and records
                 if (athleteInscriptions.length > 0) {
 
@@ -169,7 +180,8 @@ export const Inscription = (props) => {
                     setSearchParams(newSearchParams);
                     
 
-                    const events = (await axios.get(`${COMPETITIONS_URL}/${competition.id}/events?category=${athlete.category}`)).data.data;
+                    const events = (await axios.get(`${COMPETITIONS_URL}/${id}/events?category=${athlete.category}`)).data.data;
+                    console.log(events);
                     for (let i of athleteInscriptions) {
                         const event = events.find(e => e.pseudoName === i.event);
                         if (event) {
@@ -195,33 +207,15 @@ export const Inscription = (props) => {
                             default:
                                 break;
                         }
+
                     }
-                }else{
-                    // add to url isInsribed to false
-                    const newSearchParams = new URLSearchParams(searchParams);
-                    newSearchParams.set('isInscribed', 'false');
-                    setSearchParams(newSearchParams);
                 }
                 
             })
         }
     }, [athlete])
 
-    useEffect(() => {
-        if (Object.keys(records).length === 0) {
-            localStorage.removeItem('records');
-        } else {
-            localStorage.setItem('records', JSON.stringify(records));
-        }
-    }, [records])
 
-    if (!competition) {
-        return (
-            <div className='competition-page'>
-                <h2>Chargement...</h2>
-            </div>
-        )
-    }
 
     if (!props.user) {
         return (
@@ -234,12 +228,14 @@ export const Inscription = (props) => {
     return (
         <div className='competition-page'>
             <ProgressBar step={step} />
+            {step === -1 ? <OneDayAthlete competitionId={id} isForeignAthlete={isForeignAthlete} setStep={setStep} setAthleteId={setAthleteId} /> : null}
 
-            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} user={props.user}/> : null}
-            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={true}/> : null}
-            {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
-            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} user={props.user} free={true}/> : null}
+            {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} setIsForeignAthlete={setIsForeignAthlete} user={props.user}/> : null}
+            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={ true} freeEvents={freeEvents} /> : null}
+            {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} competitionId={id}/> : null}
+            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={true} user={props.user}/> : null}
             {step === 5 ? <Success competitionId={id} /> : null}
         </div>
     )
 }
+

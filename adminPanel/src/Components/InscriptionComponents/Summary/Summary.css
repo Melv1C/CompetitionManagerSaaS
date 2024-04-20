@@ -52,6 +52,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     border: 1px solid #008AFF;
     border-radius: 5px; 
     padding: 10px;
@@ -62,13 +63,14 @@
 .event-item-time {
     font-size: 1em;
     font-weight: bold;
-    width: 10%;
+    width: 15%;
 
 }
 
 .event-item-name {
     font-size: 1em;
-    width: 60%;
+    width: 50%;
+    text-align: left;
 }
 
 .event-item-record {
@@ -106,6 +108,7 @@
     }
     .event-item {
         flex-wrap: wrap;
+        gap: 0;
     }
 
     .event-item-time {

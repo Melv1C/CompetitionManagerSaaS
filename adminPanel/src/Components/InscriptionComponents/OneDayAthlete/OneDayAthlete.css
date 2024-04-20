@@ -1,0 +1,49 @@
+.one-day-athlete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.one-day-athlete .form {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+}
+.one-day-athlete .form .form-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+.one-day-athlete .form .form-group label {
+  text-align: left;
+  font-size: 1.2em;
+  font-weight: bold;
+  width: 40%;
+}
+.one-day-athlete .form .form-group input {
+  width: 50%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #008AFF;
+}
+.one-day-athlete .form .form-group.radio label {
+  width: auto;
+}
+.one-day-athlete .form .form-group.radio input {
+  width: 20px;
+}
+.one-day-athlete .submit {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: white;
+  border: 3px solid #008AFF;
+  color: Black;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+}
+.one-day-athlete .submit:hover {
+  background-color: #008AFF;
+  color: white;
+}/*# sourceMappingURL=OneDayAthlete.css.map */

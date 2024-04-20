@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { COMPETITIONS_URL, CONFIRMATIONS_URL } from '../../Gateway';
+import { COMPETITIONS_URL, CONFIRMATIONS_URL, INSCRIPTIONS_ADMIN_URL } from '../../Gateway';
 import axios from 'axios';
 import { getGlobalStatus } from '../../Status';
+
+import { formatRecord } from '../../RecordsHandler';
 
 import './styles/Confirmations.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faExpand } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faExpand, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { BasicAlert } from '../AlertComponent/BasicAlert';
 
 
 function timeToMin(time) {
@@ -108,21 +111,23 @@ function SelectedAthlete({athlete, status}) {
 }
 
 
-function InscriptionList({inscriptions, id, confirmationTime}) {
+function InscriptionList({inscriptions, id, confirmationTime, userId}) {
     return (
         <div className='inscriptionList'>
             {inscriptions.map((inscription, index) => {
-                return <InscriptionItem key={index} inscription={inscription} id={id} confirmationTime={confirmationTime} />
+                return <InscriptionItem key={index} inscription={inscription} id={id} confirmationTime={confirmationTime} userId={userId}/>
             })}
         </div>
     )
 }
 
-function InscriptionItem({inscription, id, confirmationTime}) {
+function InscriptionItem({inscription, id, confirmationTime, userId}) {
     const [time, setTime] = useState(null);
+    const [event, setEvent] = useState(null);
     useEffect(() => {
         axios.get(`${COMPETITIONS_URL}/${id}/events/${inscription.event}`).then((response) => {
             setTime(minToTime(timeToMin(response.data.data.time) - confirmationTime));
+            setEvent(response.data.data);
         }).catch((error) => {
             console.log(error);
         });
@@ -130,8 +135,20 @@ function InscriptionItem({inscription, id, confirmationTime}) {
     return (
         <div className='inscriptionItem'>
             <div className='inscriptionEvent'>{inscription.event}</div>
-            <div className='inscriptionRecord'>PB : {inscription.record === 0 ? "Aucun" : inscription.record}</div>
+            <div className='inscriptionRecord'>PB : {inscription.record === 0 ? "Aucun" : (event ? formatRecord(event, inscription.record) : 'loading...')}</div>
             <div className={validTime(time) ? "green": "red"}>Avant : {time}</div>
+            <div>
+                <button className='deleteBtn' onClick={()=>{
+                    axios.delete(`${CONFIRMATIONS_URL}/remove/${id}/${inscription.athleteId}/${inscription.event}/${userId}`).then((response) => {
+                        console.log(response);
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                }
+                }>
+                    <FontAwesomeIcon icon={faTrash} />
+                </button>
+            </div>
         </div>
     )
 }
@@ -197,6 +214,7 @@ export const Confirmations = (props) => {
     const [athlete, setAthlete] = useState(null);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(null);
+    const [error, setError] = useState(null);
     const confirmationTime = props.competition.confirmationTime;
 
     function getMatchingAthletes(keyword) {
@@ -272,7 +290,7 @@ export const Confirmations = (props) => {
                 {athlete ? <SelectedAthlete athlete={athlete} status={status}/> : null}
             </div>
             <div className='inscriptionsDiv'>
-                <InscriptionList inscriptions={inscriptions.filter(inscription => inscription.athleteId === athlete?.athleteId)} id={id} confirmationTime={confirmationTime}/>
+                <InscriptionList inscriptions={inscriptions.filter(inscription => inscription.athleteId === athlete?.athleteId)} id={id} confirmationTime={confirmationTime} userId={props.user.uid}/>
             </div>
             <div className='btnDiv'>
                 {athlete && status !== "Confirmé" ? <ConfBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}

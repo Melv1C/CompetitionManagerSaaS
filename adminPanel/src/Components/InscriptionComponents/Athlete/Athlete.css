@@ -40,24 +40,24 @@
 }
 
 .list-athletes .athlete-item .athlete-item-bib {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
     border: 1px solid black;
     border-radius: 2px;
     padding: 3px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     font-weight: 500;
+    width: 40px;
 }
 
 .list-athletes .athlete-item .athlete-item-name {
     font-size: 20px;
     font-weight: 500;
+    width: calc(100% - 100px);
 }
 
 .list-athletes .athlete-item .athlete-item-club {
     font-size: 16px;
     font-weight: 400;
+    width: 40px;
 }
 
 .athlete-card {
@@ -156,6 +156,26 @@
         margin-bottom: 20px;
     }
 
+}
+
+.new-athletes-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.new-athletes-link button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #008AFF;
+    background-color: white;
+
+}
+
+.new-athletes-link button:hover {
+    background-color: #008AFF;
+    color: white;
 }
 
 

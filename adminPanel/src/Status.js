@@ -37,6 +37,10 @@ function getSingleStatus(inscription){
         return 'Absent';
     }
 
+    if (inscription.removed) {
+        return 'removed';
+    }
+
     return inscription.confirmed ? 'Confirmé' : 'Non confirmé';
 }
 
@@ -50,6 +54,8 @@ function getColorClass(status){
             return 'Absent';
         case "changed":
             return 'Changed';
+        case "removed":
+            return 'Removed';
         default:
             return '';
     }

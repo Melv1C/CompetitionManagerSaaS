@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { INSCRIPTIONS_URL } from '../../../Gateway'
+import { INSCRIPTIONS_ADMIN_URL ,INSCRIPTIONS_URL } from '../../../Gateway'
 
 import { formatRecord } from '../../../RecordsHandler'
 
@@ -18,8 +18,6 @@ function AthleteSummary({athlete}) {
 }
 
 function EventsRecordsSummary({events, records, free}) {
-    console.log(events);
-    console.log(records);
     return (
         <div className='events-records-summary'>
             <h3>Épreuves</h3>
@@ -39,7 +37,7 @@ function EventItem({event, records, free}) {
 
     let record;
     if (isSubEvent) {
-        record = records[event.superEvent][event.pseudoName]
+        record = records[event.superEvent][event.name]
     } else if (isMultiEvent) {
         record = records[event.pseudoName]["total"]
     } else {
@@ -50,8 +48,8 @@ function EventItem({event, records, free}) {
         <div className='event-item'>
             <div className='event-item-time'>{event.time}</div>
             <div className='event-item-name'>{event.pseudoName}</div>
-            <div className='event-item-record'>{formatRecord(event, record)}</div>
-            {(event.cost !== 0 && !free) ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
+            <div className='event-item-record'>{formatRecord(event.type, record)}</div>
+            {(event.cost && event.cost !== 0 && !free) ? <div className='event-item-cost'>{event.cost} €</div> : <div className='event-item-cost'></div>}
         </div>
     )
 }
@@ -84,8 +82,7 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
     const isInscribed = urlSearchParams.get('isInscribed');
 
     if (isInscribed === 'true') {
-        console.log(`PUT ${INSCRIPTIONS_URL}/${competitionId}/${athlete.id}`);
-        axios.put(`${INSCRIPTIONS_URL}/${competitionId}/${athlete.id}`, {
+        axios.put(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}/${athlete.id}`, {
             userId: user.uid,
             events: events.map(event => event.pseudoName),
             records: records,
@@ -108,7 +105,8 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
         })
         return;
     }
-    axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
+    console.log(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}`);
+    axios.post(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}`, {
         userId: user.uid,
         athleteId: athlete.id,
         events: events.map(event => event.pseudoName),
@@ -119,6 +117,7 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
     .then(res => {
         console.log(res);
         if (res.status === 200) {
+            // redirect to res.data.url
             window.location.href = res.data.data.url;
         } else if (res.status === 201) {
             setStep(5);
@@ -154,6 +153,10 @@ export const Summary = ({athlete, events, records, setStep, competitionId, user,
             eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
         }
     }
+
+    console.log(eventsList);
+    console.log(records);
+
 
     return (
         <div className='step-page'>

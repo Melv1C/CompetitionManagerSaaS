@@ -1,0 +1,58 @@
+.one-day-athlete {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .form {
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+
+        .form-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 10px 0;
+            label {
+                text-align: left;
+                font-size: 1.2em;
+                font-weight: bold;
+                width: 40%;
+            }
+            input {
+                width: 50%;
+                padding: 5px;
+                border-radius: 5px;
+                border: 1px solid #008AFF;
+            }
+
+            
+        }
+
+        .form-group.radio {
+            label {
+                width: auto;
+            }  
+            input {
+                width: 20px;
+
+            }
+        }
+        
+    }
+
+    .submit {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        background-color: white;
+        border: 3px solid #008AFF;
+        color: Black;
+        font-size: 1.2em;
+        font-weight: bold;
+        cursor: pointer;
+        &:hover {
+            background-color: #008AFF;
+            color: white;
+        }
+    }
+}

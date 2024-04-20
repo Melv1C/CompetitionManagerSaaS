@@ -1,3 +1,36 @@
-.newInscription-button button {
-    width: auto;
+.control-buttons-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
 }
+
+.control-buttons-success a {
+    width: 400px;
+}
+
+.control-buttons-success button {
+    width: 100%;
+    padding: 10px 0;
+    border: 2px solid #008AFF;
+    border-radius: 10px;
+    background-color: #008AFF;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.control-buttons-success button:hover {
+    background-color: #005F9E;
+    border: 2px solid #005F9E;
+}
+
+/* Responsive */
+
+@media (max-width: 550px) {
+    .control-buttons-success a {
+        width: 100%;
+    }
+}
+

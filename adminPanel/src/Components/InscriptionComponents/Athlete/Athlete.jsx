@@ -87,14 +87,30 @@ function ControlButtons({setStep, setAthlete, enableNext}) {
 }
 
 
-export const Athlete = ({athlete, setAthlete, setStep, competitionId, user}) => {
+export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, setIsForeignAthlete, user}) => {
     const [athletes, setAthletes] = useState([]);
 
     const [loading, setLoading] = useState(false);
 
     const [enableNext, setEnableNext] = useState(false);
 
+    let lastChange = new Date();
+
+    function onChange(e) {
+        lastChange = new Date();
+        setTimeout(() => {
+            if (new Date() - lastChange >= 599) {
+                getAthletes(e.target.value);
+            }
+        }, 600);
+    }
+
     function getAthletes(keyword) {
+
+        if (keyword === '') {
+            setAthletes([]);
+            return;
+        }
         
         setLoading(true);
 
@@ -117,7 +133,14 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, user}) => 
         }
         axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${user.uid}`)
         .then(res => {
-            setEnableNext(true);
+            console.log(res.data.data);
+            if (res.data.data.isInsribed && res.data.data.ownByUser) {
+                setEnableNext(true);
+            } else if (!res.data.data.isInsribed) {
+                setEnableNext(true);
+            } else {
+                setEnableNext(false);
+            }
         })
         .catch(err => {
             console.log(err);
@@ -134,7 +157,13 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, user}) => 
                     <input 
                         type='text' 
                         placeholder='Nom, Prénom ou dossard'
-                        onKeyDown={(e)=>{if(e.key === 'Enter'){getAthletes(e.target.value)}}} 
+                        onKeyDown={(e)=>{
+                            if(e.key === 'Enter'){
+                                lastChange = new Date();
+                                getAthletes(e.target.value)
+                            }
+                        }} 
+                        onChange={onChange}
                     />
                     <div className='search-icon' 
                         onClick={()=>{getAthletes(document.querySelector('.field input').value)}}
@@ -143,6 +172,27 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, user}) => 
                     </div>
                 </div>
                 <ListAthletes athletes={athletes} setAthlete={setAthlete} loading={loading} />
+
+                {oneDay ? 
+                <div className='new-athletes-link'>
+                    <button onClick={()=>{
+                            setIsForeignAthlete(false)
+                            setStep(-1)
+                        }}>
+                        Je n'ai pas de dossard
+                    </button>         
+                </div> 
+                : null}
+
+                <div className='new-athletes-link'>
+                    <button onClick={()=>{
+                            setIsForeignAthlete(true)
+                            setStep(-1)
+                        }}>
+                        Athlète étranger
+                    </button>         
+                </div> 
+
             </>
             : 
             <>

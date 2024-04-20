@@ -9,9 +9,6 @@ import './Records.css'
 
 function ControlButtons({setStep, records, events}) {
     const nextEnabled = Object.keys(records).length === events.length;
-    console.log(Object.keys(records).length, events.length);
-    console.log(records);
-    console.log(events);
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(2)}}>Précédent</button>
@@ -43,29 +40,32 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
     const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
     const isSubEvent = event.superEvent !== undefined;
 
+    console.log(event);
+
     useEffect(() => {
         if (record === undefined) {
-            axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`).then(response => {
-                if (isMultiEvent) {
-                    setRecord(event.pseudoName, response.data.data.perf, "total");
-                } else if (isSubEvent) {
-                    setRecord(event.superEvent, response.data.data.perf, event.name);
-                } else {
-                    setRecord(event.pseudoName, response.data.data.perf);
-                }
-            }).catch(error => {
-                // if the athlete has no record, 404 is returned
-                if (error.response.status === 404) {
-                    console.log("setting record");
+            axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`)
+                .then(response => {
                     if (isMultiEvent) {
-                        setRecord(event.pseudoName, "0", "total");
+                        setRecord(event.pseudoName, response.data.data.perf, "total");
                     } else if (isSubEvent) {
-                        setRecord(event.superEvent, "0", event.name);
+                        setRecord(event.superEvent, response.data.data.perf, event.name);
                     } else {
-                        setRecord(event.pseudoName, "0");
+                        setRecord(event.pseudoName, response.data.data.perf);
                     }
-                }
-            });
+                })
+                .catch(error => {
+                    // if the athlete has no record, 404 is returned
+                    if (error.response.status === 404) {
+                        if (isMultiEvent) {
+                            setRecord(event.pseudoName, "0", "total");
+                        } else if (isSubEvent) {
+                            setRecord(event.superEvent, "0", event.name);
+                        } else {
+                            setRecord(event.pseudoName, "0");
+                        }
+                    }
+                });
         }
     }, [record]);
 
@@ -106,6 +106,7 @@ function DistanceInput({record, setRecord}) {
     let [meters, centimeters] = [0, 0];
     if (record.includes('.')) {
         [meters, centimeters] = record.split('.');
+        centimeters = centimeters.padEnd(2, '0');
     } else {
         meters = record;
         centimeters = '0';
@@ -377,6 +378,9 @@ function PointsInput({record, setRecord, event}) {
 }
 
 export const Records = ({events, records, setRecord, setStep}) => {
+
+    console.log(events);
+    console.log(records);
 
     const [searchParams, setSearchParams] = useSearchParams();
 

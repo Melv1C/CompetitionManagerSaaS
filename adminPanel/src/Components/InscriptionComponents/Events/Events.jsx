@@ -38,9 +38,9 @@ function EventItem({event, setEvents, events, competitionId, inscriptions, free}
     }, [events, event])
 
     useEffect(() => {
-        const eventInscriptions = inscriptions.filter(i => i.event === event.name);
+        const eventInscriptions = inscriptions.filter(i => i.event === event.pseudoName);
         setPlace(event.maxParticipants - eventInscriptions.length);
-    }, [event, competitionId])
+    }, [event, competitionId, inscriptions])
 
     return (
         <div className='event-item'>
@@ -92,7 +92,7 @@ function ControlButtons({setStep, events}) {
     )
 }
 
-export const Events = ({events, setEvents, setStep, competitionId, category, free}) => {
+export const Events = ({events, setEvents, setStep, competitionId, category, free, freeEvents}) => {
 
     const [availableEvents, setAvailableEvents] = useState([]);
 
@@ -101,7 +101,16 @@ export const Events = ({events, setEvents, setStep, competitionId, category, fre
     useEffect(() => {
         axios.get(`${COMPETITIONS_URL}/${competitionId}/events?category=${category}`)
         .then(res => {
-            const availableEventsData = res.data.data;
+            let availableEventsData = res.data.data;
+
+            // change cost if event in freeEvents
+            availableEventsData = availableEventsData.map(e => {
+                if (freeEvents.has(e.pseudoName)) {
+                    e.cost = 0;
+                }
+                return e;
+            })
+
             setEvents(events.filter(e => availableEventsData.map(e => e.name).includes(e.name)));            
             setAvailableEvents(availableEventsData);
         })

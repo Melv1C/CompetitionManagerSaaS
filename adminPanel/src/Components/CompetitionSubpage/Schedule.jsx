@@ -116,7 +116,7 @@ export const Schedule = ({competition, user}) => {
             .catch((error) => {
                 console.log(error);
             });
-    });
+    },[]);
 
 
     return (
