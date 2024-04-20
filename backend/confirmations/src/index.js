@@ -134,6 +134,42 @@ app.delete('/api/confirmations/:competId/:athleteId/:userId', async (req, res) =
     }
 });
 
+app.delete('/api/confirmations/remove/:competitionId/:athleteId/:eventName/:adminId', async (req, res) => {
+    const { competitionId, athleteId, eventName, adminId } = req.params;
+
+    if (!competitionId && typeof competitionId !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid competitionId' });
+    }
+    if (!athleteId && typeof athleteId !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid athleteId' });
+    }
+    if (!eventName && typeof eventName !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid eventName' });
+    }
+
+    const check = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${adminId}`).catch((err) => {
+        return false;
+    });
+
+    if (!check || !check.data.data) {
+        return res.status(403).json({ status: 'error', message: 'Forbidden' });
+    }
+
+    const allInscriptions = await getInscriptions(`competition_${competitionId}`);
+    for (let i = 0; i < allInscriptions.length; i++) {
+        if (allInscriptions[i].athleteId == athleteId && allInscriptions[i].event == eventName) {
+            allInscriptions[i].confirmed = false;
+            allInscriptions[i].removed = true;
+            await updateInscription(`competition_${competitionId}`, allInscriptions[i]); 
+        }
+    }
+
+    res.status(200).json({ status: 'success', message: 'Inscription removed successfully' });
+});
+
+
+
+
 app.delete('/api/confirmations/absent/:competId/:athleteId/:userId', async (req, res) => {
     const competId = req.params.competId;
     const athleteId = req.params.athleteId;

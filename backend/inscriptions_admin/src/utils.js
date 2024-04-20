@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const { getInscriptions } = require('./nano');
+const { getInscriptions, addInscription } = require('./nano');
 
 // check body elements
 function checkParams(userId, athleteId, events, records, success_url, cancel_url) {
