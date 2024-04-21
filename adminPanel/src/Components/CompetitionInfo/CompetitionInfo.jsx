@@ -47,8 +47,13 @@ export const CompetitionInfo = (props) => {
                 schedule: event.target.schedule.value,
                 description: event.target.description.value,
                 confirmationTime: confirmationTime,
-                adminId: props.user.uid
+                adminId: props.user.uid,
+                oneDay: oneDay,
+                oneDayBIB: event.target.oneDayBIB.value
             };
+            console.log(formData);
+            console.log(oneDay);
+            console.log(event.target.oneDayBIB.value);
             createCompetition(formData, navigate);
         }else{
             const formData = {
@@ -64,8 +69,13 @@ export const CompetitionInfo = (props) => {
                 description: event.target.description.value,
                 adminId: props.user.uid,
                 confirmationTime: confirmationTime,
-                id: compet.id
+                id: compet.id,
+                oneDay: oneDay,
+                oneDayBIB: event.target.oneDayBIB.value
             };
+            console.log(formData);
+            console.log(oneDay);
+            console.log(event.target.oneDayBIB.value);
             updateCompetition(formData, props.setCompetition);
             props.setShowModal(false);
         }

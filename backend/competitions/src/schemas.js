@@ -63,6 +63,13 @@ const competitionSchema = new Schema({
     confirmationTime:{
         type: Number,
         required: true,
+    },
+    oneDay:{
+        type: Boolean,
+        required: true,
+    },
+    oneDayBIB:{
+        type: String,
     }
 });
 const Competition = mongoose.model("competitions", competitionSchema);
