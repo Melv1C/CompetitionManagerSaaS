@@ -1,5 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+
+import { CleanStorage } from './CleanStorage';
 
 import './App.css';
 import './Colors.css';
@@ -18,6 +20,7 @@ function App() {
     return (
         <div>
             <Router>
+                <CleanStorage />
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />

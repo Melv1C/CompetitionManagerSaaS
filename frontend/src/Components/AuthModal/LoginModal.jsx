@@ -1,6 +1,8 @@
 import React from 'react'
 import './AuthModal.css'
 
+import { Email, Password } from './Input';
+
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../Firebase';
 
@@ -62,10 +64,8 @@ export const LoginModal = (props) => {
                 <span className="close" onClick={()=>{props.setShow(false)}}>&times;</span>
                 <h2>Se connecter</h2>
                 <form onSubmit={handleLogin}>
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" value={email} onChange={(e)=>{setEmail(e.target.value)}} required/>
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" placeholder="Mot de passe" value={password} onChange={(e)=>{setPassword(e.target.value)}} required/>
+                    <Email email={email} setEmail={setEmail} />
+                    <Password password={password} setPassword={setPassword} />
                     <button type="submit">Se connecter</button>
                 </form>
 
