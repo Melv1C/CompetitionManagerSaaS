@@ -134,7 +134,7 @@ function postInscription(athlete, events, records, competitionId, setStep) {
 }
 
 
-export const Summary = ({athlete, events, records, setStep, competitionId, free}) => {
+export const Summary = ({athlete, events, records, setStep, competitionId, free, freeEvents}) => {
     const [totalCost, setTotalCost] = useState(0);
     useEffect(() => {
         if (free) {
@@ -142,7 +142,7 @@ export const Summary = ({athlete, events, records, setStep, competitionId, free}
         } else {
             setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
         }
-    }, [events, free])
+    }, [events, free, freeEvents])
 
     if (!athlete) {
         return <div>Chargement...</div>

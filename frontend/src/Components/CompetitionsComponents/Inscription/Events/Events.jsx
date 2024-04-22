@@ -119,6 +119,20 @@ export const Events = ({events, setEvents, setStep, competitionId, category, fre
         })
     }, [competitionId, category])
 
+    // if freeEvents change, update events cost
+    useEffect(() => {
+        let availableEventsData = availableEvents;
+
+        availableEventsData = availableEventsData.map(e => {
+            if (freeEvents.has(e.pseudoName)) {
+                e.cost = 0;
+            }
+            return e;
+        })
+
+        setAvailableEvents(availableEventsData);
+    }, [freeEvents])
+
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${competitionId}`)
         .then(res => {

@@ -6,6 +6,7 @@ const { inscriptionsRouter } = require('./Routers/inscriptions');
 
 const { getInscriptions,
         getInscription,
+        getAllInscriptions
     } = require('./nano');
 
 const { removePrivateFields } = require('./utils');
@@ -54,6 +55,23 @@ app.get('/api/inscriptions', (req, res) => {
         .catch((err) => {
             console.error(err);
             res.status(500).json({ status: 'error', message: 'An error occurred while fetching inscriptions' });
+        });
+});
+
+// Get all free events for a athlete
+app.get('/api/inscriptions/:competitionId/freeEvents', async (req, res) => {
+    const { competitionId } = req.params;
+    const athleteId = req.query.athleteId;
+
+    getAllInscriptions(`competition_${competitionId}`)
+        .then((inscriptions) => {
+            const userInscriptions = inscriptions.filter((inscription) => inscription.athleteId == athleteId);
+            const events = userInscriptions.map((inscription) => inscription.event);
+            res.status(200).json({ status: 'success', message: 'Free events retrieved successfully', data: events });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching free events' });
         });
 });
 

@@ -13,10 +13,15 @@ import { faUsers } from '@fortawesome/free-solid-svg-icons'
 
 function ScheduleItem({event, inscriptions, competition}) {
     const [placesLeft, setPlacesLeft] = useState(event.maxParticipants - inscriptions.length);
+    const [nbParticipants, setNbParticipants] = useState(inscriptions.length);
 
     useEffect(() => {
         setPlacesLeft(event.maxParticipants - inscriptions.length);
     }, [inscriptions, event.maxParticipants]);
+
+    useEffect(() => {
+        setNbParticipants(inscriptions.length);
+    }, [inscriptions]);
 
     return (
         <div className="schedule-item">
@@ -24,15 +29,33 @@ function ScheduleItem({event, inscriptions, competition}) {
                 <div className="schedule-item-info">
                     <div className="schedule-item-time">{event.time}</div>
                     <div className="schedule-item-name">{event.pseudoName}</div>
-                    <PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />
-                    <div className="schedule-item-icon">
+                    {/*<PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />*/}
+                    <ParticipantsButton nbParticipants={nbParticipants} />
+                    {/*<div className="schedule-item-icon">
                         <FontAwesomeIcon icon={faUsers} /> Participants 
-                    </div>
+                    </div>*/}
                 </div>
             </Link>
         </div>
     )
 }
+
+function ParticipantsButton({nbParticipants}) {
+    if (nbParticipants === 0) {
+        return  <div className="schedule-item-icon disabled">
+                    Pas de participants
+                </div>
+    } else if (nbParticipants === 1) {
+        return  <div className="schedule-item-icon">
+                    <FontAwesomeIcon icon={faUsers} /> {nbParticipants} participant
+                </div>
+    } else {
+        return  <div className="schedule-item-icon">
+                    <FontAwesomeIcon icon={faUsers} /> {nbParticipants} participants
+                </div>
+    }
+}
+
 
 function PlacesLeft({placesLeft}) {
     if (placesLeft <= 0) {

@@ -195,12 +195,14 @@ export const Inscription = ({competition}) => {
 
     // load information if already inscribed
     useEffect(() => {
+        console.log("ici");
+        console.log(athlete);
         if (athlete) {
             axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
             .then(async res => {
                 const inscriptions = res.data.data;
                 const athleteInscriptions = inscriptions.filter(i => i.athleteId === athlete.id);
-                setFreeEvents(new Set(athleteInscriptions.map(i => i.event)));
+                //setFreeEvents(new Set(athleteInscriptions.map(i => i.event)));
                 // set events and records
                 if (athleteInscriptions.length > 0) {
 
@@ -245,10 +247,49 @@ export const Inscription = ({competition}) => {
         }
     }, [athlete])
 
+    // load free events
+    useEffect(() => {
+        if (!athlete) {
+            return;
+        }
+        console.log("LOADING FREE EVENTS");
+        axios.get(`${INSCRIPTIONS_URL}/${competition.id}/freeEvents?athleteId=${athlete.id}`)
+        .then(res => {
+            setFreeEvents(prev => {
+                let newFreeEvents = new Set(prev);
+                for (let e of res.data.data) {
+                    newFreeEvents.add(e);
+                }
+                return newFreeEvents;
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [athlete])
+
+    // change cost of event if in freeEvents
+    useEffect(() => {
+        for (let event of events) {
+            if (freeEvents.has(event.pseudoName)) {
+                event.cost = 0;
+            }
+        }
+    }, [freeEvents])
+
     if (!user) {
         return (
             <div className='competition-page'>
                 <h2>Veuillez vous connecter pour vous inscrire à une compétition</h2>
+            </div>
+        )
+    }
+
+    // if user email is not verified, message is displayed
+    if (!auth.currentUser.emailVerified) {
+        return (
+            <div className='competition-page'>
+                <h2>Veuillez vérifier votre adresse email pour vous inscrire à une compétition</h2>
             </div>
         )
     }
