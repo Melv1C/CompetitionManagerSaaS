@@ -41,8 +41,6 @@ app.get(`${prefix}`, async (req, res) => {
 
     let athletes = await getAthletesByKey(key, 'global_athletes');
 
-    console.log(athletes);
-
     athletes = athletes.map(athlete => {
         return {
             id: athlete.id,
@@ -83,7 +81,6 @@ app.get(`${prefix}`, async (req, res) => {
         }
     });
     */
-   console.log(athletes);
     res.status(200).json({
         status: 'success',
         message: 'Athletes retrieved successfully',
@@ -130,8 +127,6 @@ app.get(`${prefix}/:id`, async (req, res) => {
     */
 
     let athlete = await getAthleteById(id, 'global_athletes');
-
-    console.log(athlete);
 
     athlete = {
         id: athlete.id,

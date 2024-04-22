@@ -38,7 +38,6 @@ async function getAthletesByKey(key, dbName) {
 
     
     const keyword = key;
-    console.log('Key:', keyword);
 
     const split = keyword.split(' ');
     

@@ -41,7 +41,7 @@ async function addNewAthletes() {
                     if (!found) {
                         addAthlete('global_athletes', athlete)
                             .then(() => {
-                                console.log(`Athlete ${athlete.id} added successfully`);
+                                //console.log(`Athlete ${athlete.id} added successfully`);
                             })
                             .catch((err) => {
                                 console.error(err);
@@ -49,10 +49,8 @@ async function addNewAthletes() {
                     }
                 }
             }
-
         })
         .catch(error => {
-
             console.error('Error:', error.message);
         });
 }
@@ -62,7 +60,6 @@ async function addNewAthletes() {
 
 
 function initDB() {
-
     createDatabase('global_athletes')
         .then(() => {
             console.log('Database global_athletes created successfully');
