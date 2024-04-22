@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { INSCRIPTIONS_URL } from '../../../Gateway'
 import './Schedule.css'
+import './Filter.css'
 
 import { formatRecord } from '../../../RecordsHandler'
+import { SortCategory } from '../../../SortCategory'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faFilter } from '@fortawesome/free-solid-svg-icons'
 
 function ScheduleItem({event, inscriptions, competition}) {
     const [placesLeft, setPlacesLeft] = useState(event.maxParticipants - inscriptions.length);
@@ -69,6 +72,25 @@ function PlacesLeft({placesLeft}) {
     }
 }
 
+function CategoryFilter({categories, filterValue, setFilterValue}) {
+
+    return (
+        <div className="schedule-filter">
+            <div className="schedule-filter-icon">
+                <FontAwesomeIcon icon={faFilter} />
+            </div>
+            <div className="schedule-filter-select">
+                <select value={filterValue} onChange={(e) => {setFilterValue(e.target.value)}} >
+                    <option value="all">Toutes les catégories</option>
+                    {categories.map(category => {
+                        return <option key={category} value={category}>{category}</option>
+                    })}
+                </select>
+            </div>
+        </div>
+    )
+}
+
 
 export const Schedule = ({competition}) => {
 
@@ -83,19 +105,78 @@ export const Schedule = ({competition}) => {
             });
     }, [competition.id]);
 
-    let events = [];
-    for (let event of competition.events) {
-        events.push(event);
-        for (let subEvent of event.subEvents) {
-            events.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.name, maxParticipants: event.maxParticipants});
+    const [events, setEvents] = useState([]);
+    
+    useEffect(() => {
+        console.log(competition.events);
+        let events = [];
+        for (let event of competition.events) {
+            events.push(event);
+            for (let subEvent of event.subEvents) {
+                events.push({...subEvent, 
+                    pseudoName: `${event.pseudoName} - ${subEvent.name}`, 
+                    superEvent: event.name, 
+                    maxParticipants: event.maxParticipants, 
+                    categories: event.categories
+                });
+            }
         }
-    }
+        setEvents(events);
+    }, [competition.events]);
+
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        let categories = [];
+        for (let event of events) {
+            if (event.categories === undefined) {
+                event.categories = [];
+            }
+            for (let category of event.categories) {
+                let cat;
+                if (category.length === 3) {
+                    if (category.includes("M")) {
+                        cat =  "MAS M";
+                    } else if (category.includes("W")) {
+                        cat =  "MAS F";
+                    }
+                } else {
+                    cat =  category;
+                }
+                if (!categories.includes(cat)) {
+                    categories.push(cat);
+                }
+            }
+        }
+        setCategories(SortCategory(categories));
+    }, [events]);
+
+    const [filterValue, setFilterValue] = useState("all");
+
+    const [filteredEvents, setFilteredEvents] = useState([]);
+
+    useEffect(() => {
+        if (filterValue === "all") {
+            setFilteredEvents(events);
+        } else if (filterValue === "MAS M") {
+            setFilteredEvents(events.filter(event => {
+                return event.categories.some(category => category.includes("M") && category.length === 3);
+            }));
+        } else if (filterValue === "MAS F") {
+            setFilteredEvents(events.filter(event => {
+                return event.categories.some(category => category.includes("W") && category.length === 3);
+            }));
+        } else {
+            setFilteredEvents(events.filter(event => event.categories.includes(filterValue)));
+        }
+    }, [events, filterValue]);
 
     return (
         <div className="competition-page">
+            
+            <CategoryFilter categories={categories} filterValue={filterValue} setFilterValue={setFilterValue} />
             <div className="schedule">
                 
-                {events.sort((a, b) => {
+                {filteredEvents.sort((a, b) => {
                     if (a.time < b.time) {
                         return -1;
                     } else if (a.time > b.time) {

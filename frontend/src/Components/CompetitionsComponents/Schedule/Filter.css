@@ -1,0 +1,47 @@
+@charset "UTF-8";
+/*
+<div className="schedule-filter">
+            <div className="schedule-filter-icon">
+                <FontAwesomeIcon icon={faFilter} /> Catégories
+            </div>
+            <div className="schedule-filter-content">
+                <select value={filterValue} onChange={(e) => setFilterValue(e.target.value)}>
+                    <option value="all">Toutes les catégories</option>
+                    {categories.map(category => {
+                        return <option key={category} value={category}>{category}</option>
+                    })}
+                </select>
+            </div>
+        </div>*/
+.schedule-filter {
+  display: flex;
+  position: relative;
+  justify-content: right;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.schedule-filter .schedule-filter-icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+.schedule-filter .schedule-filter-select {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 100;
+}
+.schedule-filter .schedule-filter-select select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.schedule-filter .schedule-filter-select select option {
+  color: black;
+  cursor: pointer;
+}/*# sourceMappingURL=Filter.css.map */

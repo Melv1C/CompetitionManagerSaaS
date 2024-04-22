@@ -13,7 +13,7 @@ export const CompetitionsList = () => {
         axios.get(`${COMPETITIONS_URL}`)
             .then((response) => {
                 const data = response.data.data;
-                setCompetitions(data.filter(competition => competition.open === true));
+                setCompetitions(data.filter(competition => competition.open === true).sort((a, b) => a.date > b.date ? 1 : -1));
             })
             .catch((error) => {
                 console.log(error);

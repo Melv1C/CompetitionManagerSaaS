@@ -195,8 +195,6 @@ export const Inscription = ({competition}) => {
 
     // load information if already inscribed
     useEffect(() => {
-        console.log("ici");
-        console.log(athlete);
         if (athlete) {
             axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
             .then(async res => {
@@ -252,16 +250,10 @@ export const Inscription = ({competition}) => {
         if (!athlete) {
             return;
         }
-        console.log("LOADING FREE EVENTS");
+        console.log('loading free events');
         axios.get(`${INSCRIPTIONS_URL}/${competition.id}/freeEvents?athleteId=${athlete.id}`)
         .then(res => {
-            setFreeEvents(prev => {
-                let newFreeEvents = new Set(prev);
-                for (let e of res.data.data) {
-                    newFreeEvents.add(e);
-                }
-                return newFreeEvents;
-            })
+            setFreeEvents(new Set(res.data.data));
         })
         .catch(err => {
             console.log(err);
@@ -276,6 +268,15 @@ export const Inscription = ({competition}) => {
             }
         }
     }, [freeEvents])
+
+    // check if the inscription is still open
+    if (new Date(competition.closeDate) < new Date()) {
+        return (
+            <div className='competition-page red'>
+                <h2>Les inscriptions pour cette compétition sont terminées</h2>
+            </div>
+        )
+    }
 
     if (!user) {
         return (

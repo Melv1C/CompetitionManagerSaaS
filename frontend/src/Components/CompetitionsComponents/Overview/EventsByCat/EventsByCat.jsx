@@ -23,8 +23,6 @@ export const EventsByCat = ({events}) => {
         }
     });
 
-    console.log(modifiedEvents);
-
     const categories = modifiedEvents.map(event => event.categories).flat();
     const sortedCategories = SortCategory(categories);
     const groupedCategories = groupByGender(sortedCategories);

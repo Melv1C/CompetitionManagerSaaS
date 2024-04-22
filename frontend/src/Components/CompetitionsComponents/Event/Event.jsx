@@ -21,8 +21,6 @@ export const Event = ({competition}) => {
                     return event.pseudoName === eventName || eventName.startsWith(`${event.pseudoName} - `);
                 })[0];
 
-                console.log(event);
-
                 if (event.pseudoName !== eventName) {
                     for (let subEvent of event.subEvents) {
                         if (eventName === `${event.pseudoName} - ${subEvent.name}`) {

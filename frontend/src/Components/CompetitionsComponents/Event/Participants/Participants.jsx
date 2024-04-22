@@ -15,7 +15,7 @@ export const Participants = ({event, inscriptions}) => {
                 }
             }).map(inscription => {
                 return (
-                    <div key={inscription.id} className="participants-item">
+                    <div className="participants-item" key={inscription._id}>
                         <div className="participants-item-bib">{inscription.bib}</div>
                         <div className="participants-item-athlete">{inscription.athleteName}</div>
                         <div className="participants-item-club">{inscription.club}</div>
