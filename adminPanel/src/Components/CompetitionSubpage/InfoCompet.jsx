@@ -69,7 +69,9 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                                 let text = "";
                                 console.log(inscriptions);
                                 inscriptions.forEach((inscription) => {
-                                    mails.push(inscription.athleteId);//change to email when available
+                                    if (mails.indexOf(inscription.email) === -1 && inscription.email !== ""){
+                                        mails.push(inscription.email);
+                                    }
                                 });
                                 text = mails.join("; ");
                                 navigator.clipboard.writeText(text);

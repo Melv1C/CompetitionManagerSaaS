@@ -24,7 +24,7 @@ export const EventsList = (props) => {
     }
     return (
         <div>
-            {props.competition.events.map((event) => {
+            {props.competition.events.sort((a, b) => a.time.localeCompare(b.time)).map(event => {
                 const participants = inscriptions.filter(i => i.event === event.pseudoName);
                 return (
                     <div key={event.id} className="event">

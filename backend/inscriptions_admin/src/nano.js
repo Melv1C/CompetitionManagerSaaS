@@ -69,7 +69,13 @@ function getInscription(dbName, inscriptionId) {
     });
 }
 
-function deleteInscription(dbName, inscriptionId, rev) {
+async function deleteInscription(dbName, inscriptionId, rev) {
+    const inscription = await getInscription(dbName, inscriptionId);
+    inscription.inscribed = false;
+    return await addInscription(dbName, inscription);
+}
+
+function deleteInscriptionDef(dbName, inscriptionId, rev) {
     const db = nano.use(dbName);
     return new Promise((resolve, reject) => {
         db.destroy(inscriptionId, rev, (err, body) => {

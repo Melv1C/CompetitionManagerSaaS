@@ -388,6 +388,33 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     res.status(200).json({ status: 'success', message: 'Inscriptions updated successfully' });
 });
 
+
+// Delete an inscription for a competition
+app.delete(`${prefix}/:competitionId/:inscriptionId/:adminId`, async (req, res) => {
+    const { competitionId, inscriptionId, adminId } = req.params;
+
+    if (!competitionId && typeof competitionId !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid competitionId' });
+    }
+    if (!inscriptionId && typeof inscriptionId !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid inscriptionId' });
+    }
+
+    try {
+        await checkPermission(competitionId, adminId);
+    } catch (err) {
+        return res.status(403).json({ status: 'error', message: err.message });
+    }
+
+    const inscription = await getInscription(`competition_${competitionId}`, inscriptionId);
+    if (!inscription) {
+        return res.status(404).json({ status: 'error', message: 'Inscription not found' });
+    }
+
+    await deleteInscription(`competition_${competitionId}`, inscriptionId, inscription._rev);
+    res.status(200).json({ status: 'success', message: 'Inscription deleted successfully' });
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

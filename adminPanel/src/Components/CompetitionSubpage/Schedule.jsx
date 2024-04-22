@@ -1,15 +1,15 @@
 import {React, useState, useEffect} from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { INSCRIPTIONS_URL, COMPETITIONS_URL } from '../../Gateway';
+import { INSCRIPTIONS_URL, COMPETITIONS_URL, INSCRIPTIONS_ADMIN_URL } from '../../Gateway';
 import { formatRecord } from '../../RecordsHandler';
 import { getSingleStatus,getColorClass } from '../../Status';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import './styles/Schedule.css';
 
-function Participants({event, inscriptions}){
+function Participants({event, inscriptions, id, user, setInscriptions}){
     return (
         <div className="participants">
             {inscriptions.sort((a, b) => {
@@ -25,6 +25,20 @@ function Participants({event, inscriptions}){
                         <div className="participants-item-athlete">{inscription.athleteName}</div>
                         <div className="participants-item-club">{inscription.club}</div>
                         <div className="participants-item-record">{formatRecord(event, inscription.record)}</div>
+                        <div className="participants-item-del red">
+                            <FontAwesomeIcon icon={faTrash} onClick={
+                                () => {
+                                    axios.delete(`${INSCRIPTIONS_ADMIN_URL}/${id}/${inscription._id}/${user.uid}`)
+                                        .then((response) => {
+                                            inscriptions = inscriptions.filter((i) => i._id !== inscription._id);
+                                            setInscriptions(inscriptions);
+                                        })
+                                        .catch((error) => {
+                                            console.log(error);
+                                        });
+                                }
+                            }/>
+                        </div>
                     </div>
                 )
             })}
@@ -44,7 +58,6 @@ function EventItem({event, id, user}) {
                     return inscription.event === event.pseudoName;
                 });
                 setInscriptions(inscriptions);
-                console.log(event, inscriptions);
             })
             .catch((error) => {
                 console.log(error);
@@ -66,7 +79,7 @@ function EventItem({event, id, user}) {
                     {inscriptions.length} / {event?.maxParticipants} athlètes
                 </div>
             </div>
-            <Participants event={event} inscriptions={inscriptions} />
+            <Participants event={event} inscriptions={inscriptions} id={id} user={user} setInscriptions={setInscriptions}/>
             <div className='center'>
                 {!event.closedList ? 
                     <button className="pl-close-btn" onClick={
