@@ -58,7 +58,7 @@ export const PieChart = ({data, title}) => {
                                     color: 'black',
                                     formatter: (value, ctx) => {
                                         // si moins de 5% on n'affiche pas
-                                        if (value/total < 0.05) {
+                                        if (value/total < 0.1) {
                                             return '';
                                         }
                                         const label = ctx.chart.legend.legendItems[ctx.dataIndex].text;

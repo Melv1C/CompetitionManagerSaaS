@@ -50,7 +50,6 @@ function PlacesLeft({placesLeft}) {
 export const Schedule = ({competition}) => {
 
     const [inscriptions, setInscriptions] = useState([]);
-    console.log(inscriptions);
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
             .then((response) => {

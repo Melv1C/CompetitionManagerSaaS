@@ -1,10 +1,10 @@
 const express = require('express');
+const axios = require('axios');
 
 const app = express.Router();
 
-const {  createDatabase, deleteDatabase } = require('../nano');
+const {  createDatabase, deleteDatabase, getInscriptions, updateInscription } = require('../nano');
 const { addViews } = require('../views');
-
 
 
 // Create a database for a new competition

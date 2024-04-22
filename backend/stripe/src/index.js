@@ -49,6 +49,7 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
                 };
             }
         }),
+        customer_email: req.body.email || null,
         mode: 'payment',
         success_url: req.body.success_url,
         cancel_url: req.body.cancel_url,

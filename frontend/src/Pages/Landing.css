@@ -6,9 +6,10 @@
 
 .landing-page {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('../Components/Assets/piste.jpg');
+    background-image: url('../Components/Assets/stade.webp');
     background-attachment:fixed;
     background-repeat: no-repeat;
     background-size: cover;
@@ -22,3 +23,43 @@
         height: calc(100svh - 106px);
     }
 }
+
+.landing-page .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 250px;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--secondary-color);
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.popup-info {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    width: 90%;
+    z-index: 2;
+    padding: 2rem;
+}
+
+.popup-info .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.popup-info.show {
+    display: flex;
+} 

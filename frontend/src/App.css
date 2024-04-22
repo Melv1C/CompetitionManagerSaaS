@@ -10,6 +10,11 @@
     --breakpoint-xl: 1200px;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 
 .page {
     margin: 0 auto 50px;
@@ -48,6 +53,59 @@
     border-radius: 75px;
     background-color: white;
     color: #515151;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.email-not-verified {
+    border: 1px solid var(--secondary-color);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.email-not-verified h2 {
+    color: var(--secondary-color);
+    font-size: 2rem;
+    margin: 0;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.email-not-verified p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.email-not-verified ul {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 2rem;
+
+    list-style-type: none;
+    padding: 0;
+    gap: 1rem;
+}
+
+.email-not-verified ul li::before {
+    content: "•";
+    color: var(--secondary-color);
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    font-size: 2rem;
+}
+
+.email-not-verified .resend-btn {
+    height: 40px;
+    outline: none;
+    border: 1px solid var(--secondary-color);
+    border-radius: 75px;
+    background-color: white;
+    color: var(--secondary-color);
     font-size: 20px;
     font-weight: 500;
     cursor: pointer;

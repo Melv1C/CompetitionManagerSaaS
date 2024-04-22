@@ -1,10 +1,12 @@
 
 const axios = require('axios');
+const nano = require('nano')(process.env.COUCHDB_URL);
 
 
 function calculateCategory(birthDate, competitionDate, gender) {
 
     // calculate age (years, months, days)
+
     let age = new Date(competitionDate - birthDate);
     let years = age.getUTCFullYear() - 1970;
     //let months = age.getUTCMonth();
@@ -31,6 +33,41 @@ function calculateCategory(birthDate, competitionDate, gender) {
         return sexe + (parseInt(years/5) * 5);
     }
 }
+
+async function getAthletesByKey(key, dbName) {
+
+    
+    const keyword = key;
+    console.log('Key:', keyword);
+
+    const split = keyword.split(' ');
+    
+    const q = {
+        selector: {
+            $or: [
+                { "bib": { "$eq": parseInt(keyword) } },
+                { "firstName": { "$regex": `(?i)${keyword}` } },
+                { "lastName": { "$regex": `(?i)${keyword}` } },
+                // if split.length > 1, we have to check if each part of the keyword is in the firstName or lastName
+                { "$and": split.map(part => ({ "$or": [{ "firstName": { "$regex": `(?i)${part}` } }, { "lastName": { "$regex": `(?i)${part}` } }] })) }
+            ]
+        },
+        limit:50
+    };
+
+    const db = nano.use(dbName);
+    const response = await db.find(q);
+
+    return response.docs;
+
+}
+
+async function getAthleteById(id, dbName) {
+    const db = nano.use(dbName);
+    const response = await db.get(id);
+    return response;
+}
+
 
 async function getResults(athleteId) {
     const response = await axios.get(`https://www.beathletics.be/api/athlete/new/${athleteId}`)
@@ -93,5 +130,7 @@ module.exports = {
     calculateCategory,
     getResults,
     getResultsByEvent,
-    isOneDayAthlete
+    isOneDayAthlete,
+    getAthletesByKey,
+    getAthleteById
 }

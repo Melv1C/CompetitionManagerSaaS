@@ -84,16 +84,15 @@ function postInscription(athlete, events, records, competitionId, setStep) {
     const isInscribed = urlSearchParams.get('isInscribed');
 
     if (isInscribed === 'true') {
-        console.log(`PUT ${INSCRIPTIONS_URL}/${competitionId}/${athlete.id}`);
         axios.put(`${INSCRIPTIONS_URL}/${competitionId}/${athlete.id}`, {
             userId: auth.currentUser.uid,
             events: events.map(event => event.pseudoName),
             records: records,
+            email: auth.currentUser.email,
             success_url: window.location.protocol+'//'+window.location.host+window.location.pathname+'?subPage=inscription&athleteId='+athlete.id+'&step=5',
             cancel_url: window.location.protocol+'//'+window.location.host+window.location.pathname+'?subPage=inscription&athleteId='+athlete.id+'&step=4',
         })
         .then(res => {
-            console.log(res);
             if (res.status === 200) {
                 // if url returned, redirect to url
                 try {
@@ -111,14 +110,14 @@ function postInscription(athlete, events, records, competitionId, setStep) {
 
     axios.post(`${INSCRIPTIONS_URL}/${competitionId}`, {
         userId: auth.currentUser.uid,
-        athleteId: athlete.id,
+        athleteId: athlete.id.toString(),
         events: events.map(event => event.pseudoName),
         records: records,
+        email: auth.currentUser.email,
         success_url: window.location.protocol+'//'+window.location.host+window.location.pathname+'?subPage=inscription&athleteId='+athlete.id+'&step=5',
         cancel_url: window.location.protocol+'//'+window.location.host+window.location.pathname+'?subPage=inscription&athleteId='+athlete.id+'&step=4',
     })
     .then(res => {
-        console.log(res);
         if (res.status === 200) {
             // redirect to res.data.url
             window.location.href = res.data.data.url;
@@ -156,10 +155,6 @@ export const Summary = ({athlete, events, records, setStep, competitionId, free}
             eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
         }
     }
-
-    console.log(eventsList);
-    console.log(records);
-
 
     return (
         <div className='step-page'>

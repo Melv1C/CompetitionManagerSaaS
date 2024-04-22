@@ -9,7 +9,6 @@ const { freeInscriptions, stripeInscriptions } = require('../utils');
 
 const { checkParams, checkEvents, checkInscriptions, checkPlaceAvailable, calculateTotalCost, getData } = require('./inscriptionsUtils');
 
-
 // Add a new inscription for a competition
 app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const { competitionId } = req.params;

@@ -19,7 +19,9 @@
     max-width: 400px;
 }
 
-.footer .footer-content .left .text {
+.footer .footer-content .left .title {
+    font-size: 20px;
+    font-weight: 500;
 }
 
 .footer .footer-content .left .certification {
@@ -70,10 +72,5 @@
 .footer .footer-content .right .social {
     display: flex;
     gap: 20px;
-}
-
-.footer .footer-content .right .social .email {
-    font-size: 20px;
-    font-weight: 500;
 }
 

@@ -4,17 +4,23 @@ import './Footer.css'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
 export const Footer = () => {
   return (
     <div className='footer'>
         <div className='footer-content'>
             <div className='left'>
-                <div className='text'>
-                    Ce site a été réalisé par 2 étudiants universitaires. Il a évolué depuis sa première version en 2020 et nous continuons à l'améliorer pour vous offrir une expérience de qualité ainsi que pour apprendre de nouvelles technologies.
+
+                <div className='title'>
+                    Contactez-nous
+                </div>
+                <div className='email'>
+                    <FontAwesomeIcon icon={faEnvelope} /> {" "}
+                    <a href='mailto:claeswebcreations@gmail.com'>claeswebcreations@gmail.com</a>
                 </div>
                 <div className='certification'>
-                    <span>©  </span> 2023 ClaesWeb - Tous droits réservés
+                    <span>©  </span> 2024 ClaesWeb - Tous droits réservés
                 </div>
             </div>
             <div className='right'>
@@ -34,13 +40,6 @@ export const Footer = () => {
                             <p>Claes Riwan</p>
                         </li>
                     </ul>
-                </div>
-
-                <div className='title'>
-                    Contactez-nous
-                </div>
-                <div className='email'>
-                    <a href='mailto:claeswebcreations@gmail.com'>claeswebcreations@gmail.com</a>
                 </div>
             </div>
         </div>

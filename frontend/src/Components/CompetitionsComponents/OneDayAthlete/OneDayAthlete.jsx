@@ -6,7 +6,7 @@ import { ATLHETES_URL } from '../../../Gateway'
 
 import './OneDayAthlete.css'
 
-export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthleteId}) => {
+export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthleteId, setIsForeignAthlete}) => {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -47,6 +47,17 @@ export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthl
 
     return (
         <div className='one-day-athlete step-page'>
+
+            {!isForeignAthlete ?
+                <>
+                    <h1>Demande de dossard d'un jour</h1>
+                    <p className='info'>!!! Attention, les dossards d'un jour sont réservés aux <strong>athlètes BPM</strong> (Benjamins 2015-2016, Pupilles 2013-2014, Minimes 2011-2012) non affiliés à un club.</p>
+                    <p className='info'>!!! Attention, si vous êtes un athlète étranger, remplissez <strong onClick={()=>{setIsForeignAthlete(true)}} style={{cursor: 'pointer'}}>ce formulaire</strong></p>
+                </>
+            :
+                <h1>Demande de dossard pour un athlète étranger</h1>
+            }
+
             <h2>Athlète</h2>
             <div className='form'>
                 <div className='form-group'>
@@ -89,7 +100,7 @@ export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthl
 
                 {isForeignAthlete ?
                     <div className='form-group'>
-                        <label htmlFor="license">Numéro de licence</label>
+                        <label htmlFor="license">Numéro de license</label>
                         <input type="text" id='license' value={optionals.license} onChange={(e)=>{setOptionals({...optionals, license: e.target.value})}} />
                     </div>
                 : null}

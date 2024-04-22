@@ -10,11 +10,17 @@ const competitionsUrl = process.env.GATEWAY_URL || process.env.COMPETITIONS_URL 
 
 
 // import function from utils.js
-const { calculateCategory, getResults, getResultsByEvent, isOneDayAthlete } = require('./utils');
+const { calculateCategory, getResults, getResultsByEvent, isOneDayAthlete, getAthletesByKey, getAthleteById } = require('./utils');
 const { createDatabase, deleteDatabase, getDatabase, addAthlete, getAthletes, getAthlete } = require('./nano');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const { initDB } = require('./init');
+
+initDB();
+
+
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,6 +38,25 @@ app.get(`${prefix}`, async (req, res) => {
         });
         return;
     }
+
+    let athletes = await getAthletesByKey(key, 'global_athletes');
+
+    console.log(athletes);
+
+    athletes = athletes.map(athlete => {
+        return {
+            id: athlete.id,
+            bib: athlete.bib,
+            firstName: athlete.firstName,
+            lastName: athlete.lastName,
+            birthDate: athlete.birthDate,
+            gender: athlete.gender,
+            category: calculateCategory(new Date(athlete.birthDate), new Date(), athlete.gender),
+            club: athlete.club ? athlete.club : null,
+        }
+    });
+
+    /*
 
     const data = await axios.get(`https://www.beathletics.be/api/search/public/${key}`);
 
@@ -57,12 +82,15 @@ app.get(`${prefix}`, async (req, res) => {
             club: athlete.club ? athlete.club.abbr : null,
         }
     });
-
+    */
+   console.log(athletes);
     res.status(200).json({
         status: 'success',
         message: 'Athletes retrieved successfully',
         data: athletes,
     });
+
+    
 });
 
 app.get(`${prefix}/:id`, async (req, res) => {
@@ -85,6 +113,8 @@ app.get(`${prefix}/:id`, async (req, res) => {
         return;
     }
 
+    /*
+
     const data = await axios.get(`https://www.beathletics.be/api/athlete/new/${id}`);
 
     // check if data is empty
@@ -97,16 +127,23 @@ app.get(`${prefix}/:id`, async (req, res) => {
     }
     let athlete = data.data;
 
+    */
+
+    let athlete = await getAthleteById(id, 'global_athletes');
+
+    console.log(athlete);
+
     athlete = {
-        id: athlete.liveId,
+        id: athlete.id,
         bib: athlete.bib,
-        firstName: athlete.person.firstName,
-        lastName: athlete.person.lastName,
-        birthDate: athlete.person.birthDate,
-        gender: athlete.person.gender,
-        category: calculateCategory(new Date(athlete.person.birthDate), new Date(), athlete.person.gender),
-        club: athlete.club ? athlete.club.abbr : null,
-    } 
+        firstName: athlete.firstName,
+        lastName: athlete.lastName,
+        birthDate: athlete.birthDate,
+        gender: athlete.gender,
+        category: calculateCategory(new Date(athlete.birthDate), new Date(), athlete.gender),
+        club: athlete.club ? athlete.club : null,
+    };
+
 
     res.status(200).json({
         status: 'success',
@@ -196,12 +233,12 @@ app.post(`${prefix}`, async (req, res) => {
 
     const competition = (await axios.get(`${competitionsUrl}/api/competitions/${competitionId}`)).data.data;
 
-    const oneDay = true; //competition.oneDay;
+    const oneDay = competition.oneDay;
     if (!oneDay) {
         return res.status(400).json({ status: 'error', message: 'Competition does not allow one day athletes' });
     }
 
-    const oneDayBIB = 9000; //competition.oneDayBIB;
+    const oneDayBIB = parseInt(competition.oneDayBIB);
     // get next available bib number by check
     let bib = oneDayBIB;
     

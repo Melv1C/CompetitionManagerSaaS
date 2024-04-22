@@ -17,7 +17,8 @@ async function stripeInscriptions(dbName, inscriptionData, events, success_url, 
         success_url: success_url,
         cancel_url: cancel_url,
         inscriptionData: inscriptionData,
-        dbName: dbName
+        dbName: dbName,
+        email: inscriptionData[0].email
     };
     const response = await axios.post(url + '/api/stripe/checkout-sessions', stripeData);
     return response.data;

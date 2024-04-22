@@ -7,11 +7,13 @@ import {auth} from '../Firebase'
 
 import { ProfileInscriptions } from '../Components/ProfileInscriptions/ProfileInscriptions'
 
+import { sendEmailVerification } from 'firebase/auth'
+
 export const Profile = () => {
 
     const [user, setUser] = useState(null);
 
-    const [inscriptions, setInscriptions] = useState([]);
+    const [inscriptions, setInscriptions] = useState({});
 
     const handleLogout = () => {
         auth.signOut()
@@ -69,7 +71,15 @@ export const Profile = () => {
         })
     }, [user])
     
-    console.log(inscriptions);
+    const handleResendVerificationEmail = () => {
+        sendEmailVerification(auth.currentUser)
+        .then(() => {
+            alert("Email de vérification envoyé");
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
 
     return (
         <div className="page">
@@ -79,10 +89,19 @@ export const Profile = () => {
                 <h2>Informations personnelles</h2>
                 <p>Email: {user?.email}</p>
                 {user?.emailVerified ? null
-                    : <p>
-                        Votre email n'est pas vérifié. 
-                        <button onClick={() => {user?.sendEmailVerification()}}>Renvoyer l'email de vérification</button>
-                    </p>
+                    : <div className="email-not-verified">
+                        <h2>!!! Votre email n'est pas vérifié !!!</h2>
+                        <p>Si vous venez de vérifier votre email, veuillez juste rafraîchir la page</p>
+                        <p>Vous n'avez pas reçu l'email ? </p>
+                        <ul>
+                            <li>Vérifiez votre dossier spam ou courrier indésirable</li>
+                            <li>
+                                <button className='resend-btn' onClick={() => {handleResendVerificationEmail()}}>Renvoyer l'email de vérification</button>
+                            </li>
+                            <li>Contactez-nous</li>
+                        </ul>
+                    </div>
+                    
                 }
 
                 <button onClick={handleLogout} className="logout-btn">Se déconnecter</button>
@@ -90,7 +109,7 @@ export const Profile = () => {
             </div>
             <div className="inscriptions">
                 <h2>Mes inscriptions</h2>
-                <ProfileInscriptions inscriptions={inscriptions} />
+                <ProfileInscriptions inscriptions={inscriptions} userId={user?.uid} />
             </div>
             
         </div>

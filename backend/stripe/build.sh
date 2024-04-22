@@ -13,6 +13,7 @@ DOCKER_ID=$1
 # Copy utils.js from inscriptions folder to stripe folder
 echo "Copying utils.js from inscriptions folder to stripe folder..."
 cp ../inscriptions/src/utils.js ./src/utils.js
+cp ../inscriptions/src/nano.js ./src/nano.js
 
 # Build the Docker image
 echo "Building the Docker image..."

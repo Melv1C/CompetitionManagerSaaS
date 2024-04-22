@@ -9,11 +9,11 @@ npm run build
 
 # 2. Copy the build folder to the vps
 ROOT=root
-VPS_IP=competitionmanager.be
-scp -r build/ $ROOT@$VPS_IP:~/build
+VPS_IP="193.203.191.211"
+scp -r build/ $ROOT@$VPS_IP:~/
 
 # 3. Restart the gateway
-# ssh $ROOT@$VPS_IP "docker-compose restart gateway"
+ssh $ROOT@$VPS_IP "docker-compose restart gateway"
 
 
 

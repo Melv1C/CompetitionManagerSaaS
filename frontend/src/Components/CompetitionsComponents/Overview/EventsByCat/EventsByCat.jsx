@@ -6,8 +6,6 @@ import './EventsByCat.css';
 
 export const EventsByCat = ({events}) => {
 
-    console.log(events);
-
     const modifiedEvents = events.map(event => {
         return {
             categories: event.categories.map(category => {
@@ -25,6 +23,8 @@ export const EventsByCat = ({events}) => {
         }
     });
 
+    console.log(modifiedEvents);
+
     const categories = modifiedEvents.map(event => event.categories).flat();
     const sortedCategories = SortCategory(categories);
     const groupedCategories = groupByGender(sortedCategories);
@@ -40,9 +40,9 @@ export const EventsByCat = ({events}) => {
                                 <div key={index} className="category">
                                     <div className="category-title">{category}</div>
                                     <div className="events-div">
-                                        {[...new Set(modifiedEvents.filter(event => event.categories.includes(category)))].map((event, index) => {
+                                        {[...new Set(modifiedEvents.filter(event => event.categories.includes(category)).map(event => event.abbr))].sort().map((event, index) => {
                                             return (
-                                                <div key={index} className="event">{event.abbr}</div>
+                                                <div key={index} className="event">{event}</div>
                                             )
                                         })}
                                     </div>
@@ -60,9 +60,9 @@ export const EventsByCat = ({events}) => {
                                 <div key={index} className="category">
                                     <div className="category-title">{category}</div>
                                     <div className="events-div">
-                                        {modifiedEvents.filter(event => event.categories.includes(category)).map((event, index) => {
+                                        {[...new Set(modifiedEvents.filter(event => event.categories.includes(category)).map(event => event.abbr))].sort().map((event, index) => {
                                             return (
-                                                <div key={index} className="event">{event.abbr}</div>
+                                                <div key={index} className="event">{event}</div>
                                             )
                                         })}
                                     </div>

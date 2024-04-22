@@ -7,7 +7,7 @@ function checkParams(userId, athleteId, events, records, success_url, cancel_url
     if (!userId || typeof userId !== 'string') {
         return { status: 'error', message: 'Invalid userId' };
     }
-    if (!athleteId || typeof athleteId !== 'string') {
+    if (!athleteId) {
         return { status: 'error', message: 'Invalid athleteId' };
     }
     if (!events || !Array.isArray(events) || events.length === 0) {

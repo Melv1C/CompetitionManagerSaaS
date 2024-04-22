@@ -7,7 +7,7 @@ import { COMPETITIONS_URL } from '../../Gateway'
 
 export const CompetitionsList = () => {
 
-    const [competitions, setCompetitions] = React.useState([]);
+    const [competitions, setCompetitions] = React.useState(null);
 
     useEffect(() => {
         axios.get(`${COMPETITIONS_URL}`)
@@ -20,15 +20,19 @@ export const CompetitionsList = () => {
             });
     }, [])
 
-  return (
-    <div className="competitions-list">
+    if (competitions === null) {
+        return <div className="competitions-list">Chargement...</div>
+    }
 
-        {competitions.length === 0 && <div className="competitions-list-no-competitions">Aucune compétition</div>}
-        
-        {competitions.map((competition) => {
-            return <CompetitionsItem key={competition.id} competition={competition}/>
-        })}
+    return (
+        <div className="competitions-list">
 
-    </div>    
-  )
+            {competitions.length === 0 && <div className="competitions-list-no-competitions">Aucune compétition</div>}
+            
+            {competitions.map((competition) => {
+                return <CompetitionsItem key={competition.id} competition={competition}/>
+            })}
+
+        </div>    
+    )
 }

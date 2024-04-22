@@ -73,7 +73,6 @@ export const Inscription = ({competition}) => {
 
     const athleteId = searchParams.get('athleteId');
     const setAthleteId = (athlete) => {
-        console.log(athlete);
         if (athlete === null) {
             setSearchParams(prev => {
                 prev.delete('athleteId');
@@ -92,12 +91,21 @@ export const Inscription = ({competition}) => {
     const [events, setEvents] = useState([]);
     const [records, setRecords] = useState({});
 
-    const setRecord = (event, record, subEvent=null) => {
-
+    const setRecord = (event, record, subEvent=null, type=null) => {
         setRecords((prevRecords) => {
             if (subEvent) {
+                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                    return prevRecords;
+                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                    return prevRecords;
+                }
                 return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
             } else {
+                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                    return prevRecords;
+                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                    return prevRecords;
+                }
                 return {...prevRecords, [event]: record}
             }
         })
@@ -108,7 +116,9 @@ export const Inscription = ({competition}) => {
         if (athleteId) {
             axios.get(`${ATLHETES_URL}/${athleteId}`)
             .then(res => {
-                setAthlete(res.data.data);
+                const athlete = res.data.data;
+                athlete.id = athlete.id.toString();
+                setAthlete(athlete);
             })
             .catch(err => {
                 console.log(err);
@@ -201,7 +211,6 @@ export const Inscription = ({competition}) => {
                     
 
                     const events = (await axios.get(`${COMPETITIONS_URL}/${competition.id}/events?category=${athlete.category}`)).data.data;
-                    console.log(events);
                     for (let i of athleteInscriptions) {
                         const event = events.find(e => e.pseudoName === i.event);
                         if (event) {
@@ -236,10 +245,6 @@ export const Inscription = ({competition}) => {
         }
     }, [athlete])
 
-    useEffect(() => {
-        console.log(step);
-    }, [step])
-
     if (!user) {
         return (
             <div className='competition-page'>
@@ -251,7 +256,7 @@ export const Inscription = ({competition}) => {
     return (
         <div className='competition-page'>
             <ProgressBar step={step} />
-            {step === -1 ? <OneDayAthlete competitionId={id} isForeignAthlete={isForeignAthlete} setStep={setStep} setAthleteId={setAthleteId} /> : null}
+            {step === -1 ? <OneDayAthlete competitionId={id} isForeignAthlete={isForeignAthlete} setStep={setStep} setAthleteId={setAthleteId} setIsForeignAthlete={setIsForeignAthlete} /> : null}
 
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} setIsForeignAthlete={setIsForeignAthlete} /> : null}
             {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} freeEvents={freeEvents} /> : null}

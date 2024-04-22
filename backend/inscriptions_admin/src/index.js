@@ -38,6 +38,28 @@ function checkPermission(competitionId, adminId) {
         });
 }
 
+
+// Get all inscriptions for a competition for BackUp
+app.get(`${prefix}/backup/:competitionId`, async (req, res) => {
+    const { competitionId } = req.params;
+    const { adminId } = req.query;
+
+    try {
+        await checkPermission(competitionId, adminId);
+    } catch (err) {
+        return res.status(403).json({ status: 'error', message: err.message });
+    }
+
+    getInscriptions(`competition_${competitionId}`)
+        .then((inscriptions) => {
+            res.status(200).json({ status: 'success', message: 'Inscriptions retrieved successfully', data: inscriptions });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching inscriptions' });
+        });
+});
+
 app.get(`${prefix}/:competitionId`, async (req, res) => {
     const { competitionId } = req.params;
     const { adminId } = req.query;

@@ -1,7 +1,7 @@
 import React from 'react'
 import './AuthModal.css'
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../Firebase';
 
 export const LoginModal = (props) => {
@@ -35,6 +35,27 @@ export const LoginModal = (props) => {
         });
     }
 
+    const handleForgotPassword = () => {
+        // get email from an alert
+        const input = prompt("Veuillez entrer votre email");
+        if (input === null) {
+            alert("Email invalide");
+            return;
+        }
+        sendPasswordResetEmail(auth, input)
+        .then(() => {
+            alert("Email de réinitialisation envoyé");
+        })
+        .catch((error) => {
+            console.log(error);
+            if (error.code === "auth/user-not-found") {
+                setError("Utilisateur non trouvé");
+            } else {
+                setError("Une erreur s'est produite");
+            }
+        });
+    }
+
     return (
         <div className="modal">
             <div className="modal-content">
@@ -49,6 +70,8 @@ export const LoginModal = (props) => {
                 </form>
 
                 <p className="error">{error}</p>
+
+                <p>Vous avez oublié votre mot de passe ? <a onClick={handleForgotPassword}>Mot de passe oublié</a></p>
 
                 <p>Vous n'avez pas de compte ? <a onClick={()=>{props.setLogin(false)}}>S'inscrire</a></p>
             </div>

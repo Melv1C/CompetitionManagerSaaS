@@ -99,6 +99,11 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
     let lastChange = new Date();
 
     function onChange(e) {
+        if (e.target.value.length < 4) {
+            setAthletes([]);
+            setLoading(false);
+            return;
+        }
         lastChange = new Date();
         setTimeout(() => {
             if (new Date() - lastChange >= 599) {
@@ -111,13 +116,29 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
 
         if (keyword === '') {
             setAthletes([]);
+            setLoading(false);
             return;
         }
         
         setLoading(true);
 
-        axios.get(`${ATLHETES_URL}?key=${keyword}`)
+        const timeoutPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                setLoading(false);
+                resolve('timeout');
+            }, 10000);
+        });
+        
+        const requestPromise = axios.get(`${ATLHETES_URL}?key=${keyword}`)
+        
+        Promise.race([timeoutPromise, requestPromise])
         .then(res => {
+            if (res === 'timeout') {
+                console.log('request timeout');
+                alert('La recherche a pris trop de temps. Veuillez réessayer. En cas de problème persistant, veuillez nous contacter.');
+                window.location.reload();
+                return;
+            }
             const athletes = res.data.data;
             setLoading(false);
             setAthletes(athletes);
@@ -125,7 +146,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
         .catch(err => {
             setLoading(false);
             console.log(err);
-        }) 
+        })
     }
 
     useEffect(() => {
@@ -136,7 +157,6 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
         
         axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${auth.currentUser.uid}`)
         .then(res => {
-            console.log(res.data.data);
             if (res.data.data.isInsribed && res.data.data.ownByUser) {
                 setEnableNext(true);
             } else if (!res.data.data.isInsribed) {

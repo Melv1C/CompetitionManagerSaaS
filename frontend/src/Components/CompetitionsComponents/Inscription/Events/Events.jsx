@@ -17,7 +17,7 @@ function EventsList({availableEvents, events, setEvents, competitionId, inscript
 
     return (
         <div className='events-list'>
-            {availableEvents.map((event, index) => {
+            {availableEvents.sort((a, b) => a.time.localeCompare(b.time)).map((event, index) => {
                 return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} inscriptions={inscriptions} free={free} />
             })}
         </div>

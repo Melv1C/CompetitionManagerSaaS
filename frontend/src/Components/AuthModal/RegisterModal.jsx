@@ -1,7 +1,7 @@
 import React from 'react'
 import './AuthModal.css'
 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../Firebase';
 
 
@@ -23,7 +23,8 @@ export const RegisterModal = (props) => {
                 // Signed in 
                 var user = userCredential.user;
                 console.log(user);
-                // ...
+                // send verification email
+                sendEmailVerification(user)
             })
             .catch((error) => {
                 console.log(error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { COMPETITIONS_URL } from '../../Gateway'
+import { COMPETITIONS_URL, INSCRIPTIONS_URL } from '../../Gateway'
 
 import { formatRecord } from '../../RecordsHandler'
 
@@ -11,19 +11,31 @@ import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
 
 import './ProfileInscriptions.css'
 
-export const ProfileInscriptions = ({inscriptions}) => {
+import axios from 'axios'
+
+export const ProfileInscriptions = ({inscriptions, userId}) => {
+    console.log(inscriptions);
+    if (Object.keys(inscriptions).length === 0) {
+        return (
+            <div className="profileInscriptions">
+                <div className="noInscriptions">
+                    Vous n'avez pas d'inscriptions pour le moment
+                </div>
+            </div>
+        )
+    }
     return (
         <div className="profileInscriptions">
             <div className="competitions">
                 {Object.keys(inscriptions).map((competitionId) => {
-                    return <Competition key={competitionId} competitionId={competitionId} inscriptions={inscriptions[competitionId]} />
+                    return <Competition key={competitionId} competitionId={competitionId} inscriptions={inscriptions[competitionId]} userId={userId} />
                 })}
             </div>
         </div>
     )
 }
 
-const Competition = ({competitionId, inscriptions}) => {
+const Competition = ({competitionId, inscriptions, userId}) => {
 
     const [competition, setCompetition] = useState(null);
 
@@ -49,31 +61,27 @@ const Competition = ({competitionId, inscriptions}) => {
             })
     }, [competitionId])
 
-    console.log(competition)
-
-    
-
     return (
         <div className="competition">
             <div className="competitionTitle">
                 {competition?.name}
             </div>
-            <Athletes inscriptions={inscriptionsWithHours} />
+            <Athletes inscriptions={inscriptionsWithHours} userId={userId} />
         </div>
     )
 }
 
-const Athletes = ({inscriptions}) => {
+const Athletes = ({inscriptions, userId}) => {
     return (
         <div className="athletes">
             {Object.keys(inscriptions).map((athleteId) => {
-                return <Athlete key={athleteId} athleteId={athleteId} inscriptions={inscriptions[athleteId]} />
+                return <Athlete key={athleteId} athleteId={athleteId} inscriptions={inscriptions[athleteId]} userId={userId} />
             })}
         </div>
     )
 }
 
-const Athlete = ({athleteId, inscriptions}) => {
+const Athlete = ({athleteId, inscriptions, userId}) => {
     const firstInscription = inscriptions[0];
     return (
         <div className="athlete">
@@ -87,13 +95,35 @@ const Athlete = ({athleteId, inscriptions}) => {
                         <FontAwesomeIcon icon={faEdit} /> Modifier
                     </div>
                 </Link>
-                <div className="delete" onClick={() => console.log('todo delete')}>
+                <div className="delete" onClick={() => handleDelete(firstInscription.competitionId, athleteId, userId)}>
                     <FontAwesomeIcon icon={faTrash} /> Supprimer
                 </div>
             </div>
         </div>
     )
 }
+
+const handleDelete = (competitionId, athleteId, userId) => {
+    // prompt user to confirm deletion
+    const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer cette inscription ?");
+    if (!confirmation) return;
+
+    // delete inscription
+    const body = {
+        userId: userId
+    };
+    axios.delete(`${INSCRIPTIONS_URL}/${competitionId}/${athleteId}`, {data: body})
+        .then((response) => {
+            console.log(response);
+            window.location.reload();
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+
+
+}
+
 
 const Inscriptions = ({inscriptions}) => {
     return (
