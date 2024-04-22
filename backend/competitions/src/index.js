@@ -212,7 +212,7 @@ app.post('/api/competitions', async (req, res) => {
             email : req.body.email,
             confirmationTime : req.body.confirmationTime,
             oneDay : req.body.oneDay || false,
-            oneDayBIB : req.body.oneDayBIB || 0,
+            oneDayBIB : req.body.oneDayBIB || 9000,
         }
         const check = checkInputCompetitions(competInfo);
         if (check[0] === false){
@@ -535,7 +535,7 @@ app.put('/api/competitions/:id', async (req, res) => {
             email : req.body.email,
             confirmationTime : req.body.confirmationTime,
             oneDay : req.body.oneDay || false,
-            oneDayBIB : req.body.oneDayBIB || 0,
+            oneDayBIB : req.body.oneDayBIB || 9000,
         }
         const check = checkInputCompetitions(competInfo);
         if (check[0] === false){
