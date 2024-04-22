@@ -1,6 +1,4 @@
-- suprimer une inscription frontend (tester)
-- palce restante -> nb athlète
-- epr n'est cocher lorsque modif alors qu'inscrit
+- check block if email not verified in inscription
 
 - Confirmation en mieux
 - Endroit pour voir les inscription supprimer	

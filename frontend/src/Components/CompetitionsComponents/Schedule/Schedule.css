@@ -73,7 +73,6 @@
 
 .schedule-item .schedule-item-info .schedule-item-icon.disabled {
     background-color: #ccc;
-    cursor: not-allowed;
 }
 
 .schedule-item .schedule-item-info .schedule-item-icon * {
