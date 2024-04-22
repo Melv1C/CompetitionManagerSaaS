@@ -14,7 +14,6 @@ import './ProfileInscriptions.css'
 import axios from 'axios'
 
 export const ProfileInscriptions = ({inscriptions, userId}) => {
-    console.log(inscriptions);
     if (Object.keys(inscriptions).length === 0) {
         return (
             <div className="profileInscriptions">

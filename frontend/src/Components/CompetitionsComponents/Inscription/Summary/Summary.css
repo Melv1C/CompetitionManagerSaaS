@@ -17,11 +17,33 @@
 
 .athlete-summary {
     display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.athlete-summary .athlete-summary-item{
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border-radius: 5px;
     width: 80%;
+}
+
+.athlete-summary .athlete-summary-item h3 {
+    text-align: left;
+    width: 100%;
+    margin: 0;
+}
+
+.athlete-summary .athlete-summary-item .athlete-summary-content {
+    text-align: right;
+    width: 100%;
 }
 
 .events-records-summary {
@@ -95,6 +117,31 @@
 .total-cost-content {
     font-size: 1.2em;
     font-weight: bold;
+}
+
+/*<div className='accept-data'>
+            <input type='checkbox' id='accept-data' name='accept-data' value={acceptData} onChange={(e) => setAcceptData(e.target.value)} />
+            <label htmlFor='accept-data'>J'accepte l'utilisation de mes données dans le cadre de la compétition.</label>
+        </div>*/
+
+.accept-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.accept-data input {
+    margin-right: 10px;
+
+    /* bigger */
+    width: 15px;
+    height: 15px;
+}
+
+.accept-data label {
+    font-size: 1em;
 }
 
 

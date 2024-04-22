@@ -92,13 +92,13 @@ export const Profile = () => {
                     : <div className="email-not-verified">
                         <h2>!!! Votre email n'est pas vérifié !!!</h2>
                         <p>Si vous venez de vérifier votre email, veuillez juste rafraîchir la page</p>
-                        <p>Vous n'avez pas reçu l'email ? </p>
+                        <p>Si vous n'avez pas reçu l'email ? </p>
                         <ul>
                             <li>Vérifiez votre dossier spam ou courrier indésirable</li>
                             <li>
                                 <button className='resend-btn' onClick={() => {handleResendVerificationEmail()}}>Renvoyer l'email de vérification</button>
                             </li>
-                            <li>Contactez-nous</li>
+                            <li>Contactez-nous à l'adresse suivante: <a href="mailto:claeswebcreations@gmail.com">claeswebcreations@gmail.com</a></li>
                         </ul>
                     </div>
                     

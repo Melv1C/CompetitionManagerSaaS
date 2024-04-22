@@ -41,6 +41,7 @@ export const NavBar = () => {
     }, [path])
 
     const [showModal, setShowModal] = useState(false);
+    const [login, setLogin] = useState(true);
 
     return (
         <>
@@ -63,14 +64,17 @@ export const NavBar = () => {
                     </ul>
                     <div className='navbar-login-user'>
                         {!user ? 
-                        <button onClick={()=>{setBurger(false); setShowModal(true)}}>Se connecter</button>
+                        <>
+                            <button onClick={()=>{setBurger(false); setShowModal(true); setLogin(true)}}>Se connecter</button>
+                        </>
+
                         : null
                         }
                     </div>
                 </div>
 
             </div>
-            <AuthModal show={showModal} setShow={setShowModal} />
+            <AuthModal show={showModal} setShow={setShowModal} login={login} setLogin={setLogin} />
         </>
     )
 }

@@ -5,19 +5,17 @@ import { RegisterModal } from './RegisterModal';
 
 export const AuthModal = (props) => {
 
-    const [login, setLogin] = React.useState(true);
-
     if (!props.show) {
         return null;
     }
 
-    if (login) {
+    if (props.login) {
         return (
-            <LoginModal setShow={props.setShow} setLogin={setLogin} />
+            <LoginModal setShow={props.setShow} setLogin={props.setLogin} />
         )
     } else {
         return (
-            <RegisterModal setShow={props.setShow} setLogin={setLogin} />
+            <RegisterModal setShow={props.setShow} setLogin={props.setLogin} />
         )
     }
 }

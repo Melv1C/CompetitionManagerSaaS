@@ -1,9 +1,10 @@
 import React from 'react'
 import './AuthModal.css'
 
+import { Email, Password, PasswordConfirm } from './Input';
+
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../../Firebase';
-
 
 
 export const RegisterModal = (props) => {
@@ -25,6 +26,14 @@ export const RegisterModal = (props) => {
                 console.log(user);
                 // send verification email
                 sendEmailVerification(user)
+
+                props.setShow(false);
+
+                // alert user to verify email
+                alert("Afin de finaliser la création de votre compte, veuillez vérifier votre compte en cliquant sur le lien envoyé à votre adresse email");
+
+                // redirect to profile page
+                window.location.href = "/profile";
             })
             .catch((error) => {
                 console.log(error);
@@ -50,11 +59,9 @@ export const RegisterModal = (props) => {
                 <span className="close" onClick={()=>{props.setShow(false)}}>&times;</span>
                 <h2>S'inscrire</h2>
                 <form onSubmit={handleRegister}>
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Email" value={email} onChange={(e)=>{setEmail(e.target.value)}} required/>
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" placeholder="Mot de passe" value={password} onChange={(e)=>{setPassword(e.target.value)}} required/>
-                    <input type="password" id="password2" name="password2" placeholder="Confirmer le mot de passe" value={password2} onChange={(e)=>{setPassword2(e.target.value)}} required/>
+                    <Email email={email} setEmail={setEmail} />
+                    <Password password={password} setPassword={setPassword} />
+                    <PasswordConfirm password2={password2} setPassword2={setPassword2} />
                     <button type="submit">S'inscrire</button>
                 </form>
 

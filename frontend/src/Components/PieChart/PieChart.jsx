@@ -15,8 +15,10 @@ export const PieChart = ({data, title}) => {
         return <div>Loading...</div>
     }
 
-    const values = Object.values(data).map(val => val.value);
-    const labels = Object.values(data).map(val => val.key);
+    const sortedData = Object.values(data).sort((a, b) => a.value - b.value);
+
+    const values = Object.values(sortedData).map(val => val.value);
+    const labels = Object.values(sortedData).map(val => val.key);
 
     const total = values.reduce((a, b) => a + b, 0);
     
