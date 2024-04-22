@@ -17,7 +17,7 @@ function EventsList({availableEvents, events, setEvents, competitionId, inscript
 
     return (
         <div className='events-list'>
-            {availableEvents.map((event, index) => {
+            {availableEvents.sort((a, b) => a.time.localeCompare(b.time)).map((event, index) => {
                 return <EventItem key={index} event={event} setEvents={setEvents} events={events} competitionId={competitionId} inscriptions={inscriptions} free={free} />
             })}
         </div>
@@ -118,6 +118,20 @@ export const Events = ({events, setEvents, setStep, competitionId, category, fre
             console.log(err);
         })
     }, [competitionId, category])
+
+    // if freeEvents change, update events cost
+    useEffect(() => {
+        let availableEventsData = availableEvents;
+
+        availableEventsData = availableEventsData.map(e => {
+            if (freeEvents.has(e.pseudoName)) {
+                e.cost = 0;
+            }
+            return e;
+        })
+
+        setAvailableEvents(availableEventsData);
+    }, [freeEvents])
 
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${competitionId}`)

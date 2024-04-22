@@ -379,29 +379,31 @@ function GlobalInfo (props) {
     }
     return (
         <div className={className} onClick={(event) => {
-            if (!['text', 'number', 'time'].includes(event.target.type)) {
+            if (event.target.className.includes('eventStep') || event.target.className.includes('titleInfo')) {
                 props.changeStep("globalInfo");
             }
         }}>
             <FontAwesomeIcon icon={faChevronDown} className='displayArrow'/>
-            <label htmlFor="pseudoName" className={props.showStep.globalInfo ? "margin-bot":""}>
+            <label htmlFor="pseudoName" className={props.showStep.globalInfo ? "margin-bot titleInfo":"titleInfo"}>
                 {props.showStep.globalInfo || props.pseudoName === "" || props.maxParticipants === "" || props.cost === "" ? "Info" : "Info : "+props.pseudoName+" / "+props.time+" / "+props.maxParticipants+"places" + (props.competition.paid ? " / "+props.cost+"€" : "")}
             </label>
-            <div className='toHideInfo globalInfo'>
-                <label htmlFor="pseudoName">Nom : </label>
-                <input type="text" id="pseudoName" name="pseudoName" value={props.pseudoName} onChange={(e) => props.setPseudoName(e.target.value)}/>
+            <div className='noClose'>
+                <div className='toHideInfo globalInfo'>
+                    <label htmlFor="pseudoName">Nom : </label>
+                    <input type="text" id="pseudoName" name="pseudoName" value={props.pseudoName} onChange={(e) => props.setPseudoName(e.target.value)}/>
 
-                <label htmlFor="maxParticipants">Nb de place : </label>
-                <input type="number" id="maxParticipants" name="maxParticipants" value={props.maxParticipants} onChange={(e) => props.setMaxParticipants(e.target.value)}/>
+                    <label htmlFor="maxParticipants">Nb de place : </label>
+                    <input type="number" id="maxParticipants" name="maxParticipants" value={props.maxParticipants} onChange={(e) => props.setMaxParticipants(e.target.value)}/>
 
-                <label htmlFor="time">Heure de début : </label>
-                <input type="time" id="time" name="time" value={props.time} onChange={(e) => props.setTime(e.target.value)}/>
-                { props.competition.paid && (
-                    <>
-                        <label htmlFor="cost">Prix : </label>
-                        <input type="number" id="cost" name="cost" value={props.cost} onChange={(e) => props.setCost(e.target.value)}/>
-                    </>
-                )}
+                    <label htmlFor="time">Heure de début : </label>
+                    <input type="time" id="time" name="time" value={props.time} onChange={(e) => props.setTime(e.target.value)}/>
+                    { props.competition.paid && (
+                        <>
+                            <label htmlFor="cost">Prix : </label>
+                            <input type="number" id="cost" name="cost" value={props.cost} onChange={(e) => props.setCost(e.target.value)}/>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
@@ -474,7 +476,7 @@ function CategorySelect (props) {
 
     return (
         <div className={className} onClick={(event) => {
-            if (event.target.type !== 'checkbox' && event.target.type !== 'submit') {
+            if (!event.target.className.includes('noCloseElem') && event.target.type !== 'submit') {
                 props.changeStep("category");
             }
         }}>
@@ -511,10 +513,16 @@ function CategorySelect (props) {
                 {lenghtCat === 0 ? <p>Selectionner d'abord une épreuve</p> : null}
                 <div className='catSelect'>
                     {Object.keys(props.categories).map((categorie, index) => (
-                        <div key={index} className='category'> 
-                            <label htmlFor={categorie}>{categorie}</label>
+                        <div key={index} className='category noCloseElem'
+                        onClick={
+                            (e) => {
+                                document.getElementById(categorie).click();
+                            }
+                        }> 
+                            <label className='noCloseElem'>{categorie}</label>
                             <input 
                                 type="checkbox" 
+                                className='noCloseElem'
                                 id={categorie} 
                                 name={categorie} 
                                 value={categorie} 
@@ -525,6 +533,11 @@ function CategorySelect (props) {
                                     props.setCategories(newCategories);
                                 }} 
                                 checked={props.categories[categorie]}
+                                onClick={
+                                    (e) => {
+                                        e.stopPropagation();
+                                    }
+                                }
                             />
                         </div>
                     ))}

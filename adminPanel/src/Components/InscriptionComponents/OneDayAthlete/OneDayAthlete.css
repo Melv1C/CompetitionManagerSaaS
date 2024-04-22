@@ -3,6 +3,11 @@
   flex-direction: column;
   align-items: center;
 }
+.one-day-athlete p.info {
+  font-size: 1.2em;
+  margin: 20px 0;
+  color: var(--secondary-color);
+}
 .one-day-athlete .form {
   max-width: 500px;
   display: flex;

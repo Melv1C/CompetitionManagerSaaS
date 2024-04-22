@@ -40,30 +40,36 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
     const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
     const isSubEvent = event.superEvent !== undefined;
 
-    console.log(event);
-
     useEffect(() => {
         if (record === undefined) {
-            axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=1`)
+            setTimeout(() => {
+                if (isMultiEvent) {
+                    setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
+                } else if (isSubEvent) {
+                    setRecord(event.superEvent, "0", event.name, "setTo0IfUndef")
+                } else {
+                    setRecord(event.pseudoName, "0", null, "setTo0IfUndef")
+                }
+            }, 3000);
+
+            axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=2`)
                 .then(response => {
                     if (isMultiEvent) {
-                        setRecord(event.pseudoName, response.data.data.perf, "total");
+                        setRecord(event.pseudoName, response.data.data.perf, "total", "setToRecordIfNot0");
                     } else if (isSubEvent) {
-                        setRecord(event.superEvent, response.data.data.perf, event.name);
+                        setRecord(event.superEvent, response.data.data.perf, event.name, "setToRecordIfNot0");
                     } else {
-                        setRecord(event.pseudoName, response.data.data.perf);
+                        setRecord(event.pseudoName, response.data.data.perf, null, "setToRecordIfNot0");
                     }
                 })
                 .catch(error => {
-                    // if the athlete has no record, 404 is returned
-                    if (error.response.status === 404) {
-                        if (isMultiEvent) {
-                            setRecord(event.pseudoName, "0", "total");
-                        } else if (isSubEvent) {
-                            setRecord(event.superEvent, "0", event.name);
-                        } else {
-                            setRecord(event.pseudoName, "0");
-                        }
+                    console.log(error);
+                    if (isMultiEvent) {
+                        setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
+                    } else if (isSubEvent) {
+                        setRecord(event.superEvent, "0", event.name, "setTo0IfUndef")
+                    } else {
+                        setRecord(event.pseudoName, "0", null, "setTo0IfUndef")
                     }
                 });
         }
@@ -232,7 +238,7 @@ function TimeInput({record, setRecord, event}) {
                     onWheel={(e) => e.target.blur()}
                 />
             </div>
-            <div className='record-item-input-number-label'>"</div>
+            <div className='record-item-input-number-label'>'</div>
             <div className='record-item-input-number'>
                 <input 
                     type='number' 
@@ -265,7 +271,7 @@ function TimeInput({record, setRecord, event}) {
                     onWheel={(e) => e.target.blur()}
                 />
             </div>
-            <div className='record-item-input-number-label'>'</div>
+            <div className='record-item-input-number-label'>"</div>
             <div className='record-item-input-number'>
                 <input
                     type='number'
@@ -378,9 +384,6 @@ function PointsInput({record, setRecord, event}) {
 }
 
 export const Records = ({events, records, setRecord, setStep}) => {
-
-    console.log(events);
-    console.log(records);
 
     const [searchParams, setSearchParams] = useSearchParams();
 

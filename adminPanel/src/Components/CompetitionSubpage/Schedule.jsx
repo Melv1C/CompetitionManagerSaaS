@@ -39,14 +39,12 @@ function EventItem({event, id, user}) {
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${id}?event=${event.pseudoName}`)
             .then((response) => {
-
                 let inscriptions = response.data.data;
-
                 inscriptions = inscriptions.filter((inscription) => {
                     return inscription.event === event.pseudoName;
-                });//??????????
-
+                });
                 setInscriptions(inscriptions);
+                console.log(event, inscriptions);
             })
             .catch((error) => {
                 console.log(error);

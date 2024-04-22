@@ -146,12 +146,6 @@ app.post(`${prefix}/:competitionId`, async (req, res) => {
     if (checkInscriptions(inscriptions, athleteId)) {
         return res.status(400).json({ status: 'error', message: 'Athlete already inscribed' });
     }
-    
-    // check if place is available (if event.maxParticipants compare with number of inscriptions)
-    // const checkPlaceAvailableResult = checkPlaceAvailable(eventsInfo, inscriptions);
-    // if (checkPlaceAvailableResult) {
-    //     return res.status(400).json(checkPlaceAvailableResult);
-    // }
 
     // Timestamp
     const timestamp = new Date();
@@ -174,7 +168,8 @@ app.post(`${prefix}/:competitionId`, async (req, res) => {
             eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
             parentEvent: null,
             cost: 0, 
-            confirmed: false
+            confirmed: false,
+            inscribed: true
         });   
         
         for (let subEvent of event.subEvents) {
@@ -193,7 +188,8 @@ app.post(`${prefix}/:competitionId`, async (req, res) => {
                 eventType: "subEvent",
                 parentEvent: event.pseudoName,
                 cost: 0,
-                confirmed: false
+                confirmed: false,
+                inscribed: true
             });
         }
     }
@@ -351,7 +347,8 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
                 eventType: (event.subEvents.length == 0) ? "event" : "multiEvent",
                 parentEvent: null,
                 cost: 0,
-                confirmed: false
+                confirmed: false,
+                inscribed: true
             });   
             
             for (let subEvent of event.subEvents) {
@@ -370,7 +367,8 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
                     eventType: "subEvent",
                     parentEvent: event.pseudoName,
                     cost: 0,
-                    confirmed: false
+                    confirmed: false,
+                    inscribed: true
                 });
             }
 

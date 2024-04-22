@@ -20,7 +20,7 @@ export const EventsList = (props) => {
         })
     }, [competitionId]);
     if (props.competition.events.length === 0) {
-        return <div className="margin">Aucune épreuve</div>;
+        return <div className="margin center">Aucune épreuve</div>;
     }
     return (
         <div>

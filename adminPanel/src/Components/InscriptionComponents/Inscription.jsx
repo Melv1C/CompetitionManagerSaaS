@@ -66,7 +66,6 @@ export const Inscription = (props) => {
 
     const athleteId = searchParams.get('athleteId');
     const setAthleteId = (athlete) => {
-        console.log(athlete);
         if (athlete === null) {
             setSearchParams(prev => {
                 prev.delete('athleteId');
@@ -85,12 +84,21 @@ export const Inscription = (props) => {
     const [events, setEvents] = useState([]);
     const [records, setRecords] = useState({});
 
-    const setRecord = (event, record, subEvent=null) => {
-
+    const setRecord = (event, record, subEvent=null, type=null) => {
         setRecords((prevRecords) => {
             if (subEvent) {
+                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                    return prevRecords;
+                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                    return prevRecords;
+                }
                 return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
             } else {
+                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                    return prevRecords;
+                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                    return prevRecords;
+                }
                 return {...prevRecords, [event]: record}
             }
         })
@@ -101,7 +109,9 @@ export const Inscription = (props) => {
         if (athleteId) {
             axios.get(`${ATLHETES_URL}/${athleteId}`)
             .then(res => {
-                setAthlete(res.data.data);
+                const athlete = res.data.data;
+                athlete.id = athlete.id.toString();
+                setAthlete(athlete);
             })
             .catch(err => {
                 console.log(err);
@@ -170,7 +180,7 @@ export const Inscription = (props) => {
             .then(async res => {
                 const inscriptions = res.data.data;
                 const athleteInscriptions = inscriptions.filter(i => i.athleteId === athlete.id);
-                setFreeEvents(new Set(athleteInscriptions.map(i => i.event)));
+                //setFreeEvents(new Set(athleteInscriptions.map(i => i.event)));
                 // set events and records
                 if (athleteInscriptions.length > 0) {
 
@@ -181,7 +191,6 @@ export const Inscription = (props) => {
                     
 
                     const events = (await axios.get(`${COMPETITIONS_URL}/${id}/events?category=${athlete.category}`)).data.data;
-                    console.log(events);
                     for (let i of athleteInscriptions) {
                         const event = events.find(e => e.pseudoName === i.event);
                         if (event) {
@@ -207,7 +216,6 @@ export const Inscription = (props) => {
                             default:
                                 break;
                         }
-
                     }
                 }
                 
@@ -215,23 +223,37 @@ export const Inscription = (props) => {
         }
     }, [athlete])
 
+    // load free events
+    useEffect(() => {
+        if (!athlete) {
+            return;
+        }
+        console.log('loading free events');
+        axios.get(`${INSCRIPTIONS_URL}/${id}/freeEvents?athleteId=${athlete.id}`)
+        .then(res => {
+            setFreeEvents(new Set(res.data.data));
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }, [athlete])
 
-
-    if (!props.user) {
-        return (
-            <div className='competition-page'>
-                <h2>Veuillez vous connecter pour vous inscrire à une compétition</h2>
-            </div>
-        )
-    }
+    // change cost of event if in freeEvents
+    useEffect(() => {
+        for (let event of events) {
+            if (freeEvents.has(event.pseudoName)) {
+                event.cost = 0;
+            }
+        }
+    }, [freeEvents])
 
     return (
         <div className='competition-page'>
             <ProgressBar step={step} />
-            {step === -1 ? <OneDayAthlete competitionId={id} isForeignAthlete={isForeignAthlete} setStep={setStep} setAthleteId={setAthleteId} /> : null}
+            {step === -1 ? <OneDayAthlete competitionId={id} isForeignAthlete={isForeignAthlete} setStep={setStep} setAthleteId={setAthleteId} setIsForeignAthlete={setIsForeignAthlete} /> : null}
 
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} setIsForeignAthlete={setIsForeignAthlete} user={props.user}/> : null}
-            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={ true} freeEvents={freeEvents} /> : null}
+            {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={true} freeEvents={freeEvents} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} competitionId={id}/> : null}
             {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={true} user={props.user}/> : null}
             {step === 5 ? <Success competitionId={id} /> : null}

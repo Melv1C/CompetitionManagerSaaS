@@ -86,11 +86,11 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
             userId: user.uid,
             events: events.map(event => event.pseudoName),
             records: records,
+            email: undefined,
             success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
             cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
         })
         .then(res => {
-            console.log(res);
             if (res.status === 200) {
                 // if url returned, redirect to url
                 try {
@@ -108,14 +108,14 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
     console.log(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}`);
     axios.post(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}`, {
         userId: user.uid,
-        athleteId: athlete.id,
+        athleteId: athlete.id.toString(),
         events: events.map(event => event.pseudoName),
         records: records,
+        email: undefined,
         success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
         cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
     })
     .then(res => {
-        console.log(res);
         if (res.status === 200) {
             // redirect to res.data.url
             window.location.href = res.data.data.url;
@@ -132,7 +132,7 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
 }
 
 
-export const Summary = ({athlete, events, records, setStep, competitionId, user, free}) => {
+export const Summary = ({athlete, events, records, setStep, competitionId, free, freeEvents, user}) => {
     const [totalCost, setTotalCost] = useState(0);
     useEffect(() => {
         if (free) {
@@ -140,7 +140,7 @@ export const Summary = ({athlete, events, records, setStep, competitionId, user,
         } else {
             setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
         }
-    }, [events, free])
+    }, [events, free, freeEvents])
 
     if (!athlete) {
         return <div>Chargement...</div>
@@ -153,10 +153,6 @@ export const Summary = ({athlete, events, records, setStep, competitionId, user,
             eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});
         }
     }
-
-    console.log(eventsList);
-    console.log(records);
-
 
     return (
         <div className='step-page'>

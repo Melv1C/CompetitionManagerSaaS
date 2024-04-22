@@ -201,3 +201,14 @@
 .delTrash:hover{
     cursor: pointer;
 }
+
+.noClose{
+    width: 60%;
+}
+
+
+@media screen and (max-width: 500px){
+    .noClose{
+        width: auto;
+    }
+}

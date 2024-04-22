@@ -698,7 +698,7 @@ app.delete('/api/competitions/:id/:adminId', async (req, res) => {
                 message: 'Unauthorized',
             });
         }
-        const delIsncr = await axios.delete(`${process.env.INSCRIPTIONS_URL}/api/inscriptions/${competition.id}?adminId=${adminId}`).catch((err) => {
+        const delIsncr = await axios.delete(`${process.env.INSCRIPTIONS_ADMIN_URL}/api/admin/inscriptions/${competition.id}?adminId=${adminId}`).catch((err) => {
                 console.error(err);
                 return false;
             }

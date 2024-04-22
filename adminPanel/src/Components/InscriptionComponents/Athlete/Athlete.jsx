@@ -97,6 +97,11 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
     let lastChange = new Date();
 
     function onChange(e) {
+        if (e.target.value.length < 4) {
+            setAthletes([]);
+            setLoading(false);
+            return;
+        }
         lastChange = new Date();
         setTimeout(() => {
             if (new Date() - lastChange >= 599) {
@@ -109,13 +114,29 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
 
         if (keyword === '') {
             setAthletes([]);
+            setLoading(false);
             return;
         }
         
         setLoading(true);
 
-        axios.get(`${ATLHETES_URL}?key=${keyword}`)
+        const timeoutPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                setLoading(false);
+                resolve('timeout');
+            }, 10000);
+        });
+        
+        const requestPromise = axios.get(`${ATLHETES_URL}?key=${keyword}`)
+        
+        Promise.race([timeoutPromise, requestPromise])
         .then(res => {
+            if (res === 'timeout') {
+                console.log('request timeout');
+                alert('La recherche a pris trop de temps. Veuillez réessayer. En cas de problème persistant, veuillez nous contacter.');
+                window.location.reload();
+                return;
+            }
             const athletes = res.data.data;
             setLoading(false);
             setAthletes(athletes);
@@ -123,7 +144,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
         .catch(err => {
             setLoading(false);
             console.log(err);
-        }) 
+        })
     }
 
     useEffect(() => {
@@ -131,20 +152,6 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
             setEnableNext(false);
             return;
         }
-        axios.get(`${INSCRIPTIONS_URL}/${competitionId}/athletes/${athlete.id}?userId=${user.uid}`)
-        .then(res => {
-            console.log(res.data.data);
-            if (res.data.data.isInsribed && res.data.data.ownByUser) {
-                setEnableNext(true);
-            } else if (!res.data.data.isInsribed) {
-                setEnableNext(true);
-            } else {
-                setEnableNext(false);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        })
     }, [athlete, competitionId])
 
     return (
@@ -197,7 +204,7 @@ export const Athlete = ({athlete, setAthlete, setStep, competitionId, oneDay, se
             : 
             <>
                 <ChooseAthlete athlete={athlete} />
-                <ControlButtons setStep={setStep} setAthlete={setAthlete} enableNext={enableNext} />
+                <ControlButtons setStep={setStep} setAthlete={setAthlete} enableNext={true} />
             </>
             }
 
