@@ -7,3 +7,6 @@ package-lock.json
 /private_repo
 # all .env in backend
 /backend/**/.env
+
+# Remove backend/couchdb
+/backend/couchdb/
