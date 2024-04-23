@@ -104,8 +104,8 @@ async function getResults(athleteId) {
                 }
             }
         } catch (error) {
-            console.log(error);
-            console.log(result);
+            //console.log(error);
+            //console.log(result);
         }
     }
 

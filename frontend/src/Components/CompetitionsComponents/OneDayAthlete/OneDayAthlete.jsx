@@ -22,10 +22,32 @@ export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthl
             return;
         }
 
-        if (isForeignAthlete && (club === 'NA' || optionals.license === '')) {
+        if (isForeignAthlete && (club === 'NA' || optionals.license === '' || optionals.license === undefined)) {
             alert('Veuillez remplir tous les champs');
             return;
         }
+
+        // check if birthDate is correct
+        if (!isForeignAthlete) {
+            const minDate = new Date('2011-01-01');
+            const maxDate = new Date('2016-12-31');
+            const date = new Date(birthDate);
+            if (date < minDate || date > maxDate) {
+                alert('La date de naissance ne correspond pas à un athlète BPM (Benjamins 2015-2016, Pupilles 2013-2014, Minimes 2011-2012)');
+                return;
+            }
+        } else {
+            const maxDate = new Date('2016-12-31');
+            const date = new Date(birthDate);
+            if (date > maxDate) {
+                alert('Erreur dans la date de naissance: Athlète trop jeune.');
+                return;
+            }
+        }
+
+
+        // disable button
+        document.querySelector('.submit').disabled = true;
 
         axios.post(`${ATLHETES_URL}?competitionId=${competitionId}`, {
             firstName: firstName,
@@ -42,6 +64,8 @@ export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthl
         })
         .catch((error) => {
             console.log(error);
+            alert('Une erreur est survenue lors de l\'enregistrement de l\'athlète. Veuillez réessayer. Si le problème persiste, contactez nous.');
+            document.querySelector('.submit').disabled = false;
         });
     }
 
@@ -70,7 +94,16 @@ export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthl
                 </div>
                 <div className='form-group'>
                     <label htmlFor="birthDate">Date de naissance</label>
-                    <input type="date" id='birthDate' value={birthDate} onChange={(e)=>{setBirthDate(e.target.value)}} />
+                    {isForeignAthlete ?
+                        <input type="date" id='birthDate' value={birthDate} max='2016-12-31' onChange={(e)=>{
+                            setBirthDate(e.target.value)
+                        }} />
+                    :
+                        <input type="date" id='birthDate' value={birthDate} min='2011-01-01' max='2016-12-31' onChange={(e)=>{
+                            setBirthDate(e.target.value)
+                        }} />
+                    }
+                    {/*<input type="date" id='birthDate' value={birthDate} onChange={(e)=>{setBirthDate(e.target.value)}} />*/}
                 </div>
                 <div className='form-group radio'>
                     <label htmlFor="male">Homme</label>
@@ -90,7 +123,6 @@ export const OneDayAthlete = ({competitionId, isForeignAthlete, setStep, setAthl
                             <option value="SUI">Suisse</option>
                             <option value="ESP">Espagne</option>
                             <option value="ITA">Italie</option>
-                            <option value="BEL">Belgique</option>
                             <option value="POR">Portugal</option>
                             <option value="GBR">Royaume-Uni</option>
                             <option value="POL">Pologne</option>
