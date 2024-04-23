@@ -33,21 +33,21 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
         metadata[`inscriptionData${i}`] = JSON.stringify(inscriptionData[i]);
     }
 
+    console.log(metadata);
+
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card', 'bancontact'],
         line_items: events.map(event => {
-            if (event.cost != 0) {
-                return {
-                    price_data: {
-                        currency: 'eur',
-                        product_data: {
-                            name: event.name
-                        },
-                        unit_amount: event.cost*100,
+            return {
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: event.name
                     },
-                    quantity: 1,
-                };
-            }
+                    unit_amount: event.cost*100,
+                },
+                quantity: 1,
+            };
         }),
         customer_email: req.body.email || null,
         mode: 'payment',
@@ -55,7 +55,6 @@ app.post('/api/stripe/checkout-sessions', async (req, res) => {
         cancel_url: req.body.cancel_url,
         metadata: metadata
     });
-
     res.status(200).json({ id: session.id, url: session.url });
 });
 

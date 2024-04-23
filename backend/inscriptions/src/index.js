@@ -80,7 +80,6 @@ app.get('/api/inscriptions/:competitionId/info', async (req, res) => {
     const competitionId = req.params.competitionId;
 
     const NumberOfAthletesByClub = await getGroupedView(`competition_${competitionId}`, 'NumberOfAthletesByClub');
-    console.log(NumberOfAthletesByClub);
     const NumberOfParticipants = NumberOfAthletesByClub.reduce((acc, cur) => acc + cur.value, 0);
     const NumberOfAthletesByCategory = await getGroupedView(`competition_${competitionId}`, 'NumberOfAthletesByCategory');
     const NumberOfAthletesByEvent = await getGroupedView(`competition_${competitionId}`, 'NumberOfAthletesByEvent');

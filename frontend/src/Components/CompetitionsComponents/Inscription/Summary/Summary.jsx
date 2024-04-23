@@ -81,18 +81,21 @@ function ControlButtons({setStep, totalCost, athlete, events, records, competiti
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(3)}}>Précédent</button>
-            <button onClick={()=>{postInscription(athlete, events, records, competitionId, setStep, acceptData)}}>{totalCost === 0 ? 'Valider' : 'Payer'}</button>
+            <button onClick={()=>{
+                if (!acceptData) {
+                    alert('Vous devez accepter l\'utilisation de vos données dans le cadre de la compétition pour vous inscrire.');
+                    return;
+                }
+                // disable button 
+                document.querySelector('.control-buttons button:last-child').disabled = true;
+                postInscription(athlete, events, records, competitionId, setStep)
+
+            }}>{totalCost === 0 ? 'Valider' : 'Payer'}</button>
         </div>
     )
 }
 
-function postInscription(athlete, events, records, competitionId, setStep, acceptData) {
-    console.log(acceptData);
-    if (!acceptData) {
-        alert('Vous devez accepter l\'utilisation de vos données dans le cadre de la compétition pour vous inscrire.');
-        return;
-    }
-
+function postInscription(athlete, events, records, competitionId, setStep) {
     // get isInscribed from url
     const urlSearchParams = new URLSearchParams(window.location.search);
     const isInscribed = urlSearchParams.get('isInscribed');
@@ -118,6 +121,9 @@ function postInscription(athlete, events, records, competitionId, setStep, accep
         })
         .catch(err => {
             console.log(err);
+            alert('Une erreur est survenue lors du traitement de votre inscription. Si le problème persiste, veuillez nous contacter.');
+            // refresh page
+            //window.location.reload();
         })
         return;
     }
@@ -152,7 +158,7 @@ function AcceptData({acceptData, setAcceptData}) {
     return (
         <div className='accept-data'>
             <input type='checkbox' id='accept-data' name='accept-data' value={acceptData} onChange={(e) => setAcceptData(e.target.value)} />
-            <label htmlFor='accept-data'>J'accepte l'utilisation de mes données dans le cadre de la compétition.</label>
+            <label htmlFor='accept-data'>J'accepte l'utilisation de mes données dans le cadre de la compétition uniquement.</label>
         </div>
     )
 }
@@ -161,20 +167,34 @@ function AcceptData({acceptData, setAcceptData}) {
 export const Summary = ({athlete, events, records, setStep, competitionId, free, freeEvents}) => {
     const [totalCost, setTotalCost] = useState(0);
     const [acceptData, setAcceptData] = useState(false);
+
+    const [modifiedEvents, setModifiedEvents] = useState([]);
+
+    useEffect(() => {
+        const newEvents = events.map(event => {
+            if ([...freeEvents].includes(event.pseudoName)) {
+                return {...event, cost: 0};
+            } else {
+                return event;
+            }
+        })
+        setModifiedEvents(newEvents);
+    }, [events, freeEvents])
+
     useEffect(() => {
         if (free) {
             setTotalCost(0);
         } else {
-            setTotalCost(events.reduce((acc, event) => acc + event.cost, 0));
+            setTotalCost(modifiedEvents.reduce((acc, event) => acc + event.cost, 0));
         }
-    }, [events, free, freeEvents])
+    }, [modifiedEvents, free])
 
     if (!athlete) {
         return <div>Chargement...</div>
     }
 
     let eventsList = [];
-    for (let event of events) {
+    for (let event of modifiedEvents) {
         eventsList.push(event);
         for (let subEvent of event.subEvents) {
             eventsList.push({...subEvent, pseudoName: `${event.pseudoName} - ${subEvent.name}`, superEvent: event.pseudoName});

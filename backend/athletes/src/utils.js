@@ -115,9 +115,10 @@ async function getResults(athleteId) {
     return data;
 }
 
-async function getResultsByEvent(athleteId, event) {
+async function getResultsByEvents(athleteId, events) {
+    console.log("getResultsByEvents", athleteId, events);
     const results = await getResults(athleteId);
-    return results.filter(result => result.discipline === event);
+    return results.filter(result => events.includes(result.discipline));
 }
 
 function isOneDayAthlete(athleteId) {
@@ -128,7 +129,7 @@ function isOneDayAthlete(athleteId) {
 module.exports = {
     calculateCategory,
     getResults,
-    getResultsByEvent,
+    getResultsByEvents,
     isOneDayAthlete,
     getAthletesByKey,
     getAthleteById

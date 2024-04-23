@@ -8,7 +8,7 @@ import { ATLHETES_URL } from '../../../../Gateway'
 import './Records.css'
 
 function ControlButtons({setStep, records, events}) {
-    const nextEnabled = Object.keys(records).length === events.length;
+    const nextEnabled = Object.keys(records).length >= events.length;
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(2)}}>Précédent</button>
@@ -18,6 +18,54 @@ function ControlButtons({setStep, records, events}) {
 }
 
 function RecordsList({records, setRecord, events, athleteId}) {
+
+    useEffect(() => {
+        setTimeout(() => {
+            events.forEach((event) => {
+                const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
+                const isSubEvent = event.superEvent !== undefined;
+                if (isMultiEvent) {
+                    setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
+                } else if (isSubEvent) {
+                    setRecord(event.superEvent, "0", event.name, "setTo0IfUndef")
+                } else {
+                    setRecord(event.pseudoName, "0", null, "setTo0IfUndef")
+                }
+            });
+        }, 3000);
+
+        axios.post(`${ATLHETES_URL}/${athleteId}/getResults?maxYears=2`, {events: events.map(event => event.name)})
+            .then(response => {
+                const data = response.data.data;
+                events.forEach((event) => {
+                    const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
+                    const isSubEvent = event.superEvent !== undefined;
+                    // max 2 decimal
+                    const record = data[event.name] ? parseFloat(data[event.name].perf).toFixed(2).toString() : "0";
+                    if (isMultiEvent) {
+                        setRecord(event.pseudoName, record, "total", "setToRecordIfNotDef");
+                    } else if (isSubEvent) {
+                        setRecord(event.superEvent, record, event.name, "setToRecordIfNotDef");
+                    } else {
+                        setRecord(event.pseudoName, record, null, "setToRecordIfNotDef");
+                    }
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                events.forEach((event) => {
+                    const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
+                    const isSubEvent = event.superEvent !== undefined;
+                    if (isMultiEvent) {
+                        setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
+                    } else if (isSubEvent) {
+                        setRecord(event.superEvent, "0", event.name, "setTo0IfUndef")
+                    } else {
+                        setRecord(event.pseudoName, "0", null, "setTo0IfUndef")
+                    }
+                });
+            });
+    }, []);
 
     return (
         <div className='records-list'>
@@ -39,41 +87,6 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
 
     const isMultiEvent = event.subEvents ? event.subEvents.length > 0 : false;
     const isSubEvent = event.superEvent !== undefined;
-
-    useEffect(() => {
-        if (record === undefined) {
-            setTimeout(() => {
-                if (isMultiEvent) {
-                    setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
-                } else if (isSubEvent) {
-                    setRecord(event.superEvent, "0", event.name, "setTo0IfUndef")
-                } else {
-                    setRecord(event.pseudoName, "0", null, "setTo0IfUndef")
-                }
-            }, 3000);
-
-            axios.get(`${ATLHETES_URL}/${athleteId}/${event.name}?maxYears=2`)
-                .then(response => {
-                    if (isMultiEvent) {
-                        setRecord(event.pseudoName, response.data.data.perf, "total", "setToRecordIfNot0");
-                    } else if (isSubEvent) {
-                        setRecord(event.superEvent, response.data.data.perf, event.name, "setToRecordIfNot0");
-                    } else {
-                        setRecord(event.pseudoName, response.data.data.perf, null, "setToRecordIfNot0");
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                    if (isMultiEvent) {
-                        setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
-                    } else if (isSubEvent) {
-                        setRecord(event.superEvent, "0", event.name, "setTo0IfUndef")
-                    } else {
-                        setRecord(event.pseudoName, "0", null, "setTo0IfUndef")
-                    }
-                });
-        }
-    }, [record]);
 
     return (
         <div className='record-item'>

@@ -94,16 +94,22 @@ export const Inscription = ({competition}) => {
     const setRecord = (event, record, subEvent=null, type=null) => {
         setRecords((prevRecords) => {
             if (subEvent) {
-                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                if (!prevRecords[event]) {
+                    return {...prevRecords, [event]: {[subEvent]: record}}
+                } else if (!prevRecords[event][subEvent]) {
+                    return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
+                } else if (type === 'setTo0IfUndef' && prevRecords[event][subEvent]) {
                     return prevRecords;
-                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                } else if (type === 'setToRecordIfNotDef' && parseFloat(prevRecords[event][subEvent]) !== 0) {
                     return prevRecords;
                 }
                 return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
             } else {
-                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                if (!prevRecords[event]) {
+                    return {...prevRecords, [event]: record}
+                } else if (type === 'setTo0IfUndef' && prevRecords[event]) {
                     return prevRecords;
-                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                } else if (type === 'setToRecordIfNotDef' && parseFloat(prevRecords[event]) !== 0) {
                     return prevRecords;
                 }
                 return {...prevRecords, [event]: record}
@@ -260,15 +266,6 @@ export const Inscription = ({competition}) => {
         })
     }, [athlete])
 
-    // change cost of event if in freeEvents
-    useEffect(() => {
-        for (let event of events) {
-            if (freeEvents.has(event.pseudoName)) {
-                event.cost = 0;
-            }
-        }
-    }, [freeEvents])
-
     // check if the inscription is still open
     if (new Date(competition.closeDate) < new Date()) {
         return (
@@ -303,7 +300,7 @@ export const Inscription = ({competition}) => {
             {step === 1 ? <Athlete athlete={athlete} setAthlete={setAthleteId} setStep={setStep} competitionId={id} oneDay={true} setIsForeignAthlete={setIsForeignAthlete} /> : null}
             {step === 2 ? <Events events={events} setEvents={setEvents} setStep={setStep} competitionId={id} category={athlete ? athlete.category : null} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} freeEvents={freeEvents} /> : null}
             {step === 3 ? <Records events={events} records={records} setRecord={setRecord} setStep={setStep} /> : null}
-            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} /> : null}
+            {step === 4 ? <Summary athlete={athlete} events={events} records={records} setStep={setStep} competitionId={id} free={(competition.freeClub && athlete?.club === competition.club) ? true : false} freeEvents={freeEvents} /> : null}
             {step === 5 ? <Success competitionId={id} /> : null}
         </div>
     )

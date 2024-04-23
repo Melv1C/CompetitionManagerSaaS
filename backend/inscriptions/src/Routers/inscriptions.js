@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const app = express.Router();
 
-const { getInscriptions, deleteInscription} = require('../nano');
+const { getInscriptions, deleteInscription, getAllInscriptions} = require('../nano');
 
 const { freeInscriptions, stripeInscriptions } = require('../utils');
 
@@ -57,6 +57,16 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
     const checkPlaceAvailableResult = checkPlaceAvailable(eventsInfo, inscriptions);
     if (checkPlaceAvailableResult) {
         return res.status(400).json(checkPlaceAvailableResult);
+    }
+
+    // get free events
+    const allInscriptions = (await getAllInscriptions(`competition_${competitionId}`))
+    .filter((inscription) => inscription.athleteId == athleteId);
+
+    for (let i = 0; i < eventsInfo.length; i++) {
+        if (allInscriptions.some((inscription) => inscription.event == eventsInfo[i].pseudoName)) {
+            eventsInfo[i].cost = 0;
+        }
     }
 
     // calculate total cost
@@ -115,7 +125,6 @@ app.post('/api/inscriptions/:competitionId', async (req, res) => {
         return;
     } else {
         const response = await stripeInscriptions(`competition_${competitionId}`, inscriptionData, eventsInfo.filter((event) => events.includes(event.pseudoName)), success_url, cancel_url);
-        console.log(response);
         res.status(200).json({ status: 'success', message: 'Redirect to payment', data: response });
     } 
 });
@@ -177,6 +186,16 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         return res.status(400).json(checkPlaceAvailableResult);
     }
 
+    // get free events
+    const allInscriptions = (await getAllInscriptions(`competition_${competitionId}`))
+    .filter((inscription) => inscription.athleteId == athleteId);
+
+    for (let i = 0; i < eventsInfo.length; i++) {
+        if (allInscriptions.some((inscription) => inscription.event == eventsInfo[i].pseudoName)) {
+            eventsInfo[i].cost = 0;
+        }
+    }
+
     // calculate total cost
     const totalCost = calculateTotalCost(eventsInfo, competition, athlete, athleteInscriptions);
 
@@ -198,7 +217,6 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
     let inscriptionData = [];
     for (let event of eventsInfo) {
         if (!athleteInscriptions.some((inscription) => inscription.event == event.pseudoName)) {
-
             inscriptionData.push({ 
                 timestamp,
                 userId, 
@@ -251,8 +269,6 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
             }
         }
     }
-
-    console.log(inscriptionData);
 
     if (totalCost == 0 || admin) {
         await freeInscriptions(`competition_${competitionId}`, inscriptionData);

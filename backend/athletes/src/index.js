@@ -10,7 +10,7 @@ const competitionsUrl = process.env.GATEWAY_URL || process.env.COMPETITIONS_URL 
 
 
 // import function from utils.js
-const { calculateCategory, getResults, getResultsByEvent, isOneDayAthlete, getAthletesByKey, getAthleteById } = require('./utils');
+const { calculateCategory, getResults, getResultsByEvents, isOneDayAthlete, getAthletesByKey, getAthleteById } = require('./utils');
 const { createDatabase, deleteDatabase, getDatabase, addAthlete, getAthletes, getAthlete } = require('./nano');
 
 app.use(express.json());
@@ -147,6 +147,79 @@ app.get(`${prefix}/:id`, async (req, res) => {
     });
 });
 
+app.post(`${prefix}/:id/getResults`, async (req, res) => {
+    const id = req.params.id;
+    const events = req.body.events || [];
+    const maxYears = req.query.maxYears ? parseInt(req.query.maxYears) : null;
+
+    if (!id) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Missing required parameter: id',
+        });
+        return;
+    }
+
+    if (events.length === 0) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Missing required parameter: events',
+        });
+        return;
+    }
+
+    if (isOneDayAthlete(id)) {
+        res.status(404).json({
+            status: 'error',
+            message: 'Results not found',
+        });
+        return;
+    }
+
+    let results = await getResultsByEvents(id, events);
+
+    if (maxYears) {
+        const now = new Date();
+        results = results.filter(result => {
+            const years = now.getFullYear() - result.date.getFullYear();
+            return years <= maxYears;
+        });
+    }
+
+    if (results.length === 0) {
+        res.status(404).json({
+            status: 'error',
+            message: 'Results not found',
+        });
+        return;
+    }
+
+    let personalBests = {};
+    events.forEach(event => {
+        personalBests[event] = null;
+    });
+
+    for (let i = 0; i < results.length; i++) {
+        if (personalBests[results[i].discipline] === null) {
+            personalBests[results[i].discipline] = results[i];
+        } else if (results[i].type === "time") {
+            if (results[i].perf < personalBests[results[i].discipline].perf) {
+                personalBests[results[i].discipline] = results[i];
+            }
+        } else {
+            if (results[i].perf > personalBests[results[i].discipline].perf) {
+                personalBests[results[i].discipline] = results[i];
+            }
+        }
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Results retrieved successfully',
+        data: personalBests,
+    });
+});
+
 app.get(`${prefix}/:id/:event`, async (req, res) => {
 
 
@@ -172,7 +245,7 @@ app.get(`${prefix}/:id/:event`, async (req, res) => {
         return;
     }
 
-    let results = await getResultsByEvent(id, event);
+    let results = await getResultsByEvents(id, [event]);
 
     if (maxYears) {
         const now = new Date();
@@ -263,9 +336,5 @@ app.post(`${prefix}`, async (req, res) => {
 
     res.status(201).json({ status: 'success', message: 'Athlete added successfully', data: athlete });
 });
-
-
-
-
 
 app.listen(port, () => console.log(`Athletes microservice listening on port ${port}!`));

@@ -49,6 +49,20 @@ function RemoveUninscribedInscriptions(inscriptions) {
     return inscriptions.filter((inscription) => inscription.inscribed);
 }
 
+function getAllInscriptions(dbName) {
+    const db = nano.use(dbName);
+    return new Promise((resolve, reject) => {
+        db.list({ include_docs: true }, (err, body) => {
+            if (err) {
+                reject(err);
+            } else {
+                let inscriptions = getUsefullInscriptions(body.rows.map((row) => row.doc));
+                resolve(inscriptions);
+            }
+        });
+    });
+}
+
 function getInscriptions(dbName) {
     const db = nano.use(dbName);
     return new Promise((resolve, reject) => {
@@ -118,5 +132,6 @@ module.exports = {
     getInscription,
     deleteInscription,
     updateInscription,
-    addInscription
+    addInscription,
+    getAllInscriptions
 };
