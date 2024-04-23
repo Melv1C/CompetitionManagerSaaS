@@ -30,7 +30,7 @@ function EventItem({event, setEvents, events, competitionId, inscriptions, free}
     const [place, setPlace] = useState(null);
 
     useEffect(() => {
-        if (events.map(e => e.name).includes(event.name)) {
+        if (events.map(e => e.pseudoName).includes(event.pseudoName)) {
             setChecked(true);
         } else {
             setChecked(false);

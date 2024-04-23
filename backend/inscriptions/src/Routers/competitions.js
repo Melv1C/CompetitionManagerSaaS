@@ -9,8 +9,8 @@ const { addViews } = require('../views');
 
 // Create a database for a new competition
 app.post('/api/inscriptions', async (req, res) => {
-    console.log('Creating competition');
     const { competitionId } = req.body;
+    console.log('Creating competition', competitionId);
 
     if (!competitionId) {
         return res.status(400).json({ status: 'error', message: 'Invalid competitionId' });

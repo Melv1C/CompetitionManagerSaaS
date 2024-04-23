@@ -14,7 +14,9 @@ function addViews(db) {
         views: {
             NumberOfAthletesByClub: {
                 map: function (doc) {
-                    emit(doc.club, { count: 1, distinctAthletes: [doc.athleteId]});
+                    if (doc.inscribed) {
+                        emit(doc.club, { count: 1, distinctAthletes: [doc.athleteId]});
+                    }
                 }.toString(),
                 reduce: function (keys, values, rereduce) {
                     let distinctAthletes = []
@@ -30,7 +32,9 @@ function addViews(db) {
             },
             NumberOfAthletesByEvent: {
                 map: function (doc) {
-                    emit(doc.event, { count: 1, distinctAthletes: [doc.athleteId] });
+                    if (doc.inscribed) {
+                        emit(doc.event, { count: 1, distinctAthletes: [doc.athleteId] });
+                    }
                 }.toString(),
                 reduce: function (keys, values, rereduce) {
                     let distinctAthletes = []
@@ -46,7 +50,9 @@ function addViews(db) {
             },
             NumberOfAthletesByCategory: {
                 map: function (doc) {
-                    emit(doc.category, { count: 1, distinctAthletes: [doc.athleteId] });
+                    if (doc.inscribed) {
+                        emit(doc.category, { count: 1, distinctAthletes: [doc.athleteId] });
+                    }
                 }.toString(),
                 reduce: function (keys, values, rereduce) {
                     let distinctAthletes = []
@@ -62,10 +68,20 @@ function addViews(db) {
             },
             NumberOfEventsByAthlete: {
                 map: function (doc) {
-                    emit(doc.athleteId, 1);
+                    if (doc.inscribed) {
+                        emit(doc.athleteId, 1);
+                    }
                 }.toString(),
                 reduce: '_count'
-            }
+            },
+            NumberOfDeinscriptions: {
+                map: function (doc) {
+                    if (!doc.inscribed) {
+                        emit(doc.athleteId, 1);
+                    }
+                }.toString(),
+                reduce: '_count'
+            },
         }
     };
     return addView(db, '_design/queries', views);
