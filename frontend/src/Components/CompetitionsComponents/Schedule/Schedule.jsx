@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 
+import { useSearchParams } from 'react-router-dom';
+
 function ScheduleItem({event, inscriptions, competition}) {
     const [placesLeft, setPlacesLeft] = useState(event.maxParticipants - inscriptions.length);
     const [nbParticipants, setNbParticipants] = useState(inscriptions.length);
@@ -32,11 +34,8 @@ function ScheduleItem({event, inscriptions, competition}) {
                 <div className="schedule-item-info">
                     <div className="schedule-item-time">{event.time}</div>
                     <div className="schedule-item-name">{event.pseudoName}</div>
-                    {/*<PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />*/}
+                    <PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />
                     <ParticipantsButton nbParticipants={nbParticipants} />
-                    {/*<div className="schedule-item-icon">
-                        <FontAwesomeIcon icon={faUsers} /> Participants 
-                    </div>*/}
                 </div>
             </Link>
         </div>
@@ -68,11 +67,27 @@ function PlacesLeft({placesLeft}) {
     } else if (placesLeft <= 10) {
         return <div className="schedule-item-places orange">{placesLeft} places restantes</div>
     } else {
-        return <div className="schedule-item-places green">{placesLeft} places restantes</div>
+        return <div className="schedule-item-places"></div>
     }
 }
 
-function CategoryFilter({categories, filterValue, setFilterValue}) {
+function CategoryFilter({categories, catFilterValue, setSearchParams}) {
+
+    // save the filter value in the url
+    const setCatInUrl = (value) => {
+        if (value === "all") {
+            // remove the category parameter from the url
+            setSearchParams((searchParams) => {
+                searchParams.delete("category");
+                return searchParams;
+            });
+        } else {
+            setSearchParams((searchParams) => {
+                searchParams.set("category", value);
+                return searchParams;
+            });
+        }
+    }
 
     return (
         <div className="schedule-filter">
@@ -80,7 +95,7 @@ function CategoryFilter({categories, filterValue, setFilterValue}) {
                 <FontAwesomeIcon icon={faFilter} />
             </div>
             <div className="schedule-filter-select">
-                <select value={filterValue} onChange={(e) => {setFilterValue(e.target.value)}} >
+                <select value={catFilterValue} onChange={(e) => {setCatInUrl(e.target.value)}}>
                     <option value="all">Toutes les catégories</option>
                     {categories.map(category => {
                         return <option key={category} value={category}>{category}</option>
@@ -90,7 +105,6 @@ function CategoryFilter({categories, filterValue, setFilterValue}) {
         </div>
     )
 }
-
 
 export const Schedule = ({competition}) => {
 
@@ -108,7 +122,6 @@ export const Schedule = ({competition}) => {
     const [events, setEvents] = useState([]);
     
     useEffect(() => {
-        console.log(competition.events);
         let events = [];
         for (let event of competition.events) {
             events.push(event);
@@ -150,30 +163,40 @@ export const Schedule = ({competition}) => {
         setCategories(SortCategory(categories));
     }, [events]);
 
-    const [filterValue, setFilterValue] = useState("all");
+    const [catFilterValue, setCatFilterValue] = useState("all");
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    useEffect(() => {
+        if (searchParams.get("category")) {
+            setCatFilterValue(searchParams.get("category"));
+        } else {
+            setCatFilterValue("all");
+        }
+    }, [searchParams]);
 
     const [filteredEvents, setFilteredEvents] = useState([]);
 
     useEffect(() => {
-        if (filterValue === "all") {
+        if (catFilterValue === "all") {
             setFilteredEvents(events);
-        } else if (filterValue === "MAS M") {
+        } else if (catFilterValue === "MAS M") {
             setFilteredEvents(events.filter(event => {
                 return event.categories.some(category => category.includes("M") && category.length === 3);
             }));
-        } else if (filterValue === "MAS F") {
+        } else if (catFilterValue === "MAS F") {
             setFilteredEvents(events.filter(event => {
                 return event.categories.some(category => category.includes("W") && category.length === 3);
             }));
         } else {
-            setFilteredEvents(events.filter(event => event.categories.includes(filterValue)));
+            setFilteredEvents(events.filter(event => event.categories.includes(catFilterValue)));
         }
-    }, [events, filterValue]);
+    }, [events, catFilterValue]);
 
     return (
         <div className="competition-page">
             
-            <CategoryFilter categories={categories} filterValue={filterValue} setFilterValue={setFilterValue} />
+            <CategoryFilter categories={categories} catFilterValue={catFilterValue} setSearchParams={setSearchParams} />
             <div className="schedule">
                 
                 {filteredEvents.sort((a, b) => {

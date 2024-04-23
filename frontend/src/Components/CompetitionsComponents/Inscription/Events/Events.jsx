@@ -39,7 +39,11 @@ function EventItem({event, setEvents, events, competitionId, inscriptions, free}
 
     useEffect(() => {
         const eventInscriptions = inscriptions.filter(i => i.event === event.pseudoName);
-        setPlace(event.maxParticipants - eventInscriptions.length);
+        if (event.maxParticipants - eventInscriptions.length < 0) {
+            setPlace(0);
+        } else {
+            setPlace(event.maxParticipants - eventInscriptions.length);
+        }
     }, [event, competitionId, inscriptions])
 
     return (
@@ -47,6 +51,7 @@ function EventItem({event, setEvents, events, competitionId, inscriptions, free}
             <div className='event-item-time'>{event.time}</div>
             <div className='event-item-name'>{event.pseudoName}</div>
             <Place place={place} />
+            {place !== 0 ? 
             <input type='checkbox' checked={checked} className='event-item-checkbox' onChange={() => {
                 if (!checked) {
                     setEvents([...events, event]);
@@ -54,7 +59,9 @@ function EventItem({event, setEvents, events, competitionId, inscriptions, free}
                     setEvents(events.filter(e => e.name !== event.name));
                 }
                 setChecked(!checked);
-            }} />
+            }} />                
+            : <div className='event-item-checkbox'></div>}
+            
             {(event.cost === 0 || free) ? <div className='event-item-cost'></div> : <div className='event-item-cost'>{event.cost}€</div>}
             
         </div>

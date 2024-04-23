@@ -59,9 +59,7 @@ export const Profile = () => {
             let modifiedInscriptions = {};
 
             for (let inscription of response.data.data) {
-                if (inscription.eventType !== "subEvent") {
-                    addToDict(modifiedInscriptions, inscription.competitionId, inscription.athleteId, inscription);
-                }
+                addToDict(modifiedInscriptions, inscription.competitionId, inscription.athleteId, inscription);
             }
 
             setInscriptions(modifiedInscriptions);

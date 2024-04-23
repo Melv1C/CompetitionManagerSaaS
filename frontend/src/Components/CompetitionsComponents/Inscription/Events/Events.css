@@ -53,10 +53,9 @@
 }
 
 /* checkbox */
-.events-list .event-item input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
+.events-list .event-item .event-item-checkbox {
     width: 5%;
+    height: 20px;
 }
 
 .events-list .event-item .event-item-cost {
@@ -97,11 +96,10 @@
 
     .events-list .event-item .event-item-cost {
         font-size: 1em;
-        width: 10%;
+        width: 7%;
     }
 
-    .events-list .event-item input[type="checkbox"] {
-        width: 20px;
+    .events-list .event-item .event-item-checkbox {
         height: 20px;
         width: 10%;
     }

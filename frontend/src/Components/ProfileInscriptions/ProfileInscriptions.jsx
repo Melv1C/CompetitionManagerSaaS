@@ -14,6 +14,7 @@ import './ProfileInscriptions.css'
 import axios from 'axios'
 
 export const ProfileInscriptions = ({inscriptions, userId}) => {
+    console.log(inscriptions);
     if (Object.keys(inscriptions).length === 0) {
         return (
             <div className="profileInscriptions">
@@ -51,13 +52,50 @@ const Competition = ({competitionId, inscriptions, userId}) => {
 
                 for (let athleteId in inscriptions) {
                     for (let inscription of inscriptions[athleteId]) {
-                        const event = events.find(event => event.pseudoName === inscription.event);
-                        if (event) {
-                            inscription.time = event.time;
+                        //console.log(inscription);
+                        if (inscription.eventType === "subEvent") {
+                            const event = events.find(event => event.pseudoName === inscription.parentEvent);
+                            if (event) {
+                                const subEvent = event.subEvents.find(subEvent => subEvent.name === inscription.event.split(" - ")[1]);
+                                if (subEvent) {
+                                    setInscriptionsWithHours((prev) => {
+                                        const athleteInscriptions = prev[athleteId];
+                                        const getInscription = athleteInscriptions.find(insc => insc._id === inscription._id);
+                                        getInscription.time = subEvent.time;
+                                        // sort athlete inscriptions by time
+                                        athleteInscriptions.sort((a, b) => {
+                                            if (a.time < b.time) return -1;
+                                            if (a.time > b.time) return 1;
+                                            return 0;
+                                        });
+                                        return prev;
+                                    });
+                                }
+                            }
+                        } else {
+                            const event = events.find(event => event.pseudoName === inscription.event);
+                            if (event) {
+                                setInscriptionsWithHours((prev) => {
+                                    const athleteInscriptions = prev[athleteId];
+                                    const getInscription = athleteInscriptions.find(insc => insc._id === inscription._id);
+                                    getInscription.time = event.time;
+                                    // sort athlete inscriptions by time
+                                    athleteInscriptions.sort((a, b) => {
+                                        if (a.time < b.time) return -1;
+                                        if (a.time > b.time) return 1;
+                                        return 0;
+                                    });
+                                    return prev;
+                                });
+                            }
                         }
                     }
                 }
             })
+            .catch(error => {
+                console.error(error);
+            }
+        )
     }, [competitionId])
 
     return (
@@ -119,12 +157,10 @@ const handleDelete = (competitionId, athleteId, userId) => {
         .catch((error) => {
             console.error(error);
         })
-
-
 }
 
-
 const Inscriptions = ({inscriptions}) => {
+
     return (
         <div className="inscriptions">
             {inscriptions.map((inscription) => {

@@ -9,6 +9,11 @@ export const Participants = ({event, inscriptions}) => {
         <div className="participants">
             {inscriptions.sort((a, b) => {
                 if (event.type === 'time') {
+                    if (a.record === "0") {
+                        return 1;
+                    } else if (b.record === "0") {
+                        return -1;
+                    }
                     return a.record - b.record;
                 } else {
                     return b.record - a.record;
