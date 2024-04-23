@@ -9,4 +9,4 @@ package-lock.json
 /backend/**/.env
 
 # Remove backend/couchdb
-/backend/couchdb/
+backend/couchdb/
