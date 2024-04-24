@@ -1,47 +1,74 @@
-/*
-<div className="schedule-filter">
-            <div className="schedule-filter-icon">
-                <FontAwesomeIcon icon={faFilter} /> Catégories
-            </div>
-            <div className="schedule-filter-content">
-                <select value={filterValue} onChange={(e) => setFilterValue(e.target.value)}>
-                    <option value="all">Toutes les catégories</option>
-                    {categories.map(category => {
-                        return <option key={category} value={category}>{category}</option>
-                    })}
-                </select>
-            </div>
-        </div>*/
 
-.schedule-filter {
+.schedule-header {
     display: flex;
-    position: relative;
-    justify-content: right;
+    flex-direction: row;
+    justify-content: space-around;
     align-items: center;
+
     margin-bottom: 1rem;
-    .schedule-filter-icon {
-        font-size: 20px;
-        margin-right: 10px;
-    }
-    .schedule-filter-select {
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        z-index: 100;
-        select {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
+    .schedule-filter {
+        display: flex;
+        position: relative;
+        justify-content: right;
+        align-items: center;
+        .schedule-filter-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .schedule-filter-select {
             background-color: white;
-            color: black;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            option {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 100;
+            select {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                background-color: white;
                 color: black;
+                font-size: 16px;
+                font-weight: 500;
                 cursor: pointer;
+                option {
+                    color: black;
+                    cursor: pointer;
+                }
             }
         }
+    }
+
+    .schedule-link-container {
+        display: flex;
+        align-items: center;
+
+        .schedule-link {
+            display: flex;
+            align-items: center;
+            margin-left: 1rem;
+            
+            font-weight: bold;
+
+            cursor: pointer;
+            color: var(--primary-color);
+
+            .icon {
+                font-size: 20px;
+                margin-right: 10px;
+            }
+        }
+
+        .schedule-link:hover {
+            text-decoration: underline;
+        }
+
+
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .schedule-header {
+        flex-direction: column;
+        gap: 1rem;
     }
 }

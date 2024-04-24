@@ -63,7 +63,9 @@ export const Overview = ({competition}) => {
                                     <FontAwesomeIcon icon={faClock} className='icon' /> 
                                     Horaire:
                                 </div>
-                                <div className='value'><a href={competition.schedule} target="_blank" rel="noreferrer">Voir l'horaire</a></div>
+                                <div className='value'><a href={competition.schedule} target="_blank" rel="noreferrer" className='overview-link'>
+                                    Voir l'horaire
+                                </a></div>
                             </div>  
                         : null}
 
@@ -72,7 +74,9 @@ export const Overview = ({competition}) => {
                             <FontAwesomeIcon icon={faEnvelope} className='icon' /> 
                             Contact:
                         </div>
-                        <div className='value'><a href={`mailto:${email}`}>{email}</a></div>
+                        <div className='value'><a href={`mailto:${email}`} className='overview-link'>
+                            {email}
+                        </a></div>
                     </div>
 
                     <div className="nbrParticipants">

@@ -26,7 +26,7 @@
 }
 
 .overview .info {
-    width: 500px;
+    width: 510px;
     justify-content: space-between;
 }
 
@@ -102,4 +102,13 @@
         width: 100%;
         max-width: 100%;
     }
+}
+
+.overview .overview-link {
+    cursor: pointer;
+    color: #007BFF;
+}
+
+.overview .overview-link:hover {
+    text-decoration: underline;
 }

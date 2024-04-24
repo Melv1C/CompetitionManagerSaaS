@@ -158,7 +158,7 @@ function AcceptData({acceptData, setAcceptData}) {
     return (
         <div className='accept-data'>
             <input type='checkbox' id='accept-data' name='accept-data' value={acceptData} onChange={(e) => setAcceptData(e.target.value)} />
-            <label htmlFor='accept-data'>J'accepte l'utilisation de mes données dans le cadre de la compétition uniquement.</label>
+            <label htmlFor='accept-data'>J'accepte l'utilisation de mes données uniquement dans le cadre de la compétition.</label>
         </div>
     )
 }

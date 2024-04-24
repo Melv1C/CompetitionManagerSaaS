@@ -13,6 +13,7 @@ import { SortCategory } from '../../../SortCategory'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { faClock } from '@fortawesome/free-solid-svg-icons'
 
 import { useSearchParams } from 'react-router-dom';
 
@@ -192,11 +193,13 @@ export const Schedule = ({competition}) => {
             setFilteredEvents(events.filter(event => event.categories.includes(catFilterValue)));
         }
     }, [events, catFilterValue]);
-
     return (
         <div className="competition-page">
-            
-            <CategoryFilter categories={categories} catFilterValue={catFilterValue} setSearchParams={setSearchParams} />
+
+            <div className="schedule-header">
+                <ScheduleLink link={competition.schedule} />
+                <CategoryFilter categories={categories} catFilterValue={catFilterValue} setSearchParams={setSearchParams} />
+            </div>
             <div className="schedule">
                 
                 {filteredEvents.sort((a, b) => {
@@ -216,4 +219,17 @@ export const Schedule = ({competition}) => {
             
         </div>
     )
+}
+
+function ScheduleLink({link}) {
+    if (link) {
+        return (
+            <div className="schedule-link-container">
+                <a href={link} target="_blank" rel="noreferrer" className='schedule-link'>
+                    <FontAwesomeIcon icon={faClock} className='icon' /> Voir l'horaire
+                </a>
+            </div>
+        )
+    }
+    return null;
 }
