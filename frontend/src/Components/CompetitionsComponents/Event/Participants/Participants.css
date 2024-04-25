@@ -24,12 +24,20 @@
 
 .participants-item .participants-item-athlete {
     font-size: 1.2em;
-    width: 50%;
+    width: 40%;
 }
+
+.participants-item .participants-item-category {
+    font-size: 1.2em;
+    width: 15%;
+    text-align: center;
+}
+
+
 
 .participants-item .participants-item-club {
     font-size: 1.2em;
-    width: 15%;
+    width: 10%;
     text-align: center;
 }
 
@@ -41,7 +49,7 @@
 
 /* Responsive */
 
-@media (max-width: 550px) {
+@media (max-width: 650px) {
     .participants-item {
         flex-wrap: wrap;
         padding: 0;
@@ -59,15 +67,21 @@
         text-align: right;
     }
 
+    .participants-item .participants-item-category {
+        font-size: 1em;
+        width: 25%;
+        text-align: left;
+    }
+
     .participants-item .participants-item-club {
         font-size: 1em;
-        width: 30%;
-        text-align: left;
+        width: 25%;
+        text-align: center;
     }
 
     .participants-item .participants-item-record {
         font-size: 1em;
-        width: 70%;
+        width: 50%;
         text-align: right;
     }
 }
