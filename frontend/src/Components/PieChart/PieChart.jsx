@@ -29,12 +29,12 @@ export const PieChart = ({data, title}) => {
             label: 'Athlètes',
             data: values,
             backgroundColor: [
-              'rgba(255, 99, 132, 0.5)',
-              'rgba(54, 162, 235, 0.5)',
-              'rgba(255, 206, 86, 0.5)',
-              'rgba(75, 192, 192, 0.5)',
-              'rgba(153, 102, 255, 0.5)',
-              'rgba(255, 159, 64, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)',
             ],
           },
         ],   
@@ -59,8 +59,8 @@ export const PieChart = ({data, title}) => {
                                 datalabels: {
                                     color: 'black',
                                     formatter: (value, ctx) => {
-                                        // si moins de 5% on n'affiche pas
-                                        if (value/total < 0.1) {
+                                        // si moins de x% on n'affiche pas
+                                        if (value/total < 0.075) {
                                             return '';
                                         }
                                         const label = ctx.chart.legend.legendItems[ctx.dataIndex].text;
