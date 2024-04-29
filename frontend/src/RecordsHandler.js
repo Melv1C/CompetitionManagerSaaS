@@ -29,7 +29,7 @@ function formatTime(record) {
         return `${seconds}"${parseInt(milliseconds / 10).toString().padStart(2, '0')}`;
     }
 
-    return `${minutes}"${seconds.toString().padStart(2, '0')}'${parseInt(milliseconds / 10).toString().padStart(2, '0')}`;
+    return `${minutes}'${seconds.toString().padStart(2, '0')}"${parseInt(milliseconds / 10).toString().padStart(2, '0')}`;
 }
 
 function formatDistance(record) {
