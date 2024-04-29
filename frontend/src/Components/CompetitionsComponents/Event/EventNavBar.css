@@ -1,0 +1,35 @@
+/*
+<div className='event-nav-bar'>
+                    {subEvents.map((subEvent, index) => {
+                        return (
+                            <Link to={`/competitions/${competition.id}/${subEvent.pseudoName}`} key={index}>
+                                <div className={`event-nav-item ${subEvent.pseudoName === eventName ? 'selected' : ''}`}>
+                                    {subEvent.name}
+                                </div>
+                            </Link>
+                        )
+                    })}
+                </div>
+*/
+.event-nav-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.event-nav-bar .event-nav-item {
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.event-nav-bar .event-nav-item:hover {
+  background-color: #e0e0e0;
+}
+.event-nav-bar .event-nav-item.selected {
+  background-color: #007bff;
+  color: #fff;
+}/*# sourceMappingURL=EventNavBar.css.map */

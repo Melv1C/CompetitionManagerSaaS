@@ -2,11 +2,14 @@ import React , { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
 import axios from 'axios';
-import { COMPETITIONS_URL, INSCRIPTIONS_URL } from '../../../Gateway';
+import { INSCRIPTIONS_URL } from '../../../Gateway';
 
 import { Participants } from './Participants/Participants';
 
+import { Link } from 'react-router-dom';
+
 import './Event.css';
+import './EventNavBar.css';
 
 export const Event = ({competition}) => {
 
@@ -14,32 +17,63 @@ export const Event = ({competition}) => {
 
     const [event, setEvent] = useState(null);
 
-    useEffect(() => {
-        axios.get(`${COMPETITIONS_URL}/${competition.id}`)
-            .then((response) => {
-                let event = response.data.data.events.filter((event) => {
-                    return event.pseudoName === eventName || eventName.startsWith(`${event.pseudoName} - `);
-                })[0];
+    const [subEvents, setSubEvents] = useState([]);
 
-                if (event.pseudoName !== eventName) {
-                    for (let subEvent of event.subEvents) {
-                        if (eventName === `${event.pseudoName} - ${subEvent.name}`) {
-                            event.name = subEvent.name;
-                            event.pseudoName = `${event.pseudoName} - ${subEvent.name}`;
-                            event.time = subEvent.time;
-                            event.type = subEvent.type;
-                            delete event.id 
-                            event.subEvents = [];
-                            break;
-                        }
-                    }
-                }
-                setEvent(event);
-            })
-            .catch((error) => {
-                console.log(error);
+    useEffect(() => {
+        let event = competition.events.find((event) => {
+            return event.pseudoName === eventName;
+        });
+
+        if (!event) { // subevent
+            const parentEventName = eventName.split(' - ')[0];
+            const subEventName = eventName.split(' - ')[1];
+            const parentEvent = competition.events.find((event) => {
+                return event.pseudoName === parentEventName;
             });
-    }, [competition.id, eventName]);
+            const subEvent = parentEvent.subEvents.find((subEvent) => {
+                return subEvent.name === subEventName;
+            });
+            event = {
+                parentEventName: parentEventName,
+                pseudoName: eventName,
+                time: subEvent.time,
+                maxParticipants: parentEvent.maxParticipants,
+                type: subEvent.type,
+                isMultiEvent: true
+            }
+
+            const subEvents = [{
+                pseudoName: parentEvent.pseudoName,
+                name: "Total",
+                time: parentEvent.time
+            }, ...parentEvent.subEvents.map((subEvent) => {
+                return {
+                    pseudoName: `${parentEvent.pseudoName} - ${subEvent.name}`,
+                    name: subEvent.name,
+                    time: subEvent.time
+                }
+            })];
+            setSubEvents(subEvents);
+
+
+        } else if (event.subEvents.length > 0) {
+            event.isMultiEvent = true;
+            const subEvents = [{
+                pseudoName: event.pseudoName,
+                name: "Total",
+                time: event.time
+            }, ...event.subEvents.map((subEvent) => {
+                return {
+                    pseudoName: `${event.pseudoName} - ${subEvent.name}`,
+                    name: subEvent.name,
+                    time: subEvent.time
+                }
+            })];
+            setSubEvents(subEvents);
+        }
+        setEvent(event);
+        
+    }, [competition, eventName]);
 
 
     const [inscriptions, setInscriptions] = useState([]);
@@ -63,11 +97,24 @@ export const Event = ({competition}) => {
                 console.log(error);
             });
     }, [competition.id, eventName]);
-
-
     
     return (
         <div className="competition-page">
+            {event?.isMultiEvent ?
+                <div className='event-nav-bar'>
+                    {subEvents.map((subEvent, index) => {
+                        return (
+                            <Link to={`/competitions/${competition.id}/${subEvent.pseudoName}`} key={index}>
+                                <div className={`event-nav-item ${subEvent.pseudoName === eventName ? 'selected' : ''}`}>
+                                    {subEvent.name}
+                                </div>
+                            </Link>
+                        )
+                    })}
+                </div>
+                : null
+            }
+
             <div className="event-header">
                 <div className='time'>
                     {event?.time}
