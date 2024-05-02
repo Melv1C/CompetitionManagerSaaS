@@ -22,7 +22,6 @@ function sortInscriptions(inscriptions, dataName) {
                 alreadyCountAth.push(inscription.athleteId);
             }
         }
-        console.log(OneInsc);
         return OneInsc;
     }
     return inscriptions;
@@ -34,13 +33,13 @@ export const Stats = ({competition, user}) => {
     const [inscriptions, setInscriptions] = useState([]);
     const [categories, setCategories] = useState({});
     const [clubs, setClubs] = useState({});
+    const optionsDataName = ['Inscription', 'Revenue', 'Athlète'];
     const dataNameOptions = ['Inscription par jour', '€ par jour', 'Nouveaux athlètes par jour'];
     const randomIndexName = Math.floor(Math.random() * dataNameOptions.length);
     const [dataName, setDataName] = useState(dataNameOptions[randomIndexName]);
+    const optionsType = ['Par jour', 'Accumulation'];
     const typeOptions = ['bar', 'line'];
     const randomIndexType = Math.floor(Math.random() * typeOptions.length);
-    console.log(typeOptions[randomIndexType]);
-    console.log(dataNameOptions[randomIndexName]);
     const [type, setType] = useState(typeOptions[randomIndexType]);
 
 
@@ -67,8 +66,8 @@ export const Stats = ({competition, user}) => {
         }
         setCategories(categoriesDic);
         setClubs(clubsDic);
-        console.log(inscriptions);
     }, [inscriptions]);
+
 
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}`)
@@ -90,31 +89,30 @@ export const Stats = ({competition, user}) => {
                 }€
             </div>
             <div className="card linear-graph">
+                <select onChange={
+                    (e) => {
+                        console.log(e.target.value);
+                        setDataName(e.target.value)
+                    }}>
+                    {dataNameOptions.map((option, index) => {
+                        if (option === dataName) {
+                            return <option key={index} value={option} selected>{optionsDataName[index]}</option>
+                        }
+                        return <option key={index} value={option}>{optionsDataName[index]}</option>
+                    })}
+                </select>
+                <select onChange={
+                    (e) => {
+                        setType(e.target.value);
+                    }}>
+                    {typeOptions.map((option, index) => {
+                        if (option === type) {
+                            return <option key={index} value={option} selected>{optionsType[index]}</option>
+                        }
+                        return <option key={index} value={option}>{optionsType[index]}</option>
+                    })}
+                </select>
                 <LinearGraph inscriptions={sortInscriptions(inscriptions, dataName)} type={type} dataName={dataName}/>
-            </div>
-            {/* <div className="card linear-graph">
-                <div className='center title'>Revenue par jour:</div>
-                <LinearMoney inscriptions={inscriptions}/>
-            </div>
-            <div className="card linear-graph">
-                <div className='center title'>Revenue:</div>
-                <LinearMoneyAcc inscriptions={inscriptions}/>
-            </div>
-            <div className="card linear-graph">
-                <div className='center title'>Inscriptions par jour:</div>
-                <InscriptionsPerDay inscriptions={inscriptions}/>
-            </div>
-            <div className="card linear-graph">
-                <div className='center title'>Inscriptions:</div>
-                <InscriptionsPerDayAcc inscriptions={inscriptions}/>
-            </div>
-            <div className="card linear-graph">
-                <div className='center title'>Nouveaux athlètes par jour:</div>
-                <InscriptionsPerDay inscriptions={OneInscAth}/>
-            </div>
-            <div className="card linear-graph">
-                <div className='center title'>Nouveaux athlètes:</div>
-                <InscriptionsPerDayAcc inscriptions={OneInscAth}/>
             </div>
             <div className="card pie-chart">
                 <div className='center title'>Athlètes par cathégorie:</div>
@@ -123,7 +121,7 @@ export const Stats = ({competition, user}) => {
             <div className="card pie-chart">
                 <div className='center title'>Athlètes par club:</div>
                 <PieChart data={clubs}/>
-            </div> */}
+            </div>
         </div>
     );
 };

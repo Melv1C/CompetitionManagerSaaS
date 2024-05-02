@@ -61,8 +61,6 @@ export const LinearGraph = ({ inscriptions, type, dataName }) => {
         currentDate.setDate(currentDate.getDate() + 1);
       }
       inscriptionsByDay = { ...allDays, ...inscriptionsByDay };
-      console.log(inscriptionsByDay);
-
       if (type === 'line') {
         for (const day in inscriptionsByDay) {
           if (day !== Object.keys(inscriptionsByDay)[0]) {
@@ -106,7 +104,7 @@ export const LinearGraph = ({ inscriptions, type, dataName }) => {
         newChartInstance.destroy();
       }
     };
-  }, [inscriptions]);
+  }, [inscriptions, type, dataName]);
 
   return <canvas className='canvas-linear-graph' ref={chartContainer}></canvas>;
 };
