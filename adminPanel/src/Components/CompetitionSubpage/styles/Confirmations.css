@@ -89,3 +89,8 @@
 .btnDiv button{
     min-width: 100px;
 }
+
+.list-athletes .athlete-over {
+    background-color: #E5F0FF;
+    cursor: pointer;
+}

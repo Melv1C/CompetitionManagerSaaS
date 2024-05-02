@@ -7,7 +7,7 @@ import './Success.css'
 function NewInscriptionButton({competitionId}) {
     return (
         <div className='control-buttons-success'>
-            <Link to={`/competition/1d04e98753/inscriptions?step=1`}><button>Inscrire un autre athlète</button></Link>
+            <Link to={`/competition/${competitionId}/inscriptions?step=1`}><button>Inscrire un autre athlète</button></Link>
         </div>
     )
 }

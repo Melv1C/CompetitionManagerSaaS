@@ -13,6 +13,7 @@ export const SubNavBarCompet = ({subPage, setSubPage}) => {
                     <Link to={`/competition/${id}/inscriptions`}><li onClick={()=>{setSubPage("inscriptions")}}>Inscriptions {subPage==="inscriptions" ? <hr/> : null}</li></Link>
                     <Link to={`/competition/${id}/confirmations`}><li onClick={()=>{setSubPage("confirmations")}}>Confirmations {subPage==="confirmations" ? <hr/> : null}</li></Link>
                     <Link to={`/competition/${id}/schedule`}><li onClick={()=>{setSubPage("schedule")}}>Horaire {subPage==="schedule" ? <hr/> : null}</li></Link>
+                    <Link to={`/competition/${id}/stats`}><li onClick={()=>{setSubPage("stats")}}>Stats {subPage==="stats" ? <hr/> : null}</li></Link>
                 </ul>
             </div>
         </>

@@ -268,9 +268,9 @@ app.put(`${prefix}/:competitionId/event`, async (req, res) => {
 });
 
 // Update an inscription for a competition
-app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
+app.put(`${prefix}/:competitionId/:athleteId`, async (req, res) => {
     const { competitionId, athleteId } = req.params;
-    let userId = req.body.userId;
+    const userId = req.body.userId;
     const { events, records, email } = req.body;
     
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
@@ -306,13 +306,11 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         return res.status(400).json(checkEventsResult);
     }
 
-    // check if athlete is already inscribed
-    if (!checkInscriptions(inscriptions, athleteId)) {
-        return res.status(400).json({ status: 'error', message: 'Athlete not inscribed' });
-    }
 
-    // check if userId corresponds to the one in the inscription
+    // check if athleteId corresponds to the one in the inscription
     const athleteInscriptions = inscriptions.filter((inscription) => inscription.athleteId == athleteId);
+
+    const oldUserId = athleteInscriptions[0].userId;
 
     // Delete inscriptions for events that are not in the new list
     for (let i = 0; i < athleteInscriptions.length; i++) {
@@ -334,7 +332,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
         if (!athleteInscriptions.some((inscription) => inscription.event == event.pseudoName)) {
             inscriptionData.push({ 
                 timestamp,
-                userId, 
+                oldUserId,
                 email,
                 athleteId, 
                 athleteName: athlete.firstName + ' ' + athlete.lastName, 
@@ -354,7 +352,7 @@ app.put('/api/inscriptions/:competitionId/:athleteId', async (req, res) => {
             for (let subEvent of event.subEvents) {
                 inscriptionData.push({
                     timestamp,
-                    userId,
+                    oldUserId,
                     email,
                     athleteId,
                     athleteName: athlete.firstName + ' ' + athlete.lastName,

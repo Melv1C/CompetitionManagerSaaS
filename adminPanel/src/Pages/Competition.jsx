@@ -7,11 +7,13 @@ import { Inscriptions } from '../Components/CompetitionSubpage/Inscriptions';
 import { Events } from '../Components/CompetitionSubpage/Events';
 import { Confirmations } from '../Components/CompetitionSubpage/Confirmations';
 import { Schedule } from '../Components/CompetitionSubpage/Schedule';
+import { Stats } from '../Components/CompetitionSubpage/Stats';
 
 import { getCompetition } from '../CompetitionsAPI';
 import './styles/Competition.css';
 
 export const Competition = (props) => {
+    console.log("competition");
     const { id, subpage } = useParams();
     const navigate = useNavigate();
     const [competition, setCompetition] = useState(null);
@@ -40,6 +42,7 @@ export const Competition = (props) => {
             {subPage === "events" ? <Events competition={competition}/> : null}
             {subPage === "confirmations" ? <Confirmations competition={competition} user={props.user}/> : null}
             {subPage === "schedule" ? <Schedule competition={competition} user={props.user}/> : null}
+            {subPage === "stats" ? <Stats competition={competition} user={props.user}/> : null}
         </>    
     );
 };

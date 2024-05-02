@@ -105,7 +105,6 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
         })
         return;
     }
-    console.log(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}`);
     axios.post(`${INSCRIPTIONS_ADMIN_URL}/${competitionId}`, {
         userId: user.uid,
         athleteId: athlete.id.toString(),

@@ -5,66 +5,78 @@ import { INSCRIPTIONS_URL, COMPETITIONS_URL, INSCRIPTIONS_ADMIN_URL } from '../.
 import { formatRecord } from '../../RecordsHandler';
 import { getSingleStatus,getColorClass } from '../../Status';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faTrash, faPen, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { Popup } from '../Popup/Popup';
+import { DeleteInscrAlert } from '../AlertComponent/DeleteInscrAlert';
 
 import './styles/Schedule.css';
 
+function sortInscriptions(inscriptions) {
+    return inscriptions.sort((a, b) => {
+        const AName = a.athleteName.toLowerCase();
+        const BName = b.athleteName.toLowerCase();
+        if (AName < BName) {
+            return -1;
+        }
+        if (AName > BName) {
+            return 1;
+        }
+        return 0;
+    });
+}
+
 function Participants({event, inscriptions, id, user, setInscriptions}){
+    const navigate = useNavigate();
+    const [showModalDelete, setShowModalDelete] = useState(false);
     return (
         <div className="participants">
-            {inscriptions.sort((a, b) => {
-                if (event.type === 'time') {
-                    return a.record - b.record;
-                } else {
-                    return b.record - a.record;
-                }
-            }).map(inscription => {
+            {inscriptions.map(inscription => {
                 return (
                     <div key={inscription._id} className={"participants-item "+getColorClass(getSingleStatus(inscription))}>
                         <div className="participants-item-bib">{inscription.bib}</div>
                         <div className="participants-item-athlete">{inscription.athleteName}</div>
                         <div className="participants-item-club">{inscription.club}</div>
                         <div className="participants-item-record">{formatRecord(event, inscription.record)}</div>
+                        <div className="participants-item-edit">
+                            <FontAwesomeIcon icon={faPenToSquare} onClick={
+                                () => {
+                                    //competition/fc94a29047/inscriptions?step=2&athleteId=11572237845&isInscribed=true
+                                    navigate(`/competition/${id}/inscriptions?step=2&athleteId=${inscription.athleteId}&isInscribed=true`);
+                                }
+                            } />
+                        </div>
                         <div className="participants-item-del red">
                             <FontAwesomeIcon icon={faTrash} onClick={
                                 () => {
-                                    axios.delete(`${INSCRIPTIONS_ADMIN_URL}/${id}/${inscription._id}/${user.uid}`)
-                                        .then((response) => {
-                                            inscriptions = inscriptions.filter((i) => i._id !== inscription._id);
-                                            setInscriptions(inscriptions);
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
-                                        });
+                                    setShowModalDelete(true);
                                 }
                             }/>
                         </div>
                     </div>
                 )
             })}
+            {showModalDelete ? <Popup onClose={()=>{setShowModalDelete(false)}}><DeleteInscrAlert id={id} setShowModalDelete={setShowModalDelete} user={user} inscription={inscriptions[0]} inscriptions={inscriptions} setInscriptions={setInscriptions}/></Popup> : null}
         </div>
     )
 }
 
 
-function EventItem({event, id, user}) {
+function EventItem({event, id, user, setEvents}) {
     const [inscriptions, setInscriptions] = useState([]);
 
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${id}?event=${event.pseudoName}`)
-            .then((response) => {
+            .then(async (response) => {
                 let inscriptions = response.data.data;
                 inscriptions = inscriptions.filter((inscription) => {
                     return inscription.event === event.pseudoName;
                 });
-                setInscriptions(inscriptions);
+                setInscriptions(sortInscriptions(inscriptions));
             })
             .catch((error) => {
                 console.log(error);
             });
     }, [event]);
-
-
     
     return (
         <div className="event-div">
@@ -91,6 +103,14 @@ function EventItem({event, id, user}) {
                                 .catch((error) => {
                                     console.log(error);
                                 });
+                            setEvents((events) => {
+                                return events.map((e) => {
+                                    if (e.id === event.id) {
+                                        e.closedList = true;
+                                    }
+                                    return e;
+                                });
+                            });
                         }
                     }>Cloturer la liste participants</button> 
                 : 
@@ -103,6 +123,14 @@ function EventItem({event, id, user}) {
                                 .catch((error) => {
                                     console.log(error);
                                 });
+                            setEvents((events) => {
+                                return events.map((e) => {
+                                    if (e.id === event.id) {
+                                        e.closedList = false;
+                                    }
+                                    return e;
+                                });
+                            });
                         }
                     }>Réouvrir la liste participants</button>
                 }
@@ -157,7 +185,7 @@ export const Schedule = ({competition, user}) => {
             </div>
             {events.map(event => {
                 return (
-                    <EventItem key={event.id} event={event} id={id} user={user}/>
+                    <EventItem key={event.id} event={event} id={id} user={user} setEvents={setEvents}/>
                 )
             })}
         </div>
