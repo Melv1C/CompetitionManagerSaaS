@@ -27,18 +27,16 @@ function sortInscriptions(inscriptions) {
 export const DesinscList = ({id, setShowModalDesinsc, user, inscriptions, setInscriptions}) => {
     if (inscriptions.length === 0) {
         return (
-            <div className='padding margin scrollable with100'>
+            <div className='padding margin scrollable width100'>
                 <h2 className='marginBottom40 center'>Liste des désinscriptions</h2>
-                <div className=''>
-                    <div className='displayRow borderBottom padding'>
-                        <div className='width50'>Aucune désinscription</div>
-                    </div>
+                <div className='displayRow borderBottom padding center'>
+                    <div className='center width100'>Aucune désinscription</div>
                 </div>
             </div>
         );
     }
     return (
-        <div className='padding margin scrollable with100'>
+        <div className='padding margin scrollable width100'>
             <h2 className='marginBottom40 center'>Liste des désinscriptions</h2>
             <div className='listDesinsc'>
                 {sortInscriptions(inscriptions).map((inscription) => {

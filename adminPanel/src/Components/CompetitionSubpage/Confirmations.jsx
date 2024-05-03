@@ -10,7 +10,8 @@ import './styles/Confirmations.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faExpand, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { BasicAlert } from '../AlertComponent/BasicAlert';
+import { Popup } from '../Popup/Popup';
+import { ConfirmationError } from '../AlertComponent/ConfirmationError';
 
 
 function timeToMin(time) {
@@ -159,11 +160,11 @@ function InscriptionItem({inscription, id, confirmationTime, userId, setErrors, 
     )
 }
 
-function ConfBtn({id, athleteId, setAthlete, setInscriptions,userId, errors}) {
+function ConfBtn({id, athleteId, setAthlete, setInscriptions,userId, errors, setShowPopupErrors}) {
     return (
         <button className='greenBtn' onClick={()=>{
             if (errors.length != 0) {
-                alert(errors[0].message)
+                setShowPopupErrors(true);
             }else{
                 axios.post(`${CONFIRMATIONS_URL}/${id}/${athleteId}`,{userId:userId}).then((response) => {
                     setAthlete(null);
@@ -227,10 +228,11 @@ export const Confirmations = (props) => {
     const [status, setStatus] = useState(null);
     const [errors, setErrors] = useState([]);
     const [overAthlete, setOverAthlete] = useState(null);
+    const [showPopupErrors, setShowPopupErrors] = useState(false);
     const confirmationTime = props.competition.confirmationTime;
-    console.log(errors);
 
     useEffect(() => {
+        setErrors([]);
         setFilteredInscriptions(inscriptions.filter(inscription => inscription.athleteId === athlete?.athleteId));
     }, [athlete]);
 
@@ -339,11 +341,14 @@ export const Confirmations = (props) => {
                 <InscriptionList inscriptions={filteredInscriptions} id={id} confirmationTime={confirmationTime} userId={props.user.uid} setErrors={setErrors} errors={errors}/>
             </div>
             <div className='btnDiv'>
-                {athlete && status !== "Confirmé" ? <ConfBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid} errors={errors}/> : null}
+                {athlete && status !== "Confirmé" ? <ConfBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid} errors={errors} setShowPopupErrors={setShowPopupErrors}/> : null}
                 {athlete && status === "Confirmé" ? <UnConfBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
                 {athlete && status === "Absent" ? <PresentBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
                 {athlete && status !== "Absent" ? <AbsentBtn id={id} athleteId={athlete.athleteId} setAthlete={setAthlete} setInscriptions={setInscriptions} userId={props.user.uid}/> : null}
             </div>
+            {showPopupErrors ? <Popup onClose={()=>{setShowPopupErrors(false)}}>
+                <ConfirmationError id={id} setShowPopupErrors={setShowPopupErrors} errors={errors} user={props.user} athlete={athlete} setAthlete={setAthlete} setInscriptions={setInscriptions}/>
+            </Popup> : null}
         </div>
     )
 }

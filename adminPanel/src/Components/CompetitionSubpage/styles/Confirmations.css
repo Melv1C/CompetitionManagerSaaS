@@ -94,3 +94,14 @@
     background-color: #E5F0FF;
     cursor: pointer;
 }
+
+.listErrors{
+    margin: 0px;
+    margin-bottom: 40px;
+}
+
+.errorConf{
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 20px;
+}

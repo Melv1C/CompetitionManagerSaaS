@@ -3,11 +3,11 @@ const axios = require('axios');
 const competitionsUrl = process.env.GATEWAY_URL || process.env.COMPETITIONS_URL || 'http://localhost:3000';
 
 const { 
-        getInscriptions,
-        getInscription,
-        addInscription,
-        updateInscription,
-    } = require('./nano');
+    getInscriptions,
+    getInscription,
+    addInscription,
+    updateInscription,
+} = require('./nano');
 
 
 const app = express();
