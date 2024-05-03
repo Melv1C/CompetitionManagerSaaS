@@ -13,7 +13,6 @@ import { getCompetition } from '../CompetitionsAPI';
 import './styles/Competition.css';
 
 export const Competition = (props) => {
-    console.log("competition");
     const { id, subpage } = useParams();
     const navigate = useNavigate();
     const [competition, setCompetition] = useState(null);

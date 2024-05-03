@@ -11,7 +11,7 @@ import { LinearGraph } from '../LinearGraph/LinearGraph'
 import './styles/Stats.css'
 
 function sortInscriptions(inscriptions, dataName) {
-    if (dataName === 'Nouveaux athlètes par jour') {
+    if (dataName === 'Athlètes par jour') {
         let OneInsc = [];
         let alreadyCountAth = []
         for (let inscription of inscriptions) {
@@ -34,13 +34,15 @@ export const Stats = ({competition, user}) => {
     const [categories, setCategories] = useState({});
     const [clubs, setClubs] = useState({});
     const optionsDataName = ['Inscription', 'Revenue', 'Athlète'];
-    const dataNameOptions = ['Inscription par jour', '€ par jour', 'Nouveaux athlètes par jour'];
+    const dataNameOptions = ['Inscription par jour', '€ par jour', 'Athlètes par jour'];
     const randomIndexName = Math.floor(Math.random() * dataNameOptions.length);
     const [dataName, setDataName] = useState(dataNameOptions[randomIndexName]);
     const optionsType = ['Par jour', 'Accumulation'];
     const typeOptions = ['bar', 'line'];
     const randomIndexType = Math.floor(Math.random() * typeOptions.length);
     const [type, setType] = useState(typeOptions[randomIndexType]);
+    const optionTime = ['Tous', 'Dernière semaine', 'Dernier mois'];
+    const [time, setTime] = useState('Tous');
 
 
     useEffect(() => {
@@ -112,7 +114,18 @@ export const Stats = ({competition, user}) => {
                         return <option key={index} value={option}>{optionsType[index]}</option>
                     })}
                 </select>
-                <LinearGraph inscriptions={sortInscriptions(inscriptions, dataName)} type={type} dataName={dataName}/>
+                <select onChange={
+                    (e) => {
+                        setTime(e.target.value);
+                    }}>
+                    {optionTime.map((option, index) => {
+                        if (option === time) {
+                            return <option key={index} value={option} selected>{option}</option>
+                        }
+                        return <option key={index} value={option}>{option}</option>
+                    })}
+                </select>
+                <LinearGraph inscriptions={sortInscriptions(inscriptions, dataName)} type={type} dataName={dataName} time={time}/>
             </div>
             <div className="card pie-chart">
                 <div className='center title'>Athlètes par cathégorie:</div>

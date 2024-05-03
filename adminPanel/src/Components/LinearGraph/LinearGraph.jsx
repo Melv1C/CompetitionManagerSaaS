@@ -30,7 +30,7 @@ function removeYearDicDates(Dic) {
   return newDic;
 }
 
-export const LinearGraph = ({ inscriptions, type, dataName }) => {
+export const LinearGraph = ({ inscriptions, type, dataName, time }) => {
   const chartContainer = useRef(null);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const LinearGraph = ({ inscriptions, type, dataName }) => {
       let inscriptionsByDay = inscriptions.reduce((acc, inscription) => {
         const date = new Date(inscription.timestamp);
         const day = dateToString(date);
-        if (dataName === 'Inscription par jour' || dataName ===  'Nouveaux athlètes par jour') {
+        if (dataName === 'Inscription par jour' || dataName ===  'Athlètes par jour') {
           acc[day] = (acc[day] || 0) + 1;
         }else if (dataName === '€ par jour') {
           acc[day] = (acc[day] || 0) + inscription.cost;
@@ -52,7 +52,29 @@ export const LinearGraph = ({ inscriptions, type, dataName }) => {
       }, {});
 
       // add missing days with 0 inscriptions
-      const firstDay = Object.keys(inscriptionsByDay)[0];
+      let firstDay;
+      let realFirstDay;
+      if (time === 'Dernière semaine') {
+        const today = new Date();
+        firstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        realFirstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        if (firstDay > stringToDate(Object.keys(inscriptionsByDay)[0])) {
+          firstDay = Object.keys(inscriptionsByDay)[0];
+        }else{
+          firstDay = dateToString(firstDay);
+        }
+      } else if (time === 'Dernier mois') {
+        const today = new Date();
+        firstDay = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+        realFirstDay = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+        if (firstDay > stringToDate(Object.keys(inscriptionsByDay)[0])) {
+          firstDay = Object.keys(inscriptionsByDay)[0];
+        }else{
+          firstDay = dateToString(firstDay);
+        }
+      }else{
+        firstDay = Object.keys(inscriptionsByDay)[0];
+      }
       const lastDay = dateToString(new Date());
       const allDays = {};
       let currentDate = stringToDate(firstDay);
@@ -61,10 +83,19 @@ export const LinearGraph = ({ inscriptions, type, dataName }) => {
         currentDate.setDate(currentDate.getDate() + 1);
       }
       inscriptionsByDay = { ...allDays, ...inscriptionsByDay };
+
       if (type === 'line') {
         for (const day in inscriptionsByDay) {
           if (day !== Object.keys(inscriptionsByDay)[0]) {
             inscriptionsByDay[day] += inscriptionsByDay[Object.keys(inscriptionsByDay)[Object.keys(inscriptionsByDay).indexOf(day) - 1]];
+          }
+        }
+      }
+      
+      if (time === 'Dernière semaine' || time === 'Dernier mois') {
+        for (const day in inscriptionsByDay) {
+          if (stringToDate(day) < realFirstDay) {
+            delete inscriptionsByDay[day];
           }
         }
       }
@@ -104,7 +135,7 @@ export const LinearGraph = ({ inscriptions, type, dataName }) => {
         newChartInstance.destroy();
       }
     };
-  }, [inscriptions, type, dataName]);
+  }, [inscriptions, type, dataName, time]);
 
   return <canvas className='canvas-linear-graph' ref={chartContainer}></canvas>;
 };
