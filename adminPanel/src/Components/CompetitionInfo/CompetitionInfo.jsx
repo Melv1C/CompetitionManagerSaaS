@@ -73,14 +73,10 @@ export const CompetitionInfo = (props) => {
                 oneDay: oneDay,
                 oneDayBIB: event.target.oneDayBIB.value
             };
-            console.log(formData);
-            console.log(oneDay);
-            console.log(event.target.oneDayBIB.value);
             updateCompetition(formData, props.setCompetition);
             props.setShowModal(false);
         }
     };
-    console.log(compet);
     return (
         <div className='competInfo scrollable'>
             {compet ? <h1>Modifier la compétition</h1> : <h1>Créé une nouvelle compétition</h1>}

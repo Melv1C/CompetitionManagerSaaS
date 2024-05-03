@@ -1,5 +1,9 @@
 const nano = require('nano')(process.env.COUCHDB_URL);
 
+function RemoveUninscribedInscriptions(inscriptions) {
+    return inscriptions.filter((inscription) => inscription.inscribed);
+}
+
 function addInscription(dbName, inscription) {
     const db = nano.use(dbName);
     return new Promise((resolve, reject) => {
@@ -22,6 +26,7 @@ function getInscriptions(dbName) {
             } else {
                 let inscriptions = body.rows.map((row) => row.doc);
                 inscriptions = inscriptions.filter((inscription) => !inscription._id.startsWith('_design'));
+                inscriptions = RemoveUninscribedInscriptions(inscriptions);
                 resolve(inscriptions);
             }
         });

@@ -57,6 +57,11 @@
     border: 0px;
 }
 
+.biggerPopup {
+    max-width: none;
+    width: 90%;
+}
+
 
 
 

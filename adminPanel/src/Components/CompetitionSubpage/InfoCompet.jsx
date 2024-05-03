@@ -63,7 +63,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     <div className='margin center'>
                         <label>Copier les mails des participants</label>
                         <button className='greenBtn' onClick={(e) => {
-                            axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}?adminId=${user.uid}`).then((response) => {
+                            axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}`).then((response) => {
                                 const inscriptions = response.data.data;
                                 let mails = [];
                                 let text = "";

@@ -56,8 +56,8 @@ export const LinearGraph = ({ inscriptions, type, dataName, time }) => {
       let realFirstDay;
       if (time === 'Dernière semaine') {
         const today = new Date();
-        firstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-        realFirstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        firstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6);
+        realFirstDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6);
         if (firstDay > stringToDate(Object.keys(inscriptionsByDay)[0])) {
           firstDay = Object.keys(inscriptionsByDay)[0];
         }else{
@@ -75,7 +75,8 @@ export const LinearGraph = ({ inscriptions, type, dataName, time }) => {
       }else{
         firstDay = Object.keys(inscriptionsByDay)[0];
       }
-      const lastDay = dateToString(new Date());
+      //last day is today +1
+      const lastDay = dateToString(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1));
       const allDays = {};
       let currentDate = stringToDate(firstDay);
       while (dateToString(currentDate) !== lastDay) {

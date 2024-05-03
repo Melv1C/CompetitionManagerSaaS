@@ -3,7 +3,7 @@ const axios = require('axios');
 
 require('dotenv').config();
 
-const { createDatabase, deleteDatabase, addInscription, getInscriptions, getInscription, deleteInscription } = require('./nano');
+const { createDatabase, deleteDatabase, addInscription, getInscriptions, getInscription, deleteInscription, getAllInscriptions, getDesinscriptions, restoreInscription } = require('./nano');
 const { checkParams, checkEvents, checkInscriptions, getData, freeInscriptions } = require('./utils');
 
 const app = express();
@@ -62,15 +62,10 @@ app.get(`${prefix}/backup/:competitionId`, async (req, res) => {
 
 app.get(`${prefix}/:competitionId`, async (req, res) => {
     const { competitionId } = req.params;
-    const { adminId } = req.query;
-    let adminCheck;
-    if (adminId) {
-        adminCheck = await axios.get(`${process.env.COMPETITIONS_URL}/api/competitions/${competitionId}/${adminId}`).catch((err) => {
-            console.error(err);
-            return false;
-        });
-    }else{
-        adminCheck = false;
+    try {
+        await checkPermission(competitionId, adminId);
+    } catch (err) {
+        return res.status(403).json({ status: 'error', message: err.message });
     }
 
     getInscriptions(`competition_${competitionId}`)
@@ -82,6 +77,58 @@ app.get(`${prefix}/:competitionId`, async (req, res) => {
             res.status(500).json({ status: 'error', message: 'An error occurred while fetching inscriptions' });
         });
 });
+
+app.get(`${prefix}/:competitionId`, async (req, res) => {
+    const { competitionId } = req.params;
+
+    getInscriptions(`competition_${competitionId}`)
+        .then((inscriptions) => {
+            res.status(200).json({ status: 'success', message: 'Inscriptions retrieved successfully', data: inscriptions });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching inscriptions' });
+        });
+});
+
+app.get(`${prefix}/:competitionId/:userId`, async (req, res) => {
+    const { competitionId, userId } = req.params;
+    
+    try {
+        await checkPermission(competitionId, userId);
+    } catch (err) {
+        return res.status(403).json({ status: 'error', message: err.message });
+    }
+
+    getAllInscriptions(`competition_${competitionId}`)
+        .then((inscriptions) => {
+            res.status(200).json({ status: 'success', message: 'All inscriptions retrieved successfully', data: inscriptions});
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching inscriptions' });
+        });
+});
+
+app.get(`${prefix}/:competitionId/desinscriptions/:userId`, async (req, res) => {
+    const { competitionId, userId } = req.params;
+
+    try {
+        await checkPermission(competitionId, adminId);
+    } catch (err) {
+        return res.status(403).json({ status: 'error', message: err.message });
+    }
+
+    getDesinscriptions(`competition_${competitionId}`)
+        .then((inscriptions) => {
+            res.status(200).json({ status: 'success', message: 'All desinscriptions retrieved successfully', data: inscriptions});
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ status: 'error', message: 'An error occurred while fetching desinscriptions' });
+        });
+});
+
 
 // Create a database for a new competition
 app.post(`${prefix}`, async (req, res) => {
@@ -266,6 +313,32 @@ app.put(`${prefix}/:competitionId/event`, async (req, res) => {
 
     res.status(200).json({ status: 'success', message: 'Event name updated successfully' });
 });
+
+app.put(`${prefix}/:competitionId/:inscriptionId/restore/:adminId`, async (req, res) => {
+    const { competitionId, inscriptionId, adminId } = req.params;
+    if (!competitionId && typeof competitionId !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid competitionId' });
+    }
+    if (!inscriptionId && typeof inscriptionId !== 'string') {
+        return res.status(400).json({ status: 'error', message: 'Invalid inscriptionId' });
+    }
+
+    try {
+        await checkPermission(competitionId, adminId);
+    } catch (err) {
+        return res.status(403).json({ status: 'error', message: err.message });
+    }
+    try {
+        await restoreInscription(`competition_${competitionId}`, inscriptionId);
+        const inscriptions = await getAllInscriptions(`competition_${competitionId}`)
+        res.status(200).json({ status: 'success', message: 'Inscription restored successfully', data: inscriptions });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: 'error', message: 'An error occurred while restoring the inscription' });
+    }
+});
+
+
 
 // Update an inscription for a competition
 app.put(`${prefix}/:competitionId/:athleteId`, async (req, res) => {

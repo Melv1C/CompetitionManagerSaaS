@@ -1,16 +1,28 @@
 import {React, useState, useEffect} from 'react'
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { INSCRIPTIONS_URL, COMPETITIONS_URL, INSCRIPTIONS_ADMIN_URL } from '../../Gateway';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { INSCRIPTIONS_ADMIN_URL } from '../../Gateway';
+
 
 import { PieChart } from '../PieChart/PieChart'
 import { LinearGraph } from '../LinearGraph/LinearGraph'
+import { Popup } from '../Popup/Popup'
+import { DesinscList } from '../AlertComponent/DesinscList'
 
 import './styles/Stats.css'
 
+function removeDesinscription(inscriptions) {
+    return inscriptions.filter((inscription) => inscription.inscribed);
+}
+
+function removeInscription(inscriptions) {
+    return inscriptions.filter((inscription) => !inscription.inscribed);
+}
+
 function sortInscriptions(inscriptions, dataName) {
+    if (dataName === 'Inscription par jour' || dataName === 'Athlètes par jour') {
+        inscriptions = inscriptions.filter((inscription) => inscription.inscribed);
+    }
     if (dataName === 'Athlètes par jour') {
         let OneInsc = [];
         let alreadyCountAth = []
@@ -29,7 +41,6 @@ function sortInscriptions(inscriptions, dataName) {
 
 export const Stats = ({competition, user}) => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [inscriptions, setInscriptions] = useState([]);
     const [categories, setCategories] = useState({});
     const [clubs, setClubs] = useState({});
@@ -43,13 +54,17 @@ export const Stats = ({competition, user}) => {
     const [type, setType] = useState(typeOptions[randomIndexType]);
     const optionTime = ['Tous', 'Dernière semaine', 'Dernier mois'];
     const [time, setTime] = useState('Tous');
+    const [nbAth, setNbAth] = useState(0);
+    const [desiscritpions, setDesinscriptions] = useState([]);
+    const [showModalDesinsc, setShowModalDesinsc] = useState(false);
 
 
     useEffect(() => {
+        setDesinscriptions(removeInscription(inscriptions));
         let categoriesDic = {};
         let clubsDic = {};
         let alreadyCountAth = []
-        for (let inscription of inscriptions) {
+        for (let inscription of removeDesinscription(inscriptions)) {
             if (alreadyCountAth.includes(inscription.athleteId)) {
                 continue;
             }else{
@@ -66,62 +81,78 @@ export const Stats = ({competition, user}) => {
             }
             alreadyCountAth.push(inscription.athleteId);
         }
+        setNbAth(alreadyCountAth.length);
         setCategories(categoriesDic);
         setClubs(clubsDic);
     }, [inscriptions]);
 
 
     useEffect(() => {
-        axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}`)
+        axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}/${user.uid}`)
         .then((response) => {
-            setInscriptions(response.data.data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)));
+            const inscriptions = response.data.data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            setInscriptions(inscriptions);
         })
         .catch((error) => {
             console.log(error);
         });
     }, []);
+
     
 
 
     return (
         <div className='stats-page'>
-            <div>
-                Revenue brut : {
-                    inscriptions.reduce((acc, inscription) => acc + inscription.cost, 0)
-                }€
+            <div className='stat-card'>
+                <div>
+                    <div>
+                        Revenue brut : {
+                            inscriptions.reduce((acc, inscription) => acc + inscription.cost, 0)
+                        }€
+                    </div>
+                    <div>
+                        Nombre d'athlètes : {nbAth} 
+                    </div>
+                    <div>
+                        Nombre d'inscriptions : {inscriptions.length}
+                    </div>
+                    
+                </div>
+                <div>
+                    <div>
+                        Nombre de désinscriptions : {desiscritpions.length}
+                    </div>
+                    <button className='BtnDesinsc' onClick={
+                        () => {
+                            setShowModalDesinsc(true);
+                        }
+                    }>Voir les désinscriptions</button>
+                    {showModalDesinsc ? <Popup size={'big'} onClose={()=>{setShowModalDesinsc(false)}}><DesinscList id={id} setShowModalDesinsc={setShowModalDesinsc} user={user} inscriptions={desiscritpions} setInscriptions={setInscriptions} /></Popup> : null}
+                </div>
             </div>
             <div className="card linear-graph">
                 <select onChange={
                     (e) => {
                         console.log(e.target.value);
                         setDataName(e.target.value)
-                    }}>
+                    }} value={dataName}>
                     {dataNameOptions.map((option, index) => {
-                        if (option === dataName) {
-                            return <option key={index} value={option} selected>{optionsDataName[index]}</option>
-                        }
                         return <option key={index} value={option}>{optionsDataName[index]}</option>
                     })}
                 </select>
                 <select onChange={
                     (e) => {
                         setType(e.target.value);
-                    }}>
+                    }} value={type}>
                     {typeOptions.map((option, index) => {
-                        if (option === type) {
-                            return <option key={index} value={option} selected>{optionsType[index]}</option>
-                        }
                         return <option key={index} value={option}>{optionsType[index]}</option>
                     })}
                 </select>
                 <select onChange={
                     (e) => {
                         setTime(e.target.value);
-                    }}>
+                    }} value={time}>
                     {optionTime.map((option, index) => {
-                        if (option === time) {
-                            return <option key={index} value={option} selected>{option}</option>
-                        }
                         return <option key={index} value={option}>{option}</option>
                     })}
                 </select>
