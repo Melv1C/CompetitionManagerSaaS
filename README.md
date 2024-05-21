@@ -1,6 +1,6 @@
 # Competition ManagerSaaS
 
-## Introduction TEST
+## Introduction
 
 This is a SaaS application for managing athletic competitions.
 
