@@ -61,7 +61,8 @@ app.get(`${prefix}/backup/:competitionId`, async (req, res) => {
 });
 
 app.get(`${prefix}/:competitionId`, async (req, res) => {
-    const { competitionId } = req.params;
+    const competitionId  = req.params.competitionId;
+    const adminId = req.query.adminId;
     try {
         await checkPermission(competitionId, adminId);
     } catch (err) {
@@ -155,7 +156,7 @@ app.post(`${prefix}`, async (req, res) => {
 app.post(`${prefix}/:competitionId`, async (req, res) => {
     const { competitionId } = req.params;
     let userId = req.body.userId;
-    const { athleteId, events, records, email } = req.body;
+    const { athleteId, events, records, email, changed } = req.body;
 
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
@@ -216,7 +217,8 @@ app.post(`${prefix}/:competitionId`, async (req, res) => {
             parentEvent: null,
             cost: 0, 
             confirmed: false,
-            inscribed: true
+            inscribed: true,
+            changed: changed ? changed : false
         });   
         
         for (let subEvent of event.subEvents) {
@@ -236,7 +238,8 @@ app.post(`${prefix}/:competitionId`, async (req, res) => {
                 parentEvent: event.pseudoName,
                 cost: 0,
                 confirmed: false,
-                inscribed: true
+                inscribed: true,
+                changed: changed ? changed : false
             });
         }
     }
@@ -344,7 +347,7 @@ app.put(`${prefix}/:competitionId/:inscriptionId/restore/:adminId`, async (req, 
 app.put(`${prefix}/:competitionId/:athleteId`, async (req, res) => {
     const { competitionId, athleteId } = req.params;
     const userId = req.body.userId;
-    const { events, records, email } = req.body;
+    const { events, records, email, changed } = req.body;
     
     const success_url = req.body.success_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=5`;
     const cancel_url = req.body.cancel_url || `http://localhost/competitions/${competitionId}?subPage=inscription&athleteId=${athleteId}&step=4`;
@@ -403,6 +406,7 @@ app.put(`${prefix}/:competitionId/:athleteId`, async (req, res) => {
     let inscriptionData = [];
     for (let event of eventsInfo) {
         if (!athleteInscriptions.some((inscription) => inscription.event == event.pseudoName)) {
+            console.log('event not found added by line 407')
             inscriptionData.push({ 
                 timestamp,
                 oldUserId,
@@ -419,7 +423,8 @@ app.put(`${prefix}/:competitionId/:athleteId`, async (req, res) => {
                 parentEvent: null,
                 cost: 0,
                 confirmed: false,
-                inscribed: true
+                inscribed: true,
+                changed: changed ? changed : false
             });   
             
             for (let subEvent of event.subEvents) {
@@ -439,7 +444,8 @@ app.put(`${prefix}/:competitionId/:athleteId`, async (req, res) => {
                     parentEvent: event.pseudoName,
                     cost: 0,
                     confirmed: false,
-                    inscribed: true
+                    inscribed: true,
+                    changed: changed ? changed : false
                 });
             }
 

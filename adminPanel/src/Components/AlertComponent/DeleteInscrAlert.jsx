@@ -16,7 +16,8 @@ function sortInscriptions(inscriptions) {
     });
 }
 
-export const DeleteInscrAlert = ({id, setShowModalDelete, user, inscription, inscriptions, setInscriptions}) => {
+export const DeleteInscrAlert = ({id, setShowModalDelete, user, inscriptions, setInscriptions, delId}) => {
+    const inscription = inscriptions.find((i) => i._id === delId);
     return (
         <div className='padding margin'>
             <h2 className='marginBottom40'>Etes vous sur de vouloir supprimer cette inscription ?</h2>

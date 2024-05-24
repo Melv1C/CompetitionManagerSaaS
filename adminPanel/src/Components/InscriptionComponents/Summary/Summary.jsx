@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { INSCRIPTIONS_ADMIN_URL ,INSCRIPTIONS_URL } from '../../../Gateway'
+import { COMPETITIONS_URL, INSCRIPTIONS_ADMIN_URL ,INSCRIPTIONS_URL } from '../../../Gateway'
 
 import { formatRecord } from '../../../RecordsHandler'
-
+import Switch from '@mui/material/Switch';
 import './Summary.css'
 
 function AthleteSummary({athlete}) {
@@ -66,16 +66,16 @@ function TotalCost({totalCost}) {
     )
 }
 
-function ControlButtons({setStep, totalCost, athlete, events, records, competitionId,user}) {
+function ControlButtons({setStep, totalCost, athlete, events, records, competitionId, user, changed}) {
     return (
         <div className='control-buttons'>
             <button onClick={()=>{setStep(3)}}>Précédent</button>
-            <button onClick={()=>{postInscription(athlete, events, records, competitionId, setStep, user)}}>{totalCost === 0 ? 'Valider' : 'Payer'}</button>
+            <button onClick={()=>{postInscription(athlete, events, records, competitionId, setStep, user, changed)}}>{totalCost === 0 ? 'Valider' : 'Payer'}</button>
         </div>
     )
 }
 
-function postInscription(athlete, events, records, competitionId, setStep, user) {
+function postInscription(athlete, events, records, competitionId, setStep, user, changed) {
 
     // get isInscribed from url
     const urlSearchParams = new URLSearchParams(window.location.search);
@@ -87,6 +87,7 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
             events: events.map(event => event.pseudoName),
             records: records,
             email: undefined,
+            changed: changed,
             success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
             cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
         })
@@ -110,6 +111,7 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
         athleteId: athlete.id.toString(),
         events: events.map(event => event.pseudoName),
         records: records,
+        changed: changed,
         email: undefined,
         success_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=5`,
         cancel_url: `/competition/${competitionId}/inscriptions?athleteId=${athlete.id}&step=4`
@@ -133,6 +135,18 @@ function postInscription(athlete, events, records, competitionId, setStep, user)
 
 export const Summary = ({athlete, events, records, setStep, competitionId, free, freeEvents, user}) => {
     const [totalCost, setTotalCost] = useState(0);
+    const [changed, setchanged] = useState(false);
+
+    useEffect(() => {
+        axios.get(`${COMPETITIONS_URL}/${competitionId}`).then((response) => {
+            const competition = response.data.data;
+            setchanged(new Date(competition.date).toISOString().split('T')[0] === new Date().toISOString().split('T')[0]);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }, []);
+
+
     useEffect(() => {
         if (free) {
             setTotalCost(0);
@@ -161,7 +175,16 @@ export const Summary = ({athlete, events, records, setStep, competitionId, free,
                 <EventsRecordsSummary events={eventsList} records={records} free={free} />
                 <TotalCost totalCost={totalCost} />
             </div>
-            <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} user={user}/>
+            
+            <div>
+                <label>Afficher comme modifier</label>
+                <Switch checked={changed} onChange={
+                    () => {
+                        setchanged(!changed);
+                    }
+                }/>
+            </div>
+            <ControlButtons setStep={setStep} totalCost={totalCost} athlete={athlete} events={events} records={records} competitionId={competitionId} user={user} changed={changed}/>
         </div>
 
     )

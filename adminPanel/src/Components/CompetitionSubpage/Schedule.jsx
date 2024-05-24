@@ -28,6 +28,7 @@ function sortInscriptions(inscriptions) {
 function Participants({event, inscriptions, id, user, setInscriptions}){
     const navigate = useNavigate();
     const [showModalDelete, setShowModalDelete] = useState(false);
+    const [delId, setDelId] = useState(null);
     return (
         <div className="participants">
             {inscriptions.map(inscription => {
@@ -48,6 +49,7 @@ function Participants({event, inscriptions, id, user, setInscriptions}){
                         <div className="participants-item-del red">
                             <FontAwesomeIcon icon={faTrash} onClick={
                                 () => {
+                                    setDelId(inscription._id);
                                     setShowModalDelete(true);
                                 }
                             }/>
@@ -55,7 +57,7 @@ function Participants({event, inscriptions, id, user, setInscriptions}){
                     </div>
                 )
             })}
-            {showModalDelete ? <Popup onClose={()=>{setShowModalDelete(false)}}><DeleteInscrAlert id={id} setShowModalDelete={setShowModalDelete} user={user} inscription={inscriptions[0]} inscriptions={inscriptions} setInscriptions={setInscriptions}/></Popup> : null}
+            {showModalDelete ? <Popup onClose={()=>{setShowModalDelete(false)}}><DeleteInscrAlert id={id} setShowModalDelete={setShowModalDelete} user={user} delId={delId} inscriptions={inscriptions} setInscriptions={setInscriptions}/></Popup> : null}
         </div>
     )
 }

@@ -29,6 +29,9 @@ function getGlobalStatus(inscriptions){
 }
 
 function getSingleStatus(inscription){
+    if (inscription.bib === 729){
+        console.log(inscription)
+    }
     if (inscription == null) {
         return 'Loading...';
     }
@@ -39,6 +42,10 @@ function getSingleStatus(inscription){
 
     if (inscription.removed) {
         return 'removed';
+    }
+
+    if (inscription.changed) {
+        return 'changed';
     }
 
     return inscription.confirmed ? 'Confirmé' : 'Non confirmé';

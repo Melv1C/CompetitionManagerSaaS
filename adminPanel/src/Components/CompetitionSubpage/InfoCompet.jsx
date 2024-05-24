@@ -63,11 +63,10 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     <div className='margin center'>
                         <label>Copier les mails des participants</label>
                         <button className='greenBtn' onClick={(e) => {
-                            axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}`).then((response) => {
+                            axios.get(`${INSCRIPTIONS_ADMIN_URL}/${id}?adminId=${user.uid}`).then((response) => {
                                 const inscriptions = response.data.data;
                                 let mails = [];
                                 let text = "";
-                                console.log(inscriptions);
                                 inscriptions.forEach((inscription) => {
                                     if (mails.indexOf(inscription.email) === -1 && inscription.email !== ""){
                                         mails.push(inscription.email);
@@ -87,7 +86,7 @@ export const InfoCompet = ({competition, user, setCompetition}) => {
                     <div className='margin center'>
                         <label>Télécharger le ficher des inscritpions</label>
                         <button className='greenBtn' onClick={(e) => {
-                            axios.get(`${INSCRIPTIONS_URL}/${id}`).then((response) => {
+                            axios.get(`${INSCRIPTIONS_URL}/${id}?adminId=${user.uid}`).then((response) => {
                                 const inscriptions = response.data.data;
                                 let fileData = "";
                                 inscriptions.forEach((inscription) => {
