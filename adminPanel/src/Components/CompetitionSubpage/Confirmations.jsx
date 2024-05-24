@@ -116,7 +116,7 @@ function SelectedAthlete({athlete, status}) {
 function InscriptionList({inscriptions, id, confirmationTime, userId, setErrors, errors}) {
     return (
         <div className='inscriptionList'>
-            {inscriptions.map((inscription, index) => {
+            {inscriptions.filter(inscription => inscription.eventType !== "subEvent").map((inscription, index) => {
                 return <InscriptionItem key={index} inscription={inscription} id={id} confirmationTime={confirmationTime} userId={userId} setErrors={setErrors} errors={errors}/>
             })}
         </div>
@@ -162,7 +162,7 @@ function InscriptionItem({inscription, id, confirmationTime, userId, setErrors, 
 
 function ConfBtn({id, athleteId, setAthlete, setInscriptions,userId, errors, setShowPopupErrors}) {
     return (
-        <button className='greenBtn' onClick={()=>{
+        <button className='greenBtn' id='confirmAthBtn' onClick={()=>{
             if (errors.length != 0) {
                 setShowPopupErrors(true);
             }else{
@@ -303,9 +303,16 @@ export const Confirmations = (props) => {
                                             setOverAthlete(null);
                                         }
                                     }else{
-                                        setLoading(true);
-                                        getMatchingAthletes(e.target.value)
-                                        setOverAthlete(0);
+                                        if (document.querySelector('.field input').value === ''){
+                                            if (athlete){
+                                                document.getElementById('confirmAthBtn').click();
+                                            }
+                                        }else{
+                                            setLoading(true);
+                                            getMatchingAthletes(e.target.value)
+                                            setOverAthlete(0);
+                                        }
+                                        
                                     }
                                 }else if (e.key === 'ArrowDown') {
                                     if (overAthlete < athletes.length - 1) {

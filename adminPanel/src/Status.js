@@ -29,9 +29,6 @@ function getGlobalStatus(inscriptions){
 }
 
 function getSingleStatus(inscription){
-    if (inscription.bib === 729){
-        console.log(inscription)
-    }
     if (inscription == null) {
         return 'Loading...';
     }

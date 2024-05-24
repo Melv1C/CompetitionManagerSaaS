@@ -64,6 +64,7 @@ function RecordsItem({record, setRecord, event, athleteId, records}) {
                 })
                 .catch(error => {
                     console.log(error);
+                    console.log(event.pseudoName);
                     if (isMultiEvent) {
                         setRecord(event.pseudoName, "0", "total", "setTo0IfUndef")
                     } else if (isSubEvent) {

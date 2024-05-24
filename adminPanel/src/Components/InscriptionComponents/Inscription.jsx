@@ -87,16 +87,22 @@ export const Inscription = (props) => {
     const setRecord = (event, record, subEvent=null, type=null) => {
         setRecords((prevRecords) => {
             if (subEvent) {
-                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                if (!prevRecords[event]) {
+                    return {...prevRecords, [event]: {[subEvent]: record}}
+                } else if (!prevRecords[event][subEvent]) {
+                    return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
+                } else if (type === 'setTo0IfUndef' && prevRecords[event][subEvent]) {
                     return prevRecords;
-                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                } else if (type === 'setToRecordIfNotDef' && parseFloat(prevRecords[event][subEvent]) !== 0) {
                     return prevRecords;
                 }
                 return {...prevRecords, [event]: {...prevRecords[event], [subEvent]: record}}
             } else {
-                if (type === 'setTo0IfUndef' && prevRecords[event]) {
+                if (!prevRecords[event]) {
+                    return {...prevRecords, [event]: record}
+                } else if (type === 'setTo0IfUndef' && prevRecords[event]) {
                     return prevRecords;
-                } else if (type === 'setToRecordIfNot0' && record === 0) {
+                } else if (type === 'setToRecordIfNotDef' && parseFloat(prevRecords[event]) !== 0) {
                     return prevRecords;
                 }
                 return {...prevRecords, [event]: record}
