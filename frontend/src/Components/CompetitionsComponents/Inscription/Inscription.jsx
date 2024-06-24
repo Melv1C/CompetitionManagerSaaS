@@ -266,8 +266,13 @@ export const Inscription = ({competition}) => {
         })
     }, [athlete])
 
+    const now = new Date();
+    const closeDate = new Date(competition.closeDate);
+    // add 1 day to close date
+    closeDate.setDate(closeDate.getDate() + 1);
+
     // check if the inscription is still open
-    if (new Date(competition.closeDate) < new Date()) {
+    if (now > closeDate) {
         return (
             <div className='competition-page red'>
                 <h2>Les inscriptions pour cette compétition sont terminées</h2>
