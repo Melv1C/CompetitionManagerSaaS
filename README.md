@@ -1,5 +1,7 @@
 # Competition ManagerSaaS
 
+!!! Not up to date
+
 ## Introduction
 
 This is a SaaS application for managing athletic competitions.
@@ -16,11 +18,10 @@ The application is built using a microservice architecture. Each service is a se
 we divide the project into 3 main parts:
 - Frontend (the user interface)
 - Backend
-- Admin Panel
 
 ### Frontend
 
-[see more details](frontend/README.md)
+...
 
 ### Backend
 
@@ -31,10 +32,6 @@ The backend is composed of several services. Here you can find the list of servi
 - [Inscriptions](backend/inscriptions/README.md)
 - [Stripe](backend/stripe/README.md)
 - ...
-
-### Admin Panel
-
-[see more details](adminPanel/README.md)
 
 
 ## Dockerization
