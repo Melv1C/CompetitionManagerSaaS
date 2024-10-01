@@ -1,0 +1,2097 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event>
+    <ID>35</ID>
+    <seqno>7</seqno>
+    <name>100m TC F</name>
+    <abbreviation>100m</abbreviation>
+    <info>100 mètres</info>
+    <status>5</status>
+    <status>5</status>
+    <categories>
+        <category>
+            <name>Toutes catégories (W)</name>
+            <abbreviation>TC W</abbreviation>
+        </category>
+    </categories>
+    <eventtype>
+                            <name language=""></name>
+                            <abbreviation language=""></abbreviation>
+                            <code>2</code>
+                            <nationalcode>2</nationalcode>
+                            <shortcode>100m</shortcode>
+                            <windmode>H</windmode>
+                            <windtime>10</windtime>
+                            <fieldtype> </fieldtype>
+                            <distance>100</distance>
+                            <athletesquantity>1</athletesquantity>
+                            <implement>0</implement>
+                            <combinedeventsquantity>0</combinedeventsquantity>
+    </eventtype>
+    <rounds>
+        <round combinedTotal="false" seqno="1">
+            <name>*</name>
+            <abbreviation></abbreviation>
+            <info></info>
+            <scheduled>13:10:00</scheduled>
+            <official>13:40:58</official>
+            <status>5</status>
+            <heats>
+                <heat seqno="1" attempts="0" heights="0">
+                    <info>0</info>
+                    <scheduled>13:10:00</scheduled>
+                    <official>13:40:58</official>
+                    <status>5</status>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Bariseau</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Alice</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-06-24</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>610365095162</license>
+                                        <bib>8310</bib>
+                                        <displayname>Bariseau, Alice</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>6</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>650</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.71</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.703</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Vanhove</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Cléa</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-10-26</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>115323084374</license>
+                                        <bib>8644</bib>
+                                        <displayname>Vanhove, Cléa</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>4</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>9</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>636</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.80</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.8</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Piagnerelli</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Line</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2007-09-27</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>512444008525</license>
+                                        <bib>482</bib>
+                                        <displayname>Piagnerelli, Line</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>8</initialorder>
+                            <currentorder>3</currentorder>
+                            <currentorder_round>12</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>606</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.99</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.987</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>61</id>
+                                            <name>W35</name>
+                                            <abbreviation>W35</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Pieroux</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Marianne</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>1988-06-23</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>910261692861</license>
+                                        <bib>7300</bib>
+                                        <displayname>Pieroux, Marianne</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>5</initialorder>
+                            <currentorder>4</currentorder>
+                            <currentorder_round>17</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>563</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.27</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.268</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Truant</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Olivia</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-02-23</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>1433599202</license>
+                                        <bib>8340</bib>
+                                        <displayname>Truant, Olivia</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>5</currentorder>
+                            <currentorder_round>23</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>485</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.80</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.793</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Hannecart</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Lucie</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-05-02</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>410192649534</license>
+                                        <bib>8601</bib>
+                                        <displayname>Hannecart, Lucie</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>7</initialorder>
+                            <currentorder>6</currentorder>
+                            <currentorder_round>24</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>455</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>15.01</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>15.008</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Spreux</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Ambre</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-02-08</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>408061870553</license>
+                                        <bib>8781</bib>
+                                        <displayname>Spreux, Ambre</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>6</initialorder>
+                            <currentorder>7</currentorder>
+                            <currentorder_round>25</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>426</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>15.23</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>15.23</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Pamelard</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Nina</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-10-10</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>604375622149</license>
+                                        <bib>8322</bib>
+                                        <displayname>Pamelard, Nina</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>8</currentorder>
+                            <currentorder_round>27</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>388</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>15.52</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>15.514</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+                <heat seqno="2" attempts="0" heights="0">
+                    <info>0</info>
+                    <scheduled>13:13:00</scheduled>
+                    <official>13:40:58</official>
+                    <status>5</status>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Dubois</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Rihley</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-01-14</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>609514606320</license>
+                                        <bib>8183</bib>
+                                        <displayname>Dubois, Rihley</displayname>
+                                        <team>
+                                            <name>Mons Obourg Hainaut Athlétisme</name>
+                                            <abbreviation>MOHA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>8</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>10</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>623</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.88</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.871</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Cauchie</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Rochelle</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2008-10-15</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>6192236022</license>
+                                        <bib>267</bib>
+                                        <displayname>Cauchie, Rochelle</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.96</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.96</result_value>
+                            </personalbest>
+                            <initialorder>4</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>16</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>567</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.24</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.235</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Reybroeck</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Lilou</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-04-05</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>507394314345</license>
+                                        <bib>8604</bib>
+                                        <displayname>Reybroeck, Lilou</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>15.25</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>15.25</result_value>
+                            </personalbest>
+                            <initialorder>5</initialorder>
+                            <currentorder>3</currentorder>
+                            <currentorder_round>21</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>492</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.75</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.741</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Verhaegh</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Julie</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-05-24</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>404234103923</license>
+                                        <bib>8866</bib>
+                                        <displayname>Verhaegh, Julie</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>4</currentorder>
+                            <currentorder_round>26</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>398</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>15.44</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>15.44</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Glorieux</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Charlotte</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-04-20</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>909484652566</license>
+                                        <bib>8320</bib>
+                                        <displayname>Glorieux, Charlotte</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>15.78</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>15.78</result_value>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>5</currentorder>
+                            <currentorder_round>28</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>361</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>15.73</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>15.729</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Decruyenaere</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Madeline</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-09-16</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>210281559829</license>
+                                        <bib>8525</bib>
+                                        <displayname>Decruyenaere, Madeline</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>16.79</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>16.79</result_value>
+                            </personalbest>
+                            <initialorder>6</initialorder>
+                            <currentorder>6</currentorder>
+                            <currentorder_round>29</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>348</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>15.84</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>15.837</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>62</id>
+                                            <name>W40</name>
+                                            <abbreviation>W40</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Van De Walle</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Lauriane</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>1982-01-17</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>610585729327</license>
+                                        <bib>7389</bib>
+                                        <displayname>Van De Walle, Lauriane</displayname>
+                                        <team>
+                                            <name>Mons Obourg Hainaut Athlétisme</name>
+                                            <abbreviation>MOHA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>17.08</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>17.08</result_value>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>7</currentorder>
+                            <currentorder_round>30</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>288</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>16.35</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>16.342</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>66</id>
+                                            <name>W60</name>
+                                            <abbreviation>W60</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Willequet</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Gilliane</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>1964-05-10</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>511440392463</license>
+                                        <bib>7378</bib>
+                                        <displayname>Willequet, Gilliane</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>17.34</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>17.34</result_value>
+                            </personalbest>
+                            <initialorder>7</initialorder>
+                            <currentorder>8</currentorder>
+                            <currentorder_round>31</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>124</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>18.07</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>18.061</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+                <heat seqno="3" attempts="0" heights="0">
+                    <info>0</info>
+                    <scheduled>13:16:00</scheduled>
+                    <official>13:40:58</official>
+                    <status>5</status>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Chevalier</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Ambre</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-05-17</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>710371469430</license>
+                                        <bib>8599</bib>
+                                        <displayname>Chevalier, Ambre</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.00</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14</result_value>
+                            </personalbest>
+                            <initialorder>5</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>7</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>649</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.72</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.712</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Rooryck</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Célie</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2007-02-01</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>11454071056</license>
+                                        <bib>409</bib>
+                                        <displayname>Rooryck, Célie</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.92</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.92</result_value>
+                            </personalbest>
+                            <initialorder>4</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>13</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>598</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.04</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.039</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Mariage</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Ysaure</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-06-01</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>702551083545</license>
+                                        <bib>8321</bib>
+                                        <displayname>Mariage, Ysaure</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.15</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.15</result_value>
+                            </personalbest>
+                            <initialorder>6</initialorder>
+                            <currentorder>3</currentorder>
+                            <currentorder_round>14</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>581</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.15</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.146</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Libberecht</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Camille</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-12-11</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>102351152730</license>
+                                        <bib>8508</bib>
+                                        <displayname>Libberecht, Camille</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.91</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.91</result_value>
+                            </personalbest>
+                            <initialorder>8</initialorder>
+                            <currentorder>4</currentorder>
+                            <currentorder_round>15</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>572</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.21</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.202</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Hannecart</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Louise</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-04-12</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>10021870942</license>
+                                        <bib>8602</bib>
+                                        <displayname>Hannecart, Louise</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.10</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.1</result_value>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>5</currentorder>
+                            <currentorder_round>18</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>524</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.53</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.521</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Sabbe</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Chloé</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2008-01-16</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>609565794421</license>
+                                        <bib>448</bib>
+                                        <displayname>Sabbe, Chloé</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.50</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.5</result_value>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>6</currentorder>
+                            <currentorder_round>19</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>515</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.59</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.583</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>58</id>
+                                            <name>Seniores (W)</name>
+                                            <abbreviation>SEN W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Dupire</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Angélique°</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>1999-05-28</birthdate>
+                                            <nationality>France</nationality>
+                                        </athlete>
+                                        <license>810535298344</license>
+                                        <bib>6253</bib>
+                                        <displayname>Dupire, Angélique°</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.77</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.77</result_value>
+                            </personalbest>
+                            <initialorder>7</initialorder>
+                            <currentorder>7</currentorder>
+                            <currentorder_round>20</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>511</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.62</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.62</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Huysentruyt</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Juliette</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2008-09-19</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>204374173162</license>
+                                        <bib>278</bib>
+                                        <displayname>Huysentruyt, Juliette</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>14.80</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>14.8</result_value>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>8</currentorder>
+                            <currentorder_round>22</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>489</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>14.77</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>14.764</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+                <heat seqno="4" attempts="0" heights="0">
+                    <info>0</info>
+                    <scheduled>13:19:00</scheduled>
+                    <official>13:40:58</official>
+                    <status>5</status>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>59</id>
+                                            <name>U23 (W)</name>
+                                            <abbreviation>U23 W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Cossez</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Perrine</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2002-05-25</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>412261628680</license>
+                                        <bib>6442</bib>
+                                        <displayname>Cossez, Perrine</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>12.30</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>12.3</result_value>
+                            </personalbest>
+                            <initialorder>4</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>1</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>817</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>12.73</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>12.724</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Atsakena Nkono</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Margot</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2007-03-14</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>813394015211</license>
+                                        <bib>265</bib>
+                                        <displayname>Atsakena Nkono, Margot</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.10</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.1</result_value>
+                            </personalbest>
+                            <initialorder>6</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>2</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>785</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>12.91</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>12.904</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Wandji</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Mallory</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2007-03-09</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>405331084149</license>
+                                        <bib>501</bib>
+                                        <displayname>Wandji, Mallory</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.40</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.4</result_value>
+                            </personalbest>
+                            <initialorder>7</initialorder>
+                            <currentorder>3</currentorder>
+                            <currentorder_round>3</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>759</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.06</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.053</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Liégeois</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Cléa</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-06-06</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>410210239357</license>
+                                        <bib>8603</bib>
+                                        <displayname>Liégeois, Cléa</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.07</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.07</result_value>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>4</currentorder>
+                            <currentorder_round>4</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>723</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.27</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.262</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Flamme</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Soléna</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-02-02</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>512181475220</license>
+                                        <bib>8338</bib>
+                                        <displayname>Flamme, Soléna</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.29</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.29</result_value>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>5</currentorder>
+                            <currentorder_round>5</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>703</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.39</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.389</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Francois</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Victoria</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2009-09-06</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>915192109396</license>
+                                        <bib>8318</bib>
+                                        <displayname>Francois, Victoria</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.89</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.89</result_value>
+                            </personalbest>
+                            <initialorder>8</initialorder>
+                            <currentorder>6</currentorder>
+                            <currentorder_round>8</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>642</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.76</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.752</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>55</id>
+                                            <name>Cadettes (U16 W)</name>
+                                            <abbreviation>CAD W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Fourmentez</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Elina</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2010-11-10</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>405464169313</license>
+                                        <bib>8317</bib>
+                                        <displayname>Fourmentez, Elina</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>13.87</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>13.87</result_value>
+                            </personalbest>
+                            <initialorder>5</initialorder>
+                            <currentorder>7</currentorder>
+                            <currentorder_round>11</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>621</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>13.89</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>13.885</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>95</id>
+                                <name>Toutes catégories (W)</name>
+                                <abbreviation>TC W</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>56</id>
+                                            <name>Scolaires (U18 W)</name>
+                                            <abbreviation>SCO W</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Deworme</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Églantine</firstname>
+                                            <gender>W</gender>
+                                            <birthdate>2007-08-01</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>918182109340</license>
+                                        <bib>355</bib>
+                                        <displayname>Deworme, Églantine</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>12.85</value>
+                                <wind>0</wind>
+                                <date>2024-05-25</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>12.85</result_value>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>0</currentorder>
+                            <currentorder_round>0</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>0</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>DNS</value>
+                                    <wind>0</wind>
+                                    <info>PHF0-3-46</info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>PHF</type>
+                                    <result_value>-3</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+            </heats>
+            <participants_noheats>
+            </participants_noheats>
+        </round>
+    </rounds>
+</event>
+<!--Copyright © TimeTronics-->

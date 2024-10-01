@@ -14,7 +14,6 @@ import './ProfileInscriptions.css'
 import axios from 'axios'
 
 export const ProfileInscriptions = ({inscriptions, userId}) => {
-    console.log(inscriptions);
     if (Object.keys(inscriptions).length === 0) {
         return (
             <div className="profileInscriptions">
@@ -151,7 +150,6 @@ const handleDelete = (competitionId, athleteId, userId) => {
     };
     axios.delete(`${INSCRIPTIONS_URL}/${competitionId}/${athleteId}`, {data: body})
         .then((response) => {
-            console.log(response);
             window.location.reload();
         })
         .catch((error) => {

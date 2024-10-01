@@ -1,0 +1,31 @@
+{
+  "name": "results",
+  "version": "1.0.0",
+  "description": "This service is responsible for results",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.5",
+    "cm-back": "github:Melv1C/cm-back",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.0",
+    "nodemon": "^3.0.2",
+    "socket.io": "^4.7.5",
+    "ui-kit": "github:Melv1C/UI-KIT"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.1.0",
+    "typescript": "^5.5.4"
+  }
+}

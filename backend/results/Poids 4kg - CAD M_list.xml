@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event>
+    <ID>73</ID>
+    <seqno>35</seqno>
+    <name>Poids 4kg - CAD M</name>
+    <abbreviation>SP</abbreviation>
+    <info>Lancer du poids 4,000kg</info>
+    <status>5</status>
+    <status>5</status>
+    <categories>
+        <category>
+            <name>Cadets (M)</name>
+            <abbreviation>CAD M</abbreviation>
+        </category>
+    </categories>
+    <eventtype>
+                            <name language=""></name>
+                            <abbreviation language=""></abbreviation>
+                            <code>59</code>
+                            <nationalcode>59</nationalcode>
+                            <shortcode>SP</shortcode>
+                            <windmode>N</windmode>
+                            <windtime></windtime>
+                            <fieldtype>H</fieldtype>
+                            <distance>0</distance>
+                            <athletesquantity>1</athletesquantity>
+                            <implement>4</implement>
+                            <combinedeventsquantity>0</combinedeventsquantity>
+    </eventtype>
+    <rounds>
+        <round combinedTotal="false" seqno="1">
+            <name>*</name>
+            <abbreviation></abbreviation>
+            <info></info>
+            <scheduled>12:40:00</scheduled>
+            <official>13:26:40</official>
+            <status>5</status>
+            <heats>
+                <heat seqno="1" attempts="6" heights="0">
+                    <info>0</info>
+                    <scheduled>12:40:00</scheduled>
+                    <official>13:26:40</official>
+                    <status>5</status>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>5</id>
+                                <name>Cadets (M)</name>
+                                <abbreviation>CAD M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>5</id>
+                                            <name>Cadets (M)</name>
+                                            <abbreviation>CAD M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Cornu</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Louis</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2009-03-06</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>307462008063</license>
+                                        <bib>413</bib>
+                                        <displayname>Cornu, Louis</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>4</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>1</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>429</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>9.05</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>9.05</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>5</id>
+                                <name>Cadets (M)</name>
+                                <abbreviation>CAD M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>5</id>
+                                            <name>Cadets (M)</name>
+                                            <abbreviation>CAD M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Leveque</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Louis°</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2008-04-26</birthdate>
+                                            <nationality>France</nationality>
+                                        </athlete>
+                                        <license>102302331042</license>
+                                        <bib>511</bib>
+                                        <displayname>Leveque, Louis°</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>9.24</value>
+                                <wind>0</wind>
+                                <date>2023-06-03</date>
+                                <alltimeflag>0</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>9.24</result_value>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>2</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>368</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>8.03</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>8.03</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>5</id>
+                                <name>Cadets (M)</name>
+                                <abbreviation>CAD M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>5</id>
+                                            <name>Cadets (M)</name>
+                                            <abbreviation>CAD M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Depauw</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Liam</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2009-07-14</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>816220965629</license>
+                                        <bib>40</bib>
+                                        <displayname>Depauw, Liam</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>3</currentorder>
+                            <currentorder_round>3</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>329</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>7.37</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>7.37</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>5</id>
+                                <name>Cadets (M)</name>
+                                <abbreviation>CAD M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>5</id>
+                                            <name>Cadets (M)</name>
+                                            <abbreviation>CAD M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Mercier</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Lucien</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2009-05-24</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>816200389000</license>
+                                        <bib>205</bib>
+                                        <displayname>Mercier, Lucien</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>4</currentorder>
+                            <currentorder_round>4</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>296</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>6.80</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>6.8</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+            </heats>
+            <participants_noheats>
+            </participants_noheats>
+        </round>
+    </rounds>
+</event>
+<!--Copyright © TimeTronics-->

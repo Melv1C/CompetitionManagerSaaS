@@ -1,12 +1,28 @@
-# Ignore npm dependencies
+# Ignore node_modules directory
 node_modules/
 package-lock.json
+
+# Ignore dist directory
+dist/
+
+# Ignore environment-specific files
+.env
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+
 /python
 .vscode
 /Melvyn
 /private_repo
-# all .env in backend
-/backend/**/.env
 
 # Remove backend/couchdb
 backend/couchdb/
+
+

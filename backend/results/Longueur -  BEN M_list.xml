@@ -1,0 +1,1293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event>
+    <ID>65</ID>
+    <seqno>7</seqno>
+    <name>Longueur -  BEN M</name>
+    <abbreviation>LJ</abbreviation>
+    <info>Saut en longueur sv</info>
+    <status>5</status>
+    <status>5</status>
+    <categories>
+        <category>
+            <name>Benjamins (M)</name>
+            <abbreviation>BEN M</abbreviation>
+        </category>
+    </categories>
+    <eventtype>
+                            <name language=""></name>
+                            <abbreviation language=""></abbreviation>
+                            <code>30</code>
+                            <nationalcode>30</nationalcode>
+                            <shortcode>LJ</shortcode>
+                            <windmode>N</windmode>
+                            <windtime>5</windtime>
+                            <fieldtype>H</fieldtype>
+                            <distance>0</distance>
+                            <athletesquantity>1</athletesquantity>
+                            <implement>0</implement>
+                            <combinedeventsquantity>0</combinedeventsquantity>
+    </eventtype>
+    <rounds>
+        <round combinedTotal="false" seqno="1">
+            <name>*</name>
+            <abbreviation></abbreviation>
+            <info></info>
+            <scheduled>14:00:00</scheduled>
+            <official>15:09:55</official>
+            <status>5</status>
+            <heats>
+                <heat seqno="1" attempts="3" heights="0">
+                    <info>0</info>
+                    <scheduled>14:00:00</scheduled>
+                    <official>15:09:55</official>
+                    <status>5</status>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>N&#39;guama</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Alexy</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-07-21</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>619471940034</license>
+                                        <bib>808</bib>
+                                        <displayname>N&#39;guama, Alexy</displayname>
+                                        <team>
+                                            <name>Cercle Athlétique du Brabant Wallon</name>
+                                            <abbreviation>CABW</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>3.69</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>3.69</result_value>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>1</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>185</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>3.23</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>3.23</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Debavay</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Adam</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-02-21</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>807082380856</license>
+                                        <bib>611</bib>
+                                        <displayname>Debavay, Adam</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>3.02</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>3.02</result_value>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>2</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>152</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>3.06</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>3.06</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Croain</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Jules</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-01-18</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>11243832261</license>
+                                        <bib>252</bib>
+                                        <displayname>Croain, Jules</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>20</initialorder>
+                            <currentorder>3</currentorder>
+                            <currentorder_round>3</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>141</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>3.00</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>3</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Cougnet-Ulzega</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Gaspard</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-08-04</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>702231435265</license>
+                                        <bib>251</bib>
+                                        <displayname>Cougnet-Ulzega, Gaspard</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>15</initialorder>
+                            <currentorder>4</currentorder>
+                            <currentorder_round>4</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>139</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.99</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.99</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Cos</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Victor</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-08-24</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>9101734960</license>
+                                        <bib>865</bib>
+                                        <displayname>Cos, Victor</displayname>
+                                        <team>
+                                            <name>Olympic Saint-Ghislain Athlétisme</name>
+                                            <abbreviation>OSGA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>14</initialorder>
+                            <currentorder>5</currentorder>
+                            <currentorder_round>5</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>136</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.97</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.97</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Truant</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Mathéo</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-05-08</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>401415780100</license>
+                                        <bib>63</bib>
+                                        <displayname>Truant, Mathéo</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.77</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.77</result_value>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>6</currentorder>
+                            <currentorder_round>6</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>134</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.96</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.96</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Gorzelanczyk</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Joey</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-05-07</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>606573821513</license>
+                                        <bib>305</bib>
+                                        <displayname>Gorzelanczyk, Joey</displayname>
+                                        <team>
+                                            <name>Mons Obourg Hainaut Athlétisme</name>
+                                            <abbreviation>MOHA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.67</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.67</result_value>
+                            </personalbest>
+                            <initialorder>6</initialorder>
+                            <currentorder>7</currentorder>
+                            <currentorder_round>7</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>125</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.91</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.91</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Jordan</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Gabin</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-07-17</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>510175322939</license>
+                                        <bib>709</bib>
+                                        <displayname>Jordan, Gabin</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.72</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.72</result_value>
+                            </personalbest>
+                            <initialorder>5</initialorder>
+                            <currentorder>8</currentorder>
+                            <currentorder_round>8</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>122</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.89</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.89</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Detournay</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Virgile</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-08-12</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>8025152160</license>
+                                        <bib>375</bib>
+                                        <displayname>Detournay, Virgile</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>11</initialorder>
+                            <currentorder>9</currentorder>
+                            <currentorder_round>9</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>109</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.82</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.82</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Gorzelanczyk</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Alec</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-05-07</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>607022812653</license>
+                                        <bib>304</bib>
+                                        <displayname>Gorzelanczyk, Alec</displayname>
+                                        <team>
+                                            <name>Mons Obourg Hainaut Athlétisme</name>
+                                            <abbreviation>MOHA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.47</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.47</result_value>
+                            </personalbest>
+                            <initialorder>8</initialorder>
+                            <currentorder>10</currentorder>
+                            <currentorder_round>10</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>103</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.78</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.78</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Samyn</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Clément</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-10-22</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>606361674329</license>
+                                        <bib>72</bib>
+                                        <displayname>Samyn, Clément</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>18</initialorder>
+                            <currentorder>11</currentorder>
+                            <currentorder_round>11</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>90</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.70</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.7</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Devos</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Jules</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-06-30</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>403521431926</license>
+                                        <bib>814</bib>
+                                        <displayname>Devos, Jules</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>17</initialorder>
+                            <currentorder>12</currentorder>
+                            <currentorder_round>12</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>90</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.70</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.7</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Warny</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Rafael</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-04-10</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>7490067939</license>
+                                        <bib>309</bib>
+                                        <displayname>Warny, Rafael</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>19</initialorder>
+                            <currentorder>13</currentorder>
+                            <currentorder_round>13</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>80</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.64</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.64</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Toffolo-Bauffe</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Roméo</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-07-15</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>204504832926</license>
+                                        <bib>710</bib>
+                                        <displayname>Toffolo-Bauffe, Roméo</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>13</initialorder>
+                            <currentorder>14</currentorder>
+                            <currentorder_round>14</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>59</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.50</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.5</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Marano</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Maé</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-12-21</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>608155723262</license>
+                                        <bib>51</bib>
+                                        <displayname>Marano, Maé</displayname>
+                                        <team>
+                                            <name>Royal Athlétic Club Louvièrois</name>
+                                            <abbreviation>ACLO</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.72</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.72</result_value>
+                            </personalbest>
+                            <initialorder>4</initialorder>
+                            <currentorder>15</currentorder>
+                            <currentorder_round>15</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>49</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.43</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.43</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Delabie</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Louis</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-05-28</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>907031371240</license>
+                                        <bib>17</bib>
+                                        <displayname>Delabie, Louis</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>12</initialorder>
+                            <currentorder>16</currentorder>
+                            <currentorder_round>16</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>48</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.42</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.42</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Van Rooten</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Emrys</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-09-15</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>810094607561</license>
+                                        <bib>73</bib>
+                                        <displayname>Van Rooten, Emrys</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                            </personalbest>
+                            <initialorder>16</initialorder>
+                            <currentorder>17</currentorder>
+                            <currentorder_round>17</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>38</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.34</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.34</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Vercleven</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Clovis</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-10-22</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>303240452165</license>
+                                        <bib>255</bib>
+                                        <displayname>Vercleven, Clovis</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.28</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.28</result_value>
+                            </personalbest>
+                            <initialorder>10</initialorder>
+                            <currentorder>18</currentorder>
+                            <currentorder_round>18</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>36</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.33</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.33</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Samyn</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Henri</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2015-04-10</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>309173716050</license>
+                                        <bib>688</bib>
+                                        <displayname>Samyn, Henri</displayname>
+                                        <team>
+                                            <name>Entente Athlétique du Hainaut</name>
+                                            <abbreviation>EAH</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.56</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.56</result_value>
+                            </personalbest>
+                            <initialorder>7</initialorder>
+                            <currentorder>19</currentorder>
+                            <currentorder_round>19</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>33</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.30</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.3</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>2</id>
+                                <name>Benjamins (M)</name>
+                                <abbreviation>BEN M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>2</id>
+                                            <name>Benjamins (M)</name>
+                                            <abbreviation>BEN M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Lekoeuche</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Raphaël</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2014-06-28</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>612014161011</license>
+                                        <bib>60</bib>
+                                        <displayname>Lekoeuche, Raphaël</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>2.46</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>2.46</result_value>
+                            </personalbest>
+                            <initialorder>9</initialorder>
+                            <currentorder>20</currentorder>
+                            <currentorder_round>20</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>27</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>2.25</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue></metavalue>
+                                    <type>USR</type>
+                                    <result_value>2.25</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+            </heats>
+            <participants_noheats>
+            </participants_noheats>
+        </round>
+    </rounds>
+</event>
+<!--Copyright © TimeTronics-->

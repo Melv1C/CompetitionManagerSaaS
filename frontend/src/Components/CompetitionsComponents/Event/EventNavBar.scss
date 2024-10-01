@@ -1,21 +1,8 @@
-/*
-<div className='event-nav-bar'>
-                    {subEvents.map((subEvent, index) => {
-                        return (
-                            <Link to={`/competitions/${competition.id}/${subEvent.pseudoName}`} key={index}>
-                                <div className={`event-nav-item ${subEvent.pseudoName === eventName ? 'selected' : ''}`}>
-                                    {subEvent.name}
-                                </div>
-                            </Link>
-                        )
-                    })}
-                </div>
-*/
-
 .event-nav-bar {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 10px;
     margin-bottom: 20px;
 

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<event>
+    <ID>71</ID>
+    <seqno>46</seqno>
+    <name>Hauteur - SCO M</name>
+    <abbreviation>HJ</abbreviation>
+    <info>Saut en hauteur barres 1,15m +5cm</info>
+    <status>5</status>
+    <status>5</status>
+    <categories>
+        <category>
+            <name>Scolaires (M)</name>
+            <abbreviation>SCO M</abbreviation>
+        </category>
+    </categories>
+    <eventtype>
+        <name language=""></name>
+        <abbreviation language=""></abbreviation>
+        <code>16</code>
+        <nationalcode>16</nationalcode>
+        <shortcode>HJ</shortcode>
+        <windmode>N</windmode>
+        <windtime></windtime>
+        <fieldtype>V</fieldtype>
+        <distance>0</distance>
+        <athletesquantity>1</athletesquantity>
+        <implement>0</implement>
+        <combinedeventsquantity>0</combinedeventsquantity>
+    </eventtype>
+    <rounds>
+        <round combinedTotal="false" seqno="1">
+            <name>*</name>
+            <abbreviation></abbreviation>
+            <info></info>
+            <scheduled>14:00:00</scheduled>
+            <official>16:07:25</official>
+            <status>5</status>
+            <heats>
+                <heat seqno="1" attempts="0" heights="2">
+                    <info>0</info>
+                    <scheduled>14:00:00</scheduled>
+                    <official>16:07:25</official>
+                    <status>5</status>
+                    <heights>
+                        <height_value>1.65</height_value>
+                        <height_value>1.86</height_value>
+                    </heights>
+                    <participations>
+                        <participation relay="false">
+                            <category>
+                                <id>6</id>
+                                <name>Scolaires (M)</name>
+                                <abbreviation>SCO M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>6</id>
+                                            <name>Scolaires (M)</name>
+                                            <abbreviation>SCO M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Delplanque</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Théo</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2006-09-22</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>919324970616</license>
+                                        <bib>2185</bib>
+                                        <displayname>Delplanque, Théo</displayname>
+                                        <team>
+                                            <name>Jeunesse et Sport Mouscron - Comines</name>
+                                            <abbreviation>JSMC</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>1.90</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>1.9</result_value>
+                            </personalbest>
+                            <initialorder>1</initialorder>
+                            <currentorder>1</currentorder>
+                            <currentorder_round>1</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>679</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>0</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue>1.86</metavalue>
+                                    <type>USR</type>
+                                    <result_value>1.86</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>6</id>
+                                <name>Scolaires (M)</name>
+                                <abbreviation>SCO M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>6</id>
+                                            <name>Scolaires (M)</name>
+                                            <abbreviation>SCO M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Mariage</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Augustin</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2007-05-29</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>707055385133</license>
+                                        <bib>2545</bib>
+                                        <displayname>Mariage, Augustin</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>1.61</value>
+                                <wind>0</wind>
+                                <date>2023-09-10</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>1.61</result_value>
+                            </personalbest>
+                            <initialorder>2</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>2</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>504</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>0</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue>1.65</metavalue>
+                                    <type>USR</type>
+                                    <result_value>1.65</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                        <participation relay="false">
+                            <category>
+                                <id>6</id>
+                                <name>Scolaires (M)</name>
+                                <abbreviation>SCO M</abbreviation>
+                            </category>
+                            <participant>
+                                    <seqno>1</seqno>
+                                    <participation_confirmed>0</participation_confirmed>
+                                    <competitor>
+                                        <category>
+                                            <id>6</id>
+                                            <name>Scolaires (M)</name>
+                                            <abbreviation>SCO M</abbreviation>
+                                        </category>
+                                        <athlete>
+                                            <lastname>Hanot</lastname>
+                                            <middlename></middlename>
+                                            <firstname>Mathéo</firstname>
+                                            <gender>M</gender>
+                                            <birthdate>2006-11-27</birthdate>
+                                            <nationality>Belgium</nationality>
+                                        </athlete>
+                                        <license>509311949256</license>
+                                        <bib>2184</bib>
+                                        <displayname>Hanot, Mathéo</displayname>
+                                        <team>
+                                            <name>Royale Union Sportive Tournaisienne d&#39;Athlétisme</name>
+                                            <abbreviation>USTA</abbreviation>
+                                        </team>
+                                        <competitionteam>
+                                        </competitionteam>
+                                    </competitor>
+                            </participant>
+                            <info></info>
+                            <personalbest>
+                                <value>1.60</value>
+                                <wind>0</wind>
+                                <date>2023-02-04</date>
+                                <alltimeflag>1</alltimeflag>
+                                <seasonflag>1</seasonflag>
+                                <result_value>1.6</result_value>
+                            </personalbest>
+                            <initialorder>3</initialorder>
+                            <currentorder>2</currentorder>
+                            <currentorder_round>2</currentorder_round>
+                            <currentorder_combinedevent>0</currentorder_combinedevent>
+                            <outofcompetition_combinedevent>0</outofcompetition_combinedevent>
+                            <qualified></qualified>
+                            <points>504</points>
+                            <teampoints>0</teampoints>
+                            <results>
+                                <result bestresult="1">
+                                    <value>0</value>
+                                    <wind>0</wind>
+                                    <info></info>
+                                    <seqno>1</seqno>
+                                    <metavalue>1.65</metavalue>
+                                    <type>USR</type>
+                                    <result_value>1.65</result_value>
+                                </result>
+                            </results>
+                            <penalties>
+                            </penalties>
+                        </participation>
+                    </participations>
+                </heat>
+            </heats>
+            <participants_noheats>
+            </participants_noheats>
+        </round>
+    </rounds>
+</event>
+<!--Copyright © TimeTronics-->

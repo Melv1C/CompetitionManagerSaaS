@@ -1,7 +1,34 @@
+/*
+<div className="event-header">
+                <div className='event-header-info'>
+                    <div className='time'>
+                        {event?.time}
+                    </div>
+                    <div className='name'>
+                        {event?.pseudoName}
+                    </div>
+                    <div className='nb-participants'>
+                        {event?.maxParticipants ? `${inscriptions.length} / ${event?.maxParticipants} athlètes` : null}
+                    </div>
+                </div>
+                <div className='event-header-switch'>
+                    <div className='participants-switch' onClick={() => setResultsSwitch(false)} selected={!resultsSwitch}>
+                        Participants
+                    </div>
+                    <div className='results-switch' onClick={() => setResultsSwitch(true)} selected={resultsSwitch}>
+                        Résultats
+                    </div>
+                </div>
+            </div>
+*/
+
 .event-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+
+    justify-content: space-between;
+
     margin-bottom: 10px;
     width: 100%;
     border-radius: 5px;
@@ -10,50 +37,94 @@
     padding: 5px 0;
 }
 
-.event-header .time {
+.event-header .event-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.event-header .event-header-info .time {
     font-size: 1.5rem;
     font-weight: bold;
     width: 20%;
     text-align: center;
 }
 
-.event-header .name {
+.event-header .event-header-info .name {
     font-size: 1.5rem;
     font-weight: bold;
     width: 50%;
     text-align: center;
 }
 
-.event-header .nb-participants {
+.event-header .event-header-info .nb-participants {
     font-size: 1.2rem;
     width: 30%;
+    min-height: 10px;
     text-align: center;
+}
+
+.event-header .event-header-switch {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.event-header .event-header-switch .participants-switch {
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    color: #000;
+    transition: all 0.3s;
+}
+
+.event-header .event-header-switch .results-switch {
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    color: #000;
+    transition: all 0.3s;
+}
+
+.event-header .event-header-switch .participants-switch:hover, .event-header .event-header-switch .results-switch:hover {
+    background-color: #e0e0e0;
+}
+
+.event-header .event-header-switch .selected {
+    background-color: #007bff !important;
+    color: #fff;
 }
 
 /* Responsive */
 
 @media (max-width: 550px) {
-    .event-header {
+    .event-header .event-header-info {
         flex-wrap: wrap;
         padding: 0;
         padding: 10px 0;
     }
 
-    .event-header .time {
+    .event-header .event-header-info .time {
         font-size: 1rem;
         width: auto;
         order: 2;
         padding-left: 10px;
     }
 
-    .event-header .name {
+    .event-header .event-header-info .name {
         font-size: 1rem;
         width: 100%;
         order: 1;
         margin-bottom: 10px;
     }
 
-    .event-header .nb-participants {
+    .event-header .event-header-info .nb-participants {
         font-size: 0.8rem;
         width: auto;
         order: 3;

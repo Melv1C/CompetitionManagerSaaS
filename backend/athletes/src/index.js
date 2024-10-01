@@ -8,7 +8,6 @@ const port = process.env.PORT || 3000;
 const prefix = process.env.PREFIX || '/api/athletes';
 const competitionsUrl = process.env.GATEWAY_URL || process.env.COMPETITIONS_URL || 'http://localhost:3000';
 
-
 // import function from utils.js
 const { calculateCategory, getResults, getResultsByEvents, isOneDayAthlete, getAthletesByKey, getAthleteById } = require('./utils');
 const { createDatabase, deleteDatabase, getDatabase, addAthlete, getAthletes, getAthlete } = require('./nano');
@@ -19,8 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 const { initDB } = require('./init');
 
 initDB();
-
-
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -221,7 +218,6 @@ app.post(`${prefix}/:id/getResults`, async (req, res) => {
 });
 
 app.get(`${prefix}/:id/:event`, async (req, res) => {
-
 
     const id = req.params.id;
     const event = req.params.event;

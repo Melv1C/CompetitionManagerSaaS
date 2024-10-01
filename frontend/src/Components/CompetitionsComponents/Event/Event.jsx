@@ -2,11 +2,18 @@ import React , { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
 import axios from 'axios';
-import { INSCRIPTIONS_URL } from '../../../Gateway';
+import { INSCRIPTIONS_URL, RESULTS_URL } from '../../../Gateway';
+import socket from '../../../socket';
 
 import { Participants } from './Participants/Participants';
+import { Results } from './Results/Results';
 
 import { Link } from 'react-router-dom';
+
+import Switch from '@mui/material/Switch';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWifi } from '@fortawesome/free-solid-svg-icons';
 
 import './Event.css';
 import './EventNavBar.css';
@@ -97,38 +104,135 @@ export const Event = ({competition}) => {
                 console.log(error);
             });
     }, [competition.id, eventName]);
+
+    const [results, setResults] = useState([]);
+    const [resultsSwitch, setResultsSwitch] = useState(false);
+
+    useEffect(() => {
+        axios.get(`${RESULTS_URL}/${competition.name}/${eventName}`)
+            .then((response) => {
+                console.log(response.data.data);
+                setResults(prevResults => {
+                    return response.data.data;
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+    }, [competition.name, eventName]);
+
+    
+    useEffect(() => {
+        setResultsSwitch(results.length > 0);
+    }, [results]);
+
+    useEffect(() => {
+        
+        socket.emit('joinEvent', eventName);
+
+        socket.on('Result', (type, data) => {
+            setResults(prevResults => {
+                let newResults = [...prevResults];
+                if (type === "POST") {
+                    // if the result is already in the list, skip it
+                    const index = newResults.findIndex((r) => r.id === data.id);
+                    if (index === -1) {
+                        newResults.push(data);
+                    }
+                } else if (type === "PUT") {
+                    const index = newResults.findIndex((r) => r.id === data.id);
+                    newResults[index] = data;
+                } else if (type === "DELETE") {
+                    newResults = newResults.filter((r) => r.id !== data.id);
+                }
+                return newResults;
+            });
+        });
+
+        socket.on('AllResult', (event_name, data) => {
+            setResults(prevResults => {
+                let newResults = [...prevResults];
+                newResults = newResults.filter((r) => r.event_name !== event_name);
+                newResults.push(...data);
+                return newResults;
+            });
+        });
+    }, [eventName]);
     
     return (
-        <div className="competition-page">
-            {event?.isMultiEvent ?
-                <div className='event-nav-bar'>
-                    {subEvents.map((subEvent, index) => {
-                        return (
-                            <Link to={`/competitions/${competition.id}/${subEvent.pseudoName}`} key={index}>
-                                <div className={`event-nav-item ${subEvent.pseudoName === eventName ? 'selected' : ''}`}>
-                                    {subEvent.name}
-                                </div>
-                            </Link>
-                        )
-                    })}
-                </div>
-                : null
-            }
+        <>
+            <LiveConnection />  
+        
+            <div className="competition-page">
 
-            <div className="event-header">
-                <div className='time'>
-                    {event?.time}
+
+                {event?.isMultiEvent ?
+                    <div className='event-nav-bar'>                     
+                        {subEvents.map((subEvent, index) => {
+                            return (
+                                <Link to={`/competitions/${competition.id}/${subEvent.pseudoName}`} key={index}>
+                                    <div className={`event-nav-item ${subEvent.pseudoName === eventName ? 'selected' : ''}`}>
+                                        {subEvent.name}
+                                    </div>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                    : null
+                }
+
+                <div className="event-header">
+                    <div className='event-header-info'>
+                        <div className='time'>
+                            {event?.time}
+                        </div>
+                        <div className='name'>
+                            {event?.pseudoName}
+                        </div>
+                        <div className='nb-participants'>
+                            {event?.maxParticipants ? `${inscriptions.length} / ${event?.maxParticipants} athlètes` : null}
+                        </div>
+                    </div>
+                    <div className='event-header-switch'>
+                        <div className={`participants-switch ${!resultsSwitch ? 'selected' : ''}`} onClick={() => setResultsSwitch(false)}>
+                            Participants
+                        </div>
+                        <div className={`results-switch ${resultsSwitch ? 'selected' : ''}`} onClick={() => setResultsSwitch(true)}>
+                            Résultats
+                        </div>
+                    </div>
                 </div>
-                <div className='name'>
-                    {event?.pseudoName}
-                </div>
-                <div className='nb-participants'>
-                    {inscriptions.length} / {event?.maxParticipants} athlètes
-                </div>
+
+                {resultsSwitch ?
+                    <Results results={results.filter((result) => {
+                        return result.event_name === eventName;
+                    })} />
+                    : <Participants event={event} inscriptions={inscriptions} />
+                }    
+
             </div>
+        </>
+    )
+}
 
-            <Participants event={event} inscriptions={inscriptions} />                
 
+function LiveConnection() {
+    const [live, setLive] = useState(socket.connected);
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            setLive(true);
+        }).on('disconnect', () => {
+            setLive(false);
+        });
+    }, []);
+
+    return (
+        
+        <div className={`live-connection ${live ? 'green' : 'red'}`}>
+            <FontAwesomeIcon icon={faWifi} />
+            <div>Live Results</div>
         </div>
     )
 }

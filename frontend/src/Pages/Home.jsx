@@ -11,7 +11,7 @@ export const Home = () => {
 
     return (
         <div className="landing-page" onClick={() => setShowPopup(false)}>
-            <PopUpInfo showPopup={showPopup} setShowPopup={setShowPopup} />
+            {/* <PopUpInfo showPopup={showPopup} setShowPopup={setShowPopup} /> */}
             <h1>Bienvenue sur Competition Management !</h1>
             <Link to="/competitions" className="btn">Voir les compétitions</Link>
         </div>

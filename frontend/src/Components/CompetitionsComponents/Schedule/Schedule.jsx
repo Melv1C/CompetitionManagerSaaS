@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import axios from 'axios'
-import { INSCRIPTIONS_URL } from '../../../Gateway'
+import { INSCRIPTIONS_URL, RESULTS_URL } from '../../../Gateway'
+import socket from '../../../socket';
+
 import './Schedule.css'
 import './Filter.css'
 
@@ -14,10 +16,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { faClock } from '@fortawesome/free-solid-svg-icons'
+import { faWifi } from '@fortawesome/free-solid-svg-icons';
 
 import { useSearchParams } from 'react-router-dom';
 
-function ScheduleItem({event, inscriptions, competition}) {
+function ScheduleItem({event, inscriptions, competition, eventsWithResults}) {
     const [placesLeft, setPlacesLeft] = useState(event.maxParticipants - inscriptions.length);
     const [nbParticipants, setNbParticipants] = useState(inscriptions.length);
 
@@ -36,7 +39,9 @@ function ScheduleItem({event, inscriptions, competition}) {
                     <div className="schedule-item-time">{event.time}</div>
                     <div className="schedule-item-name">{event.pseudoName}</div>
                     <PlacesLeft placesLeft={placesLeft} key={event.name + placesLeft} />
-                    <ParticipantsButton nbParticipants={nbParticipants} />
+                    {eventsWithResults.includes(event.pseudoName) ? 
+                    <div className="schedule-item-icon">Résultats</div> 
+                    : <ParticipantsButton nbParticipants={nbParticipants} />}
                 </div>
             </Link>
         </div>
@@ -109,6 +114,8 @@ function CategoryFilter({categories, catFilterValue, setSearchParams}) {
 
 export const Schedule = ({competition}) => {
 
+    
+
     const [inscriptions, setInscriptions] = useState([]);
     useEffect(() => {
         axios.get(`${INSCRIPTIONS_URL}/${competition.id}`)
@@ -137,6 +144,31 @@ export const Schedule = ({competition}) => {
         }
         setEvents(events);
     }, [competition.events]);
+
+    const [eventsWithResults, setEventsWithResults] = useState([]);
+    useEffect(() => {
+        axios.get(`${RESULTS_URL}/${competition.name}`)
+            .then((response) => {
+                setEventsWithResults(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [competition.id]);
+
+    useEffect(() => {
+        socket.emit('joinCompetition', competition.name);
+
+        socket.on('Event', (event_name) => {
+            setEventsWithResults(prevEvents => {
+                if (!prevEvents.includes(event_name)) {
+                    return [...prevEvents, event_name];
+                }
+                return prevEvents;
+            });
+        });
+    }, [competition.name]);
+
 
     const [categories, setCategories] = useState([]);
     useEffect(() => {
@@ -193,31 +225,37 @@ export const Schedule = ({competition}) => {
             setFilteredEvents(events.filter(event => event.categories.includes(catFilterValue)));
         }
     }, [events, catFilterValue]);
-    return (
-        <div className="competition-page">
 
-            <div className="schedule-header">
-                <ScheduleLink link={competition.schedule} />
-                <CategoryFilter categories={categories} catFilterValue={catFilterValue} setSearchParams={setSearchParams} />
-            </div>
-            <div className="schedule">
+    return (
+
+        <>
+            <LiveConnection />
+            <div className="competition-page">
+
+                <div className="schedule-header">
+                    <ScheduleLink link={competition.schedule} />
+                    <CategoryFilter categories={categories} catFilterValue={catFilterValue} setSearchParams={setSearchParams} />
+                </div>
+                <div className="schedule">
+                    
+                    {filteredEvents.sort((a, b) => {
+                        if (a.time < b.time) {
+                            return -1;
+                        } else if (a.time > b.time) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }).map(event => {
+                        return (
+                            <ScheduleItem key={event.id} event={event} inscriptions={inscriptions.filter(inscription => inscription.event===event.pseudoName)} competition={competition} eventsWithResults={eventsWithResults} />
+                        )
+                    })}
+                </div>
                 
-                {filteredEvents.sort((a, b) => {
-                    if (a.time < b.time) {
-                        return -1;
-                    } else if (a.time > b.time) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }).map(event => {
-                    return (
-                        <ScheduleItem key={event.id} event={event} inscriptions={inscriptions.filter(inscription => inscription.event===event.pseudoName)} competition={competition} />
-                    )
-                })}
             </div>
-            
-        </div>
+        </>
+
     )
 }
 
@@ -232,4 +270,24 @@ function ScheduleLink({link}) {
         )
     }
     return null;
+}
+
+function LiveConnection() {
+    const [live, setLive] = useState(socket.connected);
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            setLive(true);
+        }).on('disconnect', () => {
+            setLive(false);
+        });
+    }, []);
+
+    return (
+        
+        <div className={`live-connection ${live ? 'green' : 'red'}`}>
+            <FontAwesomeIcon icon={faWifi} />
+            <div>Live Results</div>
+        </div>
+    )
 }

@@ -2,17 +2,9 @@
 const axios = require('axios');
 const nano = require('nano')(process.env.COUCHDB_URL);
 
-
 function calculateCategory(birthDate, competitionDate, gender) {
-
-    // calculate age (years, months, days)
-
     let age = new Date(competitionDate - birthDate);
-    let years = age.getUTCFullYear() - 1970;
-    //let months = age.getUTCMonth();
-    //let days = age.getUTCDate();
-
-    //console.log("Age: " + years + " years, " + months + " months, " + days + " days");
+    let years = Math.abs(age.getUTCFullYear() - 1970);
 
     // calculate category
     if (years < 35) { // not a master
