@@ -1,1 +1,1 @@
-"# CompetitionManagementSaaS" 
+# CompetitionManagementSaaS
