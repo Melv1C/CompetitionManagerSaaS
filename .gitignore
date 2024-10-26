@@ -7,6 +7,9 @@ postgres-data/
 # env file
 .env
 
+# Postgres
+postgres_data/
+
 # Logs
 logs/
 *.log
