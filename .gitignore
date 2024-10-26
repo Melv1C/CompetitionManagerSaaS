@@ -7,6 +7,9 @@ package-lock.json
 # env file
 .env
 
+# Postgres
+postgres_data/
+
 # Logs
 logs/
 *.log
