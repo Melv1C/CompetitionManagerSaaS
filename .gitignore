@@ -1,4 +1,28 @@
-**/node_modules
-**/.env
-**/tsconfig.tsbuildinfo
-**/dist
+# Node modules
+node_modules/
+
+# package-lock.json
+package-lock.json
+
+# env file
+.env
+
+# Logs
+logs/
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# Cache and history
+.npm/
+.eslintcache
+.node_repl_history
+
+# Output directories
+dist/
+build/
+
+# IDE and system files
+.vscode/
+.DS_Store
