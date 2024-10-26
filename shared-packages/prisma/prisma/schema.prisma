@@ -12,3 +12,84 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+/////////////////////////
+// User
+/////////////////////////
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  firebaseId String  @unique
+  name      String?
+
+  UserPreferences UserPreferences?
+}
+
+/////////////////////////
+// UserPreferences
+/////////////////////////
+model UserPreferences {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique
+  theme     Theme
+  language  Language
+}
+
+enum Theme {
+  LIGHT
+  DARK
+}
+
+enum Language {
+  EN
+  FR
+  NL
+}
+
+/////////////////////////
+// Athlete
+/////////////////////////
+model Athlete {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  bib Int
+  gender Gender
+  birthDate DateTime
+  club String
+}
+
+enum Gender {
+  M
+  F
+}
+
+////////////////
+// Event
+////////////////
+
+model Event {
+  id Int @id @default(autoincrement())
+  name String
+  abbr String
+  group EventGroup
+  type EventType
+}
+
+enum EventGroup {
+  SPRINT
+  JUMP
+  THROW
+  MIDDLE_DISTANCE
+  LONG_DISTANCE
+  WALK
+  COMBINED
+}
+
+enum EventType {
+  TIME
+  DISTANCE
+  HEIGHT
+  POINTS
+}
+
