@@ -1,15 +1,13 @@
 import express from "express";
-import dotenv from "dotenv"; 
-
-require('dotenv').config();
+import 'dotenv/config'
 
 const app = express();
 const port = process.env.PORT || 3000;
-const prefix = process.env.PREFIX || '/api/CHANGEME';
 const name = process.env.NAME || 'CHANGEME';
+const prefix = `/api/${name}`;
 
 app.get(`${prefix}`, (req, res) => {
-
+    
 });
 
 

@@ -21,8 +21,8 @@ COPY src /root/apps/CHANGEME-api/src
 COPY package.json /root/apps/CHANGEME-api/package.json
 COPY tsconfig.json /root/apps/CHANGEME-api/tsconfig.json
 
-# Install the dependencies
-RUN npm install
+# Install the dependencies without devDependencies
+RUN npm install --omit=dev
 
 # Expose a port (may need a to be changed)
 EXPOSE $PORT
