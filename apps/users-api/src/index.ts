@@ -1,11 +1,8 @@
 import express from "express";
 import 'dotenv/config';
 import { Pool } from 'pg';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebase-utils';
 
 const app = express();
-app.use(express.json());
 
 const port = process.env.PORT || 3000;
 const name = process.env.NAME || 'users';
@@ -25,9 +22,6 @@ const pool = new Pool({
     password: postgres_password,
     port: postgres_port,
 })
-
-
-
 
 
 
@@ -52,21 +46,6 @@ app.get(`${prefix}`, (req, res) => {
         }
     );
 });
-
-app.post(`${prefix}/login`, async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        res.send(userCredential.user);
-    } catch (error) {
-        console.error('Error logging in:', error);
-        res.status(500).send('An error occurred');
-    }
-});
-
-
-
-
 
 
 app.listen(port, () => {
