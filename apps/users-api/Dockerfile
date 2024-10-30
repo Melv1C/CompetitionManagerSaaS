@@ -16,7 +16,7 @@ COPY package.json /root/apps/CHANGEME-api/package.json
 COPY tsconfig.json /root/apps/CHANGEME-api/tsconfig.json
 
 # Install the dependencies without devDependencies
-RUN npm install --omit=dev
+RUN npm install
 
 # Build the TypeScript project
 RUN npm run build
