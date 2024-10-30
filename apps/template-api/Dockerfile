@@ -5,7 +5,7 @@ FROM node:20-alpine
 WORKDIR /root
 
 # Copy shared_package to the application directory
-COPY ../../shared_package /shared_package
+COPY ../../shared-packages /shared-packages
 
 # Set the working directory to the application directory
 WORKDIR /root/apps/CHANGEME-api
