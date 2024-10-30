@@ -1,7 +1,7 @@
 import express from "express";
 import 'dotenv/config';
 import { Pool } from 'pg';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from './firebase-utils';
 
 const app = express();
@@ -25,9 +25,6 @@ const pool = new Pool({
     password: postgres_password,
     port: postgres_port,
 })
-
-
-
 
 
 
@@ -57,11 +54,28 @@ app.post(`${prefix}/login`, async (req, res) => {
     const { email, password } = req.body;
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        pool.query(`INSERT INTO users (userid, email) VALUES ($1, $2)`, [userCredential.user.uid, userCredential.user.email]);
         res.send(userCredential.user);
     } catch (error) {
         console.error('Error logging in:', error);
         res.status(500).send('An error occurred');
     }
+});
+
+app.post(`${prefix}/register`, async (req, res) => {
+    const { email, password, password2 } = req.body;
+    //Create user in firebase
+    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        //send email verification
+        sendEmailVerification(userCredential.user) 
+        //create user in postgres
+        pool.query(`INSERT INTO users (userid, email) VALUES ($1, $2)`, [userCredential.user.uid, userCredential.user.email]);
+        res.send(userCredential.user);
+    }).catch((error) => {
+        console.error('Error registering:', error);
+        res.status(500).send('An error occurred');
+    });
+
 });
 
 
