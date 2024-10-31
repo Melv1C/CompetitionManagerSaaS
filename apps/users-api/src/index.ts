@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { parseRequest } from 'utils';
 
 const User$ = z.object({
-    id: z.number(),
+    id: z.number().positive(),
     email: z.string().email(),
     firebaseId: z.string(),
 });
