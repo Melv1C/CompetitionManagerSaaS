@@ -20,8 +20,7 @@ logs/
 .node_repl_history
 
 # Output directories
-dist/
-build/
+apps/*/dist/
 
 # IDE and system files
 .vscode/

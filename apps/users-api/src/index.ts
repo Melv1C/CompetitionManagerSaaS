@@ -1,8 +1,19 @@
 import express from "express";
 import 'dotenv/config';
 import { Pool } from 'pg';
+import { z } from 'zod';
+import { parseRequest } from 'utils';
+
+const User$ = z.object({
+    id: z.number(),
+    email: z.string().email(),
+    firebaseId: z.string(),
+});
+
+const body$ = User$.omit({ id: true });
 
 const app = express();
+app.use(express.json());
 
 const port = process.env.PORT || 3000;
 const service_name = process.env.SERVICE_NAME || 'users';
@@ -23,10 +34,10 @@ const pool = new Pool({
     port: postgres_port,
 });
 
-app.post(`${prefix}`, async (req, res) => {
-    const { email, uid } = req.body;
+app.post(`${prefix}`, parseRequest('body', body$), async (req, res) => {
+    const { email, firebaseId } = req.body;
     //create user in postgres
-    pool.query(`INSERT INTO users (firebase_id, email) VALUES ($1, $2)`, [uid, email]);
+    pool.query(`INSERT INTO users (firebase_id, email) VALUES ($1, $2)`, [firebaseId, email]);
     res.send('User created');
 });
 
