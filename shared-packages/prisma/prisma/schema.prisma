@@ -16,12 +16,14 @@ datasource db {
 // User
 /////////////////////////
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  firebaseId String  @unique
-  name      String?
+  id          String   @id @default(uuid())
+  email       String   @unique
+  firebase_id String   @unique
+  name        String?
 
   UserPreferences UserPreferences?
+
+  @@map("users")
 }
 
 /////////////////////////
@@ -33,6 +35,8 @@ model UserPreferences {
   userId    String   @unique
   theme     Theme
   language  Language
+
+  @@map("user_preferences")
 }
 
 enum Theme {
@@ -57,6 +61,8 @@ model Athlete {
   gender Gender
   birthDate DateTime
   club String
+
+  @@map("athletes")
 }
 
 enum Gender {
@@ -74,6 +80,8 @@ model Event {
   abbr String
   group EventGroup
   type EventType
+
+  @@map("events")
 }
 
 enum EventGroup {
