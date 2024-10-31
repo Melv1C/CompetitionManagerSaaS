@@ -5,15 +5,15 @@ FROM node:20-alpine
 WORKDIR /root
 
 # Copy shared_package to the application directory
-COPY ../../shared-packages /shared-packages
+COPY /shared-packages /shared-packages
 
 # Set the working directory to the application directory
 WORKDIR /root/apps/CHANGEME-api
 
 # Copy the application files
-COPY src /root/apps/CHANGEME-api/src
-COPY package.json /root/apps/CHANGEME-api/package.json
-COPY tsconfig.json /root/apps/CHANGEME-api/tsconfig.json
+COPY apps/CHANGEME/src src
+COPY apps/CHANGEME/package.json package.json
+COPY apps/CHANGEME/tsconfig.json tsconfig.json
 
 # Install the dependencies without devDependencies
 RUN npm install
