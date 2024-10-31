@@ -11,9 +11,9 @@ COPY /shared-packages /shared-packages
 WORKDIR /root/apps/CHANGEME-api
 
 # Copy the application files
-COPY apps/CHANGEME/src src
-COPY apps/CHANGEME/package.json package.json
-COPY apps/CHANGEME/tsconfig.json tsconfig.json
+COPY apps/CHANGEME-api/src src
+COPY apps/CHANGEME-api/package.json package.json
+COPY apps/CHANGEME-api/tsconfig.json tsconfig.json
 
 # Install the dependencies without devDependencies
 RUN npm install
