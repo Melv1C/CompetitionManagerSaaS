@@ -14,27 +14,27 @@ CREATE TYPE "EventGroup" AS ENUM ('SPRINT', 'JUMP', 'THROW', 'MIDDLE_DISTANCE', 
 CREATE TYPE "EventType" AS ENUM ('TIME', 'DISTANCE', 'HEIGHT', 'POINTS');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "users" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "firebaseId" TEXT NOT NULL,
+    "firebase_id" TEXT NOT NULL,
     "name" TEXT,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "UserPreferences" (
+CREATE TABLE "user_preferences" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "theme" "Theme" NOT NULL,
     "language" "Language" NOT NULL,
 
-    CONSTRAINT "UserPreferences_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "user_preferences_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Athlete" (
+CREATE TABLE "athletes" (
     "id" SERIAL NOT NULL,
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
@@ -43,28 +43,28 @@ CREATE TABLE "Athlete" (
     "birthDate" TIMESTAMP(3) NOT NULL,
     "club" TEXT NOT NULL,
 
-    CONSTRAINT "Athlete_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "athletes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Event" (
+CREATE TABLE "events" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "abbr" TEXT NOT NULL,
     "group" "EventGroup" NOT NULL,
     "type" "EventType" NOT NULL,
 
-    CONSTRAINT "Event_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "events_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_firebaseId_key" ON "User"("firebaseId");
+CREATE UNIQUE INDEX "users_firebase_id_key" ON "users"("firebase_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "UserPreferences_userId_key" ON "UserPreferences"("userId");
+CREATE UNIQUE INDEX "user_preferences_userId_key" ON "user_preferences"("userId");
 
 -- AddForeignKey
-ALTER TABLE "UserPreferences" ADD CONSTRAINT "UserPreferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user_preferences" ADD CONSTRAINT "user_preferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
