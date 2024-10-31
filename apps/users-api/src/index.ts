@@ -23,36 +23,13 @@ const pool = new Pool({
     port: postgres_port,
 });
 
-
-
-
-app.get(`${prefix}`, (req, res) => {
-    pool.query('SELECT * FROM users', (err, result) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Error');
-        }
-        res.send(result.rows);
-    });
-});
-
-app.post(`${prefix}/login`, async (req, res) => {
-    
-});
-
-app.post(`${prefix}/register`, async (req, res) => {
+app.post(`${prefix}`, async (req, res) => {
     const { email, uid } = req.body;
     //create user in postgres
     pool.query(`INSERT INTO users (firebase_id, email) VALUES ($1, $2)`, [uid, email]);
     res.send('User created');
 });
 
-
-
-
-
-
 app.listen(port, () => {
     console.log(`${service_name}: app is running at port : ${port}`);
 });
-
