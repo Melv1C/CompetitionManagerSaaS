@@ -1,4 +1,6 @@
-**/node_modules
-**/.env
-**/tsconfig.tsbuildinfo
-**/dist
+node_modules/
+.env
+tsconfig.tsbuildinfo
+dist/
+posgres_data/
+/firebase
