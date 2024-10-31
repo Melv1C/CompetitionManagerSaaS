@@ -26,3 +26,8 @@ build/
 # IDE and system files
 .vscode/
 .DS_Store
+
+posgres_data/
+
+# Firebase
+firebase/
