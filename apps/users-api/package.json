@@ -16,7 +16,7 @@
     "express": "^4.21.1",
     "pg": "^8.13.1",
     "ts-node": "^10.9.2",
-    "utils": "file:../../shared-packages/utils",
+    "@competition-manager/utils": "file:../../shared-packages/utils",
     "zod": "^3.23.8"
   },
   "devDependencies": {
