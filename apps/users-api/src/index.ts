@@ -30,7 +30,7 @@ const pool = new Pool({
     port: postgres_port,
 });
 
-const Body$ = User$.omit({ id: true, preferences: true, role: true });
+const Body$ = User$.pick({ firebaseId: true, email: true });
 
 app.post(`${prefix}`, parseRequest('body', Body$), async (req, res) => {
     const userBody = Body$.parse(req.body);
