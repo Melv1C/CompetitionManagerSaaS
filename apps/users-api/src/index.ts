@@ -4,14 +4,9 @@ import { Pool } from 'pg';
 import { z } from 'zod';
 import { parseRequest } from '@competition-manager/utils';
 import { prisma } from "@competition-manager/prisma";
+import { User$ } from '@competition-manager/schemas';
 
-const User$ = z.object({
-    id: z.number().positive(),
-    email: z.string().email(),
-    firebaseId: z.string(),
-});
 
-const body$ = User$.omit({ id: true });
 
 const app = express();
 app.use(express.json());
@@ -35,18 +30,42 @@ const pool = new Pool({
     port: postgres_port,
 });
 
-app.get(`${prefix}`, async (req, res) => {
-    const users = await prisma.user.findMany();
-    res.send(users);
+const Body$ = User$.omit({ id: true, preferences: true });
+
+app.post(`${prefix}`, parseRequest('body', Body$), async (req, res) => {
+    const userBody = Body$.parse(req.body);
+    //create user in postgres
+    const user = await prisma.user.create({
+        data: {
+            ...userBody,
+            preferences: {
+                create: {
+                    theme: 'light',
+                    language: 'fr'
+                }
+            }
+        }
+
+    });
+    res.send(user);
 });
 
 
+const Params$ = z.object({
+    firebaseId: z.string().min(1)
+});
 
-app.post(`${prefix}`, parseRequest('body', body$), async (req, res) => {
-    const { email, firebaseId } = req.body;
-    //create user in postgres
-    pool.query(`INSERT INTO users (firebase_id, email) VALUES ($1, $2)`, [firebaseId, email]);
-    res.send('User created');
+app.get(`${prefix}/:firebaseId`, parseRequest('params', Params$), async (req, res) => {
+    const { firebaseId } = Params$.parse(req.params);
+    const user = await prisma.user.findUnique({
+        where: {
+            firebaseId: firebaseId
+        },
+        include: {
+            preferences: true
+        }
+    });
+    res.send(user);
 });
 
 app.listen(port, () => {

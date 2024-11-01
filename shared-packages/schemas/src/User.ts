@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserPreferences$ } from '.';
+import { UserPreferences$ } from './UserPreferences';
 
 export const User$ = z.object({
     id: z.number().positive(),
