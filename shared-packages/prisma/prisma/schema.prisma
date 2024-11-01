@@ -45,13 +45,16 @@ model UserPreferences {
 /////////////////////////
 model Athlete {
   id Int @id @default(autoincrement())
-  license Int @unique
+  license String @unique
   firstName String @map("first_name")
   lastName String @map("last_name")
   bib Int
   gender String
   birthdate DateTime
   club String
+  metadata Json?
+  competition Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  competitionId Int? @map("competition_id")
 
   @@map("athletes")
 }
@@ -87,3 +90,15 @@ enum EventType {
   POINTS
 }
 
+
+////////////////
+// Competition
+////////////////
+
+
+model Competition {
+  id Int @id @default(autoincrement())
+  name String
+  oneDayAthletes Athlete[]
+  @@map("competitions")
+}
