@@ -1,21 +1,17 @@
-import { ZodSchema, ZodError } from "zod";
-import { Request, Response, NextFunction } from "express";
+import { ZodSchema } from 'zod';
+import { Request, Response, NextFunction } from 'express';
 
 type Key = 'body' | 'params' | 'query';
 
 export const parseRequest = (key: Key, schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
-    try {
-        req[key] = schema.parse(req[key]);
+    const result = schema.safeParse(req[key]);
+    if (result.success) {
+        req[key] = result.data;
         next();
-    } catch (error) {
-        if (error instanceof ZodError) {
-            console.log(error);
-            res.status(400).send(error.errors);
-        } else {
-            console.error(error);
-            res.status(500).send('Internal Server Error');
-        }
+    } else {
+        res.status(400).send(result.error.errors); // only send the first error message
     }
-}
+};
+
 
 
