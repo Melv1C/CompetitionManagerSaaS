@@ -30,7 +30,7 @@ const pool = new Pool({
     port: postgres_port,
 });
 
-const Body$ = User$.omit({ id: true, preferences: true });
+const Body$ = User$.omit({ id: true, preferences: true, role: true });
 
 app.post(`${prefix}`, parseRequest('body', Body$), async (req, res) => {
     const userBody = Body$.parse(req.body);
@@ -43,13 +43,12 @@ app.post(`${prefix}`, parseRequest('body', Body$), async (req, res) => {
                     theme: 'light',
                     language: 'fr'
                 }
-            }
+            },
+            role: 'user'
         }
-
     });
     res.send(user);
 });
-
 
 const Params$ = z.object({
     firebaseId: z.string().min(1)

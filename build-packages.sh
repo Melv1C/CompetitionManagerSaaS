@@ -13,10 +13,10 @@ for dir in */; do
         if [ "$dir" == "prisma/" ]; then
             if [ "$1" == "-m" ]; then              # If the 1 argument is -m, run npm run migrate else run npm run generate
                 echo "Running npm run generate in $dir"
-                npm run generate
+                npm run migrate
             else
                 echo "Running npm run migrate in $dir"
-                npm run migrate
+                npm run generate
             fi
         fi
 
