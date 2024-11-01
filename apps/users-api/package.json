@@ -17,7 +17,8 @@
     "pg": "^8.13.1",
     "ts-node": "^10.9.2",
     "@competition-manager/utils": "file:../../shared-packages/utils",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@competition-manager/prisma":"file:../../shared-packages/prisma"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",

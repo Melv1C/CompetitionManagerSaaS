@@ -3,6 +3,7 @@ import 'dotenv/config';
 import { Pool } from 'pg';
 import { z } from 'zod';
 import { parseRequest } from '@competition-manager/utils';
+import { prisma } from "@competition-manager/prisma";
 
 const User$ = z.object({
     id: z.number().positive(),
@@ -33,6 +34,13 @@ const pool = new Pool({
     password: postgres_password,
     port: postgres_port,
 });
+
+app.get(`${prefix}`, async (req, res) => {
+    const users = await prisma.user.findMany();
+    res.send(users);
+});
+
+
 
 app.post(`${prefix}`, parseRequest('body', body$), async (req, res) => {
     const { email, firebaseId } = req.body;
