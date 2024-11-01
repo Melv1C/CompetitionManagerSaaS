@@ -1,17 +1,16 @@
 import express from "express";
-import 'dotenv/config'
+import 'dotenv/config';
+
+import routes from './routes';
 
 const app = express();
-const port = process.env.PORT || 3000;
-const name = process.env.NAME || 'CHANGEME';
-const prefix = `/api/${name}`;
+app.use(express.json());
 
-app.get(`${prefix}`, (req, res) => {
-    
+const PORT = process.env.PORT || 3000;
+const PREFIX = process.env.PREFIX || '/api';
+
+app.use(`${PREFIX}/CHANGEME`, routes);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
-
-
-app.listen(port, () => {
-    console.log(`${name}: app is running at port : ${port}`);
-});
-
