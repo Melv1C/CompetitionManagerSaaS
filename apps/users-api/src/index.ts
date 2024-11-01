@@ -2,7 +2,7 @@ import express from "express";
 import 'dotenv/config';
 import { Pool } from 'pg';
 import { z } from 'zod';
-import { parseRequest } from 'utils';
+import { parseRequest } from '@competition-manager/utils';
 
 const User$ = z.object({
     id: z.number().positive(),
