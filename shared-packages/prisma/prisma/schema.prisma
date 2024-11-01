@@ -16,9 +16,9 @@ datasource db {
 // User
 /////////////////////////
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  firebaseId  String   @unique @map("firebase_id")
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  firebaseId  String    @unique @map("firebase_id")
   name        String?
 
   preferences UserPreferences?
@@ -30,24 +30,13 @@ model User {
 // UserPreferences
 /////////////////////////
 model UserPreferences {
-  id        String   @id @default(uuid())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @unique @map("user_id")
-  theme     Theme
-  language  Language
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int       @unique @map("user_id")
+  theme     String
+  language  String
 
   @@map("user_preferences")
-}
-
-enum Theme {
-  LIGHT
-  DARK
-}
-
-enum Language {
-  EN
-  FR
-  NL
 }
 
 /////////////////////////
@@ -55,19 +44,15 @@ enum Language {
 /////////////////////////
 model Athlete {
   id Int @id @default(autoincrement())
+  license Int @unique
   firstName String @map("first_name")
   lastName String @map("last_name")
   bib Int
-  gender Gender
+  gender String
   birthdate DateTime
   club String
 
   @@map("athletes")
-}
-
-enum Gender {
-  M
-  F
 }
 
 ////////////////
@@ -78,8 +63,8 @@ model Event {
   id Int @id @default(autoincrement())
   name String
   abbr String
-  group EventGroup
-  type EventType
+  group String
+  type String
 
   @@map("events")
 }
