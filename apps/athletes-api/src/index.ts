@@ -1,10 +1,8 @@
 import express from "express";
 import 'dotenv/config'
-import { z } from "zod";
-import { parseRequest } from '@competition-manager/utils';
-import { Athlete$ } from '@competition-manager/schemas';
 import { initDb, initDbDev } from "./fillDB.";
-import { prisma } from "@competition-manager/prisma";
+import routes from './routes';
+
 
 if (process.env.NODE_ENV === 'production') {
     initDb();
@@ -13,22 +11,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const app = express();
-const port = process.env.PORT || 3000;
-const name = process.env.NAME || 'athletes';
-const prefix = `/api/${name}`;
+const PORT = process.env.PORT || 3000;
+const PREFIX = process.env.PREFIX || '/api';
 
-const Query$ = z.object({
-    key: z.string().min(1)
-});
-
-app.get(`${prefix}`, async (req, res) => {
-    const athletes = await prisma.athlete.findMany()
-    res.send(athletes);
-});
+app.use(`${PREFIX}/athletes`, routes);
 
 
-app.listen(port, () => {
-    console.log(`${name}: app is running at port : ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server: app is running at port : ${PORT}`);
 });
 
 
