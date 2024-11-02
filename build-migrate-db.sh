@@ -9,23 +9,19 @@ if [ -z "$DOCKER_HOST" ]; then
     exit 1
 fi
 
-# Check if app name is provided
-if [ -z "$1" ]; then
-    echo "Usage: $0 <app-name>"
-    exit 1
-fi
+APP_NAME=migrate-db
 
-APP_NAME=$1
-DOCKERFILE_PATH="apps/$APP_NAME/Dockerfile"
+# Go to the prisma directory
+cd shared-packages/prisma
 
 # Check if Dockerfile exists
-if [ ! -f "$DOCKERFILE_PATH" ]; then
-    echo "Dockerfile not found at $DOCKERFILE_PATH"
+if [ ! -f "Dockerfile" ]; then
+    echo "Dockerfile not found at shared-packages/prisma/Dockerfile"
     exit 1
 fi
 
 # Build the Docker image
-docker build -t $APP_NAME -f $DOCKERFILE_PATH .
+docker build -t $APP_NAME .
 
 TAG_NAME="$DOCKER_HOST/$APP_NAME"
 
