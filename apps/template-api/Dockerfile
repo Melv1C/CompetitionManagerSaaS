@@ -1,3 +1,4 @@
+# Use the official Node.js image as the base image
 FROM node:20-alpine
 
 # Set the working directory to get shared package
@@ -24,7 +25,7 @@ COPY apps/CHANGEME-api/package.json package.json
 COPY apps/CHANGEME-api/package-lock.json package-lock.json
 COPY apps/CHANGEME-api/tsconfig.json tsconfig.json
 
-# Install the dependencies without devDependencies
+# Install the dependencies
 RUN npm install
 
 # Build the TypeScript project

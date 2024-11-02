@@ -9,4 +9,30 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - my-network
+
+  ########################################################
+  # Je le laisse en commentaire si besoin en local
+  ########################################################
+  # migrate-db:
+  #   image: migrate-db
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+  #   networks:
+  #     - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
+
       
