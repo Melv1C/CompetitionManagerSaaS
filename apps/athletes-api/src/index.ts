@@ -20,21 +20,3 @@ app.use(`${PREFIX}/athletes`, routes);
 app.listen(PORT, () => {
     console.log(`Server: app is running at port : ${PORT}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
