@@ -52,7 +52,7 @@ model Athlete {
   gender String
   birthdate DateTime
   club String
-  metadata Json?
+  metadata Json @default("{}")
   competition Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
   competitionId Int? @map("competition_id")
 
