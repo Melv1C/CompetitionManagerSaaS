@@ -16,8 +16,8 @@ export const Athlete$ = z.object({
     gender: z.enum(GENDER),
     birthdate: z.coerce.date().min(new Date('1900-01-01')),
     club: z.string(),
-    metadata: Json$.optional(),
-    competitionId: z.number().positive().optional(),
+    metadata: Json$.default({}),
+    competitionId: z.number().positive().nullable().default(null),
 });
 
 export type Athlete = z.infer<typeof Athlete$>;
