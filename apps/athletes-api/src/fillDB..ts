@@ -1,6 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { Athlete$, Athlete } from '@competition-manager/schemas';
+import { Athlete$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import devData from './data.json';
