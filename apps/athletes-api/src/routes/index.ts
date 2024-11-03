@@ -1,7 +1,7 @@
-import { router as getAthleteRouter } from './getAthletes';
+import { router as listAthletesRouter } from './listItems';
 
 
 
 export default [
-    getAthleteRouter
+    listAthletesRouter
 ];
