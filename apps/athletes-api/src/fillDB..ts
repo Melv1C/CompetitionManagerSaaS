@@ -1,12 +1,9 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
+import 'dotenv/config'
 import { Athlete$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import devData from './data.json';
-
-
-dotenv.config();
 
 const AthleteWithoutId$ = Athlete$.omit({ id: true, competitionId: true });
 type AthleteWithoutId = z.infer<typeof AthleteWithoutId$>;
@@ -19,7 +16,6 @@ const addNewAthletes = async () => {
             competitionId: null
         }
     });
-    console.log(athletes);
 
     let newAthletes: AthleteWithoutId[] = [];
 
