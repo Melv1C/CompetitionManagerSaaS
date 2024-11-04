@@ -12,15 +12,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@competition-manager/prisma":"file:../../shared-packages/prisma",
-    "@competition-manager/schemas":"file:../../shared-packages/schemas",
+    "@competition-manager/prisma": "file:../../shared-packages/prisma",
+    "@competition-manager/schemas": "file:../../shared-packages/schemas",
     "@competition-manager/utils": "file:../../shared-packages/utils",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "ts-node": "^10.9.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/node": "^22.8.1",
     "nodemon": "^3.1.7",

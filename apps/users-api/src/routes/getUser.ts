@@ -1,4 +1,3 @@
-
 import { Router } from 'express';
 import { z } from 'zod';
 
@@ -8,17 +7,17 @@ import { parseRequest } from '@competition-manager/utils';
 export const router = Router();
 
 const Params$ = z.object({
-    firebaseId: z.string({ message: 'Firebase ID must be a string' }).min(1, { message: 'Firebase ID must not be empty' })
+    email: z.string({ message: 'Email must be a string' }).email({ message: 'Email must be a valid email' })
 });
 
 router.get(
-    '/:firebaseId',
+    '/:email',
     parseRequest('params', Params$), 
     async (req, res) => {
-        const { firebaseId } = Params$.parse(req.params);
+        const { email } = Params$.parse(req.params);
         const user = await prisma.user.findUnique({
             where: {
-                firebaseId: firebaseId
+                email: email
             },
             include: {
                 preferences: true
