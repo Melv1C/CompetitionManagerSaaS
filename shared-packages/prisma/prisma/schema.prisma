@@ -18,9 +18,8 @@ datasource db {
 model User {
   id          Int       @id @default(autoincrement())
   email       String    @unique
-  firebaseId  String    @unique @map("firebase_id")
   role        String    @default("user")
-  name        String?
+  password    String
 
   preferences UserPreferences?
 
