@@ -1,7 +1,7 @@
 import { router as listAthletesRouter } from './listItems';
-import { router as getPBRouter } from './getPB';
+import { router as getRecordsRouter } from './getRecords';
 
 export default [
     listAthletesRouter,
-    getPBRouter
+    getRecordsRouter
 ];
