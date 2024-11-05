@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 
-type Key = 'body' | 'params' | 'query';
+type Key = 'body' | 'params' | 'query' | 'cookies';
 
 export const parseRequest = (key: Key, schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req[key]);
