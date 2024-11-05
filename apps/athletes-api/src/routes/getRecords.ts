@@ -3,7 +3,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import 'dotenv/config';
 import { parseRequest, bestResult } from '@competition-manager/utils';
-import { Result } from '@competition-manager/schemas';
+import { Result, Result$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -20,12 +20,12 @@ const getResults = async (license: string, events: string[], maxYears: number) =
         if (result.result.newTrials && result.result.newTrials.length > 0) {
             for (let j = 0; j < result.result.newTrials.length; j++) {
                 if (result.result.newTrials[j].homologationBest) {
-                    records.push({
+                    records.push(Result$.parse({
                         discipline: discipline,
                         date: date,
-                        perf: result.result.newTrials[j].rankingPerf,
+                        perf: parseFloat(result.result.newTrials[j].rankingPerf),
                         type: result.result.newTrials[j].perftype
-                    });
+                    }));
                 }
             }
         }
