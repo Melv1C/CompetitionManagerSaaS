@@ -13,10 +13,10 @@ const EVENT_GROUP = [
 export type EventGroup = typeof EVENT_GROUP[number];
 
 export const EVENT_TYPE = [
-    'Time',
-    'Distance',
-    'Height',
-    'Points'
+    'time',
+    'distance',
+    'height',
+    'points'
 ] as const;
 
 export type EventType = typeof EVENT_TYPE[number];
