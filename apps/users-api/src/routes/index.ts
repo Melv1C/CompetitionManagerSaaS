@@ -1,7 +1,7 @@
-import { router as createUserRouter } from './createUser';
 import { router as getUserRouter } from './getUser';
+import { router as registerUserRouter} from './registerUser';
 
 export default [
-    createUserRouter,
-    getUserRouter
+    getUserRouter,
+    registerUserRouter
 ];
