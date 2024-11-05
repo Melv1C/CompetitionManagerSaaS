@@ -3,14 +3,14 @@ import { z } from 'zod';
 import axios from 'axios';
 import 'dotenv/config';
 import { parseRequest, bestResult } from '@competition-manager/utils';
-import { Result, Result$ } from '@competition-manager/schemas';
+import { BeathleticsResult, BeathleticsResult$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
 const getResults = async (license: string, events: string[], maxYears: number) => {
     const { data } = await axios.get(process.env.RECORDS_API + `/athlete/new/${license}`);
     const results = data.results;
-    let records: Result[] = [];
+    let records: BeathleticsResult[] = [];
     for (let result of results) {
         if (!result.result.discipline.eventType) continue;
         let discipline = result.result.discipline.eventType.name_fr;
@@ -20,7 +20,7 @@ const getResults = async (license: string, events: string[], maxYears: number) =
         if (result.result.newTrials && result.result.newTrials.length > 0) {
             for (let j = 0; j < result.result.newTrials.length; j++) {
                 if (result.result.newTrials[j].homologationBest) {
-                    records.push(Result$.parse({
+                    records.push(BeathleticsResult$.parse({
                         discipline: discipline,
                         date: date,
                         perf: parseFloat(result.result.newTrials[j].rankingPerf),
@@ -55,14 +55,14 @@ router.post(
             res.status(404).send("No result found");
             return;
         }
-        const groupedResults: { [discipline: string]: Result[] } = results.reduce((acc, result) => {
+        const groupedResults: { [discipline: string]: BeathleticsResult[] } = results.reduce((acc, result) => {
             if (!acc[result.discipline]) {
                 acc[result.discipline] = [];
             }
             acc[result.discipline].push(result);
             return acc;
-        }, {} as { [discipline: string]: Result[] });
-        const records: { [discipline: string]: Result } = {};
+        }, {} as { [discipline: string]: BeathleticsResult[] });
+        const records: { [discipline: string]: BeathleticsResult } = {};
         for (const discipline in groupedResults) {
             records[discipline] = bestResult(groupedResults[discipline])
         }
