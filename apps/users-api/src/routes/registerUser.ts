@@ -14,7 +14,7 @@ const Body$ = z.object({
 });
 
 router.post(
-    '/register', //je sais pas si tu préfère un post a /users tout court
+    '/register',
     parseRequest('body', Body$),
     async (req, res) => {
         const { email, password } = Body$.parse(req.body);
@@ -49,6 +49,6 @@ router.post(
             secure: true,
             sameSite: 'strict',
             maxAge: 30 * 24 * 60 * 60 * 1000,
-        }).json({ accessToken });
+        }).send(accessToken);
     }
 );

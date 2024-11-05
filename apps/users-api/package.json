@@ -16,6 +16,7 @@
     "@competition-manager/schemas": "file:../../shared-packages/schemas",
     "@competition-manager/utils": "file:../../shared-packages/utils",
     "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
@@ -24,10 +25,13 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.8.1",
+    "i": "^0.3.7",
     "nodemon": "^3.1.7",
+    "npm": "^10.9.0",
     "typescript": "^5.6.3"
   }
 }

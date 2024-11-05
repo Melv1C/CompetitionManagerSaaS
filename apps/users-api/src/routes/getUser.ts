@@ -7,7 +7,7 @@ import { parseRequest } from '@competition-manager/utils';
 export const router = Router();
 
 const Params$ = z.object({
-    email: z.string({ message: 'Email must be a string' }).email({ message: 'Email must be a valid email' })
+    email: z.string({ message: 'Email must be a string' }).email({ message: 'Email in param must be a valid email' })
 });
 
 router.get(
