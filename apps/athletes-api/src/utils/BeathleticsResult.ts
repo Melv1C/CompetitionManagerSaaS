@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EVENT_TYPE } from './Event';
+import { EVENT_TYPE } from '@competition-manager/schemas/src/Event';
 
 export const BeathleticsResult$ = z.object({
     date: z.coerce.date().min(new Date('1900-01-01')),
