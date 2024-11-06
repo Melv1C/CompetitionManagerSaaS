@@ -1,2 +1,2 @@
 export * from "./parseRequest";
-export * from "./bestResult"
+export * from "./isBestResult"

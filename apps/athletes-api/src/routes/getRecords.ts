@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import 'dotenv/config';
-import { parseRequest, bestResult } from '@competition-manager/utils';
+import { parseRequest, isBestResult } from '@competition-manager/utils';
 import { BeathleticsResult } from '../utils/BeathleticsResult';
 import { getResults } from '../utils/getResult';
 
@@ -28,17 +28,14 @@ router.post(
             res.status(404).send("No result found");
             return;
         }
-        const groupedResults: { [discipline: string]: BeathleticsResult[] } = results.reduce((acc, result) => {
+        const records: { [discipline: string]: BeathleticsResult } = results.reduce((acc, result:BeathleticsResult) => {
             if (!acc[result.discipline]) {
-                acc[result.discipline] = [];
+                acc[result.discipline] = result;
+            } else if (isBestResult(result.perf, acc[result.discipline].perf, result.type)) {
+                acc[result.discipline] = result;
             }
-            acc[result.discipline].push(result);
             return acc;
-        }, {} as { [discipline: string]: BeathleticsResult[] });
-        const records: { [discipline: string]: BeathleticsResult } = {};
-        for (const discipline in groupedResults) {
-            records[discipline] = bestResult(groupedResults[discipline])
-        }
+        }, {} as { [discipline: string]: BeathleticsResult });
         res.send(records);
     }
 );

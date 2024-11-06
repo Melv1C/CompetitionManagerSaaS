@@ -10,7 +10,7 @@ export const getResults = async (license: string, events: string[], maxYears: nu
         let discipline = result.result.discipline.eventType.name_fr;
         if (!events.includes(discipline)) continue;
         let date = new Date(result.result.discipline.competition.startDate);
-        if (maxYears < new Date().getFullYear() - date.getFullYear()) continue;
+        if (maxYears < (new Date().getFullYear() - date.getFullYear())) continue;
         if (result.result.newTrials && result.result.newTrials.length > 0) {
             for (let j = 0; j < result.result.newTrials.length; j++) {
                 if (result.result.newTrials[j].homologationBest) {
