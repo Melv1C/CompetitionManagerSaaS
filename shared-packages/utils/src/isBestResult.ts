@@ -5,13 +5,9 @@ export const isBestResult = (perf1: number, perf2: number, type: EventType) => {
         return false;
     }
     if (type === 'time') {
-        if ( perf1 < perf2 ) {
-            return true;
-        }
-    } else if (perf1 > perf2) {
-        return true;
+        return perf1 < perf2;
     }
-    return false;
+    return perf1 > perf2;
 };
 
 
