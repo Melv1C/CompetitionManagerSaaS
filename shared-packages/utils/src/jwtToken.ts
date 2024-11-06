@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-export const generateAccessToken = (email: string) => {
+
+export const generateAccessToken = (email: string) => { //when use in a api don't forget to put the .env with ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
     return jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
 };
 

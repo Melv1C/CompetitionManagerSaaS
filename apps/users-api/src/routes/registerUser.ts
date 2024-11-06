@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { generateAccessToken, generateRefreshToken } from './utils';
 
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken } from '@competition-manager/utils';
 
 export const router = Router();
 
