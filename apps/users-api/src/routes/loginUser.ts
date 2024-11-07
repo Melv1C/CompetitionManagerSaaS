@@ -3,6 +3,8 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken } from '@competition-manager/utils';
+import { User$ } from '@competition-manager/schemas';
+import { UserToTokenData } from '../utils';
 
 export const router = Router();
 
@@ -19,6 +21,13 @@ router.post(
         const user = await prisma.user.findUnique({
             where: {
                 email: email
+            },
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                password: true,
+                preferences: true,
             }
         });
         if (!user) {
@@ -30,8 +39,9 @@ router.post(
             res.status(401).json({ message: 'Invalid credentials' });
             return;
         }
-        const accessToken = generateAccessToken(email);
-        const refreshToken = generateRefreshToken(email);
+        const tokenData = UserToTokenData(User$.parse(user));
+        const accessToken = generateAccessToken(tokenData);
+        const refreshToken = generateRefreshToken(tokenData);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,

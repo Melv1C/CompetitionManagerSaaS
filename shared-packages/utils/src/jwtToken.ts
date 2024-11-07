@@ -1,12 +1,13 @@
 import jwt from 'jsonwebtoken';
+import { TokenData } from '@competition-manager/schemas';
 
 
-export const generateAccessToken = (email: string) => { //when use in a api don't forget to put the .env with ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
-    return jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
+export const generateAccessToken = (tokenData: TokenData) => { //when use in a api don't forget to put the .env with ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
+    return jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' });
 };
 
-export const generateRefreshToken = (email: string) => {
-    return jwt.sign({ email: email }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
+export const generateRefreshToken = (tokenData: TokenData) => {
+    return jwt.sign(tokenData, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 };
 
 export const verifyAccessToken = (token: string) => {
