@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken } from '@competition-manager/utils';
+import { User$ } from '@competition-manager/schemas';
+import { UserToTokenData } from '../utils';
 
 export const router = Router();
 
@@ -27,7 +28,7 @@ router.post(
             return;
         } 
         const hashedPassword = await bcrypt.hash(password, 10);
-        await prisma.user.create({
+        const userData = await prisma.user.create({
             data: {
                 email,
                 password: hashedPassword,
@@ -40,9 +41,9 @@ router.post(
                 role: 'user'
             }
         });
-
-        const accessToken = generateAccessToken(email);
-        const refreshToken = generateRefreshToken(email);
+        const tokenData = UserToTokenData(User$.parse(userData));
+        const accessToken = generateAccessToken(tokenData);
+        const refreshToken = generateRefreshToken(tokenData);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,

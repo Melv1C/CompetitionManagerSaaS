@@ -4,7 +4,7 @@ export const router = Router();
 
 router.post(
     '/logout',
-    async (req, res) => {
+    (req, res) => {
         res.clearCookie('refreshToken').send("Logged out");
     }
 );

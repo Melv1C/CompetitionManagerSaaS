@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UserPreferences$ } from './UserPreferences';
 
-const ROLE = ['user', 'admin', 'superadmin'] as const;
+export const ROLE = ['user', 'admin', 'superadmin'] as const;
 export type Role = typeof ROLE[number];
 
 export const User$ = z.object({
