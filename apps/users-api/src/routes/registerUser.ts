@@ -3,7 +3,7 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken } from '@competition-manager/utils';
-import { User$ } from '@competition-manager/schemas';
+import { User$, USER_PREFERENCES_DEFAULTS } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
 export const router = Router();
@@ -33,12 +33,12 @@ router.post(
                 email,
                 password: hashedPassword,
                 preferences: {
-                    create: {
-                        theme: 'light',
-                        language: 'fr'
-                    }
+                    create: USER_PREFERENCES_DEFAULTS
                 },
                 role: 'user'
+            },
+            include: {
+                preferences: true
             }
         });
         const tokenData = UserToTokenData(User$.parse(userData));

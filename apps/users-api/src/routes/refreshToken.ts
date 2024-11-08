@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import jwt from 'jsonwebtoken';
-import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken } from '@competition-manager/utils';
-import { TokenData$ } from '@competition-manager/schemas';
+import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, decodeToken } from '@competition-manager/utils';
 
 export const router = Router();
 
@@ -16,8 +14,7 @@ router.get(
     async (req, res) => {
         const { refreshToken } = Cookies$.parse(req.cookies);
         const validRefreshToken = verifyRefreshToken(refreshToken);
-        console.log(jwt.decode(refreshToken));
-        const tokenData = TokenData$.parse(jwt.decode(refreshToken));
+        const tokenData = decodeToken(refreshToken);
         if (!validRefreshToken) {
             res.status(401).json({ message: 'Invalid refresh token' });
             return;
