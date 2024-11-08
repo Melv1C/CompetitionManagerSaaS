@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { TokenData } from '@competition-manager/schemas';
+import { TokenData, TokenData$ } from '@competition-manager/schemas';
 
 
 export const generateAccessToken = (tokenData: TokenData) => { //when use in a api don't forget to put the .env with ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
@@ -16,4 +16,8 @@ export const verifyAccessToken = (token: string) => {
 
 export const verifyRefreshToken = (token: string) => {
     return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!);
+}
+
+export const decodeToken = (token: string) => {
+    return TokenData$.parse(jwt.decode(token));
 }

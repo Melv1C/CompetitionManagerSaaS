@@ -14,8 +14,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    networks:
-      - my-network
+
 
   ########################################################
   # Je le laisse en commentaire si besoin en local
