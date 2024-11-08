@@ -22,12 +22,8 @@ router.post(
             where: {
                 email: email
             },
-            select: {
-                id: true,
-                email: true,
-                role: true,
-                password: true,
-                preferences: true,
+            include: {
+                preferences: true
             }
         });
         if (!user) {
