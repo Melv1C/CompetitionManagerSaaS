@@ -36,7 +36,6 @@ router.post(
             return;
         }
         const tokenData = UserToTokenData(User$.parse(user));
-        console.log(tokenData);
         const accessToken = generateAccessToken(tokenData);
         const refreshToken = generateRefreshToken(tokenData);
         res.cookie('refreshToken', refreshToken, {
