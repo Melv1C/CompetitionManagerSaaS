@@ -5,7 +5,7 @@ import {Box, Button, Divider, Drawer, List, ListItem } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
-import { DRAWER_WIDTH } from "../../constants";
+import { DRAWER_WIDTH } from "../../utils/constants";
 
 import { NavBarProps } from ".";
 

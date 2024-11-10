@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { AppBar, Box, Button, IconButton, Toolbar, useMediaQuery } from "@mui/material";
@@ -9,7 +9,8 @@ import { useUserToken } from "../../GlobalsStates/userToken";
 
 import { MobileNav } from "./MobileNav";
 import { AccountCircle } from "../AccountCircle";
-import { Logo } from "../Logo/Logo";
+import { Logo } from "../Logo";
+import { AuthPopup } from "../AuthPopup";
 
 type NavItemProps = {
     label: string;
@@ -25,8 +26,13 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
   
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width:900px)');
+    const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
     const [userToken] = useUserToken();
+
+    useEffect(() => {
+        setIsAuthPopupVisible(false);
+    }, [userToken]);
 
     const handleDrawerToggle = () => {
         setIsMobileOpen((prev) => !prev);
@@ -60,25 +66,31 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     )}  
 
                     <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
-                        {userToken ? (
+                        {userToken === '' && (
+                            <>
+                                <Button 
+                                    color="inherit" 
+                                    startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+                                    sx={{ 
+                                        textTransform: 'none', 
+                                        fontSize: '1.2rem',
+                                        border: '2px solid white',
+                                        padding: '0.2rem 1rem',
+                                    }} 
+                                    onClick={() => setIsAuthPopupVisible(true)}
+                                >
+                                    Sign In
+                                </Button>
+                                <AuthPopup isVisible={isAuthPopupVisible} onClose={() => setIsAuthPopupVisible(false)} />
+                            </>
+                        )}
+
+                        {(userToken !== '' && userToken !== null) && (
                             <Link to="/account">
                                 <IconButton>
                                     <AccountCircle />
                                 </IconButton>
                             </Link>
-                        ) : (
-                            <Button 
-                                color="inherit" 
-                                startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
-                                sx={{ 
-                                    textTransform: 'none', 
-                                    fontSize: '1.2rem',
-                                    border: '2px solid white',
-                                    padding: '0.2rem 1rem',
-                                }} 
-                            >
-                                Se connecter
-                            </Button>
                         )}
                     </Box>
                 </Toolbar>
