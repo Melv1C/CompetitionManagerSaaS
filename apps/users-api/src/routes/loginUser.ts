@@ -27,12 +27,12 @@ router.post(
             }
         });
         if (!user) {
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(400).json({ message: 'Invalid email' });
             return;
         }
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) {
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(400).json({ message: 'Invalid password' });
             return;
         }
         const tokenData = UserToTokenData(User$.parse(user));
