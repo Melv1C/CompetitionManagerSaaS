@@ -1,0 +1,9 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    font-family: Arial, sans-serif;
+}

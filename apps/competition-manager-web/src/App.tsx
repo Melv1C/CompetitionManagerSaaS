@@ -1,25 +1,45 @@
-import { createTheme, ThemeProvider, Typography } from "@mui/material"
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
+import './App.css'
+
+import { Box, createTheme, ThemeProvider, Toolbar } from "@mui/material"
+import { faHome, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
+
+import { NavBar } from './Components/NavBar'
 
 // must be extract in an other file
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#005ADF',
+      main: '#FF4141',
     },
     secondary: {
-      main: '#FF4141',
+      main: '#005ADF',
     },
   },
 })
 
 function App() {
+
+  const navItems = [
+    { label: 'Home', href: '/', icon: faHome },
+    { label: 'Competitions', href: '/competitions', icon: faCalendarDays },
+  ]
   
   return (
-    <ThemeProvider theme={theme}>
-      <Typography variant="h1">
-        Hello World!
-      </Typography>
-    </ThemeProvider>
+    <Box>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+            <NavBar items={navItems} />
+            <Toolbar />
+            <Routes>
+              <Route path="/" element={<h1>Home</h1>} />
+              <Route path="/competitions" element={<h1>Competitions</h1>} />
+              <Route path="/account" element={<h1>Account</h1>} />
+              <Route path="*" element={<h1>Not Found</h1>} />
+            </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </Box>
   )
 }
 
