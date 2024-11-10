@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api'; // Need to get the base URL from the environment
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 let accessToken: string | null = null;
 
