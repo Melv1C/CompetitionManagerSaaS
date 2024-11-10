@@ -26,7 +26,5 @@ dist/
 .vscode/
 .DS_Store
 
-posgres_data/
-
-# Firebase
-firebase/
+# vite
+.vite/
