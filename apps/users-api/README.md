@@ -41,21 +41,28 @@ Create a new user
 - `password` : string (min 8)
 
 #### Response
-if email already exist
-Status 409 
-{
-    message: "Email already in use"
-}
-
-else
+- Base case :
 Status 200
+```
 {
     accessToken: string;
 }
+```
 and coockie 
+```
 {
     refreshToken: string;
 }
+```
+- email already exist
+Status 409 
+```
+{
+    message: "Email already in use"
+}
+```
+
+else
 
 ### POST /login
 Login a user
@@ -64,10 +71,7 @@ Login a user
 - `email` : string
 - `password` : string
 #### Response
-if email not found
-flemme de le mettre maintenant vu que tu l'as changé
-...
-else
+- base case :
 ```
 Status 200
 {
@@ -80,11 +84,15 @@ and coockie
     refreshToken: string;
 }
 ```
+- email not found
+flemme de le mettre maintenant vu que tu l'as changé
+...
 
 ### POST /logout
 Logout the user
 
 #### Response
+- Base case :
 Status 200
 ```
 coockie 
