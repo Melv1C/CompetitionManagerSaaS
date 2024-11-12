@@ -22,17 +22,19 @@ use the refresh token to get a new access token and refresh token
 
 #### Response
 - Base case :
-Status 200 (accessToken)
-and coockie 
 ```
+Status 200 (accessToken)
+```
+```
+coockie 
 {
     refreshToken: string;
 }
 ```
 
 - Refresh token is invalid :
-Status 401
 ```
+Status 401
 {
     message: "Invalid refresh token"
 }
@@ -47,17 +49,18 @@ Create a new user
 
 #### Response
 - Base case :
-Status 200 (accessToken)
-
-and coockie 
 ```
+Status 200 (accessToken)
+```
+```
+coockie 
 {
     refreshToken: string;
 }
 ```
 - Email already exist
-Status 409 
 ```
+Status 409 
 {
     message: "Email already in use"
 }
@@ -77,8 +80,8 @@ Status 200
     accessToken: string;
 } 
 ```
-and coockie 
 ```
+coockie 
 {
     refreshToken: string;
 }
@@ -92,7 +95,9 @@ Logout the user
 
 #### Response
 - Base case :
+```
 Status 200
+```
 ```
 coockie 
 {

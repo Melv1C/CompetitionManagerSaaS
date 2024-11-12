@@ -23,8 +23,8 @@ Get a list of matching athletes with a key (the key should be either in the firs
 - `key` : string min 1 caracter
 #### Response
 - base case :
-Status 200
 ```
+Status 200
 [
     {
         id: number;
@@ -42,7 +42,9 @@ Status 200
 ]
 ```
 - no matching athlete found : 
+```
 Status 404 ("No athlete found")
+```
 
 ### POST /:license/records
 Get the records of given event for an athlete
@@ -54,8 +56,8 @@ Get the records of given event for an athlete
 - `maxYear` : number (optional)(default 2)(min 1)
 #### Response
 - base case :
-Status 200
 ```
+Status 200
 {
     event1: {
         type: "time" | "distance" | "height" | "points";
@@ -67,4 +69,6 @@ Status 200
 }
 ```
 - no records regardless of given events :
+```
 Status 404 ("No records found")
+```
