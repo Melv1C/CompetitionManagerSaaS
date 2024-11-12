@@ -87,8 +87,19 @@ coockie
 }
 ```
 - email not found
-flemme de le mettre maintenant vu que tu l'as changé
-...
+```
+Status 400
+{
+    message: "Invalid email"
+}
+```
+- invalid password
+```
+Status 400
+{
+    message: "Invalid password"
+}
+```
 
 ### POST /logout
 Logout the user
