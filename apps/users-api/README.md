@@ -21,17 +21,22 @@ use the refresh token to get a new access token and refresh token
 - `refreshToken` : string
 
 #### Response
-if the refresh token is invalid
-Status 401
-{
-    message: "Invalid refresh token"
-}
-else
+- Base case :
 Status 200 (accessToken)
 and coockie 
+```
 {
     refreshToken: string;
 }
+```
+
+- Refresh token is invalid :
+Status 401
+```
+{
+    message: "Invalid refresh token"
+}
+```
 
 ### POST /register
 Create a new user
@@ -54,15 +59,13 @@ and coockie
     refreshToken: string;
 }
 ```
-- email already exist
+- Email already exist
 Status 409 
 ```
 {
     message: "Email already in use"
 }
 ```
-
-else
 
 ### POST /login
 Login a user
