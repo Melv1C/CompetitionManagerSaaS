@@ -22,9 +22,7 @@ Get a list of matching athletes with a key (the key should be either in the firs
 #### Query parameters
 - `key` : string min 1 caracter
 #### Response
-• no matching athlete found : 
-Status 404 ("No athlete found")
-else :
+- base case :
 Status 200
 ```
 [
@@ -43,6 +41,8 @@ Status 200
     ...
 ]
 ```
+- no matching athlete found : 
+Status 404 ("No athlete found")
 
 ### POST /:license/records
 Get the records of given event for an athlete
