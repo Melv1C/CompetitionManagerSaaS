@@ -22,7 +22,7 @@ Get a list of matching athletes with a key (the key should be either in the firs
 #### Query parameters
 - `key` : string min 1 caracter
 #### Response
-if no matching athlete found : 
+• no matching athlete found : 
 Status 404 ("No athlete found")
 else :
 Status 200
@@ -53,9 +53,7 @@ Get the records of given event for an athlete
 - `event` : string[]
 - `maxYear` : number (optional)(default 2)(min 1)
 #### Response
-if no records regardless of given events :
-Status 404 ("No records found")
-else :
+- base case :
 Status 200
 ```
 {
@@ -68,3 +66,5 @@ Status 200
     ...
 }
 ```
+- no records regardless of given events :
+Status 404 ("No records found")
