@@ -12,7 +12,7 @@ export const useAutoLogin = () => {
                 const { data } = await api.get('/users/refresh-token', { withCredentials: true });
                 setUserToken(data);
             } catch (error) {
-                console.error('Auto login error:', error);
+                console.error('Auto login failed');
                 setUserToken('');
             }
         }
