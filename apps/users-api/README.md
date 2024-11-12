@@ -68,21 +68,27 @@ if email not found
 flemme de le mettre maintenant vu que tu l'as changé
 ...
 else
+```
 Status 200
 {
     accessToken: string;
 } 
+```
 and coockie 
+```
 {
     refreshToken: string;
 }
+```
 
 ### POST /logout
 Logout the user
 
 #### Response
 Status 200
+```
 coockie 
 {
     clear refreshToken
 }
+```

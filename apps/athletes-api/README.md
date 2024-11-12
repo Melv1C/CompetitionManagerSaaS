@@ -26,6 +26,7 @@ if no matching athlete found :
 Status 404 ("No athlete found")
 else :
 Status 200
+```
 [
     {
         id: number;
@@ -41,6 +42,7 @@ Status 200
     },
     ...
 ]
+```
 
 ### POST /:license/records
 Get the records of given event for an athlete
@@ -55,6 +57,7 @@ if no records regardless of given events :
 Status 404 ("No records found")
 else :
 Status 200
+```
 {
     event1: {
         type: "time" | "distance" | "height" | "points";
@@ -64,3 +67,4 @@ Status 200
     },
     ...
 }
+```
