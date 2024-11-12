@@ -47,12 +47,8 @@ Create a new user
 
 #### Response
 - Base case :
-Status 200
-```
-{
-    accessToken: string;
-}
-```
+Status 200 (accessToken)
+
 and coockie 
 ```
 {
