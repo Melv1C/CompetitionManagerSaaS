@@ -10,13 +10,71 @@ import { NavBar } from './Components/NavBar'
 import { Account } from './Pages/Account'
 
 // must be extract in an other file
-const theme = createTheme({
+const lightTheme = createTheme({
   palette: {
+    mode: 'light',
     primary: {
-      main: '#FF4141',
+      main: '#ff7043',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#005ADF',
+      main: '#184c85',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#f4f6f8',
+      paper: '#ffffff',
+    },
+    text: {
+      primary: '#001F3F',
+      secondary: '#546E7A',
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#ff7043',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: '#ff7043', // or #FF8C68
+          color: '#ffffff',
+        },
+      },
+    },
+  },
+})
+
+const darkTheme = createTheme(lightTheme, {
+  palette: {
+    mode: 'dark',
+    background: {
+      default: '#001F3F', // pas sur
+      paper: '#184c85',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#ffffff',
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#001F3F',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: '#001F3F', // or #184c85
+        },
+      },
     },
   },
 })
@@ -32,7 +90,7 @@ function App() {
   
   return (
     <Box>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={darkTheme}>
         <BrowserRouter>
             <NavBar items={navItems} />
             <Toolbar />

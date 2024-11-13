@@ -28,7 +28,13 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
 
     return (
         <>
-            <Typography variant="h4" sx={{ textAlign: 'center' }}>Sign In</Typography>
+            <Typography 
+                variant="h4"
+                color="text.primary"
+                sx={{ textAlign: 'center' }}
+            >
+                Sign In
+            </Typography>
 
             <Box 
                 component="form"
@@ -89,9 +95,20 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
 
             </Box>
 
-            <Divider>or</Divider>
+            <Divider>
+                <Typography
+                    variant="body1"
+                    color="text.secondary"
+                >
+                    or
+                </Typography>
+            </Divider>
 
-            <Typography sx={{ textAlign: 'center' }}>
+            <Typography 
+                variant="body1"
+                color="text.primary"
+                sx={{ textAlign: 'center' }}
+            >
                 Don't have an account? {' '}
                 <Link onClick={onToggle} sx={{ cursor: 'pointer' }}>
                     Sign Up

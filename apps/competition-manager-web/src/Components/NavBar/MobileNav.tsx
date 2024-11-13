@@ -20,12 +20,6 @@ export const MobileNav: React.FC<MobileNavProps> = ({ items, isMobileOpen, handl
             anchor="left"
             open={isMobileOpen}
             onClose={handleDrawerToggle}
-            PaperProps={{
-                sx: {
-                    backgroundColor: 'primary.main',
-                    color: 'primary.contrastText',
-                },
-            }}
         >
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button onClick={handleDrawerToggle} sx={{ padding: 2 }} color="inherit">
