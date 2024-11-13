@@ -8,6 +8,8 @@ import { useAutoLogin } from './hooks'
 
 import { NavBar } from './Components/NavBar'
 import { Account } from './Pages/Account'
+import { AdminCompetitions } from './Pages/Admin/Competitions'
+import { AdminCompetition } from './Pages/Admin/Competition'
 
 // must be extract in an other file
 const lightTheme = createTheme({
@@ -31,48 +33,11 @@ const lightTheme = createTheme({
     },
   },
   components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#ff7043',
-        },
-      },
-    },
     MuiDrawer: {
       styleOverrides: {
         paper: {
           backgroundColor: '#ff7043', // or #FF8C68
           color: '#ffffff',
-        },
-      },
-    },
-  },
-})
-
-const darkTheme = createTheme(lightTheme, {
-  palette: {
-    mode: 'dark',
-    background: {
-      default: '#001F3F', // pas sur
-      paper: '#184c85',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#ffffff',
-    },
-  },
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#001F3F',
-        },
-      },
-    },
-    MuiDrawer: {
-      styleOverrides: {
-        paper: {
-          backgroundColor: '#001F3F', // or #184c85
         },
       },
     },
@@ -90,7 +55,7 @@ function App() {
   
   return (
     <Box>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={lightTheme}>
         <BrowserRouter>
             <NavBar items={navItems} />
             <Toolbar />
@@ -98,6 +63,8 @@ function App() {
               <Route path="/" element={<h1>Home</h1>} />
               <Route path="/competitions" element={<h1>Competitions</h1>} />
               <Route path="/account" element={<Account />} />
+              <Route path="/admin/competitions" element={<AdminCompetitions />} />
+              <Route path="/admin/competitions/:id" element={<AdminCompetition />} />
               <Route path="*" element={<h1>Not Found</h1>} />
             </Routes>
         </BrowserRouter>

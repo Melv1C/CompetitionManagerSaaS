@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { AppBar, Box, Button, IconButton, Toolbar, useMediaQuery } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, IconDefinition, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
+import { faBars, IconDefinition, faRightToBracket, faUserGear } from "@fortawesome/free-solid-svg-icons";
 
 import { useUserToken } from "../../GlobalsStates/userToken";
 
@@ -39,9 +39,19 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     }
 
     return (
-        <Box sx={{ display: 'flex'}}>
+        <Box 
+            sx={{ 
+                display: 'flex',
+            }}
+        >
             <AppBar component="nav">
-                <Toolbar sx={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <Toolbar 
+                    sx={{ 
+                        display: 'flex', 
+                        gap: '1rem', 
+                        alignItems: 'center' 
+                    }}
+                >
                     {isMobile && (
                         <Box sx={{ marginRight: '1rem' }}>
                             <Button 
@@ -57,23 +67,42 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     <Link to="/">
                         <Logo />
                     </Link>
-                    {!isMobile && (
-                        <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
+                    <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
+                        {!isMobile && (
+                            <>
                             {items.map((item) => (
                                 <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
                                     <Button 
                                         color="inherit" 
                                         startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} 
                                         sx={{ textTransform: 'none', fontSize: '1.2rem' }}
-                                    >
+                                        >
                                         {item.label}
                                     </Button>
                                 </Link>
                             ))}
-                        </Box>
-                    )}  
+                            </>
+                        )}  
+                    </Box>
 
-                    <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
+                    {/* add link to admin dashboard */}
+                    {true && (
+                        <Box>
+                            <Link to="/admin/competitions">
+                                <IconButton 
+                                    sx={{
+                                        width: '2.5rem',
+                                        height: '2.5rem',
+                                        color: 'white',
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faUserGear} style={{ fontSize: '1.25rem' }} />
+                                </IconButton>
+                            </Link>
+                        </Box>
+                    )}
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         {userToken === '' && (
                             <>
                                 <Button 
@@ -81,7 +110,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                     color="inherit"
                                     sx={{ 
                                         textTransform: 'none', 
-                                        fontSize: '1.2rem',
+                                        fontSize: isMobile ? '1rem' : '1.2rem',
                                         border: '2px solid white',
                                         padding: '0.2rem 1rem',
                                     }} 
@@ -94,7 +123,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         )}
 
                         {(userToken !== '' && userToken !== null) && (
-                            <Link to="/account">
+                            <Link to="/account" >
                                 <IconButton>
                                     <AccountCircle />
                                 </IconButton>

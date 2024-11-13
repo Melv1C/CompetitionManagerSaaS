@@ -1,4 +1,7 @@
 import { Box } from '@mui/material';
+import React from 'react';
+
+import logo from '../../public/LogoWhite.png';
 
 export const Logo: React.FC = () => {
     return (
@@ -12,7 +15,7 @@ export const Logo: React.FC = () => {
                 height: '3rem',
             }}
         >
-            <img src="./LogoWhite.png" alt="Logo" style={{ width: '100%', height: '100%'}} />
+            <img src={logo} alt="Logo" style={{ width: '100%', height: '100%'}} />
         </Box>
     );
 };
