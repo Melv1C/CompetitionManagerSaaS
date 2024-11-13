@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Box, IconButton, Modal } from "@mui/material";
+import { Box, IconButton, Modal, useTheme } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 
@@ -50,6 +50,9 @@ type CloseButtonProps = {
 };
 
 const CloseButton = ({ onClose }: CloseButtonProps) => {
+
+    const theme = useTheme();
+
     return (
         <IconButton 
             onClick={onClose} 
@@ -59,7 +62,7 @@ const CloseButton = ({ onClose }: CloseButtonProps) => {
                 right: '0',
             }}
         >
-            <FontAwesomeIcon icon={faClose} style={{ width: '2rem', height: '2rem' }} />
+            <FontAwesomeIcon icon={faClose} style={{ width: '2rem', height: '2rem', color: theme.palette.text.primary }} />
         </IconButton>
     );
 };

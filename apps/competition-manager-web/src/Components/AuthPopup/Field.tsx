@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ZodSchema } from 'zod';
 
-import { FormControl, FormLabel, IconButton, InputAdornment, TextField } from '@mui/material';
+import { FormControl, FormLabel, IconButton, InputAdornment, TextField, useTheme } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -31,6 +31,9 @@ export const Field: React.FC<FieldProps> = ({
     isPassword = false,
     validator
 }) => {
+
+    const theme = useTheme();
+
     const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -61,7 +64,7 @@ export const Field: React.FC<FieldProps> = ({
                                     onClick={handleClickShow}
                                     onMouseDown={handleMouseDown}
                                 >
-                                    <FontAwesomeIcon icon={IsPasswordVisible ? faEye : faEyeSlash} size='xs' />
+                                    <FontAwesomeIcon icon={IsPasswordVisible ? faEye : faEyeSlash} size='xs' color={theme.palette.text.secondary} />
                                 </IconButton>
                             </InputAdornment>
                         ),

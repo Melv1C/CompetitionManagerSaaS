@@ -44,7 +44,11 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                 <Toolbar sx={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     {isMobile && (
                         <Box sx={{ marginRight: '1rem' }}>
-                            <Button color="inherit" onClick={handleDrawerToggle} sx={{ minWidth: 0, padding: 0 }}>
+                            <Button 
+                                color="inherit" 
+                                onClick={handleDrawerToggle} 
+                                sx={{ minWidth: 0, padding: 0 }}
+                            >
                                 <FontAwesomeIcon icon={faBars} size="2x" />
                             </Button>
                             <MobileNav items={items} isMobileOpen={isMobileOpen} handleDrawerToggle={handleDrawerToggle} />
@@ -57,7 +61,11 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
                             {items.map((item) => (
                                 <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <Button color="inherit" startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} sx={{ textTransform: 'none', fontSize: '1.2rem' }}>
+                                    <Button 
+                                        color="inherit" 
+                                        startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} 
+                                        sx={{ textTransform: 'none', fontSize: '1.2rem' }}
+                                    >
                                         {item.label}
                                     </Button>
                                 </Link>
@@ -69,8 +77,8 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         {userToken === '' && (
                             <>
                                 <Button 
-                                    color="inherit" 
                                     startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+                                    color="inherit"
                                     sx={{ 
                                         textTransform: 'none', 
                                         fontSize: '1.2rem',
