@@ -4,13 +4,15 @@ const nano = require('nano')(process.env.COUCHDB_URL);
 
 function calculateCategory(birthDate, competitionDate, gender) {
     let age = new Date(competitionDate - birthDate);
+    console.log("age", age);
     let years = Math.abs(age.getUTCFullYear() - 1970);
+    console.log("years", years);
 
     // calculate category
     if (years < 35) { // not a master
         const dico_age = {"SEN":[20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35],"JUN":[18,19],"SCO":[16,17],"CAD":[14,15],"MIN":[12,13],"PUP":[10,11],"BEN":[8,9],"KAN":[1,2,3,4,5,6,7]}
         const sexe = gender === "Male" ? "M" : "F";
-        const yearsDiff = (competitionDate.getMonth()>10 ? competitionDate.getFullYear()+1 : competitionDate.getFullYear()) - birthDate.getFullYear();
+        const yearsDiff = (competitionDate.getMonth()>=10 ? competitionDate.getFullYear()+1 : competitionDate.getFullYear()) - birthDate.getFullYear();
         let cat = null;
         for (let key in dico_age) {
             if (dico_age[key].includes(yearsDiff)) {
