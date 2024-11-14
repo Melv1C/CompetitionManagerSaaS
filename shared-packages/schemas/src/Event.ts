@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Category$ } from './Category';
 
 const EVENT_GROUP = [
     'Sprint',
@@ -27,6 +28,7 @@ export const Event$ = z.object({
     abbr: z.string(),
     group: z.enum(EVENT_GROUP),
     type: z.enum(EVENT_TYPE),
+    validCategories: z.array(Category$),
 });
 
 export type Event = z.infer<typeof Event$>;
