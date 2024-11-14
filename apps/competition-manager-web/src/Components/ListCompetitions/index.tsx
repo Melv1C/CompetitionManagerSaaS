@@ -1,13 +1,13 @@
 import { Box, Typography } from '@mui/material'
 import { Item } from './Item'
-import { Competition } from '../../../../type'
+import { Competition } from '../../type'
 
 type ListProps = {
     isPast: boolean
     competitions: Competition[]
 }
 
-export const List: React.FC<ListProps> = ({ isPast, competitions }) => {
+export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) => {
 
     const sortedCompetitions = competitions.sort((a, b) => {
         if (!isPast) {

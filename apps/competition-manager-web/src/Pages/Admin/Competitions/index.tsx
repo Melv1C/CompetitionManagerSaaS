@@ -1,7 +1,7 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button, Tabs, Tab } from "@mui/material";
-import { List } from "./List";
+import { ListCompetitions } from "../../../Components/ListCompetitions";
 import { useState } from "react";
 
 const getCompetitions = () => {
@@ -9,7 +9,7 @@ const getCompetitions = () => {
         {
             id: 1,
             name: 'Meeting de concours pour tous. Spécial Perche',
-            club: 'Club 1',
+            club: 'USTA',
             address: 'Rue de la Perche, 12345 Ville',
             date: new Date("2024-12-31"),
         },
@@ -142,7 +142,7 @@ export const AdminCompetitions = () => {
             </Tabs>
 
 
-            <List 
+            <ListCompetitions 
                 competitions={
                     competitions.filter(competition => 
                     !activeTab
