@@ -1,9 +1,23 @@
 import { z } from 'zod';
 import { Athlete$ } from './Athlete';
 import { CompetitionEvent$ } from './CompetitionEvent';
-import { on } from 'events';
+import { User$ } from './User';
 
+const ACCESS = ['inscriptions', 'competitions', 'confirmations', 'liveResults'] as const;
+type Access = typeof ACCESS[number];
 
+const PaymentInfo$ = z.object({
+    id: z.number().positive(),
+    free: z.boolean().default(false),
+    online: z.boolean().default(true),
+    freeClub: z.array(z.string()),
+});
+
+const Admin$ = z.object({
+    id: z.number().positive(),
+    user: User$,
+    access: z.array(z.enum(ACCESS)),
+});
 
 
 export const Competition$ = z.object({
@@ -21,12 +35,13 @@ export const Competition$ = z.object({
     open: z.boolean().default(false),
     openDate: z.coerce.date().min(new Date()).optional(),//
     place: z.string().min(1),
-    paid: z.boolean().default(true),
+    paiment: PaymentInfo$,
     freeClub: z.boolean().default(true),// a discuter
     pdfScedule: z.string().optional(),
     //close ? archived ? finished ?: z.boolean().default(false), ? or an end date
     email: z.string().email().optional(),
-    admin: z.string().min(1),
+    owner: User$,
+    admin: z.array(Admin$),
 });
 
 export type Competition = z.infer<typeof Competition$>;
