@@ -10,6 +10,7 @@ import { NavBar } from './Components/NavBar'
 import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
 import { AdminCompetition } from './Pages/Admin/Competition'
+import Competitions from './Pages/Competitions'
 
 // must be extract in an other file
 const lightTheme = createTheme({
@@ -52,7 +53,7 @@ function App() {
   ]
 
   useAutoLogin()
-  
+
   return (
     <Box>
       <ThemeProvider theme={lightTheme}>
@@ -61,7 +62,7 @@ function App() {
             <Toolbar />
             <Routes>
               <Route path="/" element={<h1>Home</h1>} />
-              <Route path="/competitions" element={<h1>Competitions</h1>} />
+              <Route path="/competitions" element={<Competitions />} />
               <Route path="/account" element={<Account />} />
               <Route path="/admin/competitions" element={<AdminCompetitions />} />
               <Route path="/admin/competitions/:id" element={<AdminCompetition />} />

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import logo from '../../public/LogoWhite.png';
+import logo from '../assets/LogoWhite.png';
 
 export const Logo: React.FC = () => {
     return (

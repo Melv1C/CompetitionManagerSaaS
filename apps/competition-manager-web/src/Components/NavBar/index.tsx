@@ -11,6 +11,7 @@ import { MobileNav } from "./MobileNav";
 import { AccountCircle } from "../AccountCircle";
 import { Logo } from "../Logo";
 import { AuthPopup } from "../AuthPopup";
+import { useRoles } from "../../hooks";
 
 type NavItemProps = {
     label: string;
@@ -29,6 +30,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
     const [userToken] = useUserToken();
+    const { isAdmin, isLogged, isNotLogged } = useRoles();
 
     useEffect(() => {
         setIsAuthPopupVisible(false);
@@ -86,7 +88,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     </Box>
 
                     {/* add link to admin dashboard */}
-                    {true && (
+                    {isAdmin && (
                         <Box>
                             <Link to="/admin/competitions">
                                 <IconButton 
@@ -103,7 +105,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     )}
 
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        {userToken === '' && (
+                        {isNotLogged && (
                             <>
                                 <Button 
                                     startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
@@ -122,8 +124,8 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                             </>
                         )}
 
-                        {(userToken !== '' && userToken !== null) && (
-                            <Link to="/account" >
+                        {isLogged && (
+                            <Link to="/account">
                                 <IconButton>
                                     <AccountCircle />
                                 </IconButton>
