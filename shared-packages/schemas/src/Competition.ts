@@ -1,19 +1,17 @@
 import { z } from 'zod';
-import { Athlete$ } from './Athlete';
 import { CompetitionEvent$ } from './CompetitionEvent';
 import { User$ } from './User';
 
-const ACCESS = ['inscriptions', 'competitions', 'confirmations', 'liveResults'] as const;
-type Access = typeof ACCESS[number];
+export const ACCESS = ['owner', 'inscriptions', 'competitions', 'confirmations', 'liveResults'] as const;
+export type Access = typeof ACCESS[number];
 
-const PaymentInfo$ = z.object({
-    id: z.number().positive(),
-    free: z.boolean().default(false),
-    online: z.boolean().default(true),
-    freeClub: z.array(z.string()),
-});
+export const PAYMENT_METHOD = ['free', 'online', 'onPlace'] as const;
+export type PaymentMethod = typeof PAYMENT_METHOD[number];
 
-const Admin$ = z.object({
+export const ONE_DAY_PERMISSION = ['foreing', 'all', 'bpm'] as const;
+export type OneDayPermission = typeof ONE_DAY_PERMISSION[number];
+
+export const Admin$ = z.object({
     id: z.number().positive(),
     user: User$,
     access: z.array(z.enum(ACCESS)),
@@ -23,25 +21,29 @@ const Admin$ = z.object({
 export const Competition$ = z.object({
     id: z.number().positive(),
     eid: z.string().min(1),
+
+    // Basic info
     name: z.string().min(1),
+    date: z.coerce.date().min(new Date()),  //test if .min(new Date() works
+
+    // Other info
     description: z.string().min(1),
-    oneDayAthletes: z.array(Athlete$),
-    oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
-    startDate: z.coerce.date().min(new Date()),  //test if .min(new Date() works
+    events: z.array(CompetitionEvent$).optional(),
+    publish: z.boolean().default(false),
+    method: z.enum(PAYMENT_METHOD),
     startInscriptionDate: z.coerce.date().min(new Date()),
     endInscriptionDate: z.coerce.date().min(new Date()),
-    events: z.array(CompetitionEvent$),
-    visible: z.boolean().default(false),
-    open: z.boolean().default(false),
-    openDate: z.coerce.date().min(new Date()).optional(),//
-    place: z.string().min(1),
-    paiment: PaymentInfo$,
-    freeClub: z.boolean().default(true),// a discuter
-    pdfScedule: z.string().optional(),
-    //close ? archived ? finished ?: z.boolean().default(false), ? or an end date
-    email: z.string().email().optional(),
-    owner: User$,
-    admin: z.array(Admin$),
+
+    // Default settings
+    admins: z.array(Admin$),
+    email: z.string().email(),
+
+    // Advanced settings
+    closeDate: z.coerce.date().min(new Date()).optional(),
+    freeClub: z.array(z.string()),
+    oneDayPermissions: z.array(z.enum(ONE_DAY_PERMISSION)),
+    oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
+        
 });
 
 export type Competition = z.infer<typeof Competition$>;
