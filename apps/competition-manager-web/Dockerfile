@@ -1,13 +1,24 @@
-# Utilise une image de base légère
-FROM alpine:latest
+# Use the official Node Alpine image as the base image
+FROM node:20-alpine
 
-# Crée un répertoire pour le contenu statique
-RUN mkdir -p /app/competition-manager-web
+# Set the working directory to get shared package
+WORKDIR /competition-manager
 
-# Copie le contenu du dossier local 'static' dans l'image
-COPY dist /app/competition-manager-web
+# Copy shared_package to the application directory
+COPY shared-packages/schemas shared-packages/schemas
 
-# Commande pour garder le conteneur actif (par exemple, avec tail)
-CMD ["tail", "-f", "/dev/null"]
+# Set the working directory to shared package
+WORKDIR /competition-manager/shared-packages/schemas
 
+# Install the dependencies and build the shared package
+RUN npm install
+RUN npm run build
 
+# Set the working directory in the container
+WORKDIR /competition-manager/apps/competition-manager-web
+
+# Copy the application files
+COPY apps/competition-manager-web .
+
+# Install the dependencies without devDependencies
+RUN npm install
