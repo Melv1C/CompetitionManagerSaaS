@@ -1,6 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, Chip, Typography } from '@mui/material'
 import { Date } from './Date'
-import { Competition } from '../../../../type'
+import { Competition } from '../../type'
 import { useNavigate } from 'react-router-dom'
 
 type ItemProps = {
