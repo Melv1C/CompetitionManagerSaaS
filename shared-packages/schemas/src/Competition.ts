@@ -40,7 +40,7 @@ export const Competition$ = z.object({
 
     // Advanced settings
     closeDate: z.coerce.date().min(new Date()).optional(),
-    freeClub: z.array(z.string()),
+    freeClubs: z.array(z.string()),
     oneDayPermissions: z.array(z.enum(ONE_DAY_PERMISSION)),
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
         
