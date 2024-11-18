@@ -5,57 +5,58 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 /////////////////////////
 // User
 /////////////////////////
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  role        String    @default("user")
-  password    String
+    id          Int       @id @default(autoincrement())
+    email       String    @unique
+    role        String    @default("user")
+    password    String
+    preferences UserPreferences?
+    admin       Admin[]
 
-  preferences UserPreferences?
 
-  @@map("users")
+    @@map("users")
 }
 
 /////////////////////////
 // UserPreferences
 /////////////////////////
 model UserPreferences {
-  id        Int       @id @default(autoincrement())
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int       @unique @map("user_id")
-  theme     String
-  language  String
+    id        Int       @id @default(autoincrement())
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    Int       @unique @map("user_id")
+    theme     String
+    language  String
 
-  @@map("user_preferences")
+    @@map("user_preferences")
 }
 
 /////////////////////////
 // Athlete
 /////////////////////////
 model Athlete {
-  id Int @id @default(autoincrement())
-  license String @unique
-  firstName String @map("first_name")
-  lastName String @map("last_name")
-  bib Int
-  gender String
-  birthdate DateTime
-  club String
-  metadata Json @default("{}")
-  competition Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
-  competitionId Int? @map("competition_id")
+    id            Int          @id @default(autoincrement())
+    license       String       @unique
+    firstName     String       @map("first_name")
+    lastName      String       @map("last_name")
+    bib           Int
+    gender        String
+    birthdate     DateTime
+    club          String
+    metadata      Json         @default("{}")
+    competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    competitionId Int?         @map("competition_id")
 
-  @@map("athletes")
+    @@map("athletes")
 }
 
 ////////////////
@@ -63,41 +64,149 @@ model Athlete {
 ////////////////
 
 model Event {
-  id Int @id @default(autoincrement())
-  name String
-  abbr String
-  group String
-  type String
-
-  @@map("events")
+    id                Int                 @id @default(autoincrement())
+    name              String
+    abbr              String
+    group             String
+    type              String
+    competitionEvents CompetitionEvent[]
+    
+    @@map("events")
 }
 
 enum EventGroup {
-  SPRINT
-  JUMP
-  THROW
-  MIDDLE_DISTANCE
-  LONG_DISTANCE
-  WALK
-  COMBINED
+    SPRINT
+    JUMP
+    THROW
+    MIDDLE_DISTANCE
+    LONG_DISTANCE
+    WALK
+    COMBINED
 }
 
 enum EventType {
-  TIME
-  DISTANCE
-  HEIGHT
-  POINTS
+    TIME
+    DISTANCE
+    HEIGHT
+    POINTS
 }
+
+////////////////
+// Category
+////////////////
+
+model Category {
+    id                Int                @id @default(autoincrement())
+    name              String
+    abbr              String
+    competitionEvents CompetitionEvent[]
+
+    @@map("categories")
+}
+
+
+
+
+
+
+
+////////////////
+// Competition event
+////////////////
+
+model CompetitionEvent {
+    id                Int                @id @default(autoincrement())
+    name              String
+    event             Event              @relation(fields: [eventId], references: [id])
+    eventId           Int                @map("event_id")
+    schedule          DateTime
+    categories        Category[]
+    place             Int?
+    parentEvent       CompetitionEvent?  @relation("ParentEventToCompetitionEvent", fields: [parentId], references: [id])
+    subEvents         CompetitionEvent[] @relation("ParentEventToCompetitionEvent") 
+    parentId          Int?               @map("parent_id")
+    cost              Float
+    isInscriptionOpen Boolean            @map("is_inscription_open")
+    competition       Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    competitionId     Int                @map("competition_id")
+
+    @@map("competition_events")
+}
+
+
+
+
 
 
 ////////////////
 // Competition
 ////////////////
 
-
 model Competition {
-  id Int @id @default(autoincrement())
-  name String
-  oneDayAthletes Athlete[]
-  @@map("competitions")
+    id                   Int                 @id @default(autoincrement())
+    eid                  String              @unique
+    name                 String
+    date                 DateTime
+    description          String              @db.Text  
+    events               CompetitionEvent[]  
+    publish              Boolean
+    method               Method
+    startInscriptionDate DateTime            @map("start_inscription_date")
+    endInscriptionDate   DateTime            @map("end_inscription_date")
+    admins               Admin[]
+    email                String
+    closeDate            DateTime            @map("close_date")
+    freeClubs            String[]            @map("free_clubs")
+    oneDayPermissions    OneDayPermission[]  @map("one_day_permission")        
+    oneDayBibStart       Int                 @map("one_day_bib_start")
+    oneDayAthletes       Athlete[]
+
+    @@map("competitions")
 }
+
+enum Method {
+    free
+    online
+    onPlace
+}
+
+enum OneDayPermission {
+    foreign
+    all
+    bpm
+}
+
+////////////////
+// Admin
+////////////////
+
+model Admin {
+    id            Int         @id @default(autoincrement())
+    user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        Int         @unique @map("user_id")
+    competition   Competition @relation(fields: [competitionId], references: [id])
+    competitionId Int         @map("competition_id")
+    access        Access
+
+    @@map("admins")
+}
+
+enum Access {
+    owner
+    inscriptions
+    competitions
+    confirmations
+    liveResults
+}
+
+
+
+
+
+
+
+
+
+
+
+
