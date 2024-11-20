@@ -62,7 +62,6 @@ model Athlete {
 ////////////////
 // Event
 ////////////////
-
 model Event {
     id                Int                 @id @default(autoincrement())
     name              String
@@ -94,7 +93,6 @@ enum EventType {
 ////////////////
 // Category
 ////////////////
-
 model Category {
     id                Int                @id @default(autoincrement())
     name              String
@@ -104,16 +102,9 @@ model Category {
     @@map("categories")
 }
 
-
-
-
-
-
-
 ////////////////
 // Competition event
 ////////////////
-
 model CompetitionEvent {
     id                Int                @id @default(autoincrement())
     name              String
@@ -133,15 +124,9 @@ model CompetitionEvent {
     @@map("competition_events")
 }
 
-
-
-
-
-
 ////////////////
 // Competition
 ////////////////
-
 model Competition {
     id                   Int                 @id @default(autoincrement())
     eid                  String              @unique
@@ -179,7 +164,6 @@ enum OneDayPermission {
 ////////////////
 // Admin
 ////////////////
-
 model Admin {
     id            Int         @id @default(autoincrement())
     user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
