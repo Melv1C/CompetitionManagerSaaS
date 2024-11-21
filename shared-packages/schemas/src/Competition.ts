@@ -28,7 +28,7 @@ export const Competition$ = z.object({
 
     // Other info
     description: z.string().min(1),
-    events: z.array(CompetitionEvent$).optional(),
+    events: z.array(CompetitionEvent$).default([]),
     publish: z.boolean().default(false),
     method: z.enum(PAYMENT_METHOD),
     startInscriptionDate: z.coerce.date().min(new Date()),
