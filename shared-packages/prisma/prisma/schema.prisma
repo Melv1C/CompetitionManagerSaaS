@@ -73,23 +73,6 @@ model Event {
     @@map("events")
 }
 
-enum EventGroup {
-    SPRINT
-    JUMP
-    THROW
-    MIDDLE_DISTANCE
-    LONG_DISTANCE
-    WALK
-    COMBINED
-}
-
-enum EventType {
-    TIME
-    DISTANCE
-    HEIGHT
-    POINTS
-}
-
 ////////////////
 // Category
 ////////////////
@@ -135,30 +118,18 @@ model Competition {
     description          String              @db.Text  
     events               CompetitionEvent[]  
     publish              Boolean
-    method               Method
+    method               String
     startInscriptionDate DateTime            @map("start_inscription_date")
     endInscriptionDate   DateTime            @map("end_inscription_date")
     admins               Admin[]
     email                String
     closeDate            DateTime            @map("close_date")
     freeClubs            String[]            @map("free_clubs")
-    oneDayPermissions    OneDayPermission[]  @map("one_day_permission")        
+    oneDayPermissions    String[]  @map("one_day_permission")        
     oneDayBibStart       Int                 @map("one_day_bib_start")
     oneDayAthletes       Athlete[]
 
     @@map("competitions")
-}
-
-enum Method {
-    free
-    online
-    onPlace
-}
-
-enum OneDayPermission {
-    foreign
-    all
-    bpm
 }
 
 ////////////////
@@ -170,15 +141,8 @@ model Admin {
     userId        Int         @unique @map("user_id")
     competition   Competition @relation(fields: [competitionId], references: [id])
     competitionId Int         @map("competition_id")
-    access        Access
+    access        String[]
 
     @@map("admins")
 }
 
-enum Access {
-    owner
-    inscriptions
-    competitions
-    confirmations
-    liveResults
-}
