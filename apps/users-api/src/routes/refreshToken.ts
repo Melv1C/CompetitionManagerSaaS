@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, decodeToken } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken } from '@competition-manager/utils';
 
 export const router = Router();
 
@@ -13,9 +13,8 @@ router.get(
     parseRequest('cookies', Cookies$),
     async (req, res) => {
         const { refreshToken } = Cookies$.parse(req.cookies);
-        const validRefreshToken = verifyRefreshToken(refreshToken);
-        const tokenData = decodeToken(refreshToken);
-        if (!validRefreshToken) {
+        const tokenData = verifyRefreshToken(refreshToken);
+        if (!tokenData) {
             res.status(401).json({ message: 'Invalid refresh token' });
             return;
         }

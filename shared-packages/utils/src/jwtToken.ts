@@ -14,10 +14,11 @@ export const verifyAccessToken = (token: string) => {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
 }
 
+//return false or the decoded token
 export const verifyRefreshToken = (token: string) => {
-    return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!);
-}
-
-export const decodeToken = (token: string) => {
-    return TokenData$.parse(jwt.decode(token));
+    try {
+        return TokenData$.parse(jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!));
+    } catch (error) {
+        return false;
+    }
 }
