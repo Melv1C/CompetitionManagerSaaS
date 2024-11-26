@@ -1,7 +1,5 @@
 import { z } from 'zod';
-
-export const GENDER = ['M', 'F'] as const;
-export type Gender = typeof GENDER[number];
+import { Gender$ } from './Gender';
 
 const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));
 
@@ -13,7 +11,7 @@ export const Athlete$ = z.object({
     firstName: z.string(),
     lastName: z.string(),
     bib: z.number().positive(),
-    gender: z.enum(GENDER),
+    gender: Gender$,
     birthdate: z.coerce.date().min(new Date('1900-01-01')),
     club: z.string(),
     metadata: Json$.default({}),
