@@ -1,22 +1,14 @@
 import { z } from 'zod';
 import { CompetitionEvent$ } from './CompetitionEvent';
-import { User$ } from './User';
-
-export const ACCESS = ['owner', 'inscriptions', 'competitions', 'confirmations', 'liveResults'] as const;
-export type Access = typeof ACCESS[number];
+import { Admin$ } from './Admin';
+import { Club$ } from './Club';
+import { Option$, PaymentPlan$ } from './PaymentPlan';
 
 export const PAYMENT_METHOD = ['free', 'online', 'onPlace'] as const;
 export type PaymentMethod = typeof PAYMENT_METHOD[number];
 
 export const ONE_DAY_PERMISSION = ['foreing', 'all', 'bpm'] as const;
 export type OneDayPermission = typeof ONE_DAY_PERMISSION[number];
-
-export const Admin$ = z.object({
-    id: z.number().positive(),
-    user: User$,
-    access: z.array(z.enum(ACCESS)),
-});
-
 
 export const Competition$ = z.object({
     id: z.number().positive(),
@@ -31,6 +23,8 @@ export const Competition$ = z.object({
     events: z.array(CompetitionEvent$).default([]),
     publish: z.boolean().default(false),
     method: z.enum(PAYMENT_METHOD),
+    PaymentPlan: PaymentPlan$,
+    Options: z.array(Option$).default([]),
     startInscriptionDate: z.coerce.date().min(new Date()),
     endInscriptionDate: z.coerce.date().min(new Date()),
 
@@ -40,7 +34,7 @@ export const Competition$ = z.object({
 
     // Advanced settings
     closeDate: z.coerce.date().min(new Date()).optional(),
-    freeClubs: z.array(z.string()),
+    freeClubs: z.array(Club$).default([]),
     oneDayPermissions: z.array(z.enum(ONE_DAY_PERMISSION)),
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
         

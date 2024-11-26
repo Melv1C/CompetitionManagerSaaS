@@ -80,6 +80,9 @@ model Category {
     id                Int                @id @default(autoincrement())
     name              String
     abbr              String
+    simpleCategory    String             @map("simple_category")
+    gender            String
+    age               Int
     competitionEvents CompetitionEvent[]
 
     @@map("categories")
@@ -125,9 +128,12 @@ model Competition {
     email                String
     closeDate            DateTime            @map("close_date")
     freeClubs            String[]            @map("free_clubs")
-    oneDayPermissions    String[]  @map("one_day_permission")        
+    oneDayPermissions    String[]            @map("one_day_permission")        
     oneDayBibStart       Int                 @map("one_day_bib_start")
     oneDayAthletes       Athlete[]
+    paymentPlan          PaymentPlan         @relation(fields: [paymentPlanId], references: [id])
+    paymentPlanId        Int
+    options              Option[] 
 
     @@map("competitions")
 }
@@ -144,5 +150,33 @@ model Admin {
     access        String[]
 
     @@map("admins")
+}
+
+////////////////
+// Option
+////////////////
+model Option {
+    id               Int         @id @default(autoincrement())
+    name             String
+    description      String
+    price            Float
+    PaymentPlans     PaymentPlan[]
+    Competitions     Competition[]
+
+    @@map("options")
+}
+
+////////////////
+// Payment plan
+////////////////
+model PaymentPlan {
+    id               Int         @id @default(autoincrement())
+    name             String
+    description      String
+    includedOptions  Option[]
+    price            Float
+    Competition      Competition[]
+    
+    @@map("payment_plans")
 }
 
