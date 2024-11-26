@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const GENDER = ['M', 'F'] as const;
+export const GENDER = ['M', 'F'] as const;
 export type Gender = typeof GENDER[number];
 
 const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));

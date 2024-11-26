@@ -6,3 +6,4 @@ export * from './Category';
 export * from './Event';
 export * from './Competition';
 export * from './CompetitionEvent';
+export * from './Club';
