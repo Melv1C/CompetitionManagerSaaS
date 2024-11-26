@@ -7,3 +7,5 @@ export * from './Event';
 export * from './Competition';
 export * from './CompetitionEvent';
 export * from './Club';
+export * from './PaymentPlan';
+export * from './Gender';
