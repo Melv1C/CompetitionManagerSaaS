@@ -82,7 +82,7 @@ model Category {
     abbr              String
     simpleCategory    String             @map("simple_category")
     gender            String
-    age               Int
+    masterAgeGroup    Int
     competitionEvents CompetitionEvent[]
 
     @@map("categories")
@@ -132,7 +132,7 @@ model Competition {
     oneDayBibStart       Int                 @map("one_day_bib_start")
     oneDayAthletes       Athlete[]
     paymentPlan          PaymentPlan         @relation(fields: [paymentPlanId], references: [id])
-    paymentPlanId        Int
+    paymentPlanId        Int                 @map("payment_plan_id")
     options              Option[] 
 
     @@map("competitions")
