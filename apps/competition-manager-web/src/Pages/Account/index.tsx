@@ -26,7 +26,7 @@ export const Account = () => {
                 variant="contained" 
                 color="primary"
                 onClick={() => {
-                    setUserToken('');
+                    setUserToken('NOT_LOGGED');
                     logout();
                 }}
             >
