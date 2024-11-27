@@ -1,6 +1,6 @@
 
 import { Competition } from "../type";
-import { api } from "../utils/api";
+//import { api } from "../utils/api";
 
 export const getCompetitions = async (): Promise<Competition[]> => {
     // Mock data

@@ -1,5 +1,5 @@
 import { Competition } from "../type";
-import { api } from "../utils/api";
+//import { api } from "../utils/api";
 
 const mockCompetitions: Competition[] = [
     {
