@@ -1,0 +1,67 @@
+name: CI Workflow - Install, Lint, Test, Build
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  ci:
+    name: Install, Lint, Test, and Build All Apps
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: |
+          for app in apps/*; do
+            if [ -f "$app/package.json" ]; then
+              echo "Installing dependencies for $app"
+              cd "$app"
+              npm ci
+              cd ../..
+            fi
+          done
+
+      - name: Lint All Apps
+        run: |
+          for app in apps/*; do
+            if [ -f "$app/package.json" ]; then
+              echo "Linting $app"
+              cd "$app"
+              npm run lint
+              cd ../..
+            fi
+          done
+
+      - name: Test All Apps
+        run: |
+          for app in apps/*; do
+            if [ -f "$app/package.json" ]; then
+              echo "Running tests for $app"
+              cd "$app"
+              npm test
+              cd ../..
+            fi
+          done
+
+      - name: Build All Apps
+        run: |
+          for app in apps/*; do
+            if [ -f "$app/package.json" ]; then
+              echo "Building $app"
+              cd "$app"
+              npm run build
+              cd ../..
+            fi
+          done
