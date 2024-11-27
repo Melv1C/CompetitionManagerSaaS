@@ -64,7 +64,7 @@ model Athlete {
 ////////////////
 model Event {
     id                Int                 @id @default(autoincrement())
-    name              String
+    name              String              @unique
     abbr              String
     group             String
     type              String

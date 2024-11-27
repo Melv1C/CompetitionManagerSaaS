@@ -1,9 +1,12 @@
 import express from "express";
 import 'dotenv/config';
+import { fillDB } from "./fillDB";
 
 import { corsMiddleware } from '@competition-manager/utils';
 
 import routes from './routes';
+
+fillDB();
 
 const app = express();
 app.use(express.json());
@@ -13,7 +16,7 @@ const PREFIX = process.env.PREFIX || '/api';
 
 app.use(corsMiddleware);
 
-app.use(`${PREFIX}/events`, routes);
+// app.use(`${PREFIX}/events`, routes);
 
 
 app.listen(PORT, () => {

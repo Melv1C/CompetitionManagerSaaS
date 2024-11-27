@@ -2,12 +2,12 @@ import { z } from 'zod';
 
 const EVENT_GROUP = [
     'Sprint',
-    'Middle',
-    'Long',
-    'Relay',
-    'Jump',
-    'Throw',
-    'Combined'
+    'Demi-fond',
+    'Fond',
+    'Haies',
+    'Saut',
+    'Lancer',
+    'Epreuves multiples'
 ] as const;
 
 export type EventGroup = typeof EVENT_GROUP[number];
@@ -15,7 +15,6 @@ export type EventGroup = typeof EVENT_GROUP[number];
 export const EVENT_TYPE = [
     'time',
     'distance',
-    'height',
     'points'
 ] as const;
 
