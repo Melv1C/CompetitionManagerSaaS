@@ -1,4 +1,4 @@
-name: CI Workflow - Install, Lint, Test, Build
+name: CI Workflow - Install, Build, Placeholder for Lint/Test
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   ci:
-    name: Install, Lint, Test, and Build All Apps
+    name: Install, Build, and Prepare for Lint/Test
     runs-on: ubuntu-latest
 
     steps:
@@ -22,49 +22,49 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install Dependencies for Apps and Shared Packages
         run: |
-          for app in apps/*; do
-            if [ -f "$app/package.json" ]; then
-              echo "Installing dependencies for $app"
-              cd "$app"
+          for folder in apps/* shared-packages/*; do
+            if [ -f "$folder/package.json" ]; then
+              echo "Installing dependencies for $folder"
+              cd "$folder"
               npm ci
               cd ../..
             fi
           done
 
-      - name: Lint All Apps
+      - name: Lint All Apps and Shared Packages (Placeholder)
         # run: |
-        #   for app in apps/*; do
-        #     if [ -f "$app/package.json" ]; then
-        #       echo "Linting $app"
-        #       cd "$app"
+        #   for folder in apps/* shared-packages/*; do
+        #     if [ -f "$folder/package.json" ]; then
+        #       echo "Linting $folder"
+        #       cd "$folder"
         #       npm run lint
         #       cd ../..
         #     fi
         #   done
         run: |
-          echo "Lint step is not implemented yet"
+          echo "Lint step is not implemented yet for apps and shared-packages"
 
-      - name: Test All Apps
+      - name: Test All Apps and Shared Packages (Placeholder)
         # run: |
-        #   for app in apps/*; do
-        #     if [ -f "$app/package.json" ]; then
-        #       echo "Running tests for $app"
-        #       cd "$app"
+        #   for folder in apps/* shared-packages/*; do
+        #     if [ -f "$folder/package.json" ]; then
+        #       echo "Running tests for $folder"
+        #       cd "$folder"
         #       npm test
         #       cd ../..
         #     fi
         #   done
         run: |
-          echo "Test step is not implemented yet"
+          echo "Test step is not implemented yet for apps and shared-packages"
 
-      - name: Build All Apps
+      - name: Build All Apps and Shared Packages
         run: |
-          for app in apps/*; do
-            if [ -f "$app/package.json" ]; then
-              echo "Building $app"
-              cd "$app"
+          for folder in apps/* shared-packages/*; do
+            if [ -f "$folder/package.json" ]; then
+              echo "Building $folder"
+              cd "$folder"
               npm run build
               cd ../..
             fi
