@@ -22,16 +22,19 @@ jobs:
       - name: Identify Changed Services
         id: changed-services
         run: |
+          prev_commit=$(git rev-parse ${{ github.sha }}~1 || echo "")
           changed_apps=""
           for app in apps/*; do
             if [ -d "$app" ]; then
               app_name=$(basename "$app")
-              if git diff --name-only ${{ github.sha }}^..${{ github.sha }} | grep -q "^$app"; then
+              if [ -n "$prev_commit" ] && git diff --name-only $prev_commit..${{ github.sha }} | grep -q "^$app"; then
                 changed_apps="$changed_apps $app_name"
+                echo "Detected changes in $app_name"
               fi
             fi
           done
           echo "changed_apps=$changed_apps" >> $GITHUB_ENV
+
 
       - name: Build and Push Changed Apps
         run: |
