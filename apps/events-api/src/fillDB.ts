@@ -30,10 +30,3 @@ export const fillDB = async () => {
     }
     console.log('DB events filled');
 }
-
-
-
-
-
-
-
