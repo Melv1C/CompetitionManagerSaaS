@@ -17,13 +17,13 @@ RUN chmod +x ./build-shared-packages.sh
 RUN sh ./build-shared-packages.sh
 
 # Set the working directory in the container
-WORKDIR /competition-manager/apps/CHANGEME-api
+WORKDIR /competition-manager/apps/events-api
 
 # Copy the application files
-COPY apps/CHANGEME-api/src src
-COPY apps/CHANGEME-api/package.json package.json
-COPY apps/CHANGEME-api/package-lock.json package-lock.json
-COPY apps/CHANGEME-api/tsconfig.json tsconfig.json
+COPY apps/events-api/src src
+COPY apps/events-api/package.json package.json
+COPY apps/events-api/package-lock.json package-lock.json
+COPY apps/events-api/tsconfig.json tsconfig.json
 
 # Install the dependencies
 RUN npm install
