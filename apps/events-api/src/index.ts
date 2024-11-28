@@ -1,10 +1,9 @@
 import express from "express";
 import 'dotenv/config';
 import { fillDB } from "./fillDB";
+import { prisma } from "@competition-manager/prisma";
 
 import { corsMiddleware } from '@competition-manager/utils';
-
-import routes from './routes';
 
 fillDB();
 
@@ -16,7 +15,11 @@ const PREFIX = process.env.PREFIX || '/api';
 
 app.use(corsMiddleware);
 
-// app.use(`${PREFIX}/events`, routes);
+app.get(`${PREFIX}/events`, (req, res) => {
+    prisma.event.findMany().then(events => {
+        res.send(events);
+    });
+});
 
 
 app.listen(PORT, () => {

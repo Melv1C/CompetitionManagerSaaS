@@ -7,28 +7,28 @@ import eprData from './epreuves.json';
 const EventWothoutId$ = Event$.omit({ id: true });
 
 export const fillDB = async () => {
-    const epreuves = await prisma.event.findMany();
-    for (let epreuve of eprData) {
+    const events = await prisma.event.findMany();
+    for (let event of eprData) {
         try {
-            EventWothoutId$.parse(epreuve);
+            EventWothoutId$.parse(event);
         } catch (error) {
-            console.log('Error parsing epreuve', epreuve);
+            console.log('Error parsing event', event);
             console.error(error);
             continue;
         }
-        const found = epreuves.find(e => e.name === epreuve.name);
+        const found = events.find(e => e.name === event.name);
         if (found) {
             await prisma.event.update({
                 where: { id: found.id },
-                data: epreuve
+                data: event
             });
             continue;
         }
         await prisma.event.create({
-            data: epreuve
+            data: event
         });
     }
-    console.log('DB epreuves filled');
+    console.log('DB events filled');
 }
 
 
