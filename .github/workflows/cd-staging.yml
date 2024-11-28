@@ -69,6 +69,6 @@ jobs:
           username: ${{ secrets.VPS_SSH_USERNAME }}
           password: ${{ secrets.VPS_SSH_PASSWORD }}
           script: |
-            cd ./CompetitionManagerSaasPrivate/staging
+            cd ./deploy/staging
             docker-compose pull
             docker-compose up -d

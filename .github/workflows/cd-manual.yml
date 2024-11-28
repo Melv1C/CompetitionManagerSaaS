@@ -58,7 +58,7 @@ jobs:
           username: ${{ secrets.VPS_SSH_USERNAME }}
           password: ${{ secrets.VPS_SSH_PASSWORD }}
           script: |
-            path="./CompetitionManagerSaasPrivate/${{ github.event.inputs.environment }}"
+            path="./deploy/${{ github.event.inputs.environment }}"
             cd $path
             docker-compose pull
             docker-compose up -d
