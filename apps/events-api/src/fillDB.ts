@@ -4,13 +4,13 @@ import { z } from 'zod';
 import { Event$ } from '@competition-manager/schemas';
 import eprData from './epreuves.json';
 
-const EventWothoutId$ = Event$.omit({ id: true });
+const EventWithoutId$ = Event$.omit({ id: true });
 
 export const fillDB = async () => {
     const events = await prisma.event.findMany();
     for (let event of eprData) {
         try {
-            EventWothoutId$.parse(event);
+            EventWithoutId$.parse(event);
         } catch (error) {
             console.log('Error parsing event', event);
             console.error(error);
