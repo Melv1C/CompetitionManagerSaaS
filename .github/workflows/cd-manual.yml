@@ -28,6 +28,10 @@ jobs:
             if [ -d "$app" ]; then
               app_name=$(basename "$app")
               dockerfile="$app/Dockerfile"
+              if [ ! -f "$dockerfile" ]; then
+                echo "Dockerfile not found for $app_name, skipping..."
+                continue
+              fi
               echo "Building and pushing Docker image for $app_name"
               docker build -f "$dockerfile" -t ${{ secrets.DOCKER_USERNAME }}/${app_name}:${{ github.event.inputs.environment }} .
               docker push ${{ secrets.DOCKER_USERNAME }}/${app_name}:${{ github.event.inputs.environment }}

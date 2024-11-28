@@ -45,6 +45,10 @@ jobs:
           else
             for app in ${{ env.changed_apps }}; do
               dockerfile="apps/$app/Dockerfile"
+              if [ ! -f "$dockerfile" ]; then
+                echo "Dockerfile not found for $app_name, skipping..."
+                continue
+              fi
               echo "Building and pushing Docker image for $app"
               docker build -f "$dockerfile" -t ${{ secrets.DOCKER_USERNAME }}/${app}:staging .
               docker push ${{ secrets.DOCKER_USERNAME }}/${app}:staging
