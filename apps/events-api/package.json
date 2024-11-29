@@ -1,0 +1,30 @@
+{
+  "name": "template-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@competition-manager/prisma": "file:../../shared-packages/prisma",
+    "@competition-manager/utils": "file:../../shared-packages/utils",
+    "@competition-manager/schemas": "file:../../shared-packages/schemas",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "ts-node": "^10.9.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.1",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
+  }
+}
