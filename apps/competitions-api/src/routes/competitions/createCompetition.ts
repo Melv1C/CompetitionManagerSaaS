@@ -56,11 +56,10 @@ router.post(
             res.status(404).send('User not found');
             return;
         }
-        if (user.role !== 'club') {
+        if (user.role !== 'club' && user.role !== 'superadmin') {
             res.status(401).send('Unauthorized user');
             return;
         }
-
         const newCompetition = await prisma.competition.create({
             data: {
                 ...competition,

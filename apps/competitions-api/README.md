@@ -13,11 +13,12 @@ See also [Template](.env.template)
 
 
 get all competitions
+get a competition by eid
 create a competition
 update a competition
 delete a competition
 
-get all events of a competition
+get all events of a competition ??
 create an event
 update an event
 delete an event
@@ -38,6 +39,31 @@ Status 200
 ]
 ```
 
+## Routes
+### GET /:eid
+Get a competitions with it's eid
+#### Params
+- eid: string
+#### Response
+```
+Status 200
+[
+    {
+        name: string,
+        date: string (date format),
+        description: string,
+        startInscriptionDate: string (date format),
+        endInscriptionDate: string (date format),
+        email: string,
+        closeDate: string (date format),
+        oneDayPermission: array of string ['foreing', 'all', 'bpm'],
+        oneDayBibStart: int,
+        event : [
+            to do
+        ]
+    }
+]
+```
 
 ### POST /
 Create a new competition
