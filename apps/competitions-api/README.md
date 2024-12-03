@@ -24,16 +24,39 @@ delete an event
 
 
 ## Routes
-### GET /exmaple
-Description
-
-#### Query 
-
-#### Parameters
-
-#### Body
-
+### GET /
+Get all competitions basic info
 #### Response
+```
+Status 200
+[
+    {
+        eid: string,
+        name: string,
+        date: string (date format),
+    }
+]
+```
+
+
+### POST /
+Create a new competition
+#### Body
+- name: string
+- date : string (date format)
+- method: string ['free', 'online', 'onPlace']
+- paymentPlanId: int
+- optionsId: int[]
+- userId: int
+#### Response
+```
+Status 200
+[
+    {
+        to do
+    }
+]
+```
 
 
 

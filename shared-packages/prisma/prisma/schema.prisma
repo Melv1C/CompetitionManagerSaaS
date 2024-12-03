@@ -144,7 +144,7 @@ model Competition {
 model Admin {
     id            Int         @id @default(autoincrement())
     user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId        Int         @unique @map("user_id")
+    userId        Int         @map("user_id")
     competition   Competition @relation(fields: [competitionId], references: [id])
     competitionId Int         @map("competition_id")
     access        String[]

@@ -11,6 +11,7 @@ router.get(
                 publish: true,
             },
             select: {
+                eid: true,
                 name: true,
                 date: true,
             }
