@@ -51,7 +51,7 @@ model Athlete {
     bib           Int
     gender        String
     birthdate     DateTime
-    club          String
+    club          String       //change to the club model
     metadata      Json         @default("{}")
     competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int?         @map("competition_id")
@@ -115,19 +115,19 @@ model CompetitionEvent {
 ////////////////
 model Competition {
     id                   Int                 @id @default(autoincrement())
-    eid                  String              @unique
+    eid                  String              @unique @default(uuid())
     name                 String
     date                 DateTime
     description          String              @db.Text  
     events               CompetitionEvent[]  
     publish              Boolean
     method               String
-    startInscriptionDate DateTime            @map("start_inscription_date")
-    endInscriptionDate   DateTime            @map("end_inscription_date")
+    startInscriptionDate DateTime?           @map("start_inscription_date")
+    endInscriptionDate   DateTime?           @map("end_inscription_date")
     admins               Admin[]
     email                String
-    closeDate            DateTime            @map("close_date")
-    freeClubs            String[]            @map("free_clubs")
+    closeDate            DateTime?           @map("close_date")
+    freeClubs            Club[]
     oneDayPermissions    String[]            @map("one_day_permission")        
     oneDayBibStart       Int                 @map("one_day_bib_start")
     oneDayAthletes       Athlete[]
@@ -179,4 +179,17 @@ model PaymentPlan {
     
     @@map("payment_plans")
 }
+
+////////////////
+// Club
+////////////////
+model Club {
+    id               Int         @id @default(autoincrement())
+    name             String
+    abbr             String
+    address          String
+    competition      Competition[]
+    
+}
+
 

@@ -19,12 +19,12 @@ export const Competition$ = z.object({
     date: z.coerce.date().min(new Date()),  //test if .min(new Date() works
 
     // Other info
-    description: z.string().min(1),
+    description: z.string().default(''),
     events: z.array(CompetitionEvent$).default([]),
     publish: z.boolean().default(false),
     method: z.enum(PAYMENT_METHOD),
-    PaymentPlan: PaymentPlan$,
-    Options: z.array(Option$).default([]),
+    paymentPlan: PaymentPlan$,
+    options: z.array(Option$).default([]),
     startInscriptionDate: z.coerce.date().min(new Date()),
     endInscriptionDate: z.coerce.date().min(new Date()),
 
@@ -35,7 +35,7 @@ export const Competition$ = z.object({
     // Advanced settings
     closeDate: z.coerce.date().min(new Date()).optional(),
     freeClubs: z.array(Club$).default([]),
-    oneDayPermissions: z.array(z.enum(ONE_DAY_PERMISSION)),
+    oneDayPermissions: z.array(z.enum(ONE_DAY_PERMISSION)).default([]),
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
         
 });
