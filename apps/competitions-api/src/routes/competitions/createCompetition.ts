@@ -3,7 +3,6 @@ import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, authMiddleware, AuthenticatedRequest } from '@competition-manager/utils';
 import { PAYMENT_METHOD, Competition$ } from '@competition-manager/schemas';
-import { cpSync } from 'fs';
 
 export const router = Router();
 
@@ -37,7 +36,6 @@ router.post(
         const competition = NewCompetition$.parse(body);
         const { paymentPlanId, optionsId } = body;
         const user = req.user;
-        console.log(user);
         const newCompetition = await prisma.competition.create({
             data: {
                 ...competition,
@@ -52,7 +50,7 @@ router.post(
                 },
                 admins: {
                     create: {
-                        access: ['owner', 'inscriptions', 'competitions', 'confirmations', 'liveResults'], //tout mettre ou juste owner ?
+                        access: ['owner'],
                         user: {
                             connect: {
                                 id: user!.id
