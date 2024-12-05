@@ -1,9 +1,16 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './authenticatedRequest';
 import { prisma } from '@competition-manager/prisma';
-import { Admin, Access } from '@competition-manager/schemas/src/Admin';
+import { Admin$, Access } from '@competition-manager/schemas/src/Admin';
+import { z } from 'zod';
 
-const isAdminAuthorized = (admin: Admin, levelRequire: Access) => {
+const AdminFromCompetiton$ = Admin$.pick({
+    userId: true,
+    access: true
+});
+type AdminFromCompetition = z.infer<typeof AdminFromCompetiton$>;
+
+const isAdminAuthorized = (admin: AdminFromCompetition, levelRequire: Access) => {
     if (admin.access.includes('owner')) {
         return true;
     }
@@ -29,7 +36,7 @@ export const adminAuthMiddleware = (levelRequire: Access) => async (req: Authent
         res.status(404).send('Competition not found');
         return;
     }
-    const admin = competition.admins.find(admin => admin.userId === req.user!.id) as Admin;
+    const admin = AdminFromCompetiton$.parse(competition.admins.find(admin => admin.userId === req.user!.id));
     if (!admin) {
         res.status(401).send('Unauthorized');
         return;

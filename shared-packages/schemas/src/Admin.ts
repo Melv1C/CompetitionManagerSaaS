@@ -6,7 +6,7 @@ export type Access = typeof ACCESS[number];
 
 export const Admin$ = z.object({
     id: z.number().positive(),
-    //user: User$, //a discuter
+    user: User$,
     userId: z.number().positive(),
     competitionId: z.number().positive(),
     access: z.array(z.enum(ACCESS)),
