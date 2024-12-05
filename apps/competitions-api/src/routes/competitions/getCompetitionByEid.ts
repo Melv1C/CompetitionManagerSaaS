@@ -6,8 +6,8 @@ import { Competition$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
-const Params$ = z.object({
-    eid: z.string()
+const Params$ = Competition$.pick({
+    eid: true,
 });
 
 router.get(

@@ -11,41 +11,45 @@ See also [Template](.env.template)
 
 
 
-
+a faire 
 get all competitions        done
 get a competition by eid    done
 create a competition        done
 update a competition
 delete a competition
 
-get all events of a competition -> non parce que get a competition by eid les donne déja
-get an event of a competition (with participants always ?)
-create an event             ongoing
-update an event
-delete an event
-
 create admin
 update admin
 delete admin
 
-diff route ? /results/:eid ? ou aussi dans competitions
+create inscription
+update inscription
+delete inscription
+
+update inscription as confirmed /inscritpions/:id/confirmations
+
 get results of an event
 create results of an event (update if already exist)
 delete results of an event
+
+create an event             ongoing
+update an event
+delete an event
+
+a discuter
+
+get all events of a competition -> non parce que get a competition by eid les donne déja
+get an event of a competition (with participants always ?)
+
+
 
 diff route ? /liveResult/:eid ? ou aussi dans competitions
 get liveResult 
 get liveResult as a admin
 
-diff route ? /inscriptions/:eid ? ou aussi dans competitions
-create inscription
-update inscription
-delete inscription
-
-diff route ? /confirmations/:eid ? ou aussi dans competitions
-update inscription as confirmed
-
 autre ?
+
+get all competitions of a admin
 
 
 

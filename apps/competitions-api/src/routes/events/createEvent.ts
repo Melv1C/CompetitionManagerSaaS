@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, verifyAccessToken } from '@competition-manager/utils';
-import { PAYMENT_METHOD, Competition$, CompetitionEvent$ } from '@competition-manager/schemas';
+import { CompetitionEvent$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
