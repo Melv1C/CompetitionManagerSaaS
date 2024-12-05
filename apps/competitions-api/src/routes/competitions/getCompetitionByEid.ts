@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { z } from 'zod';
 import { parseRequest } from '@competition-manager/utils';
 import { Competition$ } from '@competition-manager/schemas';
 

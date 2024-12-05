@@ -82,7 +82,7 @@ model Category {
     abbr              String
     simpleCategory    String             @map("simple_category")
     gender            String
-    masterAgeGroup    Int
+    masterAgeGroup    Int?
     competitionEvents CompetitionEvent[]
 
     @@map("categories")

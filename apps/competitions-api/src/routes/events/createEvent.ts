@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { parseRequest, verifyAccessToken } from '@competition-manager/utils';
+import { parseRequest, authMiddleware, adminAuthMiddleware } from '@competition-manager/utils';
 import { CompetitionEvent$ } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -16,7 +16,7 @@ const NewCompetitionEvent$ = CompetitionEvent$.pick({
 });
 
 const Params$ = z.object({
-    eid: z.string()
+    competitionEid: z.string()
 });
 
 const Body$ = z.object({
@@ -28,40 +28,19 @@ const Body$ = z.object({
     parentId: z.number().positive().optional(),
     cost: z.number().nonnegative(),
     isInscriptionOpen: z.boolean().default(true),
-    accessToken: z.string(),
 });
 
 router.post(
-    '/:eid/events',
+    '/:competitionEid/events',
     parseRequest('params', Params$),
     parseRequest('body', Body$),
+    authMiddleware('admin'),
+    adminAuthMiddleware('competitions'),
     async (req, res) => {
-        const { eid } = Params$.parse(req.params);
+        const { competitionEid } = Params$.parse(req.params);
         const body = Body$.parse(req.body);
         const competitionEvent = NewCompetitionEvent$.parse(body);
-        const { eventId, categoriesId, accessToken, parentId } = body;
-        const userInfo = verifyAccessToken(accessToken);
-        if (!userInfo) {
-            res.status(401).send('Unauthorized');
-            return;
-        }
-        const competition = await prisma.competition.findUnique({
-            where: {
-                eid,
-            },
-            include: {
-                admins: true
-            }
-        });
-        if (!competition) {
-            res.status(404).send('Competition not found');
-            return;
-        }
-        const admin = competition.admins.find(admin => admin.id === userInfo.id);
-        if (!admin || admin.access.includes('competitions') === false) {
-            res.status(401).send('Unauthorized');
-            return;
-        }
+        const { eventId, categoriesId, parentId } = body;
         const event = await prisma.event.findUnique({
             where: {
                 id: eventId
@@ -95,7 +74,7 @@ router.post(
                 },
                 competition: {
                     connect: {
-                        id: competition.id
+                        eid: competitionEid
                     }
                 },
                 ...(parentId && { parentEvent: { connect: { id: parentId } } })
