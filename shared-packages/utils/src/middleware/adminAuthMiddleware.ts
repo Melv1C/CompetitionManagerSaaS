@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './authenticatedRequest';
 import { prisma } from '@competition-manager/prisma';
-import { Admin$, Access } from '@competition-manager/schemas/src/Admin';
+import { Admin$, Access } from '@competition-manager/schemas';
 import { z } from 'zod';
 
 const AdminFromCompetiton$ = Admin$.pick({
@@ -23,10 +23,11 @@ export const adminAuthMiddleware = (levelRequire: Access) => async (req: Authent
         res.status(401).send('Unauthorized');
         return;
     }
-    const competitionEid = req.params.competitionEid;
+    const eid = req.params.eid;
+    console.log(eid);
     const competition = await prisma.competition.findUnique({
         where: {
-            eid: competitionEid
+            eid: eid
         },
         select: {
             admins: true

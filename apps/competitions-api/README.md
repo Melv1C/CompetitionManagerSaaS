@@ -32,8 +32,8 @@ get results of an event
 create results of an event (update if already exist)
 delete results of an event
 
-create an event             ongoing
-update an event
+create an event             done
+update an event             
 delete an event
 
 a discuter
