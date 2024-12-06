@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, authMiddleware, AuthenticatedRequest } from '@competition-manager/utils';
-import { PAYMENT_METHOD, Competition$ } from '@competition-manager/schemas';
+import { Competition$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -16,10 +16,11 @@ const NewCompetition$ = Competition$.pick({
     oneDayPermissions: true,
 });
 
-const Body$ = z.object({
-    name: z.string(),
-    date: z.coerce.date().min(new Date()),
-    method: z.enum(PAYMENT_METHOD),
+const Body$ = Competition$.pick({
+    name: true,
+    date: true,
+    method: true
+}).extend({
     paymentPlanId: z.number(),
     optionsId: z.array(z.number()).optional(),
 });
