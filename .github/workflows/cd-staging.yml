@@ -1,4 +1,4 @@
-name: Staging Deployment - Build and Push Modified Apps
+name: Staging Deployment - Build Docker Images on App Changes and Deploy to Staging
 
 on:
   push:
@@ -6,69 +6,103 @@ on:
       - main
 
 jobs:
-  docker-build:
+  build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      competition-manager-web: ${{ steps.changed-services.outputs.competition-manager-web }}
+      users-api: ${{ steps.changed-services.outputs.users-api }}
+      athletes-api: ${{ steps.changed-services.outputs.athletes-api }}
+      events-api: ${{ steps.changed-services.outputs.events-api }}
+      competitions-api: ${{ steps.changed-services.outputs.competitions-api }}
+      migrations: ${{ steps.changed-services.outputs.migrations }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Identify Changed Services
         id: changed-services
-        run: |
-          prev_commit=$(git rev-parse ${{ github.sha }}~1 || echo "")
-          changed_apps=""
-          for app in apps/*; do
-            if [ -d "$app" ]; then
-              app_name=$(basename "$app")
-              if [ -n "$prev_commit" ] && git diff --name-only $prev_commit..${{ github.sha }} | grep -q "^$app"; then
-                changed_apps="$changed_apps $app_name"
-                echo "Detected changes in $app_name"
-              fi
-            fi
-          done
-          echo "changed_apps=$changed_apps" >> $GITHUB_ENV
-
-
-      - name: Build and Push Changed Apps
-        run: |
-          if [ -z "${{ env.changed_apps }}" ]; then
-            echo "No changes detected in apps, skipping build and push."
-          else
-            for app in ${{ env.changed_apps }}; do
-              dockerfile="apps/$app/Dockerfile"
-              if [ ! -f "$dockerfile" ]; then
-                echo "Dockerfile not found for $app_name, skipping..."
-                continue
-              fi
-              echo "Building and pushing Docker image for $app"
-              docker build -f "$dockerfile" -t ${{ secrets.DOCKER_USERNAME }}/${app}:staging .
-              docker push ${{ secrets.DOCKER_USERNAME }}/${app}:staging
-            done
-          fi
-
-  deploy-staging:
-    runs-on: ubuntu-latest
-    needs: docker-build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy to Staging VPS
-        uses: appleboy/ssh-action@v0.1.8
+        uses: dorny/paths-filter@v2
         with:
-          host: ${{ secrets.VPS_SSH_HOST }}
-          username: ${{ secrets.VPS_SSH_USERNAME }}
-          password: ${{ secrets.VPS_SSH_PASSWORD }}
-          script: |
-            cd ./deploy/staging
-            docker-compose pull
-            docker-compose up -d
+          filters: |
+            migrations:
+              - shared-packages/prisma/**
+            competition-manager-web: 
+              - apps/competition-manager-web/**
+              - shared-packages/schemas/**
+            users-api:
+              - apps/users-api/**
+              - shared-packages/**
+            athletes-api:
+              - apps/athletes-api/**
+              - shared-packages/**
+            events-api:
+              - apps/events-api/**
+              - shared-packages/**
+            competitions-api:
+              - apps/competitions-api/**
+              - shared-packages/**
+
+      - name: Build and Push Migrations
+        if: steps.changed-services.outputs.migrations == 'true'
+        run: |
+          cd shared-packages/prisma
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/migrate-db:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/migrate-db:staging
+          
+      - name: Build and Push Competition Manager Web
+        if: steps.changed-services.outputs.competition-manager-web == 'true'
+        run: |
+          app="competition-manager-web"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+      - name: Build and Push Users API
+        if: steps.changed-services.outputs.users-api == 'true'
+        run: |
+          app="users-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+      - name: Build and Push Athletes API
+        if: steps.changed-services.outputs.athletes-api == 'true'
+        run: |
+          app="athletes-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+      - name: Build and Push Events API
+        if: steps.changed-services.outputs.events-api == 'true'
+        run: |
+          app="events-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+      - name: Build and Push Competitions API
+        if: steps.changed-services.outputs.competitions-api == 'true'
+        run: |
+          app="competitions-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Deploy to Staging
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+        host: ${{ secrets.VPS_SSH_HOST }}
+        username: ${{ secrets.VPS_SSH_USERNAME }}
+        password: ${{ secrets.VPS_SSH_PASSWORD }}
+        script: |
+          cd ./deploy/staging
+          docker-compose pull
+          docker-compose up -d
+          docker-compose restart nginx
+          
