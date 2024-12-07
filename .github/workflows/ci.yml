@@ -1,4 +1,4 @@
-name: CI Workflow - Install, Build, Placeholder for Lint/Test
+name: CI Workflow - Install, Lint, Test, and Build
 
 on:
   push:
