@@ -97,12 +97,12 @@ jobs:
       - name: Deploy to Staging
         uses: appleboy/ssh-action@v1.2.0
         with:
-        host: ${{ secrets.VPS_SSH_HOST }}
-        username: ${{ secrets.VPS_SSH_USERNAME }}
-        password: ${{ secrets.VPS_SSH_PASSWORD }}
-        script: |
-          cd ./deploy/staging
-          docker-compose pull
-          docker-compose up -d
-          docker-compose restart nginx
+          host: ${{ secrets.VPS_SSH_HOST }}
+          username: ${{ secrets.VPS_SSH_USERNAME }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          script: |
+            cd ./deploy/staging
+            docker-compose pull
+            docker-compose up -d
+            docker-compose restart nginx
           
