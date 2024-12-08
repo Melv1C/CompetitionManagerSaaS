@@ -6,11 +6,14 @@ import { faHome, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
 
 import { useAutoLogin } from './hooks'
 
-import { NavBar } from './Components/NavBar'
+import { NavBar } from './Components'
 import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
 import { AdminCompetition } from './Pages/Admin/Competition'
 import Competitions from './Pages/Competitions'
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 
 // must be extract in an other file
 const lightTheme = createTheme({
@@ -57,18 +60,20 @@ function App() {
   return (
     <Box>
       <ThemeProvider theme={lightTheme}>
-        <BrowserRouter>
-            <NavBar items={navItems} />
-            <Toolbar />
-            <Routes>
-              <Route path="/" element={<h1>Home</h1>} />
-              <Route path="/competitions" element={<Competitions />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/admin/competitions" element={<AdminCompetitions />} />
-              <Route path="/admin/competitions/:id" element={<AdminCompetition />} />
-              <Route path="*" element={<h1>Not Found</h1>} />
-            </Routes>
-        </BrowserRouter>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <BrowserRouter>
+              <NavBar items={navItems} />
+              <Toolbar />
+              <Routes>
+                <Route path="/" element={<h1>Home</h1>} />
+                <Route path="/competitions" element={<Competitions />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/admin/competitions" element={<AdminCompetitions />} />
+                <Route path="/admin/competitions/:id" element={<AdminCompetition />} />
+                <Route path="*" element={<h1>Not Found</h1>} />
+              </Routes>
+          </BrowserRouter>
+        </LocalizationProvider>
       </ThemeProvider>
     </Box>
   )
