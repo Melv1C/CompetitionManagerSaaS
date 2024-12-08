@@ -1,6 +1,5 @@
 import { Box, Button, FormControl, FormLabel, Switch } from "@mui/material"
 import { DatePicker } from '@mui/x-date-pickers';
-import { Buttons } from "./Buttons"
 import { StepProps } from ".."
 import { useState } from "react";
 import { TextFieldWithSchema } from "../../../../../Components/TextFieldWithSchema";
@@ -72,6 +71,7 @@ export const Infos: React.FC<InfosProps> = ({
                         onChange={(date) => setStartDate(date)}
                         format="dd/MM/yyyy"
                         disablePast
+                        slotProps={{ textField: { required: true } }}
                     />
                 
                     <FormControl 
@@ -96,22 +96,26 @@ export const Infos: React.FC<InfosProps> = ({
                             format="dd/MM/yyyy"
                             disablePast
                             minDate={startDate || undefined}
+                            slotProps={{ textField: { required: true } }}
                         />
                     }
                 </Box>
             </Box>
 
-            <Button 
-                variant="contained"
-                type="submit"
-            >
-                Next
-            </Button>
-
-            <Buttons buttons={[
-                { label: 'Back', onClick: handleBack },
-                { label: 'Next', onClick: handleNext }
-            ]}/>
+            <Box sx={{ display: 'flex', gap: '1rem', mt: 4 }}>
+                <Button
+                    variant="contained"
+                    onClick={handleBack}
+                >
+                    Back
+                </Button>
+                <Button
+                    variant="contained"
+                    type="submit"
+                >
+                    Next
+                </Button>
+            </Box>
         </Box>
     )
 }
