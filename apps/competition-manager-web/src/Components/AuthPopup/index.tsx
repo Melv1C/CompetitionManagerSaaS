@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-import { Box, IconButton, Modal, useTheme } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { Box, Modal } from "@mui/material";
 
 import { SignIn } from "./SignIn";
 import { SignUp } from "./SignUp";
+import { CloseButton } from "..";
 
 type AuthPopupProps = {
     isVisible: boolean;
@@ -34,35 +33,14 @@ export const AuthPopup = ({ isVisible, onClose }: AuthPopupProps) => {
                     maxWidth: '400px', 
                     bgcolor: 'background.paper', 
                     boxShadow: 24, 
-                    p: 4, 
                     borderRadius: '8px'  
                 }}
             >
-                <CloseButton onClose={onClose} />
-                {isSignIn ? <SignIn onToggle={handleToggle} /> : <SignUp onToggle={handleToggle} />}
+                <Box sx={{ p: 4 }}>
+                    <CloseButton onClose={onClose} />
+                    {isSignIn ? <SignIn onToggle={handleToggle} /> : <SignUp onToggle={handleToggle} />}
+                </Box>
             </Box>
         </Modal>
-    );
-};
-
-type CloseButtonProps = {
-    onClose: () => void;
-};
-
-const CloseButton = ({ onClose }: CloseButtonProps) => {
-
-    const theme = useTheme();
-
-    return (
-        <IconButton 
-            onClick={onClose} 
-            sx={{ 
-                position: 'absolute', 
-                top: '0', 
-                right: '0',
-            }}
-        >
-            <FontAwesomeIcon icon={faClose} style={{ width: '2rem', height: '2rem', color: theme.palette.text.primary }} />
-        </IconButton>
     );
 };
