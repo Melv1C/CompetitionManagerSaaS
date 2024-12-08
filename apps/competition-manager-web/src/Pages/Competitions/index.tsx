@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getCompetitions } from '../../api';
 import { Box, Typography } from '@mui/material';
-import { ListCompetitions } from '../../Components/ListCompetitions';
+import { ListCompetitions, Loading } from '../../Components';
 import { Competition } from '../../type';
-import Loading from '../../Components/Loading';
 
 
 const Competitions: React.FC = () => {
