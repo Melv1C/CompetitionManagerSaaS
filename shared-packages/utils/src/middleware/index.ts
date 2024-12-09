@@ -1,5 +1,4 @@
 export * from "./corsMiddleware";
-export * from "./authMiddleware";
-export * from "./adminAuthMiddleware";
+export * from "./checkRole";
 export * from "./authenticatedRequest";
 export * from "./parseRequest";

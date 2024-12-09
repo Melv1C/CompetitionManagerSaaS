@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { UserPreferences$ } from './UserPreferences';
 
+//need to be in good order
 export const ROLE = ['user', 'admin', 'club', 'superadmin'] as const;
 export type Role = typeof ROLE[number];
 

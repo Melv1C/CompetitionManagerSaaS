@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { parseRequest, authMiddleware, AuthenticatedRequest } from '@competition-manager/utils';
+import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
 import { Competition$ } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -28,7 +28,7 @@ const Body$ = Competition$.pick({
 router.post(
     '/',
     parseRequest('body', Body$),
-    authMiddleware('club'),
+    checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
         //stripe a faire
 

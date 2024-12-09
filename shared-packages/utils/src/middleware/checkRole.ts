@@ -7,7 +7,7 @@ const isAuthorized = (user: UserFromToken, levelRequire: Role) => {
     return ROLE.indexOf(user.role) >= ROLE.indexOf(levelRequire);
 }
 
-export const authMiddleware = (levelRequire: Role) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const checkRole = (levelRequire: Role) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const accessToken = req.headers.authorization?.split(' ')[1];
     if (!accessToken) {
         res.status(401).send('Unauthorized');
