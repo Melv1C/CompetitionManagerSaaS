@@ -10,8 +10,13 @@ export const generateRefreshToken = (tokenData: TokenData) => {
     return jwt.sign(tokenData, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' });
 };
 
+//return false or the decoded token
 export const verifyAccessToken = (token: string) => {
-    return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
+    try {
+        return TokenData$.parse(jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!));
+    } catch (error) {
+        return false;
+    }
 }
 
 //return false or the decoded token
