@@ -15,7 +15,7 @@ a faire
 get all competitions        done
 get a competition by eid    done
 create a competition        done
-update a competition
+update a competition        done
 delete a competition        done
 
 create admin                done
