@@ -1,19 +1,11 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { z } from 'zod';
 import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
-import { Competition$, BaseCompetition$ } from '@competition-manager/schemas';
+import { BaseCompetitionWithRelationId$ ,BaseCompetition$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
-const Body$ = Competition$.pick({
-    name: true,
-    date: true,
-    method: true
-}).extend({
-    paymentPlanId: z.number(),
-    optionsId: z.array(z.number()).optional(),
-});
+const Body$ = BaseCompetitionWithRelationId$;
 
 router.post(
     '/',
@@ -53,5 +45,4 @@ router.post(
         });
         res.send(newCompetition);
     }
-    
 );

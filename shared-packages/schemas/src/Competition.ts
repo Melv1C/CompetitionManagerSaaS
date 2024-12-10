@@ -52,3 +52,30 @@ export const BaseCompetition$ = Competition$.pick({
 });
 export type BaseCompetition = z.infer<typeof BaseCompetition$>;
 
+export const BaseCompetitionWithRelationId$ = BaseCompetition$.extend({
+    paymentPlanId: z.number(),
+    optionsId: z.array(z.number()).optional(),
+});
+export type BaseCompetitionWithRelationId = z.infer<typeof BaseCompetitionWithRelationId$>;
+
+export const UpdateCompetition$ = Competition$.pick({
+    name: true,
+    date: true,
+    description: true,
+    publish: true,
+    method: true,
+    startInscriptionDate: true,
+    endInscriptionDate: true,
+    email: true,
+    closeDate: true,
+    oneDayPermissions: true,
+    oneDayBibStart: true,
+});
+export type UpdateCompetition = z.infer<typeof UpdateCompetition$>;
+
+export const UpdateCompetitionWithRelationId$ = UpdateCompetition$.extend({
+    paymentPlanId: z.number(),
+    optionsId: z.array(z.number()).optional(),
+    freeClubsId: z.array(z.number()).optional(),
+});
+export type UpdateCompetitionWithRelationId = z.infer<typeof UpdateCompetitionWithRelationId$>;
