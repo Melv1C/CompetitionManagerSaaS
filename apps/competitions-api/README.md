@@ -16,9 +16,9 @@ get all competitions        done
 get a competition by eid    done
 create a competition        done
 update a competition
-delete a competition
+delete a competition        done
 
-create admin
+create admin                done
 update admin
 delete admin
 
