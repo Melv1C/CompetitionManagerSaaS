@@ -3,6 +3,7 @@ import { router as createCompetitionRouter} from './competitions/createCompetiti
 import { router as getCompetitionByEidRouter} from './competitions/getCompetitionByEid';
 import { router as createEventRouter} from './events/createEvent';
 import { router as createAdminRouter} from './admins/createAdmin';
+import { router as deleteCompetitionRouter} from './competitions/deleteCompetition';
 
 export default [
     getAllBasicInfoRouter,
@@ -10,4 +11,5 @@ export default [
     getCompetitionByEidRouter,
     createEventRouter,
     createAdminRouter,
+    deleteCompetitionRouter
 ];
