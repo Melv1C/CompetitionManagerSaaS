@@ -2,18 +2,9 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { AdminFromCompetiton$, CompetitionEvent$, Eid$ } from '@competition-manager/schemas';
+import { BaseAdmin$, CompetitionEvent$, Eid$, BaseCompetitionEvent$ } from '@competition-manager/schemas';
 
 export const router = Router();
-
-
-const NewCompetitionEvent$ = CompetitionEvent$.pick({
-    name: true,
-    schedule: true,
-    place: true,
-    cost: true,
-    isInscriptionOpen: true,
-});
 
 const Params$ = z.object({
     competitionEid: Eid$
@@ -40,7 +31,7 @@ router.post(
         try{
             const { competitionEid } = Params$.parse(req.params);
             const body = Body$.parse(req.body);
-            const competitionEvent = NewCompetitionEvent$.parse(body);
+            const competitionEvent = BaseCompetitionEvent$.parse(body);
             const { eventId, categoriesId, parentId } = body;
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -59,7 +50,7 @@ router.post(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole('competitions', req.user!.id, z.array(AdminFromCompetiton$).parse(competition.admins), res)) {
+            if (!checkAdminRole('competitions', req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
                 return;
             }
             if (competitionEvent.schedule < competition.date) {

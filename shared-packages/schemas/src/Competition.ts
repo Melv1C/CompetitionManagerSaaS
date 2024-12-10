@@ -39,5 +39,16 @@ export const Competition$ = z.object({
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
         
 });
-
 export type Competition = z.infer<typeof Competition$>;
+
+export const BaseCompetition$ = Competition$.pick({
+    name: true,
+    date: true,
+    method: true,
+    publish: true,
+    description: true,
+    oneDayBibStart: true,
+    oneDayPermissions: true,
+});
+export type BaseCompetition = z.infer<typeof BaseCompetition$>;
+

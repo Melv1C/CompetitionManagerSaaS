@@ -2,19 +2,9 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
-import { Competition$ } from '@competition-manager/schemas';
+import { Competition$, BaseCompetition$ } from '@competition-manager/schemas';
 
 export const router = Router();
-
-const NewCompetition$ = Competition$.pick({
-    name: true,
-    date: true,
-    method: true,
-    publish: true,
-    description: true,
-    oneDayBibStart: true,
-    oneDayPermissions: true,
-});
 
 const Body$ = Competition$.pick({
     name: true,
@@ -34,7 +24,7 @@ router.post(
 
 
         const body = Body$.parse(req.body);
-        const competition = NewCompetition$.parse(body);
+        const competition = BaseCompetition$.parse(body);
         const { paymentPlanId, optionsId } = body;
         const user = req.user;
         const newCompetition = await prisma.competition.create({

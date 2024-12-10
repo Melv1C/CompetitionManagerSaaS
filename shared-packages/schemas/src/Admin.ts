@@ -13,8 +13,8 @@ export const Admin$ = z.object({
 });
 export type Admin = z.infer<typeof Admin$>;
 
-export const AdminFromCompetiton$ = Admin$.pick({
+export const BaseAdmin$ = Admin$.pick({
     userId: true,
     access: true
 });
-export type AdminFromCompetition = z.infer<typeof AdminFromCompetiton$>;
+export type BaseAdmin = z.infer<typeof BaseAdmin$>;

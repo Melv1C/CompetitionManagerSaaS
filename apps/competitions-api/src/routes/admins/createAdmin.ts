@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
 import { Competition$ } from '@competition-manager/schemas';
-import { Admin$ } from '@competition-manager/schemas';
+import { Admin$, BaseAdmin$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 
 export const router = Router();
@@ -11,10 +11,7 @@ const Params$ = Competition$.pick({
     eid: true,
 });
 
-const Body$ = Admin$.pick({
-    userId: true,
-    access: true
-});
+const Body$ = BaseAdmin$
 
 router.post(
     '/:eid/admins',
