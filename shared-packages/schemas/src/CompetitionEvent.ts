@@ -13,5 +13,13 @@ export const CompetitionEvent$ = z.object({
     cost: z.number().nonnegative(),
     isInscriptionOpen: z.boolean().default(true),
 });
-
 export type CompetitionEvent = z.infer<typeof CompetitionEvent$>;
+
+export const BaseCompetitionEvent$ = CompetitionEvent$.pick({
+    name: true,
+    schedule: true,
+    place: true,
+    cost: true,
+    isInscriptionOpen: true,
+});
+export type BaseCompetitionEvent = z.infer<typeof BaseCompetitionEvent$>;
