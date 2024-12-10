@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, checkAdminRole } from '@competition-manager/utils';
 import { UpdateCompetition$, UpdateCompetitionWithRelationId$, Competition$ } from '@competition-manager/schemas';
-import { Admin$ } from '@competition-manager/schemas';
+import { BaseAdmin$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 
 export const router = Router();
@@ -22,10 +22,10 @@ router.put(
         try {
             //si add option stripe a faire
 
+
             const body = Body$.parse(req.body);
             const newCompetitionData = UpdateCompetition$.parse(body);
             const { paymentPlanId, optionsId, freeClubsId } = body;
-            const user = req.user;
             const eid = Params$.parse(req.params).eid;
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -39,7 +39,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole('competitions', req.user!.id, z.array(Admin$).parse(competition.admins), res)) {
+            if (!checkAdminRole('competitions', req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
                 return;
             }
             try {
