@@ -11,7 +11,7 @@ const Params$ = z.object({
 });
 
 router.get(
-    '/:eid',
+    '/:competitionEid',
     parseRequest('params', Params$),
     async (req, res) => {
         const { competitionEid } = Params$.parse(req.params);

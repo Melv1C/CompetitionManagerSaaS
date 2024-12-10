@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { AdminFromCompetition, AdminFromCompetiton$, CompetitionEvent$ } from '@competition-manager/schemas';
+import { AdminFromCompetiton$, CompetitionEvent$, Eid$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -16,19 +16,20 @@ const NewCompetitionEvent$ = CompetitionEvent$.pick({
 });
 
 const Params$ = z.object({
-    competitionEid: z.string()
+    competitionEid: Eid$
 });
 
-const Body$ = z.object({
-    name: z.string(),
+const Body$ = CompetitionEvent$.pick({
+    name: true,
+    schedule: true,
+    place: true,
+    cost: true,
+    isInscriptionOpen: true,
+}).extend({
     eventId: z.number(),
-    schedule: z.coerce.date().min(new Date()),
     categoriesId: z.array(z.number()),
-    place: z.number().positive().int().optional(),
-    parentId: z.number().positive().optional(),
-    cost: z.number().nonnegative(),
-    isInscriptionOpen: z.boolean().default(true),
-});
+    parentId: z.number().optional(),
+})
 
 router.post(
     '/:competitionEid/events',
@@ -36,71 +37,75 @@ router.post(
     parseRequest('body', Body$),
     checkRole('admin'),
     async (req: AuthenticatedRequest, res) => {
-        const { competitionEid } = Params$.parse(req.params);
-        const body = Body$.parse(req.body);
-        const competitionEvent = NewCompetitionEvent$.parse(body);
-        const { eventId, categoriesId, parentId } = body;
-        const competition = await prisma.competition.findUnique({
-            where: {
-                eid: competitionEid
-            },
-            include: {
-                admins: {
-                    select: {
-                        access: true,
-                        userId: true
-                    }
+        try{
+            const { competitionEid } = Params$.parse(req.params);
+            const body = Body$.parse(req.body);
+            const competitionEvent = NewCompetitionEvent$.parse(body);
+            const { eventId, categoriesId, parentId } = body;
+            const competition = await prisma.competition.findUnique({
+                where: {
+                    eid: competitionEid
+                },
+                include: {
+                    admins: {
+                        select: {
+                            access: true,
+                            userId: true
+                        }
+                    },
+                }
+            });
+            if (!competition) {
+                res.status(404).send('Competition not found');
+                return;
+            }
+            if (!checkAdminRole('competitions', req.user!.id, z.array(AdminFromCompetiton$).parse(competition.admins), res)) {
+                return;
+            }
+            if (competitionEvent.schedule < competition.date) {
+                res.status(400).send('Event date must be after competition date');
+                return;
+            }
+            if (competition.closeDate){
+                if (competitionEvent.schedule > competition.closeDate) {
+                    res.status(400).send('Event date must be before competition close date');
+                    return;
                 }
             }
-        });
-        if (!competition) {
-            res.status(404).send('Competition not found');
-            return;
-        }
-        if (!checkAdminRole('competitions', req.user!.id, z.array(AdminFromCompetiton$).parse(competition.admins), res)) {
-            return;
-        }
-
-
-        const event = await prisma.event.findUnique({
-            where: {
-                id: eventId
-            }
-        });
-        if (!event) {
-            res.status(404).send('Event not found');
-            return;
-        }
-        const categories = await prisma.category.findMany({
-            where: {
-                id: {
-                    in: categoriesId
+            try{
+                const newCompetitionEvent = await prisma.competitionEvent.create({
+                    data: {
+                        ...competitionEvent,
+                        event: {
+                            connect: {
+                                id: eventId
+                            }
+                        },
+                        categories: {
+                            connect: categoriesId.map(id => ({ id }))
+                        },
+                        competition: {
+                            connect: {
+                                eid: competitionEid
+                            }
+                        },
+                        ...(parentId && { parentEvent: { connect: { id: parentId } } })
+                    }
+                });
+                res.send(newCompetitionEvent);
+            } catch(e: any) {
+                if (e.code === 'P2025') {
+                    res.status(404).send('Wrong category id or event id');
+                    return;
+                }else{
+                    console.error(e);
+                    res.status(500).send('Internal server error');
+                    return;
                 }
             }
-        });
-        if (categories.length !== categoriesId.length) {
-            res.status(404).send('Category not found');
-            return;
+        } catch (e) {
+            console.error(e);
+            res.status(500).send('Internal server error');
         }
-        const newCompetitionEvent = await prisma.competitionEvent.create({
-            data: {
-                ...competitionEvent,
-                event: {
-                    connect: {
-                        id: eventId
-                    }
-                },
-                categories: {
-                    connect: categoriesId.map(id => ({ id }))
-                },
-                competition: {
-                    connect: {
-                        eid: competitionEid
-                    }
-                },
-                ...(parentId && { parentEvent: { connect: { id: parentId } } })
-            }
-        });
-        res.send(newCompetitionEvent);
     }
 );
