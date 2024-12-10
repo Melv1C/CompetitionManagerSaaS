@@ -31,7 +31,7 @@ router.get(
                 oneDayPermissions: true,
                 oneDayBibStart: true,
                 events: true,
-            }
+            },
         });
         if (!competition) {
             res.status(404).send('Competition not found');

@@ -36,20 +36,15 @@ create an event             done
 update an event             
 delete an event
 
+
 a discuter
 
 get all events of a competition -> non parce que get a competition by eid les donne déja
 get an event of a competition (with participants always ?)
 
-
-
-diff route ? /liveResult/:eid ? ou aussi dans competitions
-get liveResult 
-get liveResult as a admin
-
 autre ?
 
-get all competitions of a admin
+get all competitions of a admin (just with a query param ?)
 
 
 
