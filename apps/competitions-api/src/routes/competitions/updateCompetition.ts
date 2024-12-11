@@ -69,7 +69,7 @@ router.put(
                     return;
                 } else {
                     console.log(e);
-                    res.status(500).send(e.message);
+                    res.status(500).send('Internal server error');
                 }
             }
         } catch (error) {
