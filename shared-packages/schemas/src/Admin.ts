@@ -18,3 +18,11 @@ export const BaseAdmin$ = Admin$.pick({
     access: true
 });
 export type BaseAdmin = z.infer<typeof BaseAdmin$>;
+
+export const AdminWithoutIdAndRelation$ = Admin$.omit({
+    id: true,
+    user: true,
+    userId: true,
+    competitionId: true
+});
+export type AdminWithoutIdAndRelation = z.infer<typeof AdminWithoutIdAndRelation$>;
