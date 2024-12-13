@@ -72,17 +72,17 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
                         {!isMobile && (
                             <>
-                            {items.map((item) => (
-                                <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <Button 
-                                        color="inherit" 
-                                        startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} 
-                                        sx={{ textTransform: 'none', fontSize: '1.2rem' }}
+                                {items.map((item) => (
+                                    <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                        <Button 
+                                            color="inherit" 
+                                            startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} 
+                                            sx={{ textTransform: 'none', fontSize: '1.2rem' }}
                                         >
-                                        {item.label}
-                                    </Button>
-                                </Link>
-                            ))}
+                                            {item.label}
+                                        </Button>
+                                    </Link>
+                                ))}
                             </>
                         )}  
                     </Box>
