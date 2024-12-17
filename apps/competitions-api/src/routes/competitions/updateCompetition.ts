@@ -55,10 +55,10 @@ router.put(
                             }
                         },
                         options: {
-                            connect: optionsId?.map(id => ({ id }))
+                            set: optionsId?.map(id => ({ id }))
                         },
                         freeClubs: {
-                            connect: freeClubsId?.map(id => ({ id }))
+                            set: freeClubsId?.map(id => ({ id }))
                         }
                     }
                 });
