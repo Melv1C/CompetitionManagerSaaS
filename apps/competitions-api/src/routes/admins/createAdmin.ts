@@ -11,17 +11,15 @@ const Params$ = Competition$.pick({
     eid: true,
 });
 
-const Body$ = BaseAdmin$
-
 router.post(
     '/:eid/admins',
-    parseRequest('body', Body$),
+    parseRequest('body', BaseAdmin$),
     parseRequest('params', Params$),
     checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { eid } = Params$.parse(req.params);
-            const newAdmin = Body$.parse(req.body);
+            const newAdmin = BaseAdmin$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid
