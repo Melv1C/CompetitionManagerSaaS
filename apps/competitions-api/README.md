@@ -33,7 +33,7 @@ create results of an event (update if already exist)
 delete results of an event
 
 create an event             done
-update an event             
+update an event             done     
 delete an event
 
 

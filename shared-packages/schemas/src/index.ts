@@ -13,3 +13,4 @@ export * from './User';
 export * from './UserPreferences';
 export * from './Eid';
 export * from './Id';
+export * from './Inscription';
