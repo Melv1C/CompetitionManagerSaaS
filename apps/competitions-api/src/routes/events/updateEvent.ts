@@ -17,7 +17,7 @@ const Body$ = BaseCompetitionEvent$.extend({
 });
 
 router.put(
-    '/:competitionEid/events/eventEid',
+    '/:competitionEid/events/:eventEid',
     parseRequest('params', Params$),
     parseRequest('body', Body$),
     checkRole('admin'),
