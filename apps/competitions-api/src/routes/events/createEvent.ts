@@ -57,11 +57,9 @@ router.post(
                 res.status(400).send('Event date must be after competition date');
                 return;
             }
-            if (competition.closeDate){
-                if (competitionEvent.schedule > competition.closeDate) {
-                    res.status(400).send('Event date must be before competition close date');
-                    return;
-                }
+            if (competition.closeDate && competitionEvent.schedule > competition.closeDate) {
+                res.status(400).send('Event date must be before competition close date');
+                return;
             }
             try{
                 const newCompetitionEvent = await prisma.competitionEvent.create({
