@@ -19,7 +19,7 @@ update a competition        done
 delete a competition        done
 
 create admin                done
-update admin
+update admin                done
 delete admin
 
 create inscription

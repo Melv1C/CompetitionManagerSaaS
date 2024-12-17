@@ -93,13 +93,14 @@ model Category {
 ////////////////
 model CompetitionEvent {
     id                Int                @id @default(autoincrement())
+    eid               String             @unique @default(uuid())
     name              String
     event             Event              @relation(fields: [eventId], references: [id])
     eventId           Int                @map("event_id")
     schedule          DateTime
     categories        Category[]
     place             Int?
-    parentEvent       CompetitionEvent?  @relation("ParentEventToCompetitionEvent", fields: [parentId], references: [id])
+    parentEvent       CompetitionEvent?  @relation("ParentEventToCompetitionEvent", fields: [parentId], references: [id], onDelete: Cascade)
     subEvents         CompetitionEvent[] @relation("ParentEventToCompetitionEvent") 
     parentId          Int?               @map("parent_id")
     cost              Float
