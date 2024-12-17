@@ -20,7 +20,7 @@ router.post(
     parseRequest('body', Body$),
     checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
-        //stripe a faire
+        // TODO: stripe
 
 
         const body = Body$.parse(req.body);
