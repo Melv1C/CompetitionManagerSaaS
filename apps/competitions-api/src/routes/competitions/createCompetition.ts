@@ -5,17 +5,15 @@ import { BaseCompetitionWithRelationId$ ,BaseCompetition$ } from '@competition-m
 
 export const router = Router();
 
-const Body$ = BaseCompetitionWithRelationId$;
-
 router.post(
     '/',
-    parseRequest('body', Body$),
+    parseRequest('body', BaseCompetitionWithRelationId$),
     checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
         // TODO: stripe
 
 
-        const body = Body$.parse(req.body);
+        const body = BaseCompetitionWithRelationId$.parse(req.body);
         const competition = BaseCompetition$.parse(body);
         const { paymentPlanId, optionsId } = body;
         const user = req.user;
