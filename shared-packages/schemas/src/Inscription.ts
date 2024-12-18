@@ -15,7 +15,6 @@ export const Inscription$ = z.object({
 export type Inscription = z.infer<typeof Inscription$>;
 
 export const BaseInscription$ = Inscription$.pick({
-    athlete: true,
     paid: true,
     confirmed: true
 });
