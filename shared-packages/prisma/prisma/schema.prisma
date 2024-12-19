@@ -55,6 +55,7 @@ model Athlete {
     metadata      Json         @default("{}")
     competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int?         @map("competition_id")
+    inscriptions  Inscription[]
 
     @@map("athletes")
 }
@@ -93,19 +94,21 @@ model Category {
 ////////////////
 model CompetitionEvent {
     id                Int                @id @default(autoincrement())
+    eid               String             @unique @default(uuid())
     name              String
     event             Event              @relation(fields: [eventId], references: [id])
     eventId           Int                @map("event_id")
     schedule          DateTime
     categories        Category[]
     place             Int?
-    parentEvent       CompetitionEvent?  @relation("ParentEventToCompetitionEvent", fields: [parentId], references: [id])
+    parentEvent       CompetitionEvent?  @relation("ParentEventToCompetitionEvent", fields: [parentId], references: [id], onDelete: Cascade)
     subEvents         CompetitionEvent[] @relation("ParentEventToCompetitionEvent") 
     parentId          Int?               @map("parent_id")
     cost              Float
     isInscriptionOpen Boolean            @map("is_inscription_open")
     competition       Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId     Int                @map("competition_id")
+    inscriptions      Inscription[]
 
     @@map("competition_events")
 }
@@ -134,7 +137,7 @@ model Competition {
     paymentPlan          PaymentPlan         @relation(fields: [paymentPlanId], references: [id])
     paymentPlanId        Int                 @map("payment_plan_id")
     options              Option[] 
-
+    inscriptions         Inscription[]
     @@map("competitions")
 }
 
@@ -145,7 +148,7 @@ model Admin {
     id            Int         @id @default(autoincrement())
     user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId        Int         @map("user_id")
-    competition   Competition @relation(fields: [competitionId], references: [id])
+    competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int         @map("competition_id")
     access        String[]
 
@@ -192,4 +195,18 @@ model Club {
     
 }
 
-
+////////////////
+// Inscription
+////////////////
+model Inscription {
+    id                  Int                @id @default(autoincrement())
+    eid                 String             @unique @default(uuid())
+    athlete             Athlete            @relation(fields: [athleteLicense], references: [license])
+    athleteLicense      String             @map("athlete_license")
+    competitionEvent    CompetitionEvent   @relation(fields: [competitionEventId], references: [id], onDelete: Cascade)
+    competitionEventId  Int                @map("competition_event_id")
+    competition         Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    competitionId       Int                @map("competition_id")
+    paid                Int
+    confirmed           Boolean
+}
