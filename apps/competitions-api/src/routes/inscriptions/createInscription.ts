@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, AuthenticatedRequest, checkAdminRole } from '@competition-manager/utils';
+import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole } from '@competition-manager/utils';
 import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
@@ -11,18 +11,22 @@ const Params$ = Competition$.pick({
 });
 
 const Query$ = z.object({
-    admin: z.boolean().default(false)
+    admin: z.string()
 });
 
 const Body$ = z.array(BaseInscriptionWithRelationId$);
 
 router.post(
-    '/:competitionEid/inscriptions',
+    '/:eid/inscriptions',
     parseRequest('params', Params$),
     parseRequest('body', Body$),
     parseRequest('query', Query$),
+    checkRole('user'),
     async (req: AuthenticatedRequest, res) => {
         try {
+            //TODO check place 
+            //TODO check if the event is open
+            //TODO check if the athlete is in the right category
             const { admin } = Query$.parse(req.query);
             const { eid } = Params$.parse(req.params);
 
@@ -51,7 +55,7 @@ router.post(
 
             try {
                 for (const inscription of Body$.parse(req.body)) {
-                    prisma.inscription.create({
+                    await prisma.inscription.create({
                         data: {
                             athlete: {
                                 connect: {
@@ -65,7 +69,7 @@ router.post(
                             },
                             competitionEvent: {
                                 connect: {
-                                    id: inscription.competitionEventId
+                                    eid: inscription.competitionEventEid
                                 }
                             },
                             paid: inscription.paid,
@@ -73,9 +77,10 @@ router.post(
                         }
                     })
                 }
+                res.status(201).send('Inscription(s) created');
             } catch(e: any) {
                 if (e.code === 'P2025') {
-                    res.status(404).send('i');
+                    res.status(404).send('Athlete license not valid');
                     return;
                 }else{
                     console.error(e);
