@@ -2,6 +2,7 @@ import z from 'zod';
 import { Athlete$ } from './Athlete';
 import { Competition$ } from './Competition';
 import { CompetitionEvent$ } from './CompetitionEvent';
+import { Eid$ } from './Eid';
 
 export const Inscription$ = z.object({
     id: z.number(),
@@ -21,7 +22,6 @@ export const BaseInscription$ = Inscription$.pick({
 export type BaseInscription = z.infer<typeof BaseInscription$>;
 
 export const BaseInscriptionWithRelationId$ = BaseInscription$.extend({
-    competitionId: z.number(),
-    competitionEventId: z.number(),
+    competitionEventEid: Eid$,
     athleteLicense: z.string()
 });
