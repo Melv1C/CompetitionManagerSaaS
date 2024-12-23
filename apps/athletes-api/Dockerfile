@@ -1,6 +1,10 @@
 # Use the official Node Alpine image as the base image
 FROM node:20-alpine
 
+# Update the package manager
+RUN apk update
+RUN apk upgrade
+
 # Set the working directory to get shared package
 WORKDIR /competition-manager
 
