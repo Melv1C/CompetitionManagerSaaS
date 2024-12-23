@@ -18,17 +18,20 @@ See also [Template](.env.template)
 use the refresh token to get a new access token and refresh token
 
 #### Cookie
-- `refreshToken` : string
+- `refreshToken` : EncodeToken
 
 #### Response
 - Base case :
 ```
-Status 200 (accessToken)
-```
-```
-coockie 
+Status 200
 {
-    refreshToken: string;
+    accessToken: EncodeToken;
+}
+```
+```
+cookies 
+{
+    refreshToken: EncodeToken;
 }
 ```
 
@@ -50,12 +53,15 @@ Create a new user
 #### Response
 - Base case :
 ```
-Status 200 (accessToken)
-```
-```
-coockie 
+Status 200
 {
-    refreshToken: string;
+    accessToken: EncodeToken;
+}
+```
+```
+cookies 
+{
+    refreshToken: EncodeToken;
 }
 ```
 - Email already exist
@@ -77,13 +83,13 @@ Login a user
 ```
 Status 200
 {
-    accessToken: string;
+    accessToken: EncodeToken;
 } 
 ```
 ```
-coockie 
+cookies 
 {
-    refreshToken: string;
+    refreshToken: EncodeToken;
 }
 ```
 - email not found
@@ -110,7 +116,7 @@ Logout the user
 Status 200
 ```
 ```
-coockie 
+cookies 
 {
     clear refreshToken
 }
