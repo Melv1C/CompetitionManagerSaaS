@@ -1,14 +1,14 @@
+import { EncodeToken$ } from '@competition-manager/schemas';
 import { api } from './api';
-
 
 export const login = async (email: string, password: string) => {
     const { data } = await api.post('/users/login', { email, password });
-    return data;
+    return EncodeToken$.parse(data);
 };
 
 export const register = async (email: string, password: string) => {
     const { data } = await api.post('/users/register', { email, password });
-    return data;
+    return EncodeToken$.parse(data);
 };
 
 export const logout = async () => {
@@ -18,4 +18,3 @@ export const logout = async () => {
         console.error('Sign out error:', error);
     }
 };
-
