@@ -12,17 +12,16 @@ const Params$ = z.object({
     adminId: Id$
 });
 
-const Body$ = AdminWithoutIdAndRelation$
 
 router.put(
     '/:competitionEid/admins/:adminId',
-    parseRequest('body', Body$),
+    parseRequest('body', AdminWithoutIdAndRelation$),
     parseRequest('params', Params$),
     checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid, adminId } = Params$.parse(req.params);
-            const newAdmin = Body$.parse(req.body);
+            const newAdmin = AdminWithoutIdAndRelation$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
