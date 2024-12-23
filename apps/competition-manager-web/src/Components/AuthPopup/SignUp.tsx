@@ -8,6 +8,7 @@ import { useUserToken } from "../../GlobalsStates/userToken";
 import { register } from "../../utils/auth";
 
 import { TextFieldWithSchema as Field } from "../../Components/TextFieldWithSchema";
+import { decodeToken } from "../../utils/decodeToken";
 
 type SignUpProps = {
     onToggle: () => void;
@@ -53,7 +54,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
                     try {
                         const data = await register(email, password);
-                        setUserToken(data);
+                        setUserToken(decodeToken(data.token));
                     } catch (error) {
                         console.error('Sign up error:', error);
                         if (isAxiosError(error) && error.response) {

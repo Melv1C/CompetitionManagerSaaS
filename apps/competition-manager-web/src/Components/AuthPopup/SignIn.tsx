@@ -8,6 +8,7 @@ import { useUserToken } from "../../GlobalsStates/userToken";
 import { login } from "../../utils/auth";
 
 import { TextFieldWithSchema as Field } from "../../Components/TextFieldWithSchema";
+import { decodeToken } from "../../utils/decodeToken";
 
 type SignInProps = {
     onToggle: () => void;
@@ -53,7 +54,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
 
                     try {
                         const data = await login(email, password);
-                        setUserToken(data);
+                        setUserToken(decodeToken(data.token));
                     } catch (error) {
                         console.error('Sign in error:', error);
                         if (isAxiosError(error) && error.response) {
