@@ -5,7 +5,7 @@ import { UserEmail$, UserPassword$ } from "@competition-manager/schemas";
 import { Alert, Box, Button, Divider, Link, Typography } from "@mui/material";
 
 import { useUserToken } from "../../GlobalsStates/userToken";
-import { register } from "../../utils/auth";
+import { register } from "../../utils/requests";
 
 import { TextFieldWithSchema as Field } from "../../Components/TextFieldWithSchema";
 import { decodeToken } from "../../utils/decodeToken";
@@ -54,7 +54,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
                     try {
                         const data = await register(email, password);
-                        setUserToken(decodeToken(data.token));
+                        setUserToken(decodeToken(data));
                     } catch (error) {
                         console.error('Sign up error:', error);
                         if (isAxiosError(error) && error.response) {

@@ -19,7 +19,7 @@ export const useAutoLogin = () => {
         const fetchUserToken = async () => {
             try {
                 const { data } = await api.get('/users/refresh-token', { withCredentials: true });
-                setUserToken(decodeToken(data.token));
+                setUserToken(decodeToken(data));
             } catch (error) {
                 setUserToken('NOT_LOGGED');
             }
