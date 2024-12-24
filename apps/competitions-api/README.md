@@ -15,11 +15,11 @@ a faire
 get all competitions        done
 get a competition by eid    done
 create a competition        done
-update a competition
-delete a competition
+update a competition        done
+delete a competition        done
 
-create admin
-update admin
+create admin                done
+update admin                done
 delete admin
 
 create inscription
@@ -33,7 +33,7 @@ create results of an event (update if already exist)
 delete results of an event
 
 create an event             done
-update an event             
+update an event             done     
 delete an event
 
 

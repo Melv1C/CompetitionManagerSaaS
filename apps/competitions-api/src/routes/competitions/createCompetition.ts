@@ -1,31 +1,19 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { z } from 'zod';
 import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
-import { Competition$, BaseCompetition$ } from '@competition-manager/schemas';
+import { BaseCompetitionWithRelationId$ ,BaseCompetition$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
-const Body$ = Competition$.pick({
-    name: true,
-    date: true,
-    method: true
-}).extend({
-    paymentPlanId: z.number(),
-    optionsId: z.array(z.number()).optional(),
-});
-
 router.post(
     '/',
-    parseRequest('body', Body$),
+    parseRequest('body', BaseCompetitionWithRelationId$),
     checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
         // TODO: stripe
 
-
-        const body = Body$.parse(req.body);
-        const competition = BaseCompetition$.parse(body);
-        const { paymentPlanId, optionsId } = body;
+        const { paymentPlanId, optionsId, ...competitionData } = BaseCompetitionWithRelationId$.parse(req.body);
+        const competition = BaseCompetition$.parse(competitionData );
         const user = req.user;
         const newCompetition = await prisma.competition.create({
             data: {
@@ -53,5 +41,4 @@ router.post(
         });
         res.send(newCompetition);
     }
-    
 );

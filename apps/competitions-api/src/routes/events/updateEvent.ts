@@ -7,18 +7,19 @@ import { BaseAdmin$, Eid$, BaseCompetitionEventWithRealtionId$ } from '@competit
 export const router = Router();
 
 const Params$ = z.object({
-    competitionEid: Eid$
+    competitionEid: Eid$,
+    eventEid: Eid$
 });
 
-router.post(
-    '/:competitionEid/events',
+router.put(
+    '/:competitionEid/events/:eventEid',
     parseRequest('params', Params$),
     parseRequest('body', BaseCompetitionEventWithRealtionId$),
     checkRole('admin'),
     async (req: AuthenticatedRequest, res) => {
         try{
-            const { competitionEid } = Params$.parse(req.params);
-            const { eventId, categoriesId, parentId, ...competitionEvent } = BaseCompetitionEventWithRealtionId$.parse(req.body);
+            const { competitionEid, eventEid } = Params$.parse(req.params);
+            const { categoriesId, parentId, eventId, ...competitionEvent } = BaseCompetitionEventWithRealtionId$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
@@ -43,34 +44,33 @@ router.post(
                 res.status(400).send('Event date must be after competition date');
                 return;
             }
-            if (competition.closeDate && competitionEvent.schedule > competition.closeDate) {
+            if (competition.closeDate && competitionEvent.schedule > competition.closeDate){
                 res.status(400).send('Event date must be before competition close date');
                 return;
             }
             try{
-                const newCompetitionEvent = await prisma.competitionEvent.create({
+                const newCompetitionEvent = await prisma.competitionEvent.update({
+                    where: {
+                        eid: eventEid
+                    },
                     data: {
                         ...competitionEvent,
+                        categories: {
+                            set: categoriesId.map(id => ({ id }))
+                        },
                         event: {
                             connect: {
                                 id: eventId
                             }
                         },
-                        categories: {
-                            connect: categoriesId.map(id => ({ id }))
-                        },
-                        competition: {
-                            connect: {
-                                eid: competitionEid
-                            }
-                        },
-                        ...(parentId && { parentEvent: { connect: { id: parentId } } })
+                        ...(parentId && { parentEvent: { connect: { id: parentId } } }),
+
                     }
                 });
                 res.send(newCompetitionEvent);
             } catch(e: any) {
                 if (e.code === 'P2025') {
-                    res.status(404).send('Wrong category id or event id');
+                    res.status(404).send('Wrong category id');
                     return;
                 }else{
                     console.error(e);

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Event$ } from './Event';
 import { Category$ } from './Category';
+import { Id$ } from './Id';
 
 export const CompetitionEvent$ = z.object({
     id: z.number().positive(),
@@ -23,3 +24,10 @@ export const BaseCompetitionEvent$ = CompetitionEvent$.pick({
     isInscriptionOpen: true,
 });
 export type BaseCompetitionEvent = z.infer<typeof BaseCompetitionEvent$>;
+
+export const BaseCompetitionEventWithRealtionId$ = BaseCompetitionEvent$.extend({
+    eventId: Id$,
+    categoriesId: z.array(Id$),
+    parentId: Id$.optional(),
+})
+export type BaseCompetitionEventWithRealtionId = z.infer<typeof BaseCompetitionEventWithRealtionId$>;
