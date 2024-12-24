@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { User$ } from './User';
+import { User$ } from '../User';
 
 export const TokenData$ = User$.omit({ password: true });
 
