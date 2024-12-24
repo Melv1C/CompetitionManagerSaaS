@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { BaseAdmin$, CompetitionEvent$, Eid$, BaseCompetitionEvent$ } from '@competition-manager/schemas';
+import { BaseAdmin$, Eid$, BaseCompetitionEventWithRealtionId$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -10,29 +10,15 @@ const Params$ = z.object({
     competitionEid: Eid$
 });
 
-const Body$ = CompetitionEvent$.pick({
-    name: true,
-    schedule: true,
-    place: true,
-    cost: true,
-    isInscriptionOpen: true,
-}).extend({
-    eventId: z.number(),
-    categoriesId: z.array(z.number()),
-    parentId: z.number().optional(),
-})
-
 router.post(
     '/:competitionEid/events',
     parseRequest('params', Params$),
-    parseRequest('body', Body$),
+    parseRequest('body', BaseCompetitionEventWithRealtionId$),
     checkRole('admin'),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
-            const body = Body$.parse(req.body);
-            const competitionEvent = BaseCompetitionEvent$.parse(body);
-            const { eventId, categoriesId, parentId } = body;
+            const { eventId, categoriesId, parentId, ...competitionEvent } = BaseCompetitionEventWithRealtionId$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid

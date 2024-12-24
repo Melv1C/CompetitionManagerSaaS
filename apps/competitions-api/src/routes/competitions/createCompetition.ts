@@ -12,10 +12,8 @@ router.post(
     async (req: AuthenticatedRequest, res) => {
         // TODO: stripe
 
-
-        const body = BaseCompetitionWithRelationId$.parse(req.body);
-        const competition = BaseCompetition$.parse(body);
-        const { paymentPlanId, optionsId } = body;
+        const { paymentPlanId, optionsId, ...competitionData } = BaseCompetitionWithRelationId$.parse(req.body);
+        const competition = BaseCompetition$.parse(competitionData );
         const user = req.user;
         const newCompetition = await prisma.competition.create({
             data: {

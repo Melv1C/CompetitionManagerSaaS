@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { BaseAdmin$, Eid$, BaseCompetitionEvent$, Id$ } from '@competition-manager/schemas';
+import { BaseAdmin$, Eid$, BaseCompetitionEventWithRealtionId$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -11,22 +11,15 @@ const Params$ = z.object({
     eventEid: Eid$
 });
 
-const Body$ = BaseCompetitionEvent$.extend({
-    categoriesId: z.array(Id$),
-    parentId: Id$.optional()
-});
-
 router.put(
     '/:competitionEid/events/:eventEid',
     parseRequest('params', Params$),
-    parseRequest('body', Body$),
+    parseRequest('body', BaseCompetitionEventWithRealtionId$),
     checkRole('admin'),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid, eventEid } = Params$.parse(req.params);
-            const body = Body$.parse(req.body);
-            const competitionEvent = BaseCompetitionEvent$.parse(body);
-            const { categoriesId, parentId } = body;
+            const { categoriesId, parentId, eventId, ...competitionEvent } = BaseCompetitionEventWithRealtionId$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
@@ -65,7 +58,13 @@ router.put(
                         categories: {
                             set: categoriesId.map(id => ({ id }))
                         },
-                        ...(parentId && { parentEvent: { connect: { id: parentId } } })
+                        event: {
+                            connect: {
+                                id: eventId
+                            }
+                        },
+                        ...(parentId && { parentEvent: { connect: { id: parentId } } }),
+
                     }
                 });
                 res.send(newCompetitionEvent);

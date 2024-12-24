@@ -3,10 +3,11 @@ import { Athlete$ } from './Athlete';
 import { Competition$ } from './Competition';
 import { CompetitionEvent$ } from './CompetitionEvent';
 import { Eid$ } from './Eid';
+import { Id$ } from './Id';
 
 export const Inscription$ = z.object({
-    id: z.number(),
-    eid: z.string(),
+    id: Id$,
+    eid: Eid$,
     athlete: Athlete$,
     Competition: Competition$,
     CompetitionEvent$: CompetitionEvent$,

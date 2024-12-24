@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, checkAdminRole } from '@competition-manager/utils';
-import { UpdateCompetition$, UpdateCompetitionWithRelationId$, Competition$ } from '@competition-manager/schemas';
+import { UpdateCompetitionWithRelationId$, Competition$ } from '@competition-manager/schemas';
 import { BaseAdmins$ } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -19,10 +19,7 @@ router.put(
         try {
             //si add option stripe TODO
 
-
-            const body = UpdateCompetitionWithRelationId$.parse(req.body);
-            const newCompetitionData = UpdateCompetition$.parse(body);
-            const { paymentPlanId, optionsId, freeClubsId } = body;
+            const { paymentPlanId, optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetitionWithRelationId$.parse(req.body);
             const { eid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -52,10 +49,10 @@ router.put(
                             }
                         },
                         options: {
-                            set: optionsId?.map(id => ({ id }))
+                            set: optionsId.map(id => ({ id }))
                         },
                         freeClubs: {
-                            set: freeClubsId?.map(id => ({ id }))
+                            set: freeClubsId.map(id => ({ id }))
                         }
                     }
                 });

@@ -75,8 +75,8 @@ export type UpdateCompetition = z.infer<typeof UpdateCompetition$>;
 
 export const UpdateCompetitionWithRelationId$ = UpdateCompetition$.extend({
     paymentPlanId: z.number(),
-    optionsId: z.array(z.number()).optional(),
-    freeClubsId: z.array(z.number()).optional(),
+    optionsId: z.array(z.number()).default([]),
+    freeClubsId: z.array(z.number()).default([]),
 });
 export type UpdateCompetitionWithRelationId = z.infer<typeof UpdateCompetitionWithRelationId$>;
 
