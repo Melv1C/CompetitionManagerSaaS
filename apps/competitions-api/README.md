@@ -22,9 +22,11 @@ create admin                done
 update admin                done
 delete admin
 
-create inscription
+create inscription          done
 update inscription
 delete inscription
+
+one day ath
 
 update inscription as confirmed /inscritpions/:id/confirmations
 

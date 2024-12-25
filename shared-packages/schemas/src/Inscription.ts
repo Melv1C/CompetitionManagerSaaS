@@ -24,5 +24,5 @@ export type BaseInscription = z.infer<typeof BaseInscription$>;
 
 export const BaseInscriptionWithRelationId$ = BaseInscription$.extend({
     competitionEventEid: Eid$,
-    athleteLicense: z.string()
+    athleteLicense: z.number().min(1)
 });
