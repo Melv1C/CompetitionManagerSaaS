@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole } from '@competition-manager/utils';
-import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, ListAthlete, listAthlete$ } from '@competition-manager/schemas';
+import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, Athlete, Athlete$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
 export const router = Router();
 
-const findAthleteWithLicense = async (license: number, oneDayAthletes: ListAthlete) => {
+const findAthleteWithLicense = async (license: number, oneDayAthletes: Athlete[]) => {
     if (license <= 9999 && license >= 9900){
         return oneDayAthletes.find((a) => a.license === license);
     } else {
@@ -18,9 +18,6 @@ const findAthleteWithLicense = async (license: number, oneDayAthletes: ListAthle
         });
     }
 }
-
-
-
 
 const Params$ = Competition$.pick({
     eid: true
@@ -52,7 +49,7 @@ router.post(
                 },
                 include: {
                     admins: true,
-                    oneDayAthletes: true,
+                    oneDayAthletes: true
                 }
             });
 
@@ -72,9 +69,7 @@ router.post(
 
             try {
                 for (const inscription of Body$.parse(req.body)) {
-                    const athlete = await findAthleteWithLicense(inscription.athleteLicense, listAthlete$.parse(competition.oneDayAthletes));
-
-
+                    const athlete = await findAthleteWithLicense(inscription.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                     await prisma.inscription.create({
                         data: {
                             athlete: {

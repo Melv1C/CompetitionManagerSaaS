@@ -13,7 +13,7 @@ export const Athlete$ = z.object({
     bib: z.number().positive(),
     gender: Gender$,
     birthdate: z.coerce.date().min(new Date('1900-01-01')),
-    club: z.string(),
+    club: z.string().nullable().default(null),
     metadata: Json$.default({}),
     competitionId: z.number().positive().nullable().default(null),
 });
@@ -34,8 +34,3 @@ export const OneDayAthlete$ = Athlete$.pick({
     metadata: true,
 });
 export type OneDayAthlete = z.infer<typeof OneDayAthlete$>;
-
-export const listAthlete$ = z.array(Athlete$);
-export type ListAthlete = z.infer<typeof listAthlete$>;
-
-
