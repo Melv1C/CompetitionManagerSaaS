@@ -1,5 +1,10 @@
 [
     {
+        "name": "Non affilié",
+        "abbr": "NA",
+        "country": "Belgique"
+    },
+    {
         "name": "France",
         "abbr": "FRA",
         "country": "France"

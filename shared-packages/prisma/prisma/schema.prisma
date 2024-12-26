@@ -51,8 +51,8 @@ model Athlete {
     bib           Int
     gender        String
     birthdate     DateTime
-    club          Club?        @relation(fields: [clubId], references: [id])
-    clubId        Int?         @map("club_id")
+    club          Club         @relation(fields: [clubId], references: [id])
+    clubId        Int          @map("club_id")
     metadata      Json         @default("{}")
     competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int?         @map("competition_id")

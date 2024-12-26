@@ -2,9 +2,19 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { Eid$, OneDayAthlete$ } from '@competition-manager/schemas';
+import { Eid$, OneDayAthlete$, ONE_DAY_BIB } from '@competition-manager/schemas';
 
 export const router = Router();
+
+const getNextBib = (oneDayBib: number[], startBib: number) => {
+    for (let i = 0; i < ONE_DAY_BIB.NB; i++) {
+        const bib = ONE_DAY_BIB.MIN + ((startBib - ONE_DAY_BIB.MIN + i) % (ONE_DAY_BIB.NB));
+        if (!oneDayBib.includes(bib)) {
+            return bib;
+        }   
+    }
+    throw new Error('No bib available');
+}
 
 const Params$ = z.object({
     competitionEid: Eid$
@@ -24,12 +34,6 @@ router.post(
                     eid: competitionEid
                 },
                 include: {
-                    admins: {
-                        select: {
-                            access: true,
-                            userId: true
-                        }
-                    },
                     oneDayAthletes: {
                         select: {
                             bib: true
@@ -41,7 +45,7 @@ router.post(
                 res.status(404).send('Competition not found');
                 return;
             }
-            const newBib = competition.oneDayAthletes.length + competition.oneDayBibStart;
+            const newBib = getNextBib(competition.oneDayAthletes.map(a => a.bib), competition.oneDayBibStart);
             try{
                 const newOneDayAth = await prisma.athlete.create({
                     data: {
@@ -60,6 +64,21 @@ router.post(
                         license : newBib
                     }
                 });
+                setTimeout(async () => {
+                    //check if ath have inscriptions else delete it
+                    const inscriptions = await prisma.inscription.findMany({
+                        where: {
+                            athleteId: newOneDayAth.id
+                        }
+                    });
+                    if(inscriptions.length === 0){
+                        await prisma.athlete.delete({
+                            where: {
+                                id: newOneDayAth.id
+                            }
+                        });
+                    }
+                }, 24*60*60*1000);
                 res.send(newOneDayAth);
             } catch(e: any) {
                 if (e.code === 'P2025') {
