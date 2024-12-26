@@ -71,6 +71,7 @@ export const AdminCompetitions = () => {
 							height: '4rem',
 						}}
 						variant="contained"
+						color="secondary"
 						onClick={() => setIsCreatePopupVisible(true)}
 					>
 						<FontAwesomeIcon icon={faPlus} size="3x" />
