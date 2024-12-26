@@ -6,7 +6,7 @@
         "bib": 1000,
         "gender": "M",
         "birthdate": "2010-04-11T00:00:00.000Z",
-        "club": "USTA"
+        "clubAbbr": "USTA"
     },
     {
         "license": 10001,
@@ -15,7 +15,7 @@
         "bib": 1001,
         "gender": "F",
         "birthdate": "2011-04-12T00:00:00.000Z",
-        "club": "OSGA"
+        "clubAbbr": "OSGA"
     },
     {
         "license": 10002,
@@ -24,7 +24,7 @@
         "bib": 1002,
         "gender": "M",
         "birthdate": "2012-04-13T00:00:00.000Z",
-        "club": "USTA"
+        "clubAbbr": "USTA"
     },
     {
         "license": 10003,
@@ -33,7 +33,7 @@
         "bib": 1003,
         "gender": "F",
         "birthdate": "2013-04-14T00:00:00.000Z",
-        "club": "ATH"
+        "clubAbbr": "ATH"
     },
     {
         "license": 10004,
@@ -42,7 +42,7 @@
         "bib": 1004,
         "gender": "M",
         "birthdate": "2014-04-15T00:00:00.000Z",
-        "club": "USTA"
+        "clubAbbr": "USTA"
     },
     {
         "license": 10005,
@@ -51,7 +51,7 @@
         "bib": 1005,
         "gender": "F",
         "birthdate": "2015-04-16T00:00:00.000Z",
-        "club": "OSGA"
+        "clubAbbr": "OSGA"
     },
     {
         "license": 10006,
@@ -60,7 +60,7 @@
         "bib": 1006,
         "gender": "M",
         "birthdate": "2009-04-17T00:00:00.000Z",
-        "club": "ATH"
+        "clubAbbr": "ATH"
     },
     {
         "license": 10007,
@@ -69,7 +69,7 @@
         "bib": 1007,
         "gender": "F",
         "birthdate": "2008-04-18T00:00:00.000Z",
-        "club": "USTA"
+        "clubAbbr": "USTA"
     },
     {
         "license": 10008,
@@ -78,7 +78,7 @@
         "bib": 1008,
         "gender": "M",
         "birthdate": "2007-04-19T00:00:00.000Z",
-        "club": "OSGA"
+        "clubAbbr": "OSGA"
     },
     {
         "license": 10009,
@@ -87,7 +87,7 @@
         "bib": 1009,
         "gender": "F",
         "birthdate": "2006-04-20T00:00:00.000Z",
-        "club": "ATH"
+        "clubAbbr": "ATH"
     },
     {
         "license": 10010,
@@ -96,7 +96,7 @@
         "bib": 1010,
         "gender": "M",
         "birthdate": "2005-04-21T00:00:00.000Z",
-        "club": "USTA"
+        "clubAbbr": "USTA"
     },
     {
         "license": 10011,
@@ -105,7 +105,7 @@
         "bib": 1011,
         "gender": "F",
         "birthdate": "2004-04-22T00:00:00.000Z",
-        "club": "OSGA"
+        "clubAbbr": "OSGA"
     },
     {
         "license": 10012,
@@ -114,6 +114,6 @@
         "bib": 1012,
         "gender": "M",
         "birthdate": "2003-04-23T00:00:00.000Z",
-        "club": "ATH"
+        "clubAbbr": "ATH"
     }
 ]

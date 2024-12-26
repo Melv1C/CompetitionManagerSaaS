@@ -6,6 +6,10 @@ export const Club$ = z.object({
     name: Name$,
     abbr: Abbr$,
     address: z.string().optional(),
-});
+    province: z.string().optional(),
+    fedNumber: z.number().optional(),
+    country: z.string(),
+    fedAbbr: z.string().optional(),
 
+});
 export type Club = z.infer<typeof Club$>;

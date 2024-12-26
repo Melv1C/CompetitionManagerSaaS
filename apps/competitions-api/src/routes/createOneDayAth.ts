@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { Eid$, OneDayAthlete$, Role } from '@competition-manager/schemas';
+import { Eid$, OneDayAthlete$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -14,11 +14,11 @@ router.post(
     '/:competitionEid/oneDayAthlete',
     parseRequest('params', Params$),
     parseRequest('body', OneDayAthlete$),
-    checkRole(Role.USER),
+    checkRole('user'),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
-            const oneDayAthData = OneDayAthlete$.parse(req.body);
+            const { clubAbbr ,...oneDayAthData } = OneDayAthlete$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
@@ -51,6 +51,11 @@ router.post(
                                 id : competition.id
                             }
                         },
+                        club : {
+                            connect : {
+                                abbr : clubAbbr
+                            }
+                        },
                         bib : newBib,
                         license : newBib
                     }
@@ -58,7 +63,7 @@ router.post(
                 res.send(newOneDayAth);
             } catch(e: any) {
                 if (e.code === 'P2025') {
-                    res.status(404).send('Wrong category id or event id');
+                    res.status(404).send('Wrong club abbr');
                     return;
                 }else{
                     console.error(e);

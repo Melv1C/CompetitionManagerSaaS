@@ -13,11 +13,21 @@ export const Athlete$ = z.object({
     bib: z.number().positive(),
     gender: Gender$,
     birthdate: Date$,
-    club: z.string().nullable().default(null),
+    club: Club$,
     metadata: Json$.default({}),
-    competitionId: Id$.optional(),
 });
 export type Athlete = z.infer<typeof Athlete$>;
+
+export const BaseAthlete$ = Athlete$.omit({ 
+    id: true,
+    club: true,
+});
+export type BaseAthlete = z.infer<typeof BaseAthlete$>;
+
+export const BaseAthleteWithClubAbbr$ = BaseAthlete$.extend({
+    clubAbbr: z.string(),
+});
+export type BaseAthleteWithClubAbbr = z.infer<typeof BaseAthleteWithClubAbbr$>;
 
 export const OneDayMetadata$ = z.object({
     license: z.number().positive(),
@@ -25,12 +35,8 @@ export const OneDayMetadata$ = z.object({
 });
 export type OneDayMetadata = z.infer<typeof OneDayMetadata$>;
 
-export const OneDayAthlete$ = Athlete$.pick({
-    firstName: true,
-    lastName: true,
-    gender: true,
-    birthdate: true,
-    club: true,
-    metadata: true,
+export const OneDayAthlete$ = BaseAthleteWithClubAbbr$.omit({
+    bib: true,
+    license: true,
 });
 export type OneDayAthlete = z.infer<typeof OneDayAthlete$>;
