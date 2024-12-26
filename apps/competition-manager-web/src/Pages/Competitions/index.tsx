@@ -29,7 +29,6 @@ const Competitions: React.FC = () => {
                 variant="h4" 
                 sx={{ 
                     marginTop: '2rem',
-                    color: 'secondary.main',
                 }}
             >
                 Compétitions

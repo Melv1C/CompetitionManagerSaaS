@@ -11,9 +11,9 @@ export const Date: React.FC<DateProps> = ({ date }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                backgroundColor: 'primary.main',
+                backgroundColor: 'secondary.main',
                 border: '2px solid',
-                borderColor: 'primary.main',
+                borderColor: 'secondary.main',
                 borderRadius: '10px',
                 margin: 'auto 0',
             }}
@@ -34,6 +34,7 @@ export const Date: React.FC<DateProps> = ({ date }) => {
                     fontWeight: 'bold',
                     width: '3rem',
                     textAlign: 'center',
+                    //color: 'primary.main',
                     backgroundColor: 'white',
                     borderRadius: '0 0 8px 8px',
                 }}

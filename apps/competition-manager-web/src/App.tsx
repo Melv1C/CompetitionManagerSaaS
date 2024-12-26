@@ -20,31 +20,24 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#ff7043',
-      contrastText: '#ffffff',
-    },
-    secondary: {
       main: '#184c85',
       contrastText: '#ffffff',
     },
-    background: {
-      default: '#f4f6f8',
-      paper: '#ffffff',
-    },
-    text: {
-      primary: '#001F3F',
-      secondary: '#546E7A',
+    secondary: {
+      main: '#ff7043',
+      contrastText: '#ffffff',
     },
   },
   components: {
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#ff7043', // or #FF8C68
+          backgroundColor: '#184c85',
           color: '#ffffff',
         },
       },
     },
+
   },
 })
 

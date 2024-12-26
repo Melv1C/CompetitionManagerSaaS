@@ -38,13 +38,12 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) 
                         sx={{
                             fontSize: '2rem',
                             fontWeight: 'bold',
-                            color: 'primary.main',
                             borderBottom: '2px solid',
                             borderColor: 'primary.main',
                             paddingBottom: '0.5rem',
                         }}
                     >
-                        <Typography variant="h4" color='secondary' sx={{ fontWeight: 'bold' }}>
+                        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                             {year}
                         </Typography>
                     </Box>
