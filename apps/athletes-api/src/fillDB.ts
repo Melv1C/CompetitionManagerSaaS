@@ -119,12 +119,12 @@ export const initDbDev = async () => {
     for (const athleteData of devData) {
         const { clubAbbr, ...athlete } = BaseAthleteWithClubAbbr$.parse(athleteData);
         const club = await createClub(clubAbbr);
-        const found = await prisma.athlete.findFirst({
+        const athleteInDB = await prisma.athlete.findFirst({
             where: {
                 license: athlete.license
             }
         });
-        if (!found) {
+        if (!athleteInDB) {
             await prisma.athlete.create({
                 data: {
                     ...athlete,
