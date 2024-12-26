@@ -6,17 +6,17 @@ import { prisma } from '@competition-manager/prisma';
 
 export const router = Router();
 
-const findAthleteWithLicense = async (license: number, oneDayAthletes: Athlete[]) => {
-    if (license <= 9999 && license >= 9900){
-        return oneDayAthletes.find((a) => a.license === license);
-    } else {
-        return await prisma.athlete.findFirstOrThrow({
-            where: {
-                license: license,
-                competitionId: null
-            }
-        });
+const findAthleteWithLicense = async (license: number, oneDayAthletes: Athlete[] = []) => {
+    const athlete = oneDayAthletes.find((a) => a.license === license);
+    if (athlete) {
+        return athlete;
     }
+    return await prisma.athlete.findFirstOrThrow({
+        where: {
+            license: license,
+            competitionId: null
+        }
+    });
 }
 
 const Params$ = Competition$.pick({
