@@ -83,8 +83,7 @@ const addNewAthletes = async () => {
             });
             const { clubAbbr, ...athlete } = BaseAthleteWithClubAbbr$.parse(athleteData);
             const club = await createClub(clubAbbr) // get or create if not exist
-            const found = athletes.find(a => a.license === athlete.license);
-            if (!found) {
+            if (!athletes.find(a => a.license === athlete.license)) {
                 await prisma.athlete.create({
                     data: {
                         ...athlete,
