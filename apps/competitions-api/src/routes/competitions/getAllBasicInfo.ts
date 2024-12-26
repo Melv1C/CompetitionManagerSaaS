@@ -13,11 +13,10 @@ router.get(
                     publish: true,
                 },
             });
-            res.send(DisplayCompetition$.parse(competitions));
+            res.send(DisplayCompetition$.array().parse(competitions));
         }catch (e) {
             console.error(e);
             res.status(500).send('Internal server error');
-
         }
     }
 );
