@@ -1,12 +1,13 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Button, Tabs, Tab } from "@mui/material";
+import { Button, Tabs, Tab } from "@mui/material";
 import { ListCompetitions, Loading } from "../../../Components";
 import { useEffect, useState } from "react";
 import { useRoles } from "../../../hooks";
 import { getCompetitionsAdmin } from "../../../api";
 import { Competition } from "../../../type";
 import { CreatePopup } from "./CreatePopup";
+import { MaxWidth } from "../../../Components/MaxWidth";
 
 export const AdminCompetitions = () => {
 
@@ -33,13 +34,7 @@ export const AdminCompetitions = () => {
 	}, []);
 
 	return (
-		<Box 
-			sx={{ 
-				display: 'flex', 
-				flexDirection: 'column',
-				alignItems: 'center'
-			}}
-		>
+		<MaxWidth>
 			<Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
 				{items.map((item, index) => (
 					<Tab key={index} label={item.label} />
@@ -79,6 +74,6 @@ export const AdminCompetitions = () => {
 					{isCreatePopupVisible && <CreatePopup isVisible={isCreatePopupVisible} onClose={() => setIsCreatePopupVisible(false)} />}
 				</>
 			)}
-		</Box>
+		</MaxWidth>
 	)
 }

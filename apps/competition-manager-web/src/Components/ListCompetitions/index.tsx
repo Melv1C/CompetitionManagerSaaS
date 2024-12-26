@@ -28,8 +28,7 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) 
                 flexDirection: 'column',
                 gap: '1rem',
                 margin: '1rem',
-                width: '90%',
-                maxWidth: '800px',
+                width: '100%',
             }}
         >
             {years.map(year => (
