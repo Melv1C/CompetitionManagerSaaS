@@ -8,6 +8,7 @@ import { router as updateEventRouter} from './events/updateEvent';
 import { router as createAdminRouter} from './admins/createAdmin';
 import { router as updateAdminRouter} from './admins/updateAdmin';
 import { router as createInscriptionRouter} from './inscriptions/createInscription';
+import { router as createOneDayAthRouter} from './oneDayAth/createOneDayAth';
 
 export default [
     getAllBasicInfoRouter,
@@ -19,5 +20,6 @@ export default [
     updateCompetitionRouter,
     updateAdminRouter,
     updateEventRouter,
-    createInscriptionRouter
+    createInscriptionRouter,
+    createOneDayAthRouter
 ];

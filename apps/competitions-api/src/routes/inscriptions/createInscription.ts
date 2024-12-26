@@ -1,10 +1,23 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole } from '@competition-manager/utils';
-import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$ } from '@competition-manager/schemas';
+import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, Athlete, Athlete$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
 export const router = Router();
+
+const findAthleteWithLicense = async (license: number, oneDayAthletes: Athlete[] = []) => {
+    const athlete = oneDayAthletes.find((a) => a.license === license);
+    if (athlete) {
+        return athlete;
+    }
+    return await prisma.athlete.findFirstOrThrow({
+        where: {
+            license: license,
+            competitionId: null
+        }
+    });
+}
 
 const Params$ = Competition$.pick({
     eid: true
@@ -35,7 +48,8 @@ router.post(
                     eid
                 },
                 include: {
-                    admins: true
+                    admins: true,
+                    oneDayAthletes: true
                 }
             });
 
@@ -43,7 +57,7 @@ router.post(
                 res.status(404).send('Competition not found');
                 return;
             }
-
+            
             if (!admin){
                 //TODO stripe
             }else{
@@ -55,11 +69,12 @@ router.post(
 
             try {
                 for (const inscription of Body$.parse(req.body)) {
+                    const athlete = await findAthleteWithLicense(inscription.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                     await prisma.inscription.create({
                         data: {
                             athlete: {
                                 connect: {
-                                    license: inscription.athleteLicense
+                                    id : athlete!.id
                                 }
                             },
                             competition: {

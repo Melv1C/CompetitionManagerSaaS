@@ -45,13 +45,13 @@ model UserPreferences {
 /////////////////////////
 model Athlete {
     id            Int          @id @default(autoincrement())
-    license       String       @unique
+    license       Int
     firstName     String       @map("first_name")
     lastName      String       @map("last_name")
     bib           Int
     gender        String
     birthdate     DateTime
-    club          String       //change to the club model
+    club          String?       //change to the club model
     metadata      Json         @default("{}")
     competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int?         @map("competition_id")
@@ -192,6 +192,8 @@ model Club {
     abbr             String
     address          String
     competition      Competition[]
+
+    @@map("clubs")
     
 }
 
@@ -201,12 +203,14 @@ model Club {
 model Inscription {
     id                  Int                @id @default(autoincrement())
     eid                 String             @unique @default(uuid())
-    athlete             Athlete            @relation(fields: [athleteLicense], references: [license])
-    athleteLicense      String             @map("athlete_license")
+    athlete             Athlete            @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+    athleteId           Int                @map("athlete_id")
     competitionEvent    CompetitionEvent   @relation(fields: [competitionEventId], references: [id], onDelete: Cascade)
     competitionEventId  Int                @map("competition_event_id")
     competition         Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId       Int                @map("competition_id")
     paid                Int
     confirmed           Boolean
+
+    @@map("inscriptions")
 }
