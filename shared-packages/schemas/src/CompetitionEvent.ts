@@ -1,17 +1,15 @@
 import { z } from 'zod';
-import { Event$ } from './Event';
-import { Category$ } from './Category';
-import { Id$ } from './Id';
+import { Category$, Event$, Id$, Name$, Price$ } from '.';
 
 export const CompetitionEvent$ = z.object({
-    id: z.number().positive(),
-    name: z.string(),
+    id: Id$,
+    name: Name$,
     event: Event$,
     schedule: z.coerce.date().min(new Date()),
     categories: z.array(Category$),
     place: z.number().positive().int().optional(),
-    parentId: z.number().positive().optional(),
-    cost: z.number().nonnegative(),
+    parentId: Id$.optional(),
+    cost: Price$,
     isInscriptionOpen: z.boolean().default(true),
 });
 export type CompetitionEvent = z.infer<typeof CompetitionEvent$>;

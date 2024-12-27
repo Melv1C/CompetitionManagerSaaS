@@ -1,17 +1,28 @@
 import { z } from 'zod';
 import { UserPreferences$ } from './UserPreferences';
+import { Id$ } from './Base';
 
-//need to be in good order
-export const ROLE = ['user', 'admin', 'club', 'superadmin'] as const;
-export type Role = typeof ROLE[number];
+export enum Role {
+    USER = 'user',
+    ADMIN = 'admin',
+    CLUB = 'club',
+    SUPERADMIN = 'superadmin',
+}
+
+export const RoleLevel = {
+    [Role.USER]: 0,
+    [Role.ADMIN]: 1,
+    [Role.CLUB]: 2,
+    [Role.SUPERADMIN]: 3,
+}
 
 export const UserEmail$ = z.string().email();
 export const UserPassword$ = z.string().min(8, 'Password must be at least 8 characters long');
 
 export const User$ = z.object({
-    id: z.number().positive(),
+    id: Id$,
     email: UserEmail$,
-    role: z.enum(ROLE),
+    role: z.nativeEnum(Role),
     preferences: UserPreferences$.optional(),
     password: z.string()
 });

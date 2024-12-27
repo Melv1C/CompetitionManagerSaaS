@@ -1,32 +1,29 @@
 import { z } from 'zod';
+import { Abbr$, Id$, Name$ } from './Base';
 
-const EVENT_GROUP = [
-    'sprint',
-    'middle',
-    'long',
-    'hurdles',
-    'jump',
-    'throw',
-    'combined'
-] as const;
+export enum EventGroup {
+    SPRINT = 'sprint',
+    MIDDLE = 'middle',
+    LONG = 'long',
+    HURDLES = 'hurdles',
+    JUMP = 'jump',
+    THROW = 'throw',
+    COMBINED = 'combined',
+}
 
-export type EventGroup = typeof EVENT_GROUP[number];
-
-export const EVENT_TYPE = [
-    'time',
-    'distance',
-    'points',
-    'height'
-] as const;
-
-export type EventType = typeof EVENT_TYPE[number];
+export enum EventType {
+    TIME = 'time',
+    DISTANCE = 'distance',
+    POINTS = 'points',
+    HEIGHT = 'height',
+}
 
 export const Event$ = z.object({
-    id: z.number().positive(),
-    name: z.string(),
-    abbr: z.string(),
-    group: z.enum(EVENT_GROUP),
-    type: z.enum(EVENT_TYPE),
+    id: Id$,
+    name: Name$,
+    abbr: Abbr$,
+    group: z.nativeEnum(EventGroup),
+    type: z.nativeEnum(EventType),
 });
 
 export type Event = z.infer<typeof Event$>;

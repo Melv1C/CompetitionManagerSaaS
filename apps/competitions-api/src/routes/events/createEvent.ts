@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { BaseAdmin$, Eid$, BaseCompetitionEventWithRealtionId$, ACCESS } from '@competition-manager/schemas';
+import { BaseAdmin$, Eid$, BaseCompetitionEventWithRealtionId$, Access, Role } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -14,7 +14,7 @@ router.post(
     '/:competitionEid/events',
     parseRequest('params', Params$),
     parseRequest('body', BaseCompetitionEventWithRealtionId$),
-    checkRole('admin'),
+    checkRole(Role.ADMIN),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
@@ -36,7 +36,7 @@ router.post(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(ACCESS.COMPETITIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
+            if (!checkAdminRole(Access.COMPETITIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
                 return;
             }
             if (competitionEvent.schedule < competition.date) {
