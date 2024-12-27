@@ -1,5 +1,5 @@
 import z from 'zod';
-import { Id$, Name$, Price$ } from '.';
+import { Id$, Name$, Price$ } from './Base';
 
 export const Option$ = z.object({
     id: Id$,

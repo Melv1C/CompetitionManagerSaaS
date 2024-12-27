@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { Admin$, Club$, CompetitionEvent$, Eid$, FutureDate$, Id$, Name$, Option$, PaymentPlan$ } from '.';
+import { Id$, Name$, FutureDate$, Eid$ } from './Base';
+import { CompetitionEvent$ } from './CompetitionEvent';
+import { PaymentPlan$, Option$ } from './PaymentPlan';
+import { Admin$ } from './Admin';
+import { Club$ } from './Club';
+
 
 export enum PaymentMethod {
     FREE = 'free',

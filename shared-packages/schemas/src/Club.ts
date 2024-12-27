@@ -1,5 +1,5 @@
 import z from 'zod';
-import { Abbr$, Id$, Name$ } from './Base';
+import { Id$, Name$, Abbr$ } from './Base';
 
 export const Club$ = z.object({
     id: Id$,
