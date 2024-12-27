@@ -14,6 +14,7 @@ import Competitions from './Pages/Competitions'
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 // must be extract in an other file
 const lightTheme = createTheme({
@@ -41,6 +42,9 @@ const lightTheme = createTheme({
   },
 })
 
+// Create a client
+const queryClient = new QueryClient()
+
 function App() {
 
   const navItems = [
@@ -51,7 +55,7 @@ function App() {
   useAutoLogin()
 
   return (
-    <Box>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={lightTheme}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <BrowserRouter>
@@ -68,7 +72,7 @@ function App() {
           </BrowserRouter>
         </LocalizationProvider>
       </ThemeProvider>
-    </Box>
+    </QueryClientProvider>
   )
 }
 
