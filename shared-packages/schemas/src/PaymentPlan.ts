@@ -9,6 +9,9 @@ export const Option$ = z.object({
 });
 export type Option = z.infer<typeof Option$>;
 
+export const OptionWithoutId$ = Option$.omit({ id: true });
+export type OptionWithoutId = z.infer<typeof OptionWithoutId$>;
+
 export const PaymentPlan$ = z.object({
     id: Id$,
     name: Name$,
@@ -21,7 +24,7 @@ export type PaymentPlan = z.infer<typeof PaymentPlan$>;
 export const CreatePaymentPlan$ = PaymentPlan$.omit({ id: true, includedOptions: true });
 export type CreatePaymentPlan = z.infer<typeof CreatePaymentPlan$>;
 
-export const UpdatePaymentPlan$ = PaymentPlan$.omit({ includedOptions: true }).extend({
+export const UpdatePaymentPlan$ = CreatePaymentPlan$.extend({
     includedOptionsIds: z.array(Id$),
 });
 
