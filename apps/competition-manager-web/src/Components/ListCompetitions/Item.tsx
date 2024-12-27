@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, Chip, Typography } from '@mui/material'
+import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material'
 import { Date } from './Date'
 import { useNavigate } from 'react-router-dom'
 import { DisplayCompetition } from '@competition-manager/schemas';

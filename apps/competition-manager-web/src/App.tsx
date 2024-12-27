@@ -1,7 +1,7 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import './App.css'
 
-import { Box, createTheme, ThemeProvider, Toolbar } from "@mui/material"
+import { createTheme, ThemeProvider, Toolbar } from "@mui/material"
 import { faHome, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
 
 import { useAutoLogin } from './hooks'
