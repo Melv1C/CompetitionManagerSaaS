@@ -51,6 +51,7 @@ export const AdminCompetitions = () => {
 					: competition.date.getTime() < Date.now())
 				} 
 				isPast={activeTab === 1} 
+				link="/admin/competitions"
 			/>
 
 			{isClub && (

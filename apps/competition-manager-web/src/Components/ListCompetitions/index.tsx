@@ -5,9 +5,10 @@ import { Competition } from '../../type'
 type ListProps = {
     isPast: boolean
     competitions: Competition[]
+    link?: string
 }
 
-export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) => {
+export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, link = '/competitions' }) => {
 
     const sortedCompetitions = competitions.sort((a, b) => {
         if (!isPast) {
@@ -47,7 +48,7 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) 
                         </Typography>
                     </Box>
                     {sortedCompetitions.filter(competition => competition.date.getFullYear() === year).map(competition => (
-                        <Item key={competition.id} competition={competition} />
+                        <Item key={competition.id} competition={competition} link={link} />
                     ))}
                 </Box>
             ))}

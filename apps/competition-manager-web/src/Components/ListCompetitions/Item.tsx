@@ -5,15 +5,16 @@ import { useNavigate } from 'react-router-dom'
 
 type ItemProps = {
     competition: Competition;
+    link: string;
 }
 
-export const Item: React.FC<ItemProps> = ({ competition }) => {
+export const Item: React.FC<ItemProps> = ({ competition, link }) => {
     const navigate = useNavigate();
 
     return (
         <Card>
             <CardActionArea onClick={() => {
-                navigate(`/admin/competitions/${competition.id}`);
+                navigate(`${link}/${competition.id}`);
             }}>
                 <CardContent>
                     <Box
