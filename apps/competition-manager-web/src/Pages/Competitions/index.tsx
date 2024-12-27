@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getCompetitions } from '../../api';
-import { Box, Typography } from '@mui/material';
 import { ListCompetitions, Loading } from '../../Components';
 import { Competition } from '../../type';
+import { MaxWidth } from '../../Components/MaxWidth';
 
 
 const Competitions: React.FC = () => {
@@ -18,24 +18,10 @@ const Competitions: React.FC = () => {
     }, []);
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-            }}
-        >
-            <Typography 
-                variant="h4" 
-                sx={{ 
-                    marginTop: '2rem',
-                }}
-            >
-                Compétitions
-            </Typography>
+        <MaxWidth>
             {competitions.length === 0 && <Loading />}
             <ListCompetitions competitions={competitions} isPast={false} />
-        </Box>
+        </MaxWidth>
     );
 };
 
