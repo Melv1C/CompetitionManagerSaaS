@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
-import { BaseCompetitionWithRelationId$ ,BaseCompetition$ } from '@competition-manager/schemas';
+import { BaseCompetitionWithRelationId$ ,BaseCompetition$, ACCESS } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -29,7 +29,7 @@ router.post(
                 },
                 admins: {
                     create: {
-                        access: ['owner'],
+                        access: [ACCESS.OWNER],
                         user: {
                             connect: {
                                 id: user!.id

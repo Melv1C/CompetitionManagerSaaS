@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, checkAdminRole } from '@competition-manager/utils';
-import { UpdateCompetitionWithRelationId$, Competition$ } from '@competition-manager/schemas';
+import { UpdateCompetitionWithRelationId$, Competition$, ACCESS } from '@competition-manager/schemas';
 import { BaseAdmins$ } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -33,7 +33,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole('competitions', req.user!.id, BaseAdmins$.parse(competition.admins), res)) {
+            if (!checkAdminRole(ACCESS.COMPETITIONS, req.user!.id, BaseAdmins$.parse(competition.admins), res)) {
                 return;
             }
             try {
