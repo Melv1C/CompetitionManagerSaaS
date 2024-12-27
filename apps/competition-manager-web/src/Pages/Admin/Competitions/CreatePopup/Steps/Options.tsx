@@ -38,8 +38,7 @@ export const Options = ({
     setOptions
 }: OptionssProps) => {
   return (
-    <Box>
-
+    <>
         <Box
             sx={{
                 display: 'flex',
@@ -98,6 +97,6 @@ export const Options = ({
             { label: 'Back', onClick: handleBack },
             { label: 'Next', onClick: handleNext }
         ]} />
-    </Box>
+    </>
   )
 }

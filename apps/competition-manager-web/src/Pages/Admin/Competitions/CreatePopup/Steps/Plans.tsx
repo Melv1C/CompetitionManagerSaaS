@@ -37,7 +37,7 @@ export const Plans: React.FC<PlansProps> = ({
     ]
 
     return (
-        <Box>
+        <>
             <Box
                 sx={{
                     display: 'flex',
@@ -64,7 +64,7 @@ export const Plans: React.FC<PlansProps> = ({
                     { label: 'Next', onClick: handleNext, disabled: !plan }
                 ]}
             />
-        </Box>
+        </>
     )
 }
 
