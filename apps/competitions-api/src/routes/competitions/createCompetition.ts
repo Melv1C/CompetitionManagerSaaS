@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
-import { BaseCompetitionWithRelationId$ ,BaseCompetition$, ACCESS } from '@competition-manager/schemas';
+import { BaseCompetitionWithRelationId$, ACCESS } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -11,14 +11,11 @@ router.post(
     checkRole('club'),
     async (req: AuthenticatedRequest, res) => {
         // TODO: stripe
-
-        const { paymentPlanId, optionsId, ...competitionData } = BaseCompetitionWithRelationId$.parse(req.body);
-        const competition = BaseCompetition$.parse(competitionData );
-        const user = req.user;
+        const { paymentPlanId, optionsId, ...competition } = BaseCompetitionWithRelationId$.parse(req.body);
         const newCompetition = await prisma.competition.create({
             data: {
                 ...competition,
-                email: user!.email,
+                email: req.user!.email,
                 paymentPlan: {
                     connect: {
                         id: paymentPlanId
@@ -32,7 +29,7 @@ router.post(
                         access: [ACCESS.OWNER],
                         user: {
                             connect: {
-                                id: user!.id
+                                id: req.user!.id
                             }
                         }
                     }
