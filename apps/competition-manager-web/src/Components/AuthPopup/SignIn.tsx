@@ -5,7 +5,7 @@ import { UserEmail$, UserPassword$ } from "@competition-manager/schemas";
 import { Alert, Box, Button, Divider, Link, Typography } from "@mui/material";
 
 import { useUserToken } from "../../GlobalsStates/userToken";
-import { login } from "../../utils/requests";
+import { login } from "../../api";
 
 import { TextFieldWithSchema as Field } from "../../Components/TextFieldWithSchema";
 import { decodeToken } from "../../utils/decodeToken";

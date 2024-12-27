@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getRefreshToken } from '../api';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -6,6 +7,10 @@ let accessToken: string | null = null;
 
 // Create an Axios instance
 export const api = axios.create({
+    baseURL: BASE_URL
+});
+
+export const apiWithCredentials = axios.create({
     baseURL: BASE_URL,
     withCredentials: true, // Include cookies in requests
 });
@@ -33,13 +38,13 @@ api.interceptors.response.use(
     
             try {
                 // Call refresh token endpoint to get a new access token
-                const { data } = await axios.post(`${BASE_URL}/users/refresh-token`, {}, { withCredentials: true });
+                const token = await getRefreshToken();
                 
                 // Update the access token in memory
-                accessToken = data.accessToken;
+                accessToken = token;
         
                 // Retry the original request with the new access token
-                originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
+                originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
                 return api(originalRequest);
             } catch (refreshError) {
                 console.error('Token refresh failed:', refreshError);
