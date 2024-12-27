@@ -1,3 +1,4 @@
+import { Role } from "@competition-manager/schemas";
 import { useUserToken } from "../GlobalsStates";
 
 export const useRoles = () => {
@@ -7,11 +8,11 @@ export const useRoles = () => {
 
     const isLogged = userToken !== null && userToken !== 'NOT_LOGGED';
 
-    const isSuperAdmin = isLogged && userToken.role === 'superadmin';
+    const isSuperAdmin = isLogged && userToken.role === Role.SUPERADMIN;
 
-    const isClub = isSuperAdmin || (isLogged && userToken.role === 'club');
+    const isClub = isSuperAdmin || (isLogged && userToken.role === Role.CLUB);
 
-    const isAdmin = isClub || (isLogged && userToken.role === 'admin');
+    const isAdmin = isClub || (isLogged && userToken.role === Role.ADMIN);
 
     return {
         isNotLogged,
