@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest } from '@competition-manager/utils';
+import { Key, parseRequest } from '@competition-manager/utils';
 import { Eid$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 
@@ -12,7 +12,7 @@ const Params$ = z.object({
 
 router.get(
     '/:competitionEid',
-    parseRequest('params', Params$),
+    parseRequest(Key.Params, Params$),
     async (req, res) => {
         const { competitionEid } = Params$.parse(req.params);
         const competition = await prisma.competition.findUnique({

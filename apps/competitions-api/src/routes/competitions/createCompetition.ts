@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, AuthenticatedRequest, checkRole } from '@competition-manager/utils';
+import { parseRequest, AuthenticatedRequest, checkRole, Key } from '@competition-manager/utils';
 import { Access, BaseCompetitionWithRelationId$, Role } from '@competition-manager/schemas';
 
 export const router = Router();
 
 router.post(
     '/',
-    parseRequest('body', BaseCompetitionWithRelationId$),
+    parseRequest(Key.Body, BaseCompetitionWithRelationId$),
     checkRole(Role.CLUB),
     async (req: AuthenticatedRequest, res) => {
         // TODO: stripe

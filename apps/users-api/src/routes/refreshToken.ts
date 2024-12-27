@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key } from '@competition-manager/utils';
 
 export const router = Router();
 
@@ -10,7 +10,7 @@ const Cookies$ = z.object({
 
 router.get(
     '/refresh-token',
-    parseRequest('cookies', Cookies$),
+    parseRequest(Key.Cookies, Cookies$),
     async (req, res) => {
         const { refreshToken } = Cookies$.parse(req.cookies);
         const tokenData = verifyRefreshToken(refreshToken);

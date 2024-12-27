@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole } from '@competition-manager/utils';
+import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/utils';
 import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
@@ -26,9 +26,9 @@ const Body$ = z.array(BaseInscriptionWithRelationId$);
 
 router.post(
     '/:eid/inscriptions',
-    parseRequest('params', Params$),
-    parseRequest('body', Body$),
-    parseRequest('query', Query$),
+    parseRequest(Key.Params, Params$),
+    parseRequest(Key.Body, Body$),
+    parseRequest(Key.Query, Query$),
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try {
