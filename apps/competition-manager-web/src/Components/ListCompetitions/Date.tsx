@@ -34,7 +34,6 @@ export const Date: React.FC<DateProps> = ({ date }) => {
                     fontWeight: 'bold',
                     width: '3rem',
                     textAlign: 'center',
-                    //color: 'primary.main',
                     backgroundColor: 'white',
                     borderRadius: '0 0 8px 8px',
                 }}
