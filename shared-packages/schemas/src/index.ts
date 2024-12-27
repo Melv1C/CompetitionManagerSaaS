@@ -1,3 +1,5 @@
+export * from './Base';
+
 export * from './Admin';
 export * from './Athlete';
 export * from './Category';
@@ -12,6 +14,4 @@ export * from './Token/TokenData';
 export * from './Token/EncodeToken';
 export * from './User';
 export * from './UserPreferences';
-export * from './Eid';
-export * from './Id';
 export * from './Inscription';

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole } from '@competition-manager/utils';
-import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, Athlete, Athlete$, ACCESS } from '@competition-manager/schemas';
+import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
@@ -34,7 +34,7 @@ router.post(
     parseRequest('params', Params$),
     parseRequest('body', Body$),
     parseRequest('query', Query$),
-    checkRole('user'),
+    checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try {
             //TODO check place 
@@ -61,7 +61,7 @@ router.post(
             if (!admin){
                 //TODO stripe
             }else{
-                if (!checkAdminRole(ACCESS.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
+                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
                     return;
                 }
             }

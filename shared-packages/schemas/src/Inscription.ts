@@ -1,9 +1,5 @@
 import z from 'zod';
-import { Athlete$ } from './Athlete';
-import { Competition$ } from './Competition';
-import { CompetitionEvent$ } from './CompetitionEvent';
-import { Eid$ } from './Eid';
-import { Id$ } from './Id';
+import { Athlete$, Competition$, CompetitionEvent$, Eid$, Id$, License$, Price$ } from '.';
 
 export const Inscription$ = z.object({
     id: Id$,
@@ -11,7 +7,7 @@ export const Inscription$ = z.object({
     athlete: Athlete$,
     Competition: Competition$,
     CompetitionEvent$: CompetitionEvent$,
-    paid: z.number().default(0),
+    paid: Price$.default(0),
     confirmed: z.boolean().default(false)
 });
 export type Inscription = z.infer<typeof Inscription$>;
@@ -24,5 +20,5 @@ export type BaseInscription = z.infer<typeof BaseInscription$>;
 
 export const BaseInscriptionWithRelationId$ = BaseInscription$.extend({
     competitionEventEid: Eid$,
-    athleteLicense: z.number().min(1)
+    athleteLicense: License$
 });

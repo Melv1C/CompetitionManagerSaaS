@@ -1,7 +1,7 @@
 import z from 'zod';
-import { User$ } from './User';
+import { Id$, User$ } from '.';
 
-export enum ACCESS {
+export enum Access {
     OWNER = 'owner',
     INSCRIPTIONS = 'inscriptions',
     COMPETITIONS = 'competitions',
@@ -10,11 +10,11 @@ export enum ACCESS {
 }
 
 export const Admin$ = z.object({
-    id: z.number().positive(),
+    id: Id$,
     user: User$,
     userId: z.number().positive(),
     competitionId: z.number().positive(),
-    access: z.array(z.nativeEnum(ACCESS))
+    access: z.array(z.nativeEnum(Access))
 });
 export type Admin = z.infer<typeof Admin$>;
 

@@ -1,21 +1,26 @@
 import { z } from 'zod';
+import { Id$ } from './Base';
 
-export const THEME = ['light', 'dark'] as const;
-export type Theme = typeof THEME[number];
+export enum Theme {
+    LIGHT = 'light',
+    DARK = 'dark',
+}
 
-export const LANGUAGE = ['fr', 'en', 'nl'] as const;
-export type Language = typeof LANGUAGE[number];
+export enum Language {
+    FR = 'fr',
+    EN = 'en',
+    NL = 'nl',
+}
 
 export const USER_PREFERENCES_DEFAULTS = {
-    theme: 'light',
-    language: 'fr'
+    theme: Theme.LIGHT,
+    language: Language.FR,
 };
 
-
 export const UserPreferences$ = z.object({
-    id: z.number().positive(),
+    id: Id$,
     userId: z.number().positive(),
-    theme: z.enum(THEME),
-    language: z.enum(LANGUAGE),
+    theme: z.nativeEnum(Theme),
+    language: z.nativeEnum(Language),
 });
 

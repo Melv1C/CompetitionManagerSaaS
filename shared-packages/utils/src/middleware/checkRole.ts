@@ -1,10 +1,10 @@
 import { Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../jwtToken';
 import { AuthenticatedRequest, UserFromToken } from './authenticatedRequest';
-import { ROLE, Role } from '@competition-manager/schemas';
+import { Role, RoleLevel } from '@competition-manager/schemas';
 
 const isAuthorized = (user: UserFromToken, levelRequire: Role) => {
-    return ROLE.indexOf(user.role) >= ROLE.indexOf(levelRequire);
+    return RoleLevel[user.role] >= RoleLevel[levelRequire];
 }
 
 export const checkRole = (levelRequire: Role) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {

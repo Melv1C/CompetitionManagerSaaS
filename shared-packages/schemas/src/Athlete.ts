@@ -1,21 +1,21 @@
 import { z } from 'zod';
-import { Gender$ } from './Gender';
+import { Date$, Gender$, Id$, License$, Name$ } from '.';
 
 const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));
 
 export type Json = z.infer<typeof Json$>;
 
 export const Athlete$ = z.object({
-    id: z.number().positive(),
-    license: z.number().min(1),
-    firstName: z.string(),
-    lastName: z.string(),
+    id: Id$,
+    license: License$,
+    firstName: Name$,
+    lastName: Name$,
     bib: z.number().positive(),
     gender: Gender$,
-    birthdate: z.coerce.date().min(new Date('1900-01-01')),
+    birthdate: Date$,
     club: z.string().nullable().default(null),
     metadata: Json$.default({}),
-    competitionId: z.number().positive().nullable().default(null),
+    competitionId: Id$.optional(),
 });
 export type Athlete = z.infer<typeof Athlete$>;
 
