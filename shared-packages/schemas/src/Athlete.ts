@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Date$, Gender$, Id$, License$, Name$ } from '.';
+import { Club$, Date$, Gender$, Id$, License$, Name$ } from '.';
 
 // unuse but keep if needed
 const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));
