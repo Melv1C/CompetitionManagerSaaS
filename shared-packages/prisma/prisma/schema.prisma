@@ -51,7 +51,8 @@ model Athlete {
     bib           Int
     gender        String
     birthdate     DateTime
-    club          String?       //change to the club model
+    club          Club         @relation(fields: [clubId], references: [id])
+    clubId        Int          @map("club_id")
     metadata      Json         @default("{}")
     competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int?         @map("competition_id")
@@ -189,8 +190,13 @@ model PaymentPlan {
 model Club {
     id               Int         @id @default(autoincrement())
     name             String
-    abbr             String
-    address          String
+    abbr             String      @unique
+    address          String?
+    province         String?
+    country          String
+    fedNumber        Int?        @map("fed_number")
+    fedAbbr          String?     @map("fed_abbr")
+    athletes         Athlete[]
     competition      Competition[]
 
     @@map("clubs")

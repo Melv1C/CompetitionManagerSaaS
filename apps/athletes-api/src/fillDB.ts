@@ -1,13 +1,49 @@
 import axios from 'axios';
 import 'dotenv/config'
-import { Athlete$ } from '@competition-manager/schemas';
+import { BaseAthleteWithClubAbbr$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
-import { z } from 'zod';
 import devData from './data.json';
+import foreignClubData from './foreignClub.json';
 
-const AthleteWithoutId$ = Athlete$.omit({ id: true, competitionId: true });
-type AthleteWithoutId = z.infer<typeof AthleteWithoutId$>;
+const createForeignClub = async () => {
+    for (const clubData of foreignClubData) {
+        const club = await prisma.club.findUnique({
+            where: {
+                abbr: clubData.abbr
+            }
+        });
+        if (!club) {
+            await prisma.club.create({
+                data: clubData
+            });
+        }
+    }
+}
+createForeignClub();
 
+
+const createClub = async (clubAbbr: string) => {
+    const club = await prisma.club.findUnique({
+        where: {
+            abbr: clubAbbr
+        }
+    });
+    if (club) {
+        return club;
+    }
+    const { data } = await axios.get(`https://www.beathletics.be/api/club/${clubAbbr}`);
+    return await prisma.club.create({
+        data: {
+            name: data.name,
+            abbr: data.abbr,
+            address: data.areaServed,
+            province: data.province,
+            fedNumber: data.fedNumber,
+            country: data.federation.country,
+            fedAbbr: data.federation.abbr
+        }
+    });
+}
 
 const addNewAthletes = async () => {
 
@@ -17,7 +53,7 @@ const addNewAthletes = async () => {
         }
     });
 
-    let newAthletes: AthleteWithoutId[] = [];
+    let newAthletes = 0;
 
     const { data } = await axios.get('http://www.faisdelathle.be/extranet/exchange/AM_data/athletes_lrba.csv', {
         headers: {
@@ -36,32 +72,36 @@ const addNewAthletes = async () => {
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].split('\t');
         if (parseInt(line[0]) > 10000) {
-            console.log(line[6]);
-            const athlete: AthleteWithoutId = AthleteWithoutId$.parse({
+            const athleteData = BaseAthleteWithClubAbbr$.parse({
                 license: line[0],
                 bib: parseInt(line[1]),
                 firstName: line[3],
                 lastName: line[4],
                 gender: line[5],
                 birthdate: line[6],
-                club: line[9]
+                clubAbbr: line[9]
             });
-            const found = athletes.find(a => a.license === athlete.license);
-            if (!found) {
+            const { clubAbbr, ...athlete } = BaseAthleteWithClubAbbr$.parse(athleteData);
+            const club = await createClub(clubAbbr) // get or create if not exist
+            if (!athletes.find(a => a.license === athlete.license)) {
                 await prisma.athlete.create({
-                    data: athlete
+                    data: {
+                        ...athlete,
+                        club: {
+                            connect: {
+                                abbr: club.abbr
+                            }
+                        }
+                    }
                 });
-                newAthletes.push(athlete);
-            }
-            if (newAthletes.length >= 100) {
-                break;
+                newAthletes ++;
             }
         }
     }
-    if (newAthletes.length === 0) {
+    if (newAthletes === 0) {
         console.log('No new athletes');
     } else {
-        console.log('New athletes:', newAthletes.length);
+        console.log('New athletes:', newAthletes);
     }
 }
 
@@ -77,15 +117,23 @@ export const initDb = async () =>{
 
 export const initDbDev = async () => {
     for (const athleteData of devData) {
-        const athlete: AthleteWithoutId = AthleteWithoutId$.parse(athleteData);
-        const found = await prisma.athlete.findFirst({
+        const { clubAbbr, ...athlete } = BaseAthleteWithClubAbbr$.parse(athleteData);
+        const club = await createClub(clubAbbr);
+        const athleteInDB = await prisma.athlete.findFirst({
             where: {
                 license: athlete.license
             }
         });
-        if (!found) {
+        if (!athleteInDB) {
             await prisma.athlete.create({
-                data: athlete
+                data: {
+                    ...athlete,
+                    club: {
+                        connect: {
+                            id: club.id
+                        }
+                    }
+                }
             });
         }
     }
