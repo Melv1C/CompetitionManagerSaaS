@@ -48,7 +48,6 @@ export const Options = ({
 
             }}
         >
-
             {OPTIONS.map(({ name, description, price }) => (
                 <Card
                     key={name}
@@ -75,14 +74,14 @@ export const Options = ({
                         >
                             <Checkbox checked={options.includes(name)} />
                             <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                <Typography variant="subtitle1" color="primary">
+                                <Typography variant="subtitle1">
                                     {name}
                                 </Typography>
-                                <Typography variant="body2" color="secondary">
+                                <Typography variant="body2" color="textSecondary">
                                     {description}
                                     </Typography>
                             </Box>
-                            <Typography variant="h5" color="primary" sx={{ marginRight: '1rem' }}>
+                            <Typography variant="h6" color="secondary" sx={{ marginRight: '1rem' }}>
                                 {price}€
                             </Typography>
                         </Box>
