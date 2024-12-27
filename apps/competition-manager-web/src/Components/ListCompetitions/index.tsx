@@ -1,13 +1,14 @@
 import { Box, Typography } from '@mui/material'
 import { Item } from './Item'
-import { Competition } from '../../type'
+import { DisplayCompetition } from '@competition-manager/schemas'
 
 type ListProps = {
     isPast: boolean
-    competitions: Competition[]
+    competitions: DisplayCompetition[]
+    link?: string
 }
 
-export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) => {
+export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, link = '/competitions' }) => {
 
     const sortedCompetitions = competitions.sort((a, b) => {
         if (!isPast) {
@@ -20,6 +21,23 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) 
     const years = [
         ...new Set(sortedCompetitions.map(competition => competition.date.getFullYear()))
     ];
+
+    if (competitions.length === 0) {
+        return (
+            <Box 
+                sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    height: '100vh',
+                }}
+            >
+                <Typography>
+                    No competitions
+                </Typography>
+            </Box>
+        )
+    }
 
     return (
         <Box 
@@ -47,7 +65,7 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions }) 
                         </Typography>
                     </Box>
                     {sortedCompetitions.filter(competition => competition.date.getFullYear() === year).map(competition => (
-                        <Item key={competition.id} competition={competition} />
+                        <Item key={competition.eid} competition={competition} link={link} />
                     ))}
                 </Box>
             ))}

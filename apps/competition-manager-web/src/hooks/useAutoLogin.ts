@@ -1,16 +1,15 @@
 import { useEffect } from "react";
 
 import { useUserToken } from "../GlobalsStates";
-import { api } from "../utils/api";
 import { decodeToken } from "../utils/decodeToken";
 
 import { env } from "../env";
+import { getRefreshToken } from "../api";
 
 export const useAutoLogin = () => {
     const [, setUserToken] = useUserToken();
 
     useEffect(() => {
-
         if (env.VITE_NODE_ENV === 'local') {
             setUserToken(decodeToken(env.VITE_LOCAL_ACCESS_TOKEN!));
             return;
@@ -18,8 +17,7 @@ export const useAutoLogin = () => {
 
         const fetchUserToken = async () => {
             try {
-                const { data } = await api.get('/users/refresh-token', { withCredentials: true });
-                setUserToken(decodeToken(data));
+                setUserToken(decodeToken(await getRefreshToken()));
             } catch (error) {
                 setUserToken('NOT_LOGGED');
             }

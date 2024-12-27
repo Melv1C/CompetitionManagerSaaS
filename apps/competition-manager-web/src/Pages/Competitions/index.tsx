@@ -1,25 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from "react-query";
 import { getCompetitions } from '../../api';
 import { ListCompetitions, Loading } from '../../Components';
-import { Competition } from '../../type';
 import { MaxWidth } from '../../Components/MaxWidth';
 
 
 const Competitions: React.FC = () => {
-    const [competitions, setCompetitions] = useState<Competition[]>([]);
+    const { data: competitions, isLoading } = useQuery('competitions', () => getCompetitions());
 
-    useEffect(() => {
-        const fetchCompetitions = async () => {
-            const competitions = await getCompetitions();
-            setCompetitions(competitions);
-        }
+    if (isLoading) return <Loading />;
 
-        fetchCompetitions();
-    }, []);
+    if (!competitions) throw new Error('No competitions found');
 
     return (
         <MaxWidth>
-            {competitions.length === 0 && <Loading />}
             <ListCompetitions competitions={competitions} isPast={false} />
         </MaxWidth>
     );

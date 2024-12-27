@@ -1,19 +1,20 @@
-import { Box, Card, CardActionArea, CardContent, Chip, Typography } from '@mui/material'
+import { Box, Card, CardActionArea, CardContent, Typography } from '@mui/material'
 import { Date } from './Date'
-import { Competition } from '../../type'
 import { useNavigate } from 'react-router-dom'
+import { DisplayCompetition } from '@competition-manager/schemas';
 
 type ItemProps = {
-    competition: Competition;
+    competition: DisplayCompetition;
+    link: string;
 }
 
-export const Item: React.FC<ItemProps> = ({ competition }) => {
+export const Item: React.FC<ItemProps> = ({ competition, link }) => {
     const navigate = useNavigate();
 
     return (
         <Card>
             <CardActionArea onClick={() => {
-                navigate(`/admin/competitions/${competition.id}`);
+                navigate(`${link}/${competition.eid}`);
             }}>
                 <CardContent>
                     <Box
@@ -28,7 +29,7 @@ export const Item: React.FC<ItemProps> = ({ competition }) => {
                             <Typography variant="h6">
                                 {competition.name}
                             </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                 <Chip label={competition.club} sx={{ 
                                     backgroundColor: 'primary.light',
                                     color: '#ffffff' 
@@ -36,7 +37,7 @@ export const Item: React.FC<ItemProps> = ({ competition }) => {
                                 <Typography variant="body1">
                                     {competition.address}
                                 </Typography>
-                            </Box>
+                            </Box> */}
                         </Box>
                     </Box>
                 </CardContent>
