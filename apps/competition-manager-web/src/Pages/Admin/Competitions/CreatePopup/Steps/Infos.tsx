@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormLabel, Switch } from "@mui/material"
+import { Box, FormControl, FormLabel, Switch } from "@mui/material"
 import { DatePicker } from '@mui/x-date-pickers';
 import { StepProps } from ".."
 import { useState } from "react";
@@ -25,8 +25,10 @@ export const Infos: React.FC<InfosProps> = ({
     setEndDate
 }) => {
 
-    const [isMultiDay, setIsMultiDay] = useState(false)
-    const [isNameValid, setIsNameValid] = useState(false)
+    const [isMultiDay, setIsMultiDay] = useState(endDate ? true : false)
+    const [isNameValid, setIsNameValid] = useState(Competition$.shape.name.safeParse(name).success)
+    const [isStartDateValid, setIsStartDateValid] = useState(true)
+    const [isEndDateValid, setIsEndDateValid] = useState(true)
 
     return (
         <Box
@@ -67,6 +69,7 @@ export const Infos: React.FC<InfosProps> = ({
                         label={isMultiDay ? 'Start Date' : 'Date'}
                         value={startDate}
                         onChange={(date) => setStartDate(date)}
+                        onError={(error) => setIsStartDateValid(!error)}
                         format="dd/MM/yyyy"
                         disablePast
                         slotProps={{ textField: { required: true } }}
@@ -81,7 +84,11 @@ export const Infos: React.FC<InfosProps> = ({
                         </FormLabel>
                         <Switch
                             checked={isMultiDay}
-                            onChange={() => setIsMultiDay(prev => !prev)}
+                            onChange={() => {
+                                setIsMultiDay(prev => !prev)
+                                setEndDate(null)
+                                setIsEndDateValid(true)
+                            }}
                             sx={{ alignSelf: 'center' }}
                         />
                     </FormControl>
@@ -91,29 +98,26 @@ export const Infos: React.FC<InfosProps> = ({
                             label="End Date"
                             value={endDate}
                             onChange={(date) => setEndDate(date)}
+                            onError={(error) => setIsEndDateValid(!error)}
                             format="dd/MM/yyyy"
                             disablePast
-                            minDate={startDate || undefined}
+                            minDate={startDate ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) : undefined}
                             slotProps={{ textField: { required: true } }}
                         />
                     }
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: '1rem', mt: 4 }}>
-                <Button
-                    variant="contained"
-                    onClick={handleBack}
-                >
-                    Back
-                </Button>
-                <Button
-                    variant="contained"
-                    type="submit"
-                >
-                    Next
-                </Button>
-            </Box>
+            <Buttons 
+                buttons={[
+                    { label: 'Back', onClick: handleBack },
+                    { 
+                        label: 'Next',
+                        onClick: handleNext, 
+                        disabled: !isNameValid || !startDate || !isStartDateValid || (isMultiDay && !endDate || !isEndDateValid)
+                    }
+                ]}
+            />
         </Box>
     )
 }
