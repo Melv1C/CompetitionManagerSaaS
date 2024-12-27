@@ -1,5 +1,6 @@
 import z from 'zod';
-import { Id$, User$ } from '.';
+import { Id$ } from './Base';
+import { User$ } from './User';
 
 export enum Access {
     OWNER = 'owner',

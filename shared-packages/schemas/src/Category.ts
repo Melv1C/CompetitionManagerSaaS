@@ -1,5 +1,6 @@
 import z from 'zod';
-import { Abbr$, Gender$, Id$, Name$ } from '.';
+import { Abbr$, Id$, Name$ } from './Base';
+import { Gender$ } from './Gender';
 
 enum SimpleCategory {
     BEN = 'BEN',

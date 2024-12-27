@@ -1,5 +1,7 @@
 import { z } from 'zod';
-import { Category$, Event$, Id$, Name$, Price$ } from '.';
+import { Id$, Name$, Price$ } from './Base';
+import { Category$ } from './Category';
+import { Event$ } from './Event';
 
 export const CompetitionEvent$ = z.object({
     id: Id$,
