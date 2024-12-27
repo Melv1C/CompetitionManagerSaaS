@@ -7,7 +7,7 @@ import { AuthenticatedRequest, checkRole, Key, parseRequest } from '@competition
 export const router = Router();
 
 const Params$ = z.object({
-    isAdmin: z.boolean().optional(),
+    isAdmin: z.boolean().default(false),
 });
 
 router.get(
