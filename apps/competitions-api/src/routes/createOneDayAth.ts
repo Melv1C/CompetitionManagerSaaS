@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
+import 'dotenv/config';
 import { z } from 'zod';
 import { parseRequest, checkRole, AuthenticatedRequest } from '@competition-manager/utils';
 import { Eid$, OneDayAthlete$, ONE_DAY_BIB } from '@competition-manager/schemas';
+import { env } from 'process';
 
 export const router = Router();
 
@@ -66,19 +68,19 @@ router.post(
                 });
                 setTimeout(async () => {
                     //check if ath have inscriptions else delete it
-                    const inscriptions = await prisma.inscription.findMany({
+                    const inscriptions = await prisma.inscription.findFirst({
                         where: {
                             athleteId: newOneDayAth.id
                         }
                     });
-                    if(inscriptions.length === 0){
+                    if(inscriptions){
                         await prisma.athlete.delete({
                             where: {
                                 id: newOneDayAth.id
                             }
                         });
                     }
-                }, 24*60*60*1000);
+                }, Number(env.OneDayExpirationTime) || 24*60*60*1000);
                 res.send(newOneDayAth);
             } catch(e: any) {
                 if (e.code === 'P2025') {
