@@ -1,4 +1,4 @@
-import { Box, Modal, Step, StepContent, StepLabel, Stepper, Typography } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper, Typography } from "@mui/material"
 import { CloseButton } from "../../../../Components"
 import { Plans } from "./Steps/Plans"
 import { Options } from "./Steps/Options"
@@ -63,54 +63,40 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
         },
     ]
 
-
     useEffect(() => {
         const elem = activeStep === 0 ? document.getElementById('create-competition-title') : document.getElementById(`step-${activeStep}`)
         elem?.scrollIntoView({ behavior: 'smooth', block: activeStep === 0 ? 'center' : 'start' })
     }, [activeStep])
 
     return (
-        <Modal
+        <Dialog
             open={isVisible}
             onClose={onClose}
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            fullWidth
         >
-            <Box 
-                sx={{ 
-                    position: 'relative',
-                    width: '90%', 
-                    maxWidth: '800px',
-                    height: '90%',
-                    overflow: 'auto',
-                    bgcolor: 'background.paper', 
-                    boxShadow: 24, 
-                    borderRadius: '8px'
-                }}
-            >
-                <Box sx={{ p: 4 }}>
-                    <CloseButton onClose={onClose} />
-
-                    <Typography variant="h4" align="center" color="primary" gutterBottom id="create-competition-title">
-                        Create Competition
-                    </Typography>
-
-                    <Stepper activeStep={activeStep} orientation="vertical">
-                        {steps.map((step, index) => (
-                            <Step key={index}>
-                                <StepLabel id={`step-${index}`}>
-                                    {step.label}
-                                </StepLabel>
-                                <StepContent>
-                                    <Box sx={{ mt: 2 }}>
-                                        {step.content}
-                                    </Box>
-                                </StepContent>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box>
-            </Box>
-        </Modal>
+            <DialogTitle style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h5" align="center">
+                    Create Competition
+                </Typography>
+                <CloseButton onClose={onClose} />
+            </DialogTitle>
+            <DialogContent>
+                <Stepper activeStep={activeStep} orientation="vertical">
+                    {steps.map((step, index) => (
+                        <Step key={index}>
+                            <StepLabel id={`step-${index}`}>
+                                {step.label}
+                            </StepLabel>
+                            <StepContent>
+                                <Box sx={{ mt: 2 }}>
+                                    {step.content}
+                                </Box>
+                            </StepContent>
+                        </Step>
+                    ))}
+                </Stepper>
+            </DialogContent>
+        </Dialog>
     )
 }
 
