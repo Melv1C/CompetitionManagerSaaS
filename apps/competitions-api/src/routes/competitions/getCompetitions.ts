@@ -16,7 +16,6 @@ router.get(
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try {
-            let competitions;
             if (req.params.isAdmin) {
                 const admins = await prisma.admin.findMany({
                     where: {
@@ -26,20 +25,22 @@ router.get(
                         competitionId: true,
                     },
                 });
-                competitions = await prisma.competition.findMany({
+                const competitions = await prisma.competition.findMany({
                     where: {
                         id: {
                             in: admins.map((a) => a.competitionId),
                         },
                     },
                 });
-            }else{
-                competitions = await prisma.competition.findMany({
-                    where: {
-                        publish: true,
-                    },
-                });
+                res.send(DisplayCompetition$.array().parse(competitions));
+                return;
             }
+            
+            const competitions = await prisma.competition.findMany({
+                where: {
+                    publish: true,
+                },
+            });
             res.send(DisplayCompetition$.array().parse(competitions));
         }catch (e) {
             console.error(e);
