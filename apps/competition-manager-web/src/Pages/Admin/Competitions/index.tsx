@@ -2,14 +2,16 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Tabs, Tab } from "@mui/material";
 import { ListCompetitions, Loading } from "../../../Components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRoles } from "../../../hooks";
-import { getCompetitionsAdmin } from "../../../api";
-import { Competition } from "../../../type";
 import { CreatePopup } from "./CreatePopup";
 import { MaxWidth } from "../../../Components/MaxWidth";
+import { getCompetitions } from "../../../api";
+import { useQuery } from "react-query";
 
 export const AdminCompetitions = () => {
+
+	const { data: competitions, isLoading } = useQuery('admin-competitions', () => getCompetitions({ isAdmin: true }))
 
 	const { isClub } = useRoles();
 
@@ -18,20 +20,12 @@ export const AdminCompetitions = () => {
 		{ label: 'Passées' },
 	]
 
-	const [competitions, setCompetitions] = useState<Competition[]>([]);
-
 	const [activeTab, setActiveTab] = useState(0);
 
 	const [isCreatePopupVisible, setIsCreatePopupVisible] = useState(false);
 
-	useEffect(() => {
-		const fetchCompetitions = async () => {
-			const competitions = await getCompetitionsAdmin();
-			setCompetitions(competitions);
-		}
-
-		fetchCompetitions();
-	}, []);
+	if (isLoading) return <Loading />;
+	if (!competitions) throw new Error('No competitions found');
 
 	return (
 		<MaxWidth>
@@ -40,8 +34,6 @@ export const AdminCompetitions = () => {
 					<Tab key={index} label={item.label} />
 				))}
 			</Tabs>
-
-			{competitions.length === 0 && <Loading />}
 
 			<ListCompetitions 
 				competitions={
