@@ -3,7 +3,7 @@ import { CompetitionEvent$ } from './CompetitionEvent';
 import { Admin$ } from './Admin';
 import { Club$ } from './Club';
 import { Option$, PaymentPlan$ } from './PaymentPlan';
-
+import { Id$ } from './Id';
 
 export enum PAYMENT_METHOD {
     FREE = 'free',
@@ -18,7 +18,7 @@ export enum ONE_DAY_PERMISSION {
 }
 
 export const Competition$ = z.object({
-    id: z.number().positive(),
+    id: Id$,
     eid: z.string().min(1),
 
     // Basic info
@@ -60,8 +60,8 @@ export const BaseCompetition$ = Competition$.pick({
 export type BaseCompetition = z.infer<typeof BaseCompetition$>;
 
 export const BaseCompetitionWithRelationId$ = BaseCompetition$.extend({
-    paymentPlanId: z.number(),
-    optionsId: z.array(z.number()).default([]),
+    paymentPlanId: Id$,
+    optionsId: z.array(Id$).default([]),
 });
 export type BaseCompetitionWithRelationId = z.infer<typeof BaseCompetitionWithRelationId$>;
 
