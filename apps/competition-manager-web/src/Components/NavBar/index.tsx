@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { AppBar, Box, Button, IconButton, Toolbar, useMediaQuery } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, IconDefinition, faRightToBracket, faUserGear } from "@fortawesome/free-solid-svg-icons";
+import { faBars, IconDefinition, faRightToBracket, faUserGear, faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
 
 import { useUserToken } from "../../GlobalsStates/userToken";
 
@@ -30,7 +30,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
     const [userToken] = useUserToken();
-    const { isAdmin, isLogged, isNotLogged } = useRoles();
+    const { isAdmin, isLogged, isNotLogged, isSuperAdmin } = useRoles();
 
     useEffect(() => {
         setIsAuthPopupVisible(false);
@@ -86,6 +86,23 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                             </>
                         )}  
                     </Box>
+
+                    {/* add link to super admin dashboard */}
+                    {isSuperAdmin && (
+                        <Box>
+                            <Link to="/superadmin">
+                                <IconButton 
+                                    sx={{
+                                        width: '2.5rem',
+                                        height: '2.5rem',
+                                        color: 'white',
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faScrewdriverWrench} style={{ fontSize: '1.25rem' }} />
+                                </IconButton>
+                            </Link>
+                        </Box>
+                    )}
 
                     {/* add link to admin dashboard */}
                     {isAdmin && (
