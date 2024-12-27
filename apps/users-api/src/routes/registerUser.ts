@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, Key } from '@competition-manager/utils';
 import { User$, USER_PREFERENCES_DEFAULTS } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
@@ -15,7 +15,7 @@ const Body$ = z.object({
 
 router.post(
     '/register',
-    parseRequest('body', Body$),
+    parseRequest(Key.Body, Body$),
     async (req, res) => {
         const { email, password } = Body$.parse(req.body);
         const user = await prisma.user.findUnique({

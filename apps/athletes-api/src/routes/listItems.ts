@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest } from '@competition-manager/utils';
+import { Key, parseRequest } from '@competition-manager/utils';
 
 import { Athlete, Athlete$ } from '@competition-manager/schemas';
 
@@ -22,7 +22,7 @@ const Query$ = z.object({
 
 router.get(
     '',
-    parseRequest('query', Query$), 
+    parseRequest(Key.Query, Query$), 
     async (req, res) => {
         const { key } = Query$.parse(req.query);
         const athletes = await prisma.athlete.findMany({

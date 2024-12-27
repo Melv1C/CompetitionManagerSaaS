@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import 'dotenv/config';
-import { parseRequest, isBestResult } from '@competition-manager/utils';
+import { parseRequest, isBestResult, Key } from '@competition-manager/utils';
 import { BeathleticsResult } from '../utils/BeathleticsResult';
 import { getResults } from '../utils/getResult';
 
@@ -18,8 +18,8 @@ const Body$ = z.object({
 
 router.post(
     '/:license/records',
-    parseRequest('params', Param$), 
-    parseRequest('body', Body$), 
+    parseRequest(Key.Params, Param$), 
+    parseRequest(Key.Body, Body$), 
     async (req, res) => {
         const { license } = Param$.parse(req.params);
         const { events, maxYears } = Body$.parse(req.body);

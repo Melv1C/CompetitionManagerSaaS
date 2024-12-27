@@ -2,9 +2,8 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import 'dotenv/config';
 import { z } from 'zod';
-import { parseRequest, checkRole, AuthenticatedRequest } from '@competition-manager/utils';
+import { parseRequest, checkRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
 import { Eid$, OneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
-import { env } from 'process';
 
 export const router = Router();
 
@@ -24,8 +23,8 @@ const Params$ = z.object({
 
 router.post(
     '/:competitionEid/oneDayAthlete',
-    parseRequest('params', Params$),
-    parseRequest('body', OneDayAthlete$),
+    parseRequest(Key.Params, Params$),
+    parseRequest(Key.Body, OneDayAthlete$),
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try{
@@ -80,7 +79,7 @@ router.post(
                             }
                         });
                     }
-                }, Number(env.OneDayExpirationTime) || 24*60*60*1000);
+                }, Number(process.env.OneDayExpirationTime) || 24*60*60*1000);
                 res.send(newOneDayAth);
             } catch(e: any) {
                 if (e.code === 'P2025') {

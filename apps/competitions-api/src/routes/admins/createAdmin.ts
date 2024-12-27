@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
+import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
 import { Access, Competition$, Role } from '@competition-manager/schemas';
 import { BaseAdmin$, BaseAdmins$ } from '@competition-manager/schemas';
 
@@ -12,8 +12,8 @@ const Params$ = Competition$.pick({
 
 router.post(
     '/:eid/admins',
-    parseRequest('body', BaseAdmin$),
-    parseRequest('params', Params$),
+    parseRequest(Key.Body, BaseAdmin$),
+    parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
     async (req: AuthenticatedRequest, res) => {
         try{

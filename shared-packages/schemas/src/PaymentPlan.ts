@@ -13,7 +13,7 @@ export const PaymentPlan$ = z.object({
     id: Id$,
     name: Name$,
     description: z.string(),
-    includedOptions: z.array(Option$),
+    includedOptions: z.array(Option$).default([]),
     price: Price$,
 });
 export type PaymentPlan = z.infer<typeof PaymentPlan$>;
