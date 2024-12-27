@@ -2,10 +2,8 @@ import { Box, Button, FormControl, FormLabel, Switch } from "@mui/material"
 import { DatePicker } from '@mui/x-date-pickers';
 import { StepProps } from ".."
 import { useState } from "react";
-import { z } from "zod";
 import { TextFieldWith$ } from "../../../../../Components/FieldsWithSchema";
-
-const name$ = z.string().min(3).max(50)
+import { Competition$ } from "@competition-manager/schemas";
 
 type InfosProps = StepProps & {
     name: string,
@@ -51,7 +49,7 @@ export const Infos: React.FC<InfosProps> = ({
                     label={{ value: 'Name' }}
                     value={{ value: name, onChange: setName }}
                     validator={{ 
-                        Schema$: name$,
+                        Schema$: Competition$.shape.name,
                         isValid: isNameValid,
                         setIsValid: setIsNameValid 
                     }}
