@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest } from '@competition-manager/utils';
-import { BaseAdmin$, Eid$ } from '@competition-manager/schemas';
+import { ACCESS, BaseAdmin$, Eid$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -34,7 +34,7 @@ router.delete(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole('owner', req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
+            if (!checkAdminRole(ACCESS.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
                 return;
             }
             await prisma.competition.delete({

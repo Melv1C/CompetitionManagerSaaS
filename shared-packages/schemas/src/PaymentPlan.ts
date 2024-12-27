@@ -1,7 +1,8 @@
 import z from 'zod';
+import { Id$ } from './Id';
 
 export const Option$ = z.object({
-    id: z.number().positive(),
+    id: Id$,
     name: z.string(),
     description: z.string(),
     price: z.number().positive(),
@@ -9,7 +10,7 @@ export const Option$ = z.object({
 export type Option = z.infer<typeof Option$>;
 
 export const PaymentPlan$ = z.object({
-    id: z.number().positive(),
+    id: Id$,
     name: z.string(),
     description: z.string(),
     includedOptions: z.array(Option$),
