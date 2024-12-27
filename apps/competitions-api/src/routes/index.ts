@@ -1,4 +1,4 @@
-import { router as getAllBasicInfoRouter} from './competitions/getAllBasicInfo';
+import { router as getAllBasicInfoRouter} from './competitions/getCompetitions';
 import { router as getCompetitionByEidRouter} from './competitions/getCompetitionByEid';
 import { router as createCompetitionRouter} from './competitions/createCompetition';
 import { router as deleteCompetitionRouter} from './competitions/deleteCompetition';
