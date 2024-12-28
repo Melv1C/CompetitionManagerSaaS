@@ -27,6 +27,7 @@ export type CreatePaymentPlan = z.infer<typeof CreatePaymentPlan$>;
 export const UpdatePaymentPlan$ = CreatePaymentPlan$.extend({
     includedOptionsIds: z.array(Id$),
 });
+export type UpdatePaymentPlan = z.infer<typeof UpdatePaymentPlan$>;
 
 
 
