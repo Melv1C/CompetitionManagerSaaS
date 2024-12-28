@@ -7,6 +7,7 @@ export const setUserIfExist = () => (req: AuthenticatedRequest, res: Response, n
     try{
         const accessToken = req.headers.authorization?.split(' ')[1];
         if (!accessToken) {
+            next();
             return;
         }
         const user = verifyAccessToken(accessToken);
