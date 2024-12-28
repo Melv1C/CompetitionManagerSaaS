@@ -2,21 +2,21 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { DisplayCompetition$, Role } from '@competition-manager/schemas';
 import { z } from 'zod';
-import { AuthenticatedRequest, checkRole, Key, parseRequest } from '@competition-manager/utils';
+import { AuthenticatedRequest, isAuthorized, Key, parseRequest, setUserIfExist } from '@competition-manager/utils';
 
 export const router = Router();
 
-const Params$ = z.object({
+const Query$ = z.object({
     isAdmin: z.boolean().default(false),
 });
 
 router.get(
     '/',
-    parseRequest(Key.Params, Params$),
-    checkRole(Role.USER),
+    parseRequest(Key.Params, Query$),
+    setUserIfExist(),
     async (req: AuthenticatedRequest, res) => {
         try {
-            if (req.params.isAdmin) {
+            if (req.query.isAdmin && req.user! && isAuthorized(req.user, Role.ADMIN)) {
                 const admins = await prisma.admin.findMany({
                     where: {
                         userId: req.user!.id,
