@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { DisplayCompetition$, Role } from '@competition-manager/schemas';
+import { DisplayCompetition$, Role, Date$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { AuthenticatedRequest, isAuthorized, Key, parseRequest, setUserIfExist } from '@competition-manager/utils';
 
@@ -8,6 +8,8 @@ export const router = Router();
 
 const Query$ = z.object({
     isAdmin: z.boolean().default(false),
+    fromDate: Date$.optional(),
+    toDate: Date$.optional(),
 });
 
 router.get(
@@ -16,7 +18,8 @@ router.get(
     setUserIfExist(),
     async (req: AuthenticatedRequest, res) => {
         try {
-            if (req.query.isAdmin && req.user! && isAuthorized(req.user, Role.ADMIN)) {
+            const { isAdmin, toDate, fromDate } = Query$.parse(req.query);
+            if (isAdmin && req.user! && isAuthorized(req.user, Role.ADMIN)) {
                 const admins = await prisma.admin.findMany({
                     where: {
                         userId: req.user!.id,
@@ -30,6 +33,10 @@ router.get(
                         id: {
                             in: admins.map((a) => a.competitionId),
                         },
+                        date: {
+                            gte: fromDate,
+                            lte: toDate,
+                        }
                     },
                 });
                 res.send(DisplayCompetition$.array().parse(competitions));
@@ -39,6 +46,10 @@ router.get(
             const competitions = await prisma.competition.findMany({
                 where: {
                     publish: true,
+                    date: {
+                        gte: fromDate,
+                        lte: toDate,
+                    }
                 },
             });
             res.send(DisplayCompetition$.array().parse(competitions));
