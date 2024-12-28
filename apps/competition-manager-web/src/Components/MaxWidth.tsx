@@ -15,10 +15,10 @@ export const MaxWidth: React.FC<MaxWidthProps> = ({
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%',
+                width: `calc(100% - 2rem)`,
                 maxWidth: maxWidth,
                 margin: 'auto',
+                padding: '1rem'
             }}
         >
             {children}
