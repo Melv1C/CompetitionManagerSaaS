@@ -9,7 +9,7 @@ const isAuthorized = (user: UserFromToken, levelRequire: Role) => {
 }
 
 //if use req[key][needRole] is a boolean to now if the role is required
-export const checkRole = (levelRequire: Role, key: Key = Key.Params, needRole: string = "") => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const checkRole = (levelRequire: Role, key: Key = Key.Query, needRole: string = "") => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (needRole) {
         if (!req[key][needRole]) {
             next();

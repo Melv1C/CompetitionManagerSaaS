@@ -6,17 +6,17 @@ import { AuthenticatedRequest, checkRole, Key, parseRequest } from '@competition
 
 export const router = Router();
 
-const Params$ = z.object({
+const Query$ = z.object({
     isAdmin: z.boolean().default(false),
 });
 
 router.get(
     '/',
-    parseRequest(Key.Params, Params$),
-    checkRole(Role.USER),
+    parseRequest(Key.Params, Query$),
+    checkRole(Role.ADMIN, Key.Query, 'isAdmin'),
     async (req: AuthenticatedRequest, res) => {
         try {
-            if (req.params.isAdmin) {
+            if (req.query.isAdmin) {
                 const admins = await prisma.admin.findMany({
                     where: {
                         userId: req.user!.id,
