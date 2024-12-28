@@ -15,6 +15,7 @@ import Competitions from './Pages/Competitions'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { SuperAdmin } from './Pages/SuperAdmin'
 
 // must be extract in an other file
 const lightTheme = createTheme({
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/account" element={<Account />} />
                 <Route path="/admin/competitions" element={<AdminCompetitions />} />
                 <Route path="/admin/competitions/:id" element={<AdminCompetition />} />
+                <Route path="/superadmin/*" element={<SuperAdmin />} />
                 <Route path="*" element={<h1>Not Found</h1>} />
               </Routes>
           </BrowserRouter>
