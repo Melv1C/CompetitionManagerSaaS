@@ -27,7 +27,7 @@ export type Date = z.infer<typeof Date$>;
 export const FutureDate$ = Date$.min(new Date());
 export type FutureDate = z.infer<typeof FutureDate$>;
 
-export const Price$ = z.number().nonnegative();
+export const Price$ = z.coerce.number().nonnegative();
 export type Price = z.infer<typeof Price$>;
 
 //export const License$ = z.string().min(1, "License must be at least 1 character long").max(20, "License must be at most 20 characters long");
