@@ -14,6 +14,7 @@ jobs:
       athletes-api: ${{ steps.changed-services.outputs.athletes-api }}
       events-api: ${{ steps.changed-services.outputs.events-api }}
       competitions-api: ${{ steps.changed-services.outputs.competitions-api }}
+      offers-api: ${{ steps.changed-services.outputs.offers-api }}
       migrations: ${{ steps.changed-services.outputs.migrations }}
 
     steps:
@@ -47,6 +48,9 @@ jobs:
               - shared-packages/**
             competitions-api:
               - apps/competitions-api/**
+              - shared-packages/**
+            offers-api:
+              - apps/offers-api/**
               - shared-packages/**
 
       - name: Build and Push Migrations
@@ -95,6 +99,15 @@ jobs:
           dockerfile="apps/$app/Dockerfile"
           docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
           docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+      - name: Build and Push Offers API
+        if: steps.changed-services.outputs.offers-api == 'true'
+        run: |
+          app="offers-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+          
 
   deploy-to-staging:
     runs-on: ubuntu-latest
