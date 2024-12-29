@@ -1,40 +1,20 @@
 import { Box, Card, CardActionArea, CardContent, CardHeader, Typography } from "@mui/material"
 import { StepProps } from ".."
 import { Buttons } from "./Buttons"
+import { PaymentPlan } from "@competition-manager/schemas"
 
 type PlansProps = Omit<StepProps, 'handleBack'> & {
-    plan: string
-    setPlan: (plan: string) => void
+    plans: PaymentPlan[]
+    plan: PaymentPlan
+    setPlan: (plan: PaymentPlan) => void
 }
 
 export const Plans: React.FC<PlansProps> = ({
     handleNext,
+    plans,
     plan,
     setPlan
 }) => {
-
-    const plans = [
-        {
-            title: 'Basic Plan',
-            value: 'basic',
-            price: 5,
-            advantages: [
-                'Advantage 1',
-                'Advantage 2',
-                'Advantage 3',
-            ],
-        },
-        {
-            title: 'Premium Plan',
-            value: 'premium',
-            price: 10,
-            advantages: [
-                'Advantage 1',
-                'Advantage 2',
-                'Advantage 3',
-            ],
-        }
-    ]
 
     return (
         <>
@@ -46,14 +26,14 @@ export const Plans: React.FC<PlansProps> = ({
                 }}
             >
 
-                {plans.map(({ title, value, price, advantages }) => (
+                {plans.sort((a, b) => a.price - b.price).map(p => (
                     <Plan 
-                        key={value}
-                        title={title}
-                        isSelected={plan === value}
-                        onSelect={() => setPlan(value)}
-                        price={price}
-                        advantages={advantages}
+                        key={p.id}
+                        title={p.name}
+                        isSelected={plan.id === p.id}
+                        onSelect={() => setPlan(p)}
+                        price={p.price}
+                        description={p.description}
                     />
                 ))}
 
@@ -74,7 +54,7 @@ type PlanProps = {
     isSelected: boolean
     onSelect: () => void
     price: number
-    advantages: string[]
+    description: string
 }
 
 const Plan: React.FC<PlanProps> = ({
@@ -82,7 +62,7 @@ const Plan: React.FC<PlanProps> = ({
     isSelected,
     onSelect,
     price,
-    advantages
+    description
 }) => {
     return (
         <Card 
@@ -95,10 +75,6 @@ const Plan: React.FC<PlanProps> = ({
         >
             <CardActionArea 
                 onClick={onSelect}
-                // remove the hover effect
-                sx={{ 
-
-                }}
             >
                 <CardHeader 
                     title={title} 
@@ -125,16 +101,13 @@ const Plan: React.FC<PlanProps> = ({
                             </Typography>
                         </Box>
                         <Box>
-                            {advantages.map((advantage, index) => (
-                                <Typography key={index} align="center" variant="body2">
-                                    {advantage}
-                                </Typography>
-                            ))}
+                            <Typography variant="body1" align="center" color={isSelected ? 'primary' : 'secondary'}>
+                                {description}
+                            </Typography>
                         </Box>
                     </Box>
                 </CardContent>
             </CardActionArea>
-
         </Card>
     )
 }

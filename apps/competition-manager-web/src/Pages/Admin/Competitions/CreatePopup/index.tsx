@@ -7,6 +7,8 @@ import { Options } from "./Steps/Options"
 import { useEffect, useState } from "react"
 import { Infos } from "./Steps/Infos"
 import { Summary } from "./Steps/Summary"
+import { Option, PaymentPlan } from "@competition-manager/schemas"
+import { getOptions, getPlans } from "../../../../api"
 
 export type StepProps = {
     handleBack: () => void
@@ -30,43 +32,52 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
         setActiveStep((prev) => prev - 1)
     }
 
-    const [dataForm, setDataForm] = useState<{
-        plan: string,
-        options: string[],
-        name: string,
-        startDate: Date | null,
-        endDate: Date | null
-    }>({
-        plan: 'basic',
-        options: [],
-        name: '',
-        startDate: null,
-        endDate: null
-    })
+    const [plans, setPlans] = useState<PaymentPlan[]>([])
+    const [options, setOptions] = useState<Option[]>([])
+
+    const [plan, setPlan] = useState<PaymentPlan>();
+    const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+    const [name, setName] = useState<string>('');
+    const [date, setDate] = useState<Date>();
+    const [closeDate, setCloseDate] = useState<Date>();
 
     const steps = [
         {
             label: 'Choose Plan',
-            content: <Plans handleNext={handleNext} plan={dataForm.plan} setPlan={(plan) => setDataForm(prev => ({ ...prev, plan }))} />,
+            content: <Plans handleNext={handleNext} plans={plans} plan={plan!} setPlan={setPlan} />,
         },
         {
             label: 'Select Options',
-            content: <Options handleBack={handleBack} handleNext={handleNext} options={dataForm.options} setOptions={(options) => setDataForm(prev => ({ ...prev, options }))} />,
+            content: <Options handleBack={handleBack} handleNext={handleNext} plan={plan!} options={options} selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} />,
         },
         {
             label: 'Basic Information',
-            content: <Infos handleBack={handleBack} handleNext={handleNext} name={dataForm.name} setName={(name) => setDataForm(prev => ({ ...prev, name }))} startDate={dataForm.startDate} setStartDate={(startDate) => setDataForm(prev => ({ ...prev, startDate }))} endDate={dataForm.endDate} setEndDate={(endDate) => setDataForm(prev => ({ ...prev, endDate }))} />,
+            content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} date={date} setDate={setDate} closeDate={closeDate} setCloseDate={setCloseDate} />,
         },
         {
             label: 'Summary',
-            content: <Summary handleBack={handleBack} handleNext={handleNext} dataForm={dataForm} />,
+            content: <Summary handleBack={handleBack} handleNext={handleNext} dataForm={{ plan: plan!, selectedOptions, name, date: date!, closeDate }} />,
         },
     ]
+
+    useEffect(() => {
+        getPlans().then(plans => {
+            setPlans(plans)
+            setPlan(plans[0])
+        }).catch(console.error)
+        getOptions().then(setOptions).catch(console.error)
+    }, [])
 
     useEffect(() => {
         const elem = activeStep === 0 ? document.getElementById('create-competition-title') : document.getElementById(`step-${activeStep}`)
         elem?.scrollIntoView({ behavior: 'smooth', block: activeStep === 0 ? 'center' : 'start' })
     }, [activeStep])
+
+    useEffect(() => {
+        if (activeStep === steps.length) {
+            onClose()
+        }
+    }, [activeStep, onClose, steps.length])
 
     return (
         <Dialog
@@ -74,12 +85,12 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
             onClose={onClose}
             fullWidth
         >
-            <DialogTitle style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5" align="center">
+            <Box>
+                <DialogTitle variant="h5" align="center">
                     Create Competition
-                </Typography>
+                </DialogTitle>
                 <CloseButton onClose={onClose} />
-            </DialogTitle>
+            </Box>
             <DialogContent>
                 <Stepper activeStep={activeStep} orientation="vertical">
                     {steps.map((step, index) => (

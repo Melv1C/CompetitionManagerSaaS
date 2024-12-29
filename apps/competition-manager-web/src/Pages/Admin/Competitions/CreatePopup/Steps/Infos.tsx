@@ -9,10 +9,10 @@ import { Buttons } from "./Buttons";
 type InfosProps = StepProps & {
     name: string,
     setName: (name: string) => void,
-    startDate: Date | null,
-    setStartDate: (startDate: Date | null) => void,
-    endDate: Date | null,
-    setEndDate: (endDate: Date | null) => void
+    date?: Date,
+    setDate: (date?: Date) => void,
+    closeDate?: Date,
+    setCloseDate: (date?: Date) => void,
 }
 
 export const Infos: React.FC<InfosProps> = ({
@@ -20,16 +20,16 @@ export const Infos: React.FC<InfosProps> = ({
     handleNext,
     name,
     setName,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate
+    date,
+    setDate,
+    closeDate,
+    setCloseDate,
 }) => {
 
-    const [isMultiDay, setIsMultiDay] = useState(endDate ? true : false)
+    const [isMultiDay, setIsMultiDay] = useState(closeDate ? true : false)
     const [isNameValid, setIsNameValid] = useState(Competition$.shape.name.safeParse(name).success)
-    const [isStartDateValid, setIsStartDateValid] = useState(true)
-    const [isEndDateValid, setIsEndDateValid] = useState(true)
+    const [isDateValid, setIsDateValid] = useState(true)
+    const [isCloseDateValid, setIsCloseDateValid] = useState(true)
 
     return (
         <Box
@@ -68,9 +68,9 @@ export const Infos: React.FC<InfosProps> = ({
                 >
                     <DatePicker
                         label={isMultiDay ? 'Start Date' : 'Date'}
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        onError={(error) => setIsStartDateValid(!error)}
+                        value={date}
+                        onChange={(date) => setDate(date || undefined)}
+                        onError={(error) => setIsDateValid(!error)}
                         format="dd/MM/yyyy"
                         disablePast
                         slotProps={{ textField: { required: true } }}
@@ -87,8 +87,8 @@ export const Infos: React.FC<InfosProps> = ({
                             checked={isMultiDay}
                             onChange={() => {
                                 setIsMultiDay(prev => !prev)
-                                setEndDate(null)
-                                setIsEndDateValid(true)
+                                setCloseDate(undefined)
+                                setIsCloseDateValid(true)
                             }}
                             sx={{ alignSelf: 'center' }}
                         />
@@ -96,13 +96,13 @@ export const Infos: React.FC<InfosProps> = ({
 
                     {isMultiDay && 
                         <DatePicker
-                            label="End Date"
-                            value={endDate}
-                            onChange={(date) => setEndDate(date)}
-                            onError={(error) => setIsEndDateValid(!error)}
+                            label="Close Date"
+                            value={closeDate}
+                            onChange={(date) => setCloseDate(date || undefined)}
+                            onError={(error) => setIsCloseDateValid(!error)}
                             format="dd/MM/yyyy"
                             disablePast
-                            minDate={startDate ? new Date(startDate.getTime() + 24 * 60 * 60 * 1000) : undefined}
+                            minDate={date ? new Date(date.getTime() + 24 * 60 * 60 * 1000) : undefined}
                             slotProps={{ textField: { required: true } }}
                         />
                     }
@@ -115,7 +115,7 @@ export const Infos: React.FC<InfosProps> = ({
                     { 
                         label: 'Next',
                         onClick: handleNext, 
-                        disabled: !isNameValid || !startDate || !isStartDateValid || (isMultiDay && !endDate || !isEndDateValid)
+                        disabled: !isNameValid || !date || !isDateValid || (isMultiDay && !closeDate || !isCloseDateValid)
                     }
                 ]}
             />
