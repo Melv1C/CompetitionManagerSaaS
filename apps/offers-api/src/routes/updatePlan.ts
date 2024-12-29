@@ -1,6 +1,6 @@
 import { prisma } from '@competition-manager/prisma';
-import { PaymentPlan$, UpdatePaymentPlan$ } from '@competition-manager/schemas';
-import { Key, parseRequest } from '@competition-manager/utils';
+import { PaymentPlan$, Role, UpdatePaymentPlan$ } from '@competition-manager/schemas';
+import { checkRole, Key, parseRequest } from '@competition-manager/utils';
 import { Router } from 'express';
 
 export const router = Router();
@@ -11,6 +11,7 @@ router.put(
     '/plans/:id',
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Body, UpdatePaymentPlan$),
+    checkRole(Role.SUPERADMIN),
     async (req, res) => {
         const { id } = Params$.parse(req.params);
         const { includedOptionsIds, ...data } = UpdatePaymentPlan$.parse(req.body);
