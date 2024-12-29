@@ -1,6 +1,6 @@
 import { prisma } from '@competition-manager/prisma';
-import { Option$, OptionWithoutId$ } from '@competition-manager/schemas';
-import { Key, parseRequest } from '@competition-manager/utils';
+import { Option$, OptionWithoutId$, Role } from '@competition-manager/schemas';
+import { checkRole, Key, parseRequest } from '@competition-manager/utils';
 import { Router } from 'express';
 
 export const router = Router();
@@ -11,6 +11,7 @@ router.put(
     '/options/:id',
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Body, OptionWithoutId$),
+    checkRole(Role.SUPERADMIN),
     async (req, res) => {
         const { id } = Params$.parse(req.params);
         const data = OptionWithoutId$.parse(req.body);
