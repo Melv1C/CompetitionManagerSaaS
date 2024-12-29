@@ -7,8 +7,8 @@ import { Alert, Box, Button, Divider, Link, Typography } from "@mui/material";
 import { useUserToken } from "../../GlobalsStates/userToken";
 import { login } from "../../api";
 
-import { TextFieldWithSchema as Field } from "../../Components/TextFieldWithSchema";
 import { decodeToken } from "../../utils/decodeToken";
+import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 
 type SignInProps = {
     onToggle: () => void;
@@ -65,20 +65,19 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
                     }
                 }}
             >
-                <Field 
+                <TextFieldWith$ 
                     id="email" 
                     label={{ value: 'Email', hasExtrenLabel: true }}
-                    value={{ value: email, onChange: setEmail }} 
+                    value={{ value: email, onChange: (value) => setEmail(value) }}
                     validator={{ Schema$: UserEmail$, isValid: isEmailValid, setIsValid: setIsEmailValid }} 
                     required
                 />
 
-                <Field 
+                <PasswordFieldWith$ 
                     id="password" 
                     label={{ value: 'Password', hasExtrenLabel: true }}
                     value={{ value: password, onChange: setPassword }} 
                     validator={{ Schema$: UserPassword$, isValid: isPasswordValid, setIsValid: setIsPasswordValid }}
-                    isPassword
                     required
                 />
 

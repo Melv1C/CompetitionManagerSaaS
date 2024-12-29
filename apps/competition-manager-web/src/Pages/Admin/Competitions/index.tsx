@@ -1,6 +1,6 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Tabs, Tab } from "@mui/material";
+import { Tabs, Tab } from "@mui/material";
 import { ListCompetitions, Loading } from "../../../Components";
 import { useState } from "react";
 import { useRoles } from "../../../hooks";
@@ -8,6 +8,7 @@ import { CreatePopup } from "./CreatePopup";
 import { MaxWidth } from "../../../Components/MaxWidth";
 import { getCompetitions } from "../../../api";
 import { useQuery } from "react-query";
+import { CircleButton } from "../../../Components/CircleButton";
 
 export const AdminCompetitions = () => {
 
@@ -48,22 +49,19 @@ export const AdminCompetitions = () => {
 
 			{isClub && (
 				<>
-					<Button 
+					<CircleButton 
+						size="4rem"
 						sx={{ 
 							position: 'fixed',
 							bottom: '1rem',
-							right: '1rem',
-							borderRadius: '50%',
-							padding: '1rem',
-							width: '4rem',
-							height: '4rem',
+							right: '1rem'
 						}}
 						variant="contained"
 						color="secondary"
 						onClick={() => setIsCreatePopupVisible(true)}
 					>
 						<FontAwesomeIcon icon={faPlus} size="3x" />
-					</Button>
+					</CircleButton>
 					{isCreatePopupVisible && <CreatePopup isVisible={isCreatePopupVisible} onClose={() => setIsCreatePopupVisible(false)} />}
 				</>
 			)}

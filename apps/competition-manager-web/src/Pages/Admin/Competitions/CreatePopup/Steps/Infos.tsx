@@ -2,8 +2,8 @@ import { Box, Button, FormControl, FormLabel, Switch } from "@mui/material"
 import { DatePicker } from '@mui/x-date-pickers';
 import { StepProps } from ".."
 import { useState } from "react";
-import { TextFieldWithSchema } from "../../../../../Components/TextFieldWithSchema";
 import { z } from "zod";
+import { TextFieldWith$ } from "../../../../../Components/FieldsWithSchema";
 
 const name$ = z.string().min(3).max(50)
 
@@ -46,7 +46,7 @@ export const Infos: React.FC<InfosProps> = ({
                     justifyContent: 'center'
                 }}
             >
-                <TextFieldWithSchema
+                <TextFieldWith$
                     id="name"
                     label={{ value: 'Name' }}
                     value={{ value: name, onChange: setName }}
