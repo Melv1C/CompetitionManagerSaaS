@@ -1,0 +1,329 @@
+[
+    {
+        "abbr": "KAN M",
+        "name": "Kangourou M",
+        "baseCategory": "Kangourou",
+        "abbrBaseCategory": "KAN",
+        "gender": "M"
+    },
+    {
+        "abbr": "KAN F",
+        "name": "Kangourou F",
+        "baseCategory": "Kangourou",
+        "abbrBaseCategory": "KAN",
+        "gender": "F"
+    },
+    {
+        "abbr": "PUP M",
+        "name": "Pupille M",
+        "baseCategory": "Pupille",
+        "abbrBaseCategory": "PUP",
+        "gender": "M"
+    },
+    {
+        "abbr": "PUP F",
+        "name": "Pupille F",
+        "baseCategory": "Pupille",
+        "abbrBaseCategory": "PUP",
+        "gender": "F"
+    },
+    {
+        "abbr": "MIN M",
+        "name": "Minime M",
+        "baseCategory": "Minime",
+        "abbrBaseCategory": "MIN",
+        "gender": "M"
+    },
+    {
+        "abbr": "MIN F",
+        "name": "Minime F",
+        "baseCategory": "Minime",
+        "abbrBaseCategory": "MIN",
+        "gender": "F"
+    },
+    {
+        "abbr": "CAD M",
+        "name": "Cadet M",
+        "baseCategory": "Cadet",
+        "abbrBaseCategory": "CAD",
+        "gender": "M"
+    },
+    {
+        "abbr": "CAD F",
+        "name": "Cadet F",
+        "baseCategory": "Cadet",
+        "abbrBaseCategory": "CAD",
+        "gender": "F"
+    },
+    {
+        "abbr": "JUN M",
+        "name": "Junior M",
+        "baseCategory": "Junior",
+        "abbrBaseCategory": "JUN",
+        "gender": "M"
+    },
+    {
+        "abbr": "JUN F",
+        "name": "Junior F",
+        "baseCategory": "Junior",
+        "abbrBaseCategory": "JUN",
+        "gender": "F"
+    },
+    {
+        "abbr": "ESP M",
+        "name": "Espoir M",
+        "baseCategory": "Espoir",
+        "abbrBaseCategory": "ESP",
+        "gender": "M"
+    },
+    {
+        "abbr": "ESP F",
+        "name": "Espoir F",
+        "baseCategory": "Espoir",
+        "abbrBaseCategory": "ESP",
+        "gender": "F"
+    },
+    {
+        "abbr": "SEN M",
+        "name": "Senior M",
+        "baseCategory": "Senior",
+        "abbrBaseCategory": "SEN",
+        "gender": "M"
+    },
+    {
+        "abbr": "SEN F",
+        "name": "Senior F",
+        "baseCategory": "Senior",
+        "abbrBaseCategory": "SEN",
+        "gender": "F"
+    },
+    {
+        "abbr": "M35",
+        "name": "Master 35 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 35
+    },
+    {
+        "abbr": "W35",
+        "name": "Master 35 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 35
+    },
+    {
+        "abbr": "M40",
+        "name": "Master 40 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 40
+    },
+    {
+        "abbr": "W40",
+        "name": "Master 40 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 40
+    },
+    {
+        "abbr": "M45",
+        "name": "Master 45 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 45
+    },
+    {
+        "abbr": "W45",
+        "name": "Master 45 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 45
+    },
+    {
+        "abbr": "M50",
+        "name": "Master 50 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 50
+    },
+    {
+        "abbr": "W50",
+        "name": "Master 50 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 50
+    },
+    {
+        "abbr": "M55",
+        "name": "Master 55 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 55
+    },
+    {
+        "abbr": "W55",
+        "name": "Master 55 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 55
+    },
+    {
+        "abbr": "M60",
+        "name": "Master 60 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 60
+    },
+    {
+        "abbr": "W60",
+        "name": "Master 60 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 60
+    },
+    {
+        "abbr": "M65",
+        "name": "Master 65 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 65
+    },
+    {
+        "abbr": "W65",
+        "name": "Master 65 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 65
+    },
+    {
+        "abbr": "M70",
+        "name": "Master 70 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 70
+    },
+    {
+        "abbr": "W70",
+        "name": "Master 70 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 70
+    },
+    {
+        "abbr": "M75",
+        "name": "Master 75 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 75
+    },
+    {
+        "abbr": "W75",
+        "name": "Master 75 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 75
+    },
+    {
+        "abbr": "M80",
+        "name": "Master 80 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 80
+    },
+    {
+        "abbr": "W80",
+        "name": "Master 80 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 80
+    },
+    {
+        "abbr": "M85",
+        "name": "Master 85 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 85
+    },
+    {
+        "abbr": "W85",
+        "name": "Master 85 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 85
+    },
+    {
+        "abbr": "M90",
+        "name": "Master 90 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 90
+    },
+    {
+        "abbr": "W90",
+        "name": "Master 90 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 90
+    },
+    {
+        "abbr": "M95",
+        "name": "Master 95 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 95
+    },
+    {
+        "abbr": "W95",
+        "name": "Master 95 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 95
+    },
+    {
+        "abbr": "M100",
+        "name": "Master 100 M",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "M",
+        "masterAgeGroup": 100
+    },
+    {
+        "abbr": "W100",
+        "name": "Master 100 F",
+        "baseCategory": "Master",
+        "abbrBaseCategory": "MAS",
+        "gender": "F",
+        "masterAgeGroup": 100
+    }
+]
+
+
+
+
+
