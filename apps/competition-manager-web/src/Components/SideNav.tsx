@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Box, Drawer, IconButton, List, ListItemButton, ListItemIcon, Typography } from "@mui/material"
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../utils/constants";
 import { faChevronLeft, faChevronRight, IconDefinition } from "@fortawesome/free-solid-svg-icons";
