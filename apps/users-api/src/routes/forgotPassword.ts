@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 export const router = Router();
 
-const sendRestPasswordEmail = async (email: Email, token: string) => {
+const sendRestPasswordEmail = (email: Email, token: string) => {
     if (!process.env.BASE_URL) {
         throw new Error('BASE_URL not set');
     }
@@ -18,7 +18,7 @@ const sendRestPasswordEmail = async (email: Email, token: string) => {
         subject: 'Verify your email',
         html: `<a href="${url.toString()}">Click here to reset your password</a>`
     });
-    return await sendEmail(emailData);
+    return sendEmail(emailData);
 }
 
 const Body$ = z.object({

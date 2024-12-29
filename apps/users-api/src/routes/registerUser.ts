@@ -6,7 +6,7 @@ import { UserToTokenData } from '../utils';
 
 export const router = Router();
 
-const sendVerificationEmail = async (email: Email, verificationToken: string) => {
+const sendVerificationEmail = (email: Email, verificationToken: string) => {
     if (!process.env.BASE_URL) {
         throw new Error('BASE_URL not set');
     }
@@ -18,7 +18,7 @@ const sendVerificationEmail = async (email: Email, verificationToken: string) =>
         subject: 'Verify your email',
         html: `<a href="${url.toString()}">Click here to verify your email</a>`
     });
-    return await sendEmail(emailData);
+    return sendEmail(emailData);
 }
 
 
