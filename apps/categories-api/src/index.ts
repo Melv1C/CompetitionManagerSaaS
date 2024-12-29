@@ -1,9 +1,11 @@
 import express from "express";
 import 'dotenv/config';
+import { fillDB } from "./fillDB";
+import { prisma } from "@competition-manager/prisma";
 
 import { corsMiddleware } from '@competition-manager/utils';
 
-import routes from './routes';
+fillDB();
 
 const app = express();
 app.use(express.json());
@@ -13,7 +15,11 @@ const PREFIX = process.env.PREFIX || '/api';
 
 app.use(corsMiddleware);
 
-app.use(`${PREFIX}/categories`, routes);
+app.get(`${PREFIX}/categories`, (req, res) => {
+    prisma.category.findMany().then(categories => {
+        res.send(categories);
+    });
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
