@@ -20,8 +20,13 @@ router.get(
     parseRequest(Key.Query, Query$),
     setUserIfExist(),
     async (req: AuthenticatedRequest, res) => {
+        const { isAdmin } = Query$.parse(req.query);
         const { competitionEid } = Params$.parse(req.params);
-        if (req.query.isAdmin && req.user! && isAuthorized(req.user, Role.ADMIN)) {
+        if (isAdmin && !req.user) {
+            res.status(401).send('Unauthorized');
+            return;
+        }
+        if (isAdmin && isAuthorized(req.user!, Role.ADMIN)) {
             const admin = await prisma.admin.findFirst({
                 where: {
                     userId: req.user!.id,

@@ -5,6 +5,10 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 let accessToken: string | null = null;
 
+export const setAccessToken = (token: string) => {
+    accessToken = token;
+};
+
 // Create an Axios instance
 export const api = axios.create({
     baseURL: BASE_URL
