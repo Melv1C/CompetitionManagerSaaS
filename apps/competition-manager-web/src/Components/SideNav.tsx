@@ -51,12 +51,12 @@ export const SideNav: React.FC<MenuItemProps> = ({ items, isMenuOpen, setIsMenuO
                                     display: 'flex', 
                                     justifyContent: 'center', 
                                     alignItems: 'center', 
-                                    width: '2rem', 
-                                    minWidth: '2rem',
+                                    width: '1rem', 
+                                    minWidth: '1rem',
                                     height: '2rem' 
                                 }}
                             >
-                                <FontAwesomeIcon icon={icon} color="white" size="lg" />
+                                <FontAwesomeIcon icon={icon} color="white" />
                             </ListItemIcon>
                             {isMenuOpen && <Typography variant="h6">{text}</Typography>}
                         </ListItemButton>
@@ -76,7 +76,7 @@ export const SideNav: React.FC<MenuItemProps> = ({ items, isMenuOpen, setIsMenuO
                     color="inherit" 
                     onClick={handleDrawerToggle} 
                 >
-                    <FontAwesomeIcon icon={isMenuOpen ? faChevronLeft : faChevronRight} />
+                    <FontAwesomeIcon icon={isMenuOpen ? faChevronLeft : faChevronRight} size="xs" />
                 </IconButton>
             </Box>
         </Drawer>
