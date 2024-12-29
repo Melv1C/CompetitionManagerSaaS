@@ -2,23 +2,40 @@ import z from 'zod';
 import { Abbr$, Id$, Name$ } from './Base';
 import { Gender$ } from './Gender';
 
-enum SimpleCategory {
+enum AbbrBaseCategory {
+    KAN = 'KAN',
     BEN = 'BEN',
     PUP = 'PUP',
     MIN = 'MIN',
     CAD = 'CAD',
     JUN = 'JUN',
+    ESP = 'ESP',
     SEN = 'SEN',
     MAS = 'MAS',
+}
+
+enum BaseCategory {
+    KANGOUROU = 'Kangourou',
+    BENJAMIN = 'Benjamin',
+    PUPILLE = 'Pupille',
+    MINIME = 'Minime',
+    CADET = 'Cadet',
+    JUNIOR = 'Junior',
+    ESPOIR = 'Espoir',
+    SENIOR = 'Senior',
+    MASTER = 'Master'
 }
 
 export const Category$ = z.object({
     id: Id$,
     abbr: Abbr$,
     name: Name$,
-    simpleCategory: z.nativeEnum(SimpleCategory),
+    baseCategory: z.nativeEnum(BaseCategory),
+    abbrBaseCategory: z.nativeEnum(AbbrBaseCategory),
     gender: Gender$,
     masterAgeGroup: z.number().positive().nullish(),
 });
-
 export type Category = z.infer<typeof Category$>;
+
+export const CategoryWithoutId$ = Category$.omit({ id: true });
+export type CategoryWithoutId = z.infer<typeof CategoryWithoutId$>;
