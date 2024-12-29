@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 
-import { useUserToken } from "../GlobalsStates";
+import { userTokenAtom } from "../GlobalsStates";
 import { decodeToken } from "../utils/decodeToken";
 
 import { env } from "../env";
 import { getRefreshToken } from "../api";
 import { setAccessToken } from "../utils/api";
+import { useSetAtom } from "jotai";
 
 export const useAutoLogin = () => {
-    const [, setUserToken] = useUserToken();
+    const setUserToken = useSetAtom(userTokenAtom);
 
     useEffect(() => {
         if (env.VITE_NODE_ENV === 'local') {

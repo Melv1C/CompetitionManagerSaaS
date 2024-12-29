@@ -5,13 +5,13 @@ import { AppBar, Box, Button, IconButton, Toolbar, useMediaQuery } from "@mui/ma
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, IconDefinition, faRightToBracket, faUserGear, faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
 
-import { useUserToken } from "../../GlobalsStates/userToken";
-
 import { MobileNav } from "./MobileNav";
 import { AccountCircle } from "../AccountCircle";
 import { Logo } from "../Logo";
 import { AuthPopup } from "../AuthPopup";
 import { useRoles } from "../../hooks";
+import { useAtomValue } from "jotai";
+import { userTokenAtom } from "../../GlobalsStates";
 
 type NavItemProps = {
     label: string;
@@ -29,7 +29,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const isMobile = useMediaQuery('(max-width:900px)');
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
-    const [userToken] = useUserToken();
+    const userToken = useAtomValue(userTokenAtom);
     const { isAdmin, isLogged, isNotLogged, isSuperAdmin } = useRoles();
 
     useEffect(() => {
