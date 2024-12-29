@@ -39,10 +39,11 @@ router.post(
                 });
                 res.send('Password updated');
             } catch (e: any) {
-                if (e.code === 'eeeeeeeeee') {
+                if (e.code === 'P2025') {
                     res.status(404).send('User not found');
                     return;
                 }else{
+                    console.error(e);
                     res.status(500).send('Internal server error');
                     return;
                 }
