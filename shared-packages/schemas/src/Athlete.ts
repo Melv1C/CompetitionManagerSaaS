@@ -29,7 +29,7 @@ export const Athlete$ = z.object({
     gender: Gender$,
     birthdate: Date$,
     club: Club$,
-    metadata: OneDayMetadata$.optional(),
+    metadata: OneDayMetadata$.nullish(),
 });
 export type Athlete = z.infer<typeof Athlete$>;
 

@@ -9,8 +9,8 @@ export const CompetitionEvent$ = z.object({
     event: Event$,
     schedule: z.coerce.date().min(new Date()),
     categories: z.array(Category$),
-    place: z.number().positive().int().optional(),
-    parentId: Id$.optional(),
+    place: z.number().positive().int().nullish(),
+    parentId: Id$.nullish(),
     cost: Price$,
     isInscriptionOpen: z.boolean().default(true),
 });
@@ -28,6 +28,6 @@ export type BaseCompetitionEvent = z.infer<typeof BaseCompetitionEvent$>;
 export const BaseCompetitionEventWithRealtionId$ = BaseCompetitionEvent$.extend({
     eventId: Id$,
     categoriesId: z.array(Id$),
-    parentId: Id$.optional(),
+    parentId: Id$.nullish(),
 })
 export type BaseCompetitionEventWithRealtionId = z.infer<typeof BaseCompetitionEventWithRealtionId$>;
