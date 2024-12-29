@@ -69,32 +69,30 @@ export const Options: React.FC<OptionssProps> = ({
                                     <Typography variant="body2" color="textSecondary">
                                         {option.description}
                                     </Typography>
-                            </Box>
-                            {isIncluded(option) && (
-                                <Typography variant="h6" color="textSecondary">
-                                    Included
+                                </Box>
+                                {isIncluded(option) && (
+                                    <Typography variant="h6" color="textSecondary">
+                                        Included
+                                    </Typography>
+                                )}
+                                <Typography 
+                                    variant="h6" 
+                                    color={isIncluded(option) ? 'textSecondary' : 'secondary'}
+                                    sx={{ marginRight: '1rem' }}
+                                >
+                                    {option.price}€
                                 </Typography>
-                            )}
-                            <Typography 
-                                variant="h6" 
-                                color={isIncluded(option) ? 'textSecondary' : 'secondary'}
-                                sx={{ marginRight: '1rem' }}
-                            >
-                                {option.price}€
-                            </Typography>
 
-                        </Box>
-                    </CardActionArea>
-                </Card>
-            ))}
-
-                    
+                            </Box>
+                        </CardActionArea>
+                    </Card>
+                ))}
             </Box>
 
-        <Buttons buttons={[
-            { label: 'Back', onClick: handleBack },
-            { label: 'Next', onClick: handleNext }
-        ]} />
-    </>
-  )
+            <Buttons buttons={[
+                { label: 'Back', onClick: handleBack },
+                { label: 'Next', onClick: handleNext }
+            ]} />
+        </>
+    )
 }
