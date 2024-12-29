@@ -29,3 +29,9 @@ export const User$ = z.object({
     password: z.string()
 });
 export type User = z.infer<typeof User$>;
+
+export const UserWithoutId$ = User$.omit({ id: true });
+export type UserWithoutId = z.infer<typeof UserWithoutId$>;
+
+export const BaseUser$ = User$.omit({ role: true, preferences: true, id: true });
+export type BaseUser = z.infer<typeof BaseUser$>;
