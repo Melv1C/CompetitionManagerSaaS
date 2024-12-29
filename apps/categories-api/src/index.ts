@@ -2,7 +2,7 @@ import express from "express";
 import 'dotenv/config';
 import { fillDB } from "./fillDB";
 import { prisma } from "@competition-manager/prisma";
-
+import { Category$ } from '@competition-manager/schemas';
 import { corsMiddleware } from '@competition-manager/utils';
 
 fillDB();
@@ -17,7 +17,7 @@ app.use(corsMiddleware);
 
 app.get(`${PREFIX}/categories`, (req, res) => {
     prisma.category.findMany().then(categories => {
-        res.send(categories);
+        res.send(Category$.array().parse(categories));
     });
 });
 
