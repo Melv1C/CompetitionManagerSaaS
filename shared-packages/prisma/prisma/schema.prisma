@@ -80,11 +80,12 @@ model Event {
 ////////////////
 model Category {
     id                Int                @id @default(autoincrement())
-    name              String
-    abbr              String
-    simpleCategory    String             @map("simple_category")
+    name              String             @unique
+    abbr              String             @unique
+    baseCategory      String             @map("base_category")
+    abbrBaseCategory  String             @map("abbr_base_category")
     gender            String
-    masterAgeGroup    Int?
+    masterAgeGroup    Int?               @map("master_age_group")
     competitionEvents CompetitionEvent[]
 
     @@map("categories")
