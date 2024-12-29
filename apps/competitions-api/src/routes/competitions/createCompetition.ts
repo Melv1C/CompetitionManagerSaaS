@@ -41,7 +41,11 @@ router.post(
                 options: true,
                 admins: {
                     include: {
-                        user: true
+                        user: {
+                            include: {
+                                preferences: true
+                            }
+                        }
                     }
                 }
             }
