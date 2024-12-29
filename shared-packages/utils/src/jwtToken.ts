@@ -14,6 +14,10 @@ export const generateVerificationToken = (tokenData: TokenData) => {
     return EncodeToken$.parse(jwt.sign(tokenData, process.env.VERIFY_EMAIL_TOKEN_SECRET!, { expiresIn: '7d' }));
 }
 
+export const generateResetPasswordToken = (tokenData: TokenData) => {
+    return EncodeToken$.parse(jwt.sign(tokenData, process.env.RESET_PASSWORD_TOKEN_SECRET!, { expiresIn: '1h' }));
+}
+
 //return false or the decoded token
 export const verifyAccessToken = (token: EncodeToken) => {
     try {
@@ -36,6 +40,14 @@ export const verifyRefreshToken = (token: EncodeToken) => {
 export const verifyVerificationToken = (token: EncodeToken) => {
     try {
         return TokenData$.parse(jwt.verify(token, process.env.VERIFY_EMAIL_TOKEN_SECRET!));
+    } catch (error) {
+        return false;
+    }
+}
+
+export const verifyResetPasswordToken = (token: EncodeToken) => {
+    try {
+        return TokenData$.parse(jwt.verify(token, process.env.RESET_PASSWORD_TOKEN_SECRET!));
     } catch (error) {
         return false;
     }
