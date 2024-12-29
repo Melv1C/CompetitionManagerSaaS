@@ -27,8 +27,6 @@ router.get(
             return;
         }
         if (isAdmin && isAuthorized(req.user!, Role.ADMIN)) {
-            console.log(competitionEid);
-            console.log(req.user!.id);
             const admin = await prisma.admin.findFirst({
                 where: {
                     userId: req.user!.id,
