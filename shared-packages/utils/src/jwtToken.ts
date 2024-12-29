@@ -1,42 +1,46 @@
 import jwt from 'jsonwebtoken';
 import { EncodeToken, EncodeToken$, TokenData, TokenData$ } from '@competition-manager/schemas';
 
-//when use in a api don't forget to put the .env with ACCESS_TOKEN_SECRET and REFRESH_TOKEN_SECRET
+const generateToken = (tokenData: TokenData, secret: string, expiresIn: string) => {
+    return EncodeToken$.parse(jwt.sign(tokenData, secret, { expiresIn }));
+};
+
+const verifyToken = (token: EncodeToken, secret: string) => {
+    try {
+        return TokenData$.parse(jwt.verify(token, secret));
+    } catch (error) {
+        return false;
+    }
+};
+
 export const generateAccessToken = (tokenData: TokenData) => {
-    return EncodeToken$.parse(jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: '15m' }));
+    return generateToken(tokenData, process.env.ACCESS_TOKEN_SECRET!, '15m');
 };
 
 export const generateRefreshToken = (tokenData: TokenData) => {
-    return EncodeToken$.parse(jwt.sign(tokenData, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: '30d' }));
+    return generateToken(tokenData, process.env.REFRESH_TOKEN_SECRET!, '30d');
 };
 
 export const generateVerificationToken = (tokenData: TokenData) => {
-    return EncodeToken$.parse(jwt.sign(tokenData, process.env.VERIFY_EMAIL_TOKEN_SECRET!, { expiresIn: '7d' }));
-}
+    return generateToken(tokenData, process.env.VERIFY_EMAIL_TOKEN_SECRET!, '7d');
+};
 
-//return false or the decoded token
+export const generateResetPasswordToken = (tokenData: TokenData) => {
+    return generateToken(tokenData, process.env.RESET_PASSWORD_TOKEN_SECRET!, '15m');
+};
+
 export const verifyAccessToken = (token: EncodeToken) => {
-    try {
-        return TokenData$.parse(jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!));
-    } catch (error) {
-        return false;
-    }
-}
+    return verifyToken(token, process.env.ACCESS_TOKEN_SECRET!);
+};
 
-//return false or the decoded token
 export const verifyRefreshToken = (token: EncodeToken) => {
-    try {
-        return TokenData$.parse(jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!));
-    } catch (error) {
-        return false;
-    }
-}
+    return verifyToken(token, process.env.REFRESH_TOKEN_SECRET!);
+};
 
-//return false or the decoded token
 export const verifyVerificationToken = (token: EncodeToken) => {
-    try {
-        return TokenData$.parse(jwt.verify(token, process.env.VERIFY_EMAIL_TOKEN_SECRET!));
-    } catch (error) {
-        return false;
-    }
-}
+    return verifyToken(token, process.env.VERIFY_EMAIL_TOKEN_SECRET!);
+};
+
+export const verifyResetPasswordToken = (token: EncodeToken) => {
+    return verifyToken(token, process.env.RESET_PASSWORD_TOKEN_SECRET!);
+};

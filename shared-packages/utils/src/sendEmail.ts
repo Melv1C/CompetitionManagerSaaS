@@ -1,5 +1,5 @@
 import { createTransport, SendMailOptions } from 'nodemailer';
-import { Email } from '@competition-manager/schemas';
+import { EmailData } from '@competition-manager/schemas';
 
 const transporter = createTransport({
     service: process.env.NODEMAILER_SERVICE ?? "gmail",
@@ -12,20 +12,20 @@ const transporter = createTransport({
     },
 });
 
-export const sendEmail = async (email : Email) => {
+export const sendEmail = async (email : EmailData) => {
     const options: SendMailOptions = {
         from: process.env.NODEMAILER_USER,
         to: email.to,
         subject: email.subject,
         html: email.html,
     }
-    transporter.sendMail(options, (err, info) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(info);
-        }
-    });
+    try {
+        await transporter.sendMail(options);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
 }
 
 

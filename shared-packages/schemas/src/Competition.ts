@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id$, Name$, FutureDate$, Eid$ } from './Base';
+import { Id$, Name$, FutureDate$, Eid$, Email$ } from './Base';
 import { CompetitionEvent$ } from './CompetitionEvent';
 import { PaymentPlan$, Option$ } from './PaymentPlan';
 import { Admin$ } from './Admin';
@@ -38,7 +38,7 @@ export const Competition$ = z.object({
 
     // Default settings
     admins: z.array(Admin$),
-    email: z.string().email(),
+    email: Email$,
 
     // Advanced settings
     closeDate: FutureDate$.nullish(),

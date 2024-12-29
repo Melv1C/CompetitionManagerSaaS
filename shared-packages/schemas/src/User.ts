@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { UserPreferences$ } from './UserPreferences';
-import { Id$ } from './Base';
+import { Email$, Id$ } from './Base';
 
 export enum Role {
     UNCONFIRMED_USER = 'unconfirmedUser',
@@ -18,12 +18,12 @@ export const RoleLevel = {
     [Role.SUPERADMIN]: 4,
 }
 
-export const UserEmail$ = z.string().email();
+
 export const UserPassword$ = z.string().min(8, 'Password must be at least 8 characters long');
 
 export const User$ = z.object({
     id: Id$,
-    email: UserEmail$,
+    email: Email$,
     role: z.nativeEnum(Role).default(Role.UNCONFIRMED_USER),
     preferences: UserPreferences$,
     password: z.string()
