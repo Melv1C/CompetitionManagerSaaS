@@ -1,3 +1,3 @@
 export * from "./auth";
-export * from "./getCompetitions";
+export * from "./Competition";
 export * from "./OffersCRUD";
