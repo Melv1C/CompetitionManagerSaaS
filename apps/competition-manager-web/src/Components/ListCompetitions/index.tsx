@@ -45,7 +45,6 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, li
                 display: 'flex', 
                 flexDirection: 'column',
                 gap: '1rem',
-                margin: '1rem',
                 width: '100%',
             }}
         >
