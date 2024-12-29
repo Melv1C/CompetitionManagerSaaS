@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { Key, parseRequest, setUserIfExist, AuthenticatedRequest, isAuthorized } from '@competition-manager/utils';
-import { Eid$, Role, AdminCompetition$ } from '@competition-manager/schemas';
+import { Eid$, Role, Competition$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 
 export const router = Router();
@@ -44,6 +44,12 @@ router.get(
                                 },
                             },
                             options: true,
+                            admins: {
+                                include: {
+                                    user: true,
+                                },
+                            },
+                            freeClubs: true,
                         },
                     },
                 },
@@ -52,7 +58,8 @@ router.get(
                 res.status(404).send('Competition not found');
                 return;
             }
-            res.send(AdminCompetition$.parse(admin.competition));
+            res.send(Competition$.parse(admin.competition));
+            return;
         }
 
         const competition = await prisma.competition.findUnique({
@@ -60,23 +67,26 @@ router.get(
                 eid: competitionEid,
                 publish: true
             },
-            select: {
-                name: true,
-                date: true,
-                description: true,
-                startInscriptionDate: true,
-                endInscriptionDate: true,
-                email: true,
-                closeDate: true,
-                oneDayPermissions: true,
-                oneDayBibStart: true,
+            include: {
                 events: true,
+                paymentPlan: {
+                    include: {
+                        includedOptions: true,
+                    },
+                },
+                options: true,
+                admins: {
+                    include: {
+                        user: true,
+                    },
+                },
+                freeClubs: true,
             },
         });
         if (!competition) {
             res.status(404).send('Competition not found');
             return;
         }
-        res.send(competition);
+        res.send(Competition$.parse(competition));
     }
 );
