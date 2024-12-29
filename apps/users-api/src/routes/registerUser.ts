@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail } from '@competition-manager/utils';
-import { User$, UserWithoutId$, BaseUser$, USER_PREFERENCES_DEFAULTS, Email$ } from '@competition-manager/schemas';
+import { User$, UserWithoutIdAndRelations$, BaseUser$, USER_PREFERENCES_DEFAULTS, Email$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
 export const router = Router();
@@ -28,7 +28,7 @@ router.post(
     parseRequest(Key.Body, BaseUser$),
     async (req, res) => {
         try {
-            const newUser = UserWithoutId$.parse(req.body);
+            const newUser = UserWithoutIdAndRelations$.parse(req.body);
             const user = await prisma.user.findUnique({
                 where: {
                     email: newUser.email
