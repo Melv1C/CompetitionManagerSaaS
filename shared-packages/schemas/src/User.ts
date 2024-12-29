@@ -30,6 +30,12 @@ export const User$ = z.object({
 });
 export type User = z.infer<typeof User$>;
 
+export const PublicUser$ = User$.omit({ password: true });
+export type PublicUser = z.infer<typeof PublicUser$>;
+
+export const PublicUserWithoutRelations$ = PublicUser$.omit({ preferences: true });
+export type PublicUserWithoutRelations = z.infer<typeof PublicUserWithoutRelations$>;
+
 export const UserWithoutIdAndRelations$ = User$.omit({ id: true, preferences: true });
 export type UserWithoutIdAndRelations = z.infer<typeof UserWithoutIdAndRelations$>;
 

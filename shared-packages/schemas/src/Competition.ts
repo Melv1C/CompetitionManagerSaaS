@@ -106,7 +106,3 @@ export const DisplayCompetition$ = Competition$.pick({
     date: true,
 });
 export type DisplayCompetition = z.infer<typeof DisplayCompetition$>;
-
-export const AdminCompetition$ = Competition$.omit({
-    id: true,
-})

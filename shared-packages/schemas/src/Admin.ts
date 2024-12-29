@@ -1,6 +1,6 @@
 import z from 'zod';
 import { Id$ } from './Base';
-import { User$ } from './User';
+import { PublicUserWithoutRelations$ } from './User';
 
 export enum Access {
     OWNER = 'owner',
@@ -12,7 +12,7 @@ export enum Access {
 
 export const Admin$ = z.object({
     id: Id$,
-    user: User$,
+    user: PublicUserWithoutRelations$,
     userId: z.number().positive(),
     competitionId: z.number().positive(),
     access: z.array(z.nativeEnum(Access))
