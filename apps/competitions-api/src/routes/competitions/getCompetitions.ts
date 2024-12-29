@@ -7,7 +7,7 @@ import { AuthenticatedRequest, isAuthorized, Key, parseRequest, setUserIfExist }
 export const router = Router();
 
 const Query$ = z.object({
-    isAdmin: z.boolean().default(false),
+    isAdmin: z.coerce.boolean().default(false),
     fromDate: Date$.optional(),
     toDate: Date$.optional(),
 });
