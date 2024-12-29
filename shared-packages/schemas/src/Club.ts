@@ -5,11 +5,11 @@ export const Club$ = z.object({
     id: Id$,
     name: Name$,
     abbr: Abbr$,
-    address: z.string().optional(),
-    province: z.string().optional(),
-    fedNumber: z.number().optional(),
+    address: z.string().nullish(),
+    province: z.string().nullish(),
+    fedNumber: z.number().positive().nullish(),
     country: z.string(),
-    fedAbbr: z.string().optional(),
+    fedAbbr: z.string().nullish(),
 
 });
 export type Club = z.infer<typeof Club$>;

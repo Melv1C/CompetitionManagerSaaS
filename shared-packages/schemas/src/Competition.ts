@@ -33,15 +33,15 @@ export const Competition$ = z.object({
     method: z.nativeEnum(PaymentMethod).default(PaymentMethod.FREE),
     paymentPlan: PaymentPlan$,
     options: z.array(Option$).default([]),
-    startInscriptionDate: FutureDate$.optional(),
-    endInscriptionDate: FutureDate$.optional(),
+    startInscriptionDate: FutureDate$.nullish(),
+    endInscriptionDate: FutureDate$.nullish(),
 
     // Default settings
     admins: z.array(Admin$),
     email: z.string().email(),
 
     // Advanced settings
-    closeDate: FutureDate$.optional(),
+    closeDate: FutureDate$.nullish(),
     freeClubs: z.array(Club$).default([]),
     oneDayPermissions: z.array(z.nativeEnum(OneDayPermission)).default([]),
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
