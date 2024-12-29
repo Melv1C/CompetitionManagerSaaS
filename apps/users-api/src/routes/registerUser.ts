@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword } from '@competition-manager/utils';
 import { User$, UserWithoutIdAndRelations$, BaseUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
