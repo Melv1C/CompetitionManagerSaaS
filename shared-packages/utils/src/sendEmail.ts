@@ -14,7 +14,7 @@ const transporter = createTransport({
 
 export const sendEmail = async (email : Email) => {
     const options: SendMailOptions = {
-        from: "competition.manager.saas@gmail.com",
+        from: process.env.NODEMAILER_USER,
         to: email.to,
         subject: email.subject,
         html: email.html,
