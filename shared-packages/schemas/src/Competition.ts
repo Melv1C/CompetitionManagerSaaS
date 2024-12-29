@@ -33,8 +33,8 @@ export const Competition$ = z.object({
     method: z.nativeEnum(PaymentMethod).default(PaymentMethod.FREE),
     paymentPlan: PaymentPlan$,
     options: z.array(Option$).default([]),
-    startInscriptionDate: FutureDate$,
-    endInscriptionDate: FutureDate$,
+    startInscriptionDate: FutureDate$.optional(),
+    endInscriptionDate: FutureDate$.optional(),
 
     // Default settings
     admins: z.array(Admin$),
@@ -52,11 +52,7 @@ export type Competition = z.infer<typeof Competition$>;
 export const BaseCompetition$ = Competition$.pick({
     name: true,
     date: true,
-    method: true,
-    publish: true,
-    description: true,
-    oneDayBibStart: true,
-    oneDayPermissions: true,
+    closeDate: true,
 });
 export type BaseCompetition = z.infer<typeof BaseCompetition$>;
 
@@ -65,6 +61,22 @@ export const BaseCompetitionWithRelationId$ = BaseCompetition$.extend({
     optionsId: z.array(Id$).default([]),
 });
 export type BaseCompetitionWithRelationId = z.infer<typeof BaseCompetitionWithRelationId$>;
+
+export const DefaultCompetition$ = Competition$.omit({
+    id: true,
+    eid: true,
+    paymentPlan: true,
+    options: true,
+    admins: true,
+    email: true,
+
+    //Without relation
+    events: true,
+    freeClubs: true,
+});
+export type DefaultCompetition = z.infer<typeof DefaultCompetition$>;
+
+
 
 export const UpdateCompetition$ = Competition$.pick({
     name: true,
