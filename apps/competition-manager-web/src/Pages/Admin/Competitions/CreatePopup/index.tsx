@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper, Typography } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper } from "@mui/material"
 import { CloseButton } from "../../../../Components"
 import { Plans } from "./Steps/Plans"
 import { Options } from "./Steps/Options"
