@@ -1,19 +1,18 @@
-import { Box, Button, FormControl, FormLabel, Switch } from "@mui/material"
+import { Box, FormControl, FormLabel, Switch } from "@mui/material"
 import { DatePicker } from '@mui/x-date-pickers';
 import { StepProps } from ".."
 import { useState } from "react";
-import { z } from "zod";
 import { TextFieldWith$ } from "../../../../../Components/FieldsWithSchema";
-
-const name$ = z.string().min(3).max(50)
+import { Competition$ } from "@competition-manager/schemas";
+import { Buttons } from "./Buttons";
 
 type InfosProps = StepProps & {
     name: string,
     setName: (name: string) => void,
-    startDate: Date | null,
-    setStartDate: (startDate: Date | null) => void,
-    endDate: Date | null,
-    setEndDate: (endDate: Date | null) => void
+    date?: Date,
+    setDate: (date?: Date) => void,
+    closeDate?: Date,
+    setCloseDate: (date?: Date) => void,
 }
 
 export const Infos: React.FC<InfosProps> = ({
@@ -21,14 +20,16 @@ export const Infos: React.FC<InfosProps> = ({
     handleNext,
     name,
     setName,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate
+    date,
+    setDate,
+    closeDate,
+    setCloseDate,
 }) => {
 
-    const [isMultiDay, setIsMultiDay] = useState(false)
-    const [isNameValid, setIsNameValid] = useState(false)
+    const [isMultiDay, setIsMultiDay] = useState(closeDate ? true : false)
+    const [isNameValid, setIsNameValid] = useState(Competition$.shape.name.safeParse(name).success)
+    const [isDateValid, setIsDateValid] = useState(true)
+    const [isCloseDateValid, setIsCloseDateValid] = useState(true)
 
     return (
         <Box
@@ -51,7 +52,7 @@ export const Infos: React.FC<InfosProps> = ({
                     label={{ value: 'Name' }}
                     value={{ value: name, onChange: setName }}
                     validator={{ 
-                        Schema$: name$,
+                        Schema$: Competition$.shape.name,
                         isValid: isNameValid,
                         setIsValid: setIsNameValid 
                     }}
@@ -67,8 +68,9 @@ export const Infos: React.FC<InfosProps> = ({
                 >
                     <DatePicker
                         label={isMultiDay ? 'Start Date' : 'Date'}
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
+                        value={date}
+                        onChange={(date) => setDate(date || undefined)}
+                        onError={(error) => setIsDateValid(!error)}
                         format="dd/MM/yyyy"
                         disablePast
                         slotProps={{ textField: { required: true } }}
@@ -83,39 +85,40 @@ export const Infos: React.FC<InfosProps> = ({
                         </FormLabel>
                         <Switch
                             checked={isMultiDay}
-                            onChange={() => setIsMultiDay(prev => !prev)}
+                            onChange={() => {
+                                setIsMultiDay(prev => !prev)
+                                setCloseDate(undefined)
+                                setIsCloseDateValid(true)
+                            }}
                             sx={{ alignSelf: 'center' }}
                         />
                     </FormControl>
 
                     {isMultiDay && 
                         <DatePicker
-                            label="End Date"
-                            value={endDate}
-                            onChange={(date) => setEndDate(date)}
+                            label="Close Date"
+                            value={closeDate}
+                            onChange={(date) => setCloseDate(date || undefined)}
+                            onError={(error) => setIsCloseDateValid(!error)}
                             format="dd/MM/yyyy"
                             disablePast
-                            minDate={startDate || undefined}
+                            minDate={date ? new Date(date.getTime() + 24 * 60 * 60 * 1000) : undefined}
                             slotProps={{ textField: { required: true } }}
                         />
                     }
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: '1rem', mt: 4 }}>
-                <Button
-                    variant="contained"
-                    onClick={handleBack}
-                >
-                    Back
-                </Button>
-                <Button
-                    variant="contained"
-                    type="submit"
-                >
-                    Next
-                </Button>
-            </Box>
+            <Buttons 
+                buttons={[
+                    { label: 'Back', onClick: handleBack },
+                    { 
+                        label: 'Next',
+                        onClick: handleNext, 
+                        disabled: !isNameValid || !date || !isDateValid || (isMultiDay && !closeDate || !isCloseDateValid)
+                    }
+                ]}
+            />
         </Box>
     )
 }

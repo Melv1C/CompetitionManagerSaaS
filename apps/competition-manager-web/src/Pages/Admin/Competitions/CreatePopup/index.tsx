@@ -1,4 +1,4 @@
-import { Box, Modal, Step, StepContent, StepLabel, Stepper, Typography } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper } from "@mui/material"
 import { CloseButton } from "../../../../Components"
 import { Plans } from "./Steps/Plans"
 import { Options } from "./Steps/Options"
@@ -7,6 +7,8 @@ import { Options } from "./Steps/Options"
 import { useEffect, useState } from "react"
 import { Infos } from "./Steps/Infos"
 import { Summary } from "./Steps/Summary"
+import { Option, PaymentPlan } from "@competition-manager/schemas"
+import { getOptions, getPlans } from "../../../../api"
 
 export type StepProps = {
     handleBack: () => void
@@ -30,87 +32,82 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
         setActiveStep((prev) => prev - 1)
     }
 
-    const [dataForm, setDataForm] = useState<{
-        plan: string,
-        options: string[],
-        name: string,
-        startDate: Date | null,
-        endDate: Date | null
-    }>({
-        plan: 'basic',
-        options: [],
-        name: '',
-        startDate: null,
-        endDate: null
-    })
+    const [plans, setPlans] = useState<PaymentPlan[]>([])
+    const [options, setOptions] = useState<Option[]>([])
+
+    const [plan, setPlan] = useState<PaymentPlan>();
+    const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+    const [name, setName] = useState<string>('');
+    const [date, setDate] = useState<Date>();
+    const [closeDate, setCloseDate] = useState<Date>();
 
     const steps = [
         {
             label: 'Choose Plan',
-            content: <Plans handleNext={handleNext} plan={dataForm.plan} setPlan={(plan) => setDataForm(prev => ({ ...prev, plan }))} />,
+            content: <Plans handleNext={handleNext} plans={plans} plan={plan!} setPlan={setPlan} />,
         },
         {
             label: 'Select Options',
-            content: <Options handleBack={handleBack} handleNext={handleNext} options={dataForm.options} setOptions={(options) => setDataForm(prev => ({ ...prev, options }))} />,
+            content: <Options handleBack={handleBack} handleNext={handleNext} plan={plan!} options={options} selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} />,
         },
         {
             label: 'Basic Information',
-            content: <Infos handleBack={handleBack} handleNext={handleNext} name={dataForm.name} setName={(name) => setDataForm(prev => ({ ...prev, name }))} startDate={dataForm.startDate} setStartDate={(startDate) => setDataForm(prev => ({ ...prev, startDate }))} endDate={dataForm.endDate} setEndDate={(endDate) => setDataForm(prev => ({ ...prev, endDate }))} />,
+            content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} date={date} setDate={setDate} closeDate={closeDate} setCloseDate={setCloseDate} />,
         },
         {
             label: 'Summary',
-            content: <Summary handleBack={handleBack} handleNext={handleNext} dataForm={dataForm} />,
+            content: <Summary handleBack={handleBack} handleNext={handleNext} dataForm={{ plan: plan!, selectedOptions, name, date: date!, closeDate }} />,
         },
     ]
 
+    useEffect(() => {
+        getPlans().then(plans => {
+            setPlans(plans)
+            setPlan(plans[0])
+        }).catch(console.error)
+        getOptions().then(setOptions).catch(console.error)
+    }, [])
 
     useEffect(() => {
         const elem = activeStep === 0 ? document.getElementById('create-competition-title') : document.getElementById(`step-${activeStep}`)
         elem?.scrollIntoView({ behavior: 'smooth', block: activeStep === 0 ? 'center' : 'start' })
     }, [activeStep])
 
+    useEffect(() => {
+        if (activeStep === steps.length) {
+            onClose()
+        }
+    }, [activeStep, onClose, steps.length])
+
     return (
-        <Modal
+        <Dialog
             open={isVisible}
             onClose={onClose}
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            fullWidth
         >
-            <Box 
-                sx={{ 
-                    position: 'relative',
-                    width: '90%', 
-                    maxWidth: '800px',
-                    height: '90%',
-                    overflow: 'auto',
-                    bgcolor: 'background.paper', 
-                    boxShadow: 24, 
-                    borderRadius: '8px'
-                }}
-            >
-                <Box sx={{ p: 4 }}>
-                    <CloseButton onClose={onClose} />
-
-                    <Typography variant="h4" align="center" color="primary" gutterBottom id="create-competition-title">
-                        Create Competition
-                    </Typography>
-
-                    <Stepper activeStep={activeStep} orientation="vertical">
-                        {steps.map((step, index) => (
-                            <Step key={index}>
-                                <StepLabel id={`step-${index}`}>
-                                    {step.label}
-                                </StepLabel>
-                                <StepContent>
-                                    <Box sx={{ mt: 2 }}>
-                                        {step.content}
-                                    </Box>
-                                </StepContent>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box>
+            <Box>
+                <DialogTitle variant="h5" align="center">
+                    Create Competition
+                </DialogTitle>
+                <CloseButton onClose={onClose} />
             </Box>
-        </Modal>
+            <DialogContent>
+                <Stepper activeStep={activeStep} orientation="vertical">
+                    {steps.map((step, index) => (
+                        <Step key={index}>
+                            <StepLabel id={`step-${index}`}>
+                                {step.label}
+                            </StepLabel>
+                            <StepContent>
+                                <Box sx={{ mt: 2 }}>
+                                    {step.content}
+                                </Box>
+                            </StepContent>
+                        </Step>
+                    ))}
+                </Stepper>
+            </DialogContent>
+        </Dialog>
     )
 }
 

@@ -1,14 +1,16 @@
 import { Box } from "@mui/material"
 import { Buttons } from "./Buttons"
 import { StepProps } from ".."
+import { PaymentPlan, Option, BaseCompetitionWithRelationId$ } from "@competition-manager/schemas"
+import { createCompetition } from "../../../../../api"
 
 type SummaryProps = StepProps & {
     dataForm : {
-        plan: string,
-        options: string[],
+        plan: PaymentPlan
+        selectedOptions: Option[],
         name: string,
-        startDate: Date | null,
-        endDate: Date | null
+        date: Date,
+        closeDate?: Date
     }
 }
 
@@ -17,9 +19,19 @@ export const Summary: React.FC<SummaryProps> = ({
     handleNext,
     dataForm
 }) => {
+    const baseCompetition = BaseCompetitionWithRelationId$.parse({
+        ...dataForm,
+        paymentPlanId: dataForm.plan.id,
+        optionsId: dataForm.selectedOptions.map(option => option.id)
+    })
+
+    const onSubmit = async () => {
+        await createCompetition(baseCompetition)
+        handleNext()
+    }
+
     return (
         <Box>
-
             <Box 
                 sx={{
                     display: 'flex',
@@ -30,14 +42,14 @@ export const Summary: React.FC<SummaryProps> = ({
             >
                 <Box>
                     <Box>
-                        <Box>Plan: {dataForm.plan}</Box>
-                        <Box>Options: {dataForm.options.join(', ')}</Box>
+                        <Box>Plan: {dataForm.plan.name}</Box>
+                        <Box>Options: {dataForm.selectedOptions.map(option => option.name).join(', ')}</Box>
                     </Box>
 
                     <Box>
                         <Box>Name: {dataForm.name}</Box>
-                        <Box>Start Date: {dataForm.startDate?.toLocaleDateString()}</Box>
-                        {dataForm.endDate && <Box>End Date: {dataForm.endDate?.toLocaleDateString()}</Box>}
+                        <Box>Date: {dataForm.date?.toLocaleDateString()}</Box>
+                        {dataForm.closeDate && <Box>Close Date: {dataForm.closeDate?.toLocaleDateString()}</Box>}
                     </Box>
                 </Box>
             </Box>
@@ -45,7 +57,7 @@ export const Summary: React.FC<SummaryProps> = ({
             <Buttons buttons={
                 [
                     { label: 'Back', onClick: handleBack },
-                    { label: 'Pay', onClick: handleNext }
+                    { label: 'Pay', onClick: onSubmit }
                 ]
             } />
         </Box>
