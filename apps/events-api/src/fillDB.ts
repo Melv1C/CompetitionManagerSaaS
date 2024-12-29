@@ -1,32 +1,29 @@
 import 'dotenv/config'
 import { prisma } from '@competition-manager/prisma';
-import { z } from 'zod';
-import { Event$ } from '@competition-manager/schemas';
+import { EventWithoutId$ } from '@competition-manager/schemas';
 import eprData from './epreuves.json';
-
-const EventWithoutId$ = Event$.omit({ id: true });
 
 export const fillDB = async () => {
     const events = await prisma.event.findMany();
-    for (let event of eprData) {
+    for (let eventData of eprData) {
         try {
-            EventWithoutId$.parse(event);
+            const event = EventWithoutId$.parse(eventData);
+            const existingEvent = events.find(e => e.name === event.name);
+            if (existingEvent) {
+                await prisma.event.update({
+                    where: { id: existingEvent.id },
+                    data: event
+                });
+                continue;
+            }
+            await prisma.event.create({
+                data: event
+            });
         } catch (error) {
-            console.log('Error parsing event', event);
+            console.log('Error parsing event', eventData);
             console.error(error);
             continue;
         }
-        const found = events.find(e => e.name === event.name);
-        if (found) {
-            await prisma.event.update({
-                where: { id: found.id },
-                data: event
-            });
-            continue;
-        }
-        await prisma.event.create({
-            data: event
-        });
     }
     console.log('DB events filled');
 }

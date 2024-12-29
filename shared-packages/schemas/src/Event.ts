@@ -25,5 +25,7 @@ export const Event$ = z.object({
     group: z.nativeEnum(EventGroup),
     type: z.nativeEnum(EventType),
 });
-
 export type Event = z.infer<typeof Event$>;
+
+export const EventWithoutId$ = Event$.omit({ id: true });
+export type EventWithoutId = z.infer<typeof EventWithoutId$>;
