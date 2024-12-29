@@ -1,25 +1,24 @@
 import { Router } from 'express';
-import bcrypt from 'bcrypt';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail } from '@competition-manager/utils';
-import { User$, UserWithoutIdAndRelations$, BaseUser$, USER_PREFERENCES_DEFAULTS, Email$ } from '@competition-manager/schemas';
+import { User$, UserWithoutIdAndRelations$, BaseUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
 export const router = Router();
 
-const sendVerificationEmail = (email: string, verificationToken: string) => {
+const sendVerificationEmail = async (email: Email, verificationToken: string) => {
     if (!process.env.BASE_URL) {
         throw new Error('BASE_URL not set');
     }
     const url = new URL(process.env.BASE_URL);
     url.pathname = `${process.env.PREFIX}/users/verify-email`;
     url.searchParams.set('token', verificationToken);
-    const emailData = Email$.parse({
+    const emailData = EmailData$.parse({
         to: email,
         subject: 'Verify your email',
         html: `<a href="${url.toString()}">Click here to verify your email</a>`
     });
-    sendEmail(emailData);
+    return await sendEmail(emailData);
 }
 
 
@@ -38,7 +37,7 @@ router.post(
                 res.status(409).json({ message: 'Email already in use' });
                 return;
             } 
-            newUser.password = await bcrypt.hash(newUser.password, 10);
+            newUser.password = await hashPassword(newUser.password);
             const userData = await prisma.user.create({
                 data: {
                     ...newUser,
@@ -53,7 +52,10 @@ router.post(
             const tokenData = UserToTokenData(User$.parse(userData));
             const accessToken = generateAccessToken(tokenData);
             const refreshToken = generateRefreshToken(tokenData);
-            sendVerificationEmail(userData.email, generateVerificationToken(tokenData));
+            if (!await sendVerificationEmail(userData.email, generateVerificationToken(tokenData))) {
+                res.status(500).send('Failed to send email');
+                return;
+            }
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',

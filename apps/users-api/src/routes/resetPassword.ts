@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import bcrypt from 'bcrypt';
-import { parseRequest, verifyResetPasswordToken, Key } from '@competition-manager/utils';
+import { parseRequest, verifyResetPasswordToken, Key, hashPassword } from '@competition-manager/utils';
 import { EncodeToken$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
@@ -18,34 +17,36 @@ const Body$ = z.object({
 router.post(
     '/reset-password',
     parseRequest(Key.Query, Query$),
+    parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
             const { token } = Query$.parse(req.query);
-            const tokenData = verifyResetPasswordToken(token);
             const { newPassword } = Body$.parse(req.body);
+            const tokenData = verifyResetPasswordToken(token);
             if (!tokenData) {
                 res.status(401).json({ message: 'Invalid or expired token' });
                 return;
             }
-            const user = await prisma.user.findUnique({
-                where: {
-                    email: tokenData.email
+            const hashedPassword = await hashPassword(newPassword);
+            try {
+                await prisma.user.update({
+                    where: {
+                        id: tokenData.id
+                    },
+                    data: {
+                        password: hashedPassword
+                    }
+                });
+                res.send('Password updated');
+            } catch (e: any) {
+                if (e.code === 'eeeeeeeeee') {
+                    res.status(404).send('User not found');
+                    return;
+                }else{
+                    res.status(500).send('Internal server error');
+                    return;
                 }
-            });
-            if (!user) {
-                res.status(404).json({ message: 'No account found with this email' });
-                return;
             }
-            const hashedPassword = await bcrypt.hash(newPassword, 10);
-            await prisma.user.update({
-                where: {
-                    id: user.id
-                },
-                data: {
-                    password: hashedPassword
-                }
-            });
-            res.send('Password updated');
         } catch (error) {
             console.error(error);
             res.status(500).send('Internal server error');

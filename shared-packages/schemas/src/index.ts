@@ -15,4 +15,4 @@ export * from './Token/EncodeToken';
 export * from './User';
 export * from './UserPreferences';
 export * from './Inscription';
-export * from './Email';
+export * from './EmailData';

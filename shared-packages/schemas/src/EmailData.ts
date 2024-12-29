@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-export const Email$ = z.object({
+export const EmailData$ = z.object({
     to: z.string().email(),
     subject: z.string(),
     html: z.string(),
 })
-export type Email = z.infer<typeof Email$>;
+export type EmailData = z.infer<typeof EmailData$>;

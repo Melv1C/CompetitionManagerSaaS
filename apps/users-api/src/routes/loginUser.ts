@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import bcrypt from 'bcrypt';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, Key } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePassword } from '@competition-manager/utils';
 import { User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
@@ -30,7 +29,7 @@ router.post(
             res.status(400).json({ message: 'Invalid email' });
             return;
         }
-        const valid = await bcrypt.compare(password, user.password);
+        const valid = await comparePassword(password, user.password);
         if (!valid) {
             res.status(400).json({ message: 'Invalid password' });
             return;
