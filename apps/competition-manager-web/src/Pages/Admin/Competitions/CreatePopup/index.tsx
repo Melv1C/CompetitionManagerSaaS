@@ -56,7 +56,7 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
         },
         {
             label: 'Summary',
-            content: <Summary handleBack={handleBack} handleNext={handleNext} dataForm={{ plan: plan!, selectedOptions, name, date: date!, closeDate }} />,
+            content: <Summary handleBack={handleBack} dataForm={{ plan: plan!, selectedOptions, name, date: date!, closeDate }} />,
         },
     ]
 

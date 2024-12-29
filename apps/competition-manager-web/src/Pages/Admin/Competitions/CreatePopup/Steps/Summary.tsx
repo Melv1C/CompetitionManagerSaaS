@@ -3,8 +3,9 @@ import { Buttons } from "./Buttons"
 import { StepProps } from ".."
 import { PaymentPlan, Option, BaseCompetitionWithRelationId$ } from "@competition-manager/schemas"
 import { createCompetition } from "../../../../../api"
+import { useNavigate } from "react-router-dom"
 
-type SummaryProps = StepProps & {
+type SummaryProps = Omit<StepProps, 'handleNext'> & {
     dataForm : {
         plan: PaymentPlan
         selectedOptions: Option[],
@@ -16,7 +17,6 @@ type SummaryProps = StepProps & {
 
 export const Summary: React.FC<SummaryProps> = ({
     handleBack,
-    handleNext,
     dataForm
 }) => {
     const baseCompetition = BaseCompetitionWithRelationId$.parse({
@@ -25,9 +25,12 @@ export const Summary: React.FC<SummaryProps> = ({
         optionsId: dataForm.selectedOptions.map(option => option.id)
     })
 
+    const navigate = useNavigate()
+
     const onSubmit = async () => {
-        await createCompetition(baseCompetition)
-        handleNext()
+        createCompetition(baseCompetition).then((competition) => {
+            navigate(`/admin/competitions/${competition.eid}`)
+        }) 
     }
 
     return (
