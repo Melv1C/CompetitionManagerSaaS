@@ -19,7 +19,11 @@ router.get(
     async (req: AuthenticatedRequest, res) => {
         try {
             const { isAdmin, toDate, fromDate } = Query$.parse(req.query);
-            if (isAdmin && req.user! && isAuthorized(req.user, Role.ADMIN)) {
+            if (isAdmin && !req.user) {
+                res.status(401).send('Unauthorized');
+                return;
+            }
+            if (isAdmin && isAuthorized(req.user!, Role.ADMIN)) {
                 const admins = await prisma.admin.findMany({
                     where: {
                         userId: req.user!.id,
