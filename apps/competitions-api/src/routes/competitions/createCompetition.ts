@@ -13,6 +13,10 @@ router.post(
         // TODO: stripe
         const { paymentPlanId, optionsId, ...competition } = BaseCompetitionWithRelationId$.parse(req.body);
         const defaultCompetition = DefaultCompetition$.parse(competition);
+        // Set endInscriptionDate to the day before the competition by default
+        defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
+        defaultCompetition.endInscriptionDate.setDate(defaultCompetition.endInscriptionDate.getDate() - 1);
+        defaultCompetition.endInscriptionDate.setHours(23, 59, 59, 999);
         const newCompetition = await prisma.competition.create({
             data: {
                 ...defaultCompetition,
