@@ -1,6 +1,6 @@
 
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome'
-import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faFloppyDisk, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 type IconProps = Omit<FontAwesomeIconProps, 'icon'>
 
@@ -20,6 +20,12 @@ export const Delete: React.FC<IconProps> = (props) => {
     return (
       <FontAwesomeIcon icon={faTrash} {...props} />
     )
+}
+
+export const Save: React.FC<IconProps> = (props) => {
+	return (
+	  <FontAwesomeIcon icon={faFloppyDisk} {...props} />
+	)
 }
 
 

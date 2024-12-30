@@ -4,12 +4,13 @@ import { Email$, UserPassword$ } from "@competition-manager/schemas";
 
 import { Alert, Box, Button, Divider, Link, Typography } from "@mui/material";
 
-import { useUserToken } from "../../GlobalsStates/userToken";
 import { register } from "../../api";
 
 
 import { decodeToken } from "../../utils/decodeToken";
 import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
+import { useSetAtom } from "jotai";
+import { userTokenAtom } from "../../GlobalsStates";
 
 type SignUpProps = {
     onToggle: () => void;
@@ -17,7 +18,7 @@ type SignUpProps = {
 
 export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
-    const [, setUserToken] = useUserToken();
+    const setUserToken = useSetAtom(userTokenAtom);
 
     const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(true);

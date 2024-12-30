@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, TextField, TextFieldProps } from '@mui/material';
+import { FormControl, FormControlProps, FormLabel, FormLabelProps, TextField, TextFieldProps } from '@mui/material';
 import { useState } from 'react';
 import { ZodSchema } from 'zod';
 
@@ -23,6 +23,8 @@ export type BaseFieldWith$Props = Omit<TextFieldProps, 'label' | 'value'> & {
     label: LabelProps;
     value: FieldValueProps;
     validator: Validator;
+    formControlProps?: FormControlProps;
+    formLabelProps?: FormLabelProps;
 };
 
 export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({ 
@@ -30,14 +32,16 @@ export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
     label,
     value,
     validator,
+    formControlProps,
+    formLabelProps,
     ...props
 }) => {
     const [hasBlurred, setHasBlurred] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
     return (
-        <FormControl>
-            {label.hasExtrenLabel && <FormLabel htmlFor={id}>{label.value}</FormLabel>}
+        <FormControl {...formControlProps}>
+            {label.hasExtrenLabel && <FormLabel htmlFor={id} {...formLabelProps}>{label.value}</FormLabel>}
             <TextField
                 label={!label.hasExtrenLabel ? label.value : ''}
                 value={value.value}

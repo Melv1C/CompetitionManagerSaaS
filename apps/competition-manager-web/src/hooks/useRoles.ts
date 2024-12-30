@@ -1,8 +1,9 @@
 import { Role } from "@competition-manager/schemas";
-import { useUserToken } from "../GlobalsStates";
+import { useAtomValue } from "jotai";
+import { userTokenAtom } from "../GlobalsStates";
 
 export const useRoles = () => {
-    const [userToken] = useUserToken();
+    const userToken = useAtomValue(userTokenAtom);
 
     const isNotLogged = userToken === 'NOT_LOGGED';
 

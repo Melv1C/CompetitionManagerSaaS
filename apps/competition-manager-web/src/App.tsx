@@ -1,7 +1,7 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom'
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet } from 'react-router-dom'
 import './App.css'
 
-import { createTheme, ThemeProvider, Toolbar } from "@mui/material"
+import { Box, createTheme, ThemeProvider } from "@mui/material"
 import { faHome, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
 
 import { useAutoLogin } from './hooks'
@@ -53,25 +53,29 @@ function App() {
     { label: 'Competitions', href: '/competitions', icon: faCalendarDays },
   ]
 
+  const router = createBrowserRouter(
+    createRoutesFromElements([
+      <Route element={<><NavBar items={navItems} /><Outlet /></>} >
+        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/competitions" element={<Competitions />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/admin/competitions" element={<AdminCompetitions />} />
+        <Route path="/admin/competitions/:eid/*" element={<AdminCompetition />} />
+        <Route path="/superadmin/*" element={<SuperAdmin />} />
+        <Route path="*" element={<h1>Not Found</h1>} />
+      </Route>
+    ])
+  )
+
   useAutoLogin()
 
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={lightTheme}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <BrowserRouter>
-              <NavBar items={navItems} />
-              <Toolbar />
-              <Routes>
-                <Route path="/" element={<h1>Home</h1>} />
-                <Route path="/competitions" element={<Competitions />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="/admin/competitions" element={<AdminCompetitions />} />
-                <Route path="/admin/competitions/:id" element={<AdminCompetition />} />
-                <Route path="/superadmin/*" element={<SuperAdmin />} />
-                <Route path="*" element={<h1>Not Found</h1>} />
-              </Routes>
-          </BrowserRouter>
+          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+          <RouterProvider router={router} />
+          </Box>
         </LocalizationProvider>
       </ThemeProvider>
     </QueryClientProvider>
