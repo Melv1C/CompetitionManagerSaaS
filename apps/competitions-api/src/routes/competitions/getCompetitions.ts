@@ -39,16 +39,18 @@ router.get(
                     const admins = await prisma.admin.findMany({
                         where: {
                             userId: req.user!.id,
+                            competition: {
+                                date: {
+                                    gte: fromDate,
+                                    lte: toDate,
+                                }
+                            }
                         },
                         select: {
                             competition: true
                         },
                     });
-                    const competitions = admins.map((a) => a.competition).filter((competition) => 
-                        (!fromDate || competition.date >= fromDate) && 
-                        (!toDate || competition.date <= toDate)
-                    );
-                    res.send(DisplayCompetition$.array().parse(competitions));
+                    res.send(DisplayCompetition$.array().parse(admins.map(admin => admin.competition)));
                     return;
                 }
             }

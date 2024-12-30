@@ -33,7 +33,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (req.user!.role || !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmins$.parse(competition.admins), res)) return;
+            if (req.user!.role == Role.SUPERADMIN || !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmins$.parse(competition.admins), res)) return;
             try {
                 const updatedCompetition = await prisma.competition.update({
                     where: {
