@@ -43,7 +43,7 @@ export const SideNav: React.FC<MenuItemProps> = ({ items, isMenuOpen, setIsMenuO
                             sx={{ 
                                 color: 'white',
                                 justifyContent: 'flex-start',
-                                gap: '0.5rem',
+                                gap: '1rem',
                             }}
                         >
                             <ListItemIcon 
