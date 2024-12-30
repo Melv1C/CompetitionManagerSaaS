@@ -23,30 +23,35 @@ router.get(
                 res.status(401).send('Unauthorized');
                 return;
             }
-            if (isAdmin && isAuthorized(req.user!, Role.ADMIN)) {
-                const admins = await prisma.admin.findMany({
-                    where: {
-                        userId: req.user!.id,
-                    },
-                    select: {
-                        competitionId: true,
-                    },
-                });
-                const competitions = await prisma.competition.findMany({
-                    where: {
-                        id: {
-                            in: admins.map((a) => a.competitionId),
+            if (isAdmin) {
+                if (req.user!.role === Role.SUPERADMIN) {
+                    const competitions = await prisma.competition.findMany({
+                        where: {
+                            date: {
+                                gte: fromDate,
+                                lte: toDate,
+                            }
                         },
-                        date: {
-                            gte: fromDate,
-                            lte: toDate,
-                        }
-                    },
-                });
-                res.send(DisplayCompetition$.array().parse(competitions));
-                return;
+                    });
+                    res.send(DisplayCompetition$.array().parse(competitions));
+                    return;
+                }else if (isAuthorized(req.user!, Role.ADMIN)) {
+                    const admins = await prisma.admin.findMany({
+                        where: {
+                            userId: req.user!.id,
+                        },
+                        select: {
+                            competition: true
+                        },
+                    });
+                    const competitions = admins.map((a) => a.competition).filter((competition) => 
+                        (!fromDate || competition.date >= fromDate) && 
+                        (!toDate || competition.date <= toDate)
+                    );
+                    res.send(DisplayCompetition$.array().parse(competitions));
+                    return;
+                }
             }
-            
             const competitions = await prisma.competition.findMany({
                 where: {
                     publish: true,

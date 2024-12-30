@@ -6,6 +6,24 @@ import { z } from 'zod';
 
 export const router = Router();
 
+const competitionQuery = {
+    include: {
+        events: true,
+        paymentPlan: {
+            include: {
+                includedOptions: true,
+            },
+        },
+        options: true,
+        admins: {
+            include: {
+                user: true,
+            },
+        },
+        freeClubs: true,
+    },
+};
+
 const Params$ = z.object({
     competitionEid: Eid$,
 });
@@ -26,6 +44,20 @@ router.get(
             res.status(401).send('Unauthorized');
             return;
         }
+        if (req.user!.role === Role.SUPERADMIN) {
+            const competition = await prisma.competition.findUnique({
+                where: {
+                    eid: competitionEid,
+                },
+                ...competitionQuery
+            });
+            if (!competition) {
+                res.status(404).send('Competition not found');
+                return;
+            }
+            res.send(Competition$.parse(competition));
+            return;
+        }
         if (isAdmin && isAuthorized(req.user!, Role.ADMIN)) {
             const admin = await prisma.admin.findFirst({
                 where: {
@@ -36,21 +68,7 @@ router.get(
                 },
                 select: {
                     competition: {
-                        include: {
-                            events: true,
-                            paymentPlan: {
-                                include: {
-                                    includedOptions: true,
-                                },
-                            },
-                            options: true,
-                            admins: {
-                                include: {
-                                    user: true,
-                                },
-                            },
-                            freeClubs: true,
-                        },
+                        ...competitionQuery
                     },
                 },
             });
@@ -67,21 +85,7 @@ router.get(
                 eid: competitionEid,
                 publish: true
             },
-            include: {
-                events: true,
-                paymentPlan: {
-                    include: {
-                        includedOptions: true,
-                    },
-                },
-                options: true,
-                admins: {
-                    include: {
-                        user: true,
-                    },
-                },
-                freeClubs: true,
-            },
+            ...competitionQuery
         });
         if (!competition) {
             res.status(404).send('Competition not found');

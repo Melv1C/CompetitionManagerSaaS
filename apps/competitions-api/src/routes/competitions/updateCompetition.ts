@@ -19,13 +19,13 @@ router.put(
         try {
             //si add option stripe TODO
 
-            const { paymentPlanId, optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetitionWithRelationId$.parse(req.body);
+            const { optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetitionWithRelationId$.parse(req.body);
             const { eid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid
                 },
-                include: {
+                select: {
                     admins: true
                 }
             });
@@ -33,9 +33,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmins$.parse(competition.admins), res)) {
-                return;
-            }
+            if (req.user!.role || !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmins$.parse(competition.admins), res)) return;
             try {
                 const updatedCompetition = await prisma.competition.update({
                     where: {
@@ -43,20 +41,34 @@ router.put(
                     },
                     data: {
                         ...newCompetitionData,
-                        paymentPlan: {
-                            connect: {
-                                id: paymentPlanId
-                            }
-                        },
                         options: {
                             set: optionsId.map(id => ({ id }))
                         },
                         freeClubs: {
                             set: freeClubsId.map(id => ({ id }))
                         }
+                    },
+                    include: {
+                        paymentPlan: true,
+                        options: true,
+                        admins: {
+                            include: {
+                                user: {
+                                    include: {
+                                        preferences: true
+                                    }
+                                }
+                            }
+                        },
+                        events: {
+                            include: {
+                                categories: true,
+                                event: true
+                            }
+                        }
                     }
                 });
-                res.send(updatedCompetition);
+                res.send(Competition$.parse(updatedCompetition));
             } catch (e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('Wrong payment plan id or option id or club id');
