@@ -4,7 +4,7 @@ import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEuroSign } from "@fortawesome/free-solid-svg-icons"
 import { createOption, updateOption } from "../../../api"
-import { Option, Option$, OptionWithoutId, OptionWithoutId$ } from "@competition-manager/schemas"
+import { Option, Option$, UpdateOption, UpdateOption$, CreateOption$ } from "@competition-manager/schemas"
 
 
 type OptionPopupProps = {  
@@ -15,7 +15,7 @@ type OptionPopupProps = {
 
 export const OptionPopup: React.FC<OptionPopupProps> = ({isVisible, onClose, editOption}) => {
 
-    const [option, setOption] = useState<OptionWithoutId>(editOption ?? {
+    const [option, setOption] = useState<UpdateOption>(editOption ?? {
         name: '',
         description: '',
         price: 0,
@@ -29,7 +29,7 @@ export const OptionPopup: React.FC<OptionPopupProps> = ({isVisible, onClose, edi
 
     const handleSubmit = () => {
         if (editOption) {
-            updateOption(editOption.id, OptionWithoutId$.parse(option)).then((option) => {
+            updateOption(editOption.id, UpdateOption$.parse(option)).then((option) => {
                 onClose(Option$.parse(option))
             }).catch((e) => {
                 console.log(e)
@@ -37,7 +37,7 @@ export const OptionPopup: React.FC<OptionPopupProps> = ({isVisible, onClose, edi
             return;
         } 
 
-        createOption(OptionWithoutId$.parse(option)).then((option) => {
+        createOption(CreateOption$.parse(option)).then((option) => {
             onClose(Option$.parse(option))
         }).catch((e) => {
             console.log(e)

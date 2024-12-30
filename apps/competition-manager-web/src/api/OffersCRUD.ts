@@ -1,4 +1,4 @@
-import { CreatePaymentPlan, Id, Option, Option$, OptionWithoutId, PaymentPlan, PaymentPlan$, UpdatePaymentPlan } from "@competition-manager/schemas";
+import { CreatePaymentPlan, Id, Option, Option$, CreateOption, UpdateOption, PaymentPlan, PaymentPlan$, UpdatePaymentPlan } from "@competition-manager/schemas";
 import { api } from "../utils/api";
 
 export const getPlans = async (): Promise<PaymentPlan[]> => {
@@ -26,12 +26,12 @@ export const getOptions = async (): Promise<Option[]> => {
     return Option$.array().parse(data);
 };
 
-export const createOption = async (option: OptionWithoutId): Promise<Option> => {
+export const createOption = async (option: CreateOption): Promise<Option> => {
     const { data } = await api.post('/offers/options', option);
     return Option$.parse(data);
 }
 
-export const updateOption = async (id: Id, option: OptionWithoutId): Promise<Option> => {
+export const updateOption = async (id: Id, option: UpdateOption): Promise<Option> => {
     const { data } = await api.put(`/offers/options/${id}`, option);
     return Option$.parse(data);
 }
