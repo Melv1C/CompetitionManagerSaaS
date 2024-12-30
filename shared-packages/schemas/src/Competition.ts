@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id$, Name$, FutureDate$, Eid$, Email$ } from './Base';
+import { Id$, Name$, Eid$, Email$, Date$ } from './Base';
 import { CompetitionEvent$ } from './CompetitionEvent';
 import { PaymentPlan$, Option$ } from './PaymentPlan';
 import { Admin$ } from './Admin';
@@ -24,7 +24,7 @@ export const Competition$ = z.object({
 
     // Basic info
     name: Name$,
-    date: FutureDate$,
+    date: Date$,
 
     // Other info
     description: z.string().default(''),
@@ -33,15 +33,15 @@ export const Competition$ = z.object({
     method: z.nativeEnum(PaymentMethod).default(PaymentMethod.FREE),
     paymentPlan: PaymentPlan$,
     options: z.array(Option$).default([]),
-    startInscriptionDate: FutureDate$.default(new Date()),
-    endInscriptionDate: FutureDate$.default(new Date()),
+    startInscriptionDate: Date$.default(new Date()),
+    endInscriptionDate: Date$.default(new Date()),
 
     // Default settings
     admins: z.array(Admin$),
     email: Email$,
 
     // Advanced settings
-    closeDate: FutureDate$.nullish(),
+    closeDate: Date$.nullish(),
     freeClubs: z.array(Club$).default([]),
     oneDayPermissions: z.array(z.nativeEnum(OneDayPermission)).default([]),
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
