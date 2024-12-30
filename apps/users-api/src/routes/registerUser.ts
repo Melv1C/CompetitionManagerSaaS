@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword } from '@competition-manager/utils';
-import { User$, UserWithoutIdAndRelations$, BaseUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$ } from '@competition-manager/schemas';
+import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$, Role } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 
 export const router = Router();
@@ -24,10 +24,10 @@ const sendVerificationEmail = (email: Email, verificationToken: string) => {
 
 router.post(
     '/register',
-    parseRequest(Key.Body, BaseUser$),
+    parseRequest(Key.Body, CreateUser$),
     async (req, res) => {
         try {
-            const newUser = UserWithoutIdAndRelations$.parse(req.body);
+            const newUser = CreateUser$.parse(req.body);
             const user = await prisma.user.findUnique({
                 where: {
                     email: newUser.email
@@ -41,6 +41,7 @@ router.post(
             const userData = await prisma.user.create({
                 data: {
                     ...newUser,
+                    role: Role.UNCONFIRMED_USER,
                     preferences: {
                         create: USER_PREFERENCES_DEFAULTS
                     },
