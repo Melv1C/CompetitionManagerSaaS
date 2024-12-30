@@ -3,7 +3,7 @@ import { prisma } from '@competition-manager/prisma';
 import 'dotenv/config';
 import { z } from 'zod';
 import { parseRequest, checkRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
-import { Eid$, OneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
+import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -24,12 +24,12 @@ const Params$ = z.object({
 router.post(
     '/:competitionEid/oneDayAthlete',
     parseRequest(Key.Params, Params$),
-    parseRequest(Key.Body, OneDayAthlete$),
+    parseRequest(Key.Body, CreateOneDayAthlete$),
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
-            const { clubAbbr ,...oneDayAthData } = OneDayAthlete$.parse(req.body);
+            const { clubAbbr ,...oneDayAthData } = CreateOneDayAthlete$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
