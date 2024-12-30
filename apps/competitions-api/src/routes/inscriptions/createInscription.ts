@@ -55,7 +55,7 @@ router.post(
             
             if (!admin){
                 //TODO stripe
-            }else{
+            } else{
                 if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
                     return;
                 }
@@ -91,7 +91,7 @@ router.post(
                 if (e.code === 'P2025') {
                     res.status(404).send('Athlete license not valid');
                     return;
-                }else{
+                } else{
                     console.error(e);
                     res.status(500).send('Internal server error');
                     return;

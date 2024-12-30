@@ -35,7 +35,7 @@ router.get(
                     });
                     res.send(DisplayCompetition$.array().parse(competitions));
                     return;
-                }else if (isAuthorized(req.user!, Role.ADMIN)) {
+                } else if (isAuthorized(req.user!, Role.ADMIN)) {
                     const admins = await prisma.admin.findMany({
                         where: {
                             userId: req.user!.id,
