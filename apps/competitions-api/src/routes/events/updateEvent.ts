@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
-import { BaseAdmin$, Eid$, BaseCompetitionEventWithRealtionId$, Access, Role } from '@competition-manager/schemas';
+import { BaseAdmin$, Eid$, UpdateCompetitionEvent$, Access, Role } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -14,12 +14,12 @@ const Params$ = z.object({
 router.put(
     '/:competitionEid/events/:eventEid',
     parseRequest(Key.Params, Params$),
-    parseRequest(Key.Body, BaseCompetitionEventWithRealtionId$),
+    parseRequest(Key.Body, UpdateCompetitionEvent$),
     checkRole(Role.ADMIN),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid, eventEid } = Params$.parse(req.params);
-            const { categoriesId, parentId, eventId, ...competitionEvent } = BaseCompetitionEventWithRealtionId$.parse(req.body);
+            const { categoriesId, parentId, eventId, ...competitionEvent } = UpdateCompetitionEvent$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
