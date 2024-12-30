@@ -151,6 +151,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     </Box>
                 </Toolbar>
             </AppBar>
+            <Toolbar />
         </Box>
     );
 };
