@@ -73,7 +73,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={lightTheme}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
           <RouterProvider router={router} />
+          </Box>
         </LocalizationProvider>
       </ThemeProvider>
     </QueryClientProvider>
