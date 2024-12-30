@@ -1,15 +1,16 @@
 import { Box, Chip, Divider, FormControl, FormLabel, InputLabel, MenuItem, Select, Switch, Typography } from "@mui/material";
 import { useAtomValue } from "jotai";
-import { competitionAtom } from "../../../GlobalsStates";
-import { useEffect, useState } from "react";
-import { Loading } from "../../../Components";
-import { MaxWidth } from "../../../Components/MaxWidth";
-import { TextFieldWith$ } from "../../../Components/FieldsWithSchema";
+import { competitionAtom } from "../../../../GlobalsStates";
+import { useEffect, useMemo, useState } from "react";
+import { Loading } from "../../../../Components";
+import { MaxWidth } from "../../../../Components/MaxWidth";
+import { TextFieldWith$ } from "../../../../Components/FieldsWithSchema";
 import { Club, Competition, Competition$, PaymentMethod } from "@competition-manager/schemas";
-import { CircleButton } from "../../../Components/CircleButton";
-import { Save } from "../../../Components/Icons";
-import { DatePicker } from "@mui/x-date-pickers";
+import { CircleButton } from "../../../../Components/CircleButton";
+import { Save } from "../../../../Components/Icons";
+import { MobileDatePicker, MobileDateTimePicker } from "@mui/x-date-pickers";
 import { useBlocker } from "react-router-dom";
+import { OnLeavePopup } from "./OnLeavePopup";
 
 export const Info = () => {
     const competition = useAtomValue(competitionAtom);
@@ -24,44 +25,54 @@ export const Info = () => {
 
     const [isMultiDay, setIsMultiDay] = useState(competition?.closeDate !== null);
 
-    const isFormValid = isNameValid && isDescriptionValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid;
-
-    const isSaveDisabled = !isFormValid || JSON.stringify(competition) === JSON.stringify(competitionState);
-
-    const blocker = useBlocker(!isSaveDisabled);
-
-    useEffect(() => {
-        if (blocker.state === 'blocked') {
-            const response = window.confirm('You have unsaved changes, are you sure you want to leave?');
-            if (response) {
-                blocker.proceed!();
-                
-            }
-        }
-
-        return () => {
-            if (blocker.state === 'blocked') {
-                blocker.reset();
-            }
-        }
-    }, [blocker])
-
-    useEffect(() => {
-        if (!isSaveDisabled) {
-          window.onbeforeunload = () => true;
-        }
+    const isModified = JSON.stringify(competition) !== JSON.stringify(competitionState);
     
-        return () => {
-          window.onbeforeunload = null;
-        };
-      }, [isSaveDisabled]);
+    const isFormValid = useMemo(() => (
+        isNameValid && isDescriptionValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid
+    ), [isNameValid, isDescriptionValid, isDateValid, isMultiDay, isCloseDateValid, isEmailValid]);
+    
+    const isSaveEnabled = useMemo(() => isFormValid && isModified, [isFormValid, isModified]);
+
+    const blocker = useBlocker(isModified);
+    const [isBlock, setIsBlock] = useState(false);
 
     useEffect(() => {
         if (competition && !competitionState) {
             setCompetitionState(competition);
             setIsMultiDay(competition.closeDate !== null);
         }
-    }, [competition]);
+    }, [competition, competitionState]);
+    
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            if (isModified) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+    
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [isModified]);
+
+    useEffect(() => {
+        if (blocker.state === 'blocked') {
+            setIsBlock(true);
+        }
+    }, [blocker]);
+    
+    const handleStay = () => {
+        setIsBlock(false);
+    };
+    
+    const handleLeave = () => {
+        setIsBlock(false);
+        if (blocker.state === 'blocked') {
+            blocker.proceed();
+        }
+    };
 
     if (!competitionState) {
         return <Loading />
@@ -69,6 +80,7 @@ export const Info = () => {
 
     return (
         <MaxWidth>
+            {isBlock && <OnLeavePopup onStay={handleStay} onLeave={handleLeave} />}
             <Box component="form">
                 <Box 
                     sx={{ 
@@ -108,7 +120,7 @@ export const Info = () => {
                         onClick={() => { }}
                         variant="contained"
                         color="success"
-                        disabled={isSaveDisabled}
+                        disabled={!isSaveEnabled}
                     >
                         <Save size="xl" />
                     </CircleButton>
@@ -131,7 +143,7 @@ export const Info = () => {
                         }}
                     >
 
-                        <DatePicker
+                        <MobileDatePicker
                             label={isMultiDay ? 'Start Date' : 'Date'}
                             value={competitionState.date}
                             onChange={(date) => setCompetitionState({ ...competitionState, date: date || new Date() })}
@@ -159,7 +171,7 @@ export const Info = () => {
                         </FormControl>
 
                         {isMultiDay && 
-                            <DatePicker
+                            <MobileDatePicker
                                 label="Close Date"
                                 value={competitionState.closeDate}
                                 onChange={(date) => setCompetitionState({ ...competitionState, closeDate: date || undefined })}
@@ -202,21 +214,23 @@ export const Info = () => {
                             gap: '1rem',
                         }}
                     >
-                        <DatePicker
+                        <MobileDateTimePicker
+                            ampm={false}
                             label="Start Inscription Date"
                             value={competitionState.startInscriptionDate}
                             onChange={(date) => setCompetitionState({ ...competitionState, startInscriptionDate: date || undefined })}
                             //onError={(error) => setIsDateValid(!error)}
-                            format="dd/MM/yyyy"
+                            format="dd/MM/yyyy HH:mm"
                             disablePast
                         />
 
-                        <DatePicker
+                        <MobileDateTimePicker
+                            ampm={false}
                             label="End Inscription Date"
                             value={competitionState.endInscriptionDate}
                             onChange={(date) => setCompetitionState({ ...competitionState, endInscriptionDate: date || undefined })}
                             //onError={(error) => setIsDateValid(!error)}
-                            format="dd/MM/yyyy"
+                            format="dd/MM/yyyy HH:mm"
                             disablePast
                             minDate={competitionState.startInscriptionDate ? new Date(competitionState.startInscriptionDate.getTime() + 24 * 60 * 60 * 1000) : undefined}
                             maxDate={competitionState.date}
@@ -278,54 +292,3 @@ export const Info = () => {
         </MaxWidth>
     )
 }
-
-
-/*
-{
-    "id": 5,
-    "eid": "23b0bb8a-4a00-4869-9b22-821f42176757",
-    "name": "Tournoi des jeunes",
-    "date": "2025-01-21T23:00:00.000Z",
-    "description": "",
-    "events": [],
-    "publish": false,
-    "method": "free",
-    "paymentPlan": {
-        "id": 1,
-        "name": "Basic",
-        "description": "",
-        "includedOptions": [],
-        "price": 1
-    },
-    "options": [
-        {
-            "id": 1,
-            "name": "Live result",
-            "description": "",
-            "price": 2
-        }
-    ],
-    "startInscriptionDate": null,
-    "endInscriptionDate": null,
-    "admins": [
-        {
-            "id": 5,
-            "user": {
-                "id": 1,
-                "email": "claes.melvyn@gmail.com",
-                "role": "superadmin"
-            },
-            "userId": 1,
-            "competitionId": 5,
-            "access": [
-                "owner"
-            ]
-        }
-    ],
-    "email": "claes.melvyn@gmail.com",
-    "closeDate": null,
-    "freeClubs": [],
-    "oneDayPermissions": [],
-    "oneDayBibStart": 9900
-}
-    */
