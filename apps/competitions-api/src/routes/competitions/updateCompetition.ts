@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, checkAdminRole, Key } from '@competition-manager/utils';
-import { UpdateCompetitionWithRelationId$, Competition$, Access, Role } from '@competition-manager/schemas';
+import { UpdateCompetition$, Competition$, Access, Role } from '@competition-manager/schemas';
 import { BaseAdmin$ } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -12,14 +12,14 @@ const Params$ = Competition$.pick({
 
 router.put(
     '/:eid',
-    parseRequest(Key.Body, UpdateCompetitionWithRelationId$),
+    parseRequest(Key.Body, UpdateCompetition$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.ADMIN),
     async (req: AuthenticatedRequest, res) => {
         try {
             //si add option stripe TODO
 
-            const { optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetitionWithRelationId$.parse(req.body);
+            const { optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetition$.parse(req.body);
             const { eid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {

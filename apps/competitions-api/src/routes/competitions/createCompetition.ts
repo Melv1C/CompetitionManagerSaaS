@@ -1,17 +1,17 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, Key } from '@competition-manager/utils';
-import { Access, BaseCompetitionWithRelationId$, Competition$, DefaultCompetition$, Role } from '@competition-manager/schemas';
+import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } from '@competition-manager/schemas';
 
 export const router = Router();
 
 router.post(
     '/',
-    parseRequest(Key.Body, BaseCompetitionWithRelationId$),
+    parseRequest(Key.Body, CreateCompetition$),
     checkRole(Role.CLUB),
     async (req: AuthenticatedRequest, res) => {
         // TODO: stripe
-        const { paymentPlanId, optionsId, ...competition } = BaseCompetitionWithRelationId$.parse(req.body);
+        const { paymentPlanId, optionsId, ...competition } = CreateCompetition$.parse(req.body);
         const defaultCompetition = DefaultCompetition$.parse(competition);
         // Set endInscriptionDate to the day before the competition by default
         defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
