@@ -25,13 +25,13 @@ export const BaseAdmin$ = Admin$.pick({
 });
 export type BaseAdmin = z.infer<typeof BaseAdmin$>;
 
-export const BaseAdmins$ = z.array(BaseAdmin$);
-export type BaseAdmins = z.infer<typeof BaseAdmins$>;
+export const CreateAdmin$ = BaseAdmin$
+export type CreateAdmin = z.infer<typeof CreateAdmin$>;
 
-export const AdminWithoutIdAndRelation$ = Admin$.omit({
+export const UpdateAdmin$ = Admin$.omit({
     id: true,
     user: true,
     userId: true,
     competitionId: true
 });
-export type AdminWithoutIdAndRelation = z.infer<typeof AdminWithoutIdAndRelation$>;
+export type UpdateAdmin = z.infer<typeof UpdateAdmin$>;
