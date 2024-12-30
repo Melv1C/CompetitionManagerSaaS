@@ -1,13 +1,13 @@
 import 'dotenv/config'
 import { prisma } from '@competition-manager/prisma';
-import { CategoryWithoutId$ } from '@competition-manager/schemas';
+import { CreateCategory$ } from '@competition-manager/schemas';
 import catData from './categories.json';
 
 export const fillDB = async () => {
     const categories = await prisma.category.findMany();
     for (const cat of catData) {
         try {
-            const category = CategoryWithoutId$.parse(cat);
+            const category = CreateCategory$.parse(cat);
             const existingCategory = categories.find(c => c.name === category.name);
             if (existingCategory) {
                 await prisma.category.update({
