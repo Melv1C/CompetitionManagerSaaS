@@ -15,9 +15,6 @@ export type Abbr = z.infer<typeof Abbr$>;
 export const Date$ = z.coerce.date().min(new Date('1900-01-01'));
 export type Date = z.infer<typeof Date$>;
 
-export const FutureDate$ = Date$.min(new Date());
-export type FutureDate = z.infer<typeof FutureDate$>;
-
 export const Price$ = z.coerce.number().nonnegative();
 export type Price = z.infer<typeof Price$>;
 
