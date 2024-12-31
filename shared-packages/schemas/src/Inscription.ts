@@ -16,10 +16,20 @@ export const Inscription$ = z.object({
 export type Inscription = z.infer<typeof Inscription$>;
 
 export const CreateInscription$ = Inscription$.pick({
-    paid: true,
-    confirmed: true
+    //TODO pick record, ...
 }).extend({
     competitionEventEid: Eid$,
     athleteLicense: License$
 });
 export type CreateInscription = z.infer<typeof CreateInscription$>;
+
+export const DefaultInscription$ = Inscription$.omit({
+    id: true,
+    athlete: true,
+    Competition: true,
+    CompetitionEvent$: true,
+}).extend({
+    competitionEventEid: Eid$,
+    athleteLicense: License$
+});
+export type DefaultInscription = z.infer<typeof DefaultInscription$>;

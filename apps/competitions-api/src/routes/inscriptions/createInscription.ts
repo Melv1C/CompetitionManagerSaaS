@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/utils';
-import { Competition$, CreateInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
@@ -62,8 +62,8 @@ router.post(
             }
 
             try {
-                for (const inscription of Body$.parse(req.body)) {
-                    const athlete = await findAthleteWithLicense(inscription.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                for (const { athleteLicense, competitionEventEid, ...inscription } of DefaultInscription$.array().parse(req.body)) {
+                    const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                     await prisma.inscription.create({
                         data: {
                             athlete: {
@@ -78,11 +78,10 @@ router.post(
                             },
                             competitionEvent: {
                                 connect: {
-                                    eid: inscription.competitionEventEid
+                                    eid: competitionEventEid
                                 }
                             },
-                            paid: inscription.paid,
-                            confirmed: inscription.confirmed
+                            ...inscription
                         }
                     })
                 }
