@@ -4,6 +4,7 @@ import { fillDB } from "./fillDB";
 import { prisma } from "@competition-manager/prisma";
 
 import { corsMiddleware } from '@competition-manager/utils';
+import { Event$ } from "@competition-manager/schemas";
 
 fillDB();
 
@@ -17,7 +18,7 @@ app.use(corsMiddleware);
 
 app.get(`${PREFIX}/events`, (req, res) => {
     prisma.event.findMany().then(events => {
-        res.send(events);
+        res.send(Event$.array().parse(events));
     });
 });
 
