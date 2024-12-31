@@ -5,7 +5,6 @@ import { PaymentPlan$, Option$ } from './PaymentPlan';
 import { Admin$ } from './Admin';
 import { Club$ } from './Club';
 
-
 export enum PaymentMethod {
     FREE = 'free',
     ONLINE = 'online',
@@ -49,18 +48,15 @@ export const Competition$ = z.object({
 });
 export type Competition = z.infer<typeof Competition$>;
 
-export const BaseCompetition$ = Competition$.pick({
+export const CreateCompetition$ = Competition$.pick({
     name: true,
     date: true,
     closeDate: true,
-});
-export type BaseCompetition = z.infer<typeof BaseCompetition$>;
-
-export const BaseCompetitionWithRelationId$ = BaseCompetition$.extend({
+}).extend({
     paymentPlanId: Id$,
     optionsId: z.array(Id$).default([]),
 });
-export type BaseCompetitionWithRelationId = z.infer<typeof BaseCompetitionWithRelationId$>;
+export type CreateCompetition = z.infer<typeof CreateCompetition$>;
 
 export const DefaultCompetition$ = Competition$.omit({
     id: true,
@@ -69,14 +65,10 @@ export const DefaultCompetition$ = Competition$.omit({
     options: true,
     admins: true,
     email: true,
-
-    //Without relation
     events: true,
     freeClubs: true,
 });
 export type DefaultCompetition = z.infer<typeof DefaultCompetition$>;
-
-
 
 export const UpdateCompetition$ = Competition$.omit({
     id: true,
@@ -86,14 +78,11 @@ export const UpdateCompetition$ = Competition$.omit({
     admins: true,
     freeClubs: true,
     events: true,
-});
-export type UpdateCompetition = z.infer<typeof UpdateCompetition$>;
-
-export const UpdateCompetitionWithRelationId$ = UpdateCompetition$.extend({
+}).extend({
     optionsId: z.array(Id$).default([]),
     freeClubsId: z.array(Id$).default([]),
 });
-export type UpdateCompetitionWithRelationId = z.infer<typeof UpdateCompetitionWithRelationId$>;
+export type UpdateCompetition = z.infer<typeof UpdateCompetition$>;
 
 export const DisplayCompetition$ = Competition$.pick({
     eid: true,

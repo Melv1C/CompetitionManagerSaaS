@@ -1,13 +1,13 @@
 import 'dotenv/config'
 import { prisma } from '@competition-manager/prisma';
-import { EventWithoutId$ } from '@competition-manager/schemas';
+import { CreateEvent$ } from '@competition-manager/schemas';
 import eprData from './epreuves.json';
 
 export const fillDB = async () => {
     const events = await prisma.event.findMany();
     for (let eventData of eprData) {
         try {
-            const event = EventWithoutId$.parse(eventData);
+            const event = CreateEvent$.parse(eventData);
             const existingEvent = events.find(e => e.name === event.name);
             if (existingEvent) {
                 await prisma.event.update({

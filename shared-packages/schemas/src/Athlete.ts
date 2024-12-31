@@ -3,7 +3,6 @@ import { Date$, Id$, License$, Name$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
-
 // unuse but keep if needed
 const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));
 export type Json = z.infer<typeof Json$>;
@@ -39,14 +38,13 @@ export const BaseAthlete$ = Athlete$.omit({
 });
 export type BaseAthlete = z.infer<typeof BaseAthlete$>;
 
-export const BaseAthleteWithClubAbbr$ = BaseAthlete$.extend({
+export const CreateAthlete$ = BaseAthlete$.extend({
     clubAbbr: z.string().default('NA'),
 });
-export type BaseAthleteWithClubAbbr = z.infer<typeof BaseAthleteWithClubAbbr$>;
+export type CreateAthlete = z.infer<typeof CreateAthlete$>;
 
-
-export const OneDayAthlete$ = BaseAthleteWithClubAbbr$.omit({
+export const CreateOneDayAthlete$ = CreateAthlete$.omit({
     bib: true,
     license: true,
 });
-export type OneDayAthlete = z.infer<typeof OneDayAthlete$>;
+export type CreateOneDayAthlete = z.infer<typeof CreateOneDayAthlete$>;

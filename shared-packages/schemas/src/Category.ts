@@ -37,5 +37,5 @@ export const Category$ = z.object({
 });
 export type Category = z.infer<typeof Category$>;
 
-export const CategoryWithoutId$ = Category$.omit({ id: true });
-export type CategoryWithoutId = z.infer<typeof CategoryWithoutId$>;
+export const CreateCategory$ = Category$.omit({ id: true });
+export type CreateCategory = z.infer<typeof CreateCategory$>;

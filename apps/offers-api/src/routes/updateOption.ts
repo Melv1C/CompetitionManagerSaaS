@@ -1,5 +1,5 @@
 import { prisma } from '@competition-manager/prisma';
-import { Option$, OptionWithoutId$, Role } from '@competition-manager/schemas';
+import { Option$, UpdateOption$, Role } from '@competition-manager/schemas';
 import { checkRole, Key, parseRequest } from '@competition-manager/utils';
 import { Router } from 'express';
 
@@ -10,11 +10,11 @@ const Params$ = Option$.pick({ id: true });
 router.put(
     '/options/:id',
     parseRequest(Key.Params, Params$),
-    parseRequest(Key.Body, OptionWithoutId$),
+    parseRequest(Key.Body, UpdateOption$),
     checkRole(Role.SUPERADMIN),
     async (req, res) => {
         const { id } = Params$.parse(req.params);
-        const data = OptionWithoutId$.parse(req.body);
+        const data = UpdateOption$.parse(req.body);
         const updatedOption = await prisma.option.update({
             where: { id },
             data,

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/utils';
-import { Competition$, BaseInscriptionWithRelationId$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
@@ -22,7 +22,7 @@ const Query$ = z.object({
     admin: z.string()
 });
 
-const Body$ = z.array(BaseInscriptionWithRelationId$);
+const Body$ = z.array(CreateInscription$);
 
 router.post(
     '/:eid/inscriptions',

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, checkAdminRole, Key } from '@competition-manager/utils';
-import { UpdateCompetitionWithRelationId$, Competition$, Access, Role } from '@competition-manager/schemas';
-import { BaseAdmins$ } from '@competition-manager/schemas';
+import { UpdateCompetition$, Competition$, Access, Role } from '@competition-manager/schemas';
+import { BaseAdmin$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -12,14 +12,14 @@ const Params$ = Competition$.pick({
 
 router.put(
     '/:eid',
-    parseRequest(Key.Body, UpdateCompetitionWithRelationId$),
+    parseRequest(Key.Body, UpdateCompetition$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.ADMIN),
     async (req: AuthenticatedRequest, res) => {
         try {
             //si add option stripe TODO
 
-            const { optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetitionWithRelationId$.parse(req.body);
+            const { optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetition$.parse(req.body);
             const { eid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -33,7 +33,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (req.user!.role == Role.SUPERADMIN || !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmins$.parse(competition.admins), res)) return;
+            if (req.user!.role == Role.SUPERADMIN || !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res)) return;
             try {
                 const updatedCompetition = await prisma.competition.update({
                     where: {

@@ -27,5 +27,5 @@ export const Event$ = z.object({
 });
 export type Event = z.infer<typeof Event$>;
 
-export const EventWithoutId$ = Event$.omit({ id: true });
-export type EventWithoutId = z.infer<typeof EventWithoutId$>;
+export const CreateEvent$ = Event$.omit({ id: true });
+export type CreateEvent = z.infer<typeof CreateEvent$>;

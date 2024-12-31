@@ -1,6 +1,6 @@
 import axios from 'axios';
 import 'dotenv/config'
-import { BaseAthleteWithClubAbbr$ } from '@competition-manager/schemas';
+import { CreateAthlete$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import devData from './data.json';
 import foreignClubData from './foreignClub.json';
@@ -72,7 +72,7 @@ const addNewAthletes = async () => {
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].split('\t');
         if (parseInt(line[0]) > 10000) {
-            const athleteData = BaseAthleteWithClubAbbr$.parse({
+            const athleteData = CreateAthlete$.parse({
                 license: line[0],
                 bib: parseInt(line[1]),
                 firstName: line[3],
@@ -81,7 +81,7 @@ const addNewAthletes = async () => {
                 birthdate: line[6],
                 clubAbbr: line[9]
             });
-            const { clubAbbr, ...athlete } = BaseAthleteWithClubAbbr$.parse(athleteData);
+            const { clubAbbr, ...athlete } = CreateAthlete$.parse(athleteData);
             const club = await createClub(clubAbbr) // get or create if not exist
             if (!athletes.find(a => a.license === athlete.license)) {
                 await prisma.athlete.create({
@@ -117,7 +117,7 @@ export const initDb = async () =>{
 
 export const initDbDev = async () => {
     for (const athleteData of devData) {
-        const { clubAbbr, ...athlete } = BaseAthleteWithClubAbbr$.parse(athleteData);
+        const { clubAbbr, ...athlete } = CreateAthlete$.parse(athleteData);
         const club = await createClub(clubAbbr);
         const athleteInDB = await prisma.athlete.findFirst({
             where: {

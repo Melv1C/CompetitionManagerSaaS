@@ -218,7 +218,10 @@ export const Info = () => {
                             ampm={false}
                             label="Start Inscription Date"
                             value={competitionState.startInscriptionDate}
-                            onChange={(date) => setCompetitionState({ ...competitionState, startInscriptionDate: date || undefined })}
+                            onChange={(date) => {
+                                if (!date) return; //setIsDateValid(false);
+                                setCompetitionState({ ...competitionState, startInscriptionDate: date })
+                            }}
                             //onError={(error) => setIsDateValid(!error)}
                             format="dd/MM/yyyy HH:mm"
                             disablePast
@@ -228,7 +231,10 @@ export const Info = () => {
                             ampm={false}
                             label="End Inscription Date"
                             value={competitionState.endInscriptionDate}
-                            onChange={(date) => setCompetitionState({ ...competitionState, endInscriptionDate: date || undefined })}
+                            onChange={(date) => {
+                                if (!date) return; //setIsDateValid(false);
+                                setCompetitionState({ ...competitionState, endInscriptionDate: date })
+                            }}
                             //onError={(error) => setIsDateValid(!error)}
                             format="dd/MM/yyyy HH:mm"
                             disablePast

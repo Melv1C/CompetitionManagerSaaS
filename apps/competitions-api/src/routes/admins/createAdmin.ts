@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
 import { Access, Competition$, Role } from '@competition-manager/schemas';
-import { BaseAdmin$, BaseAdmins$ } from '@competition-manager/schemas';
+import { CreateAdmin$, BaseAdmin$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -12,13 +12,13 @@ const Params$ = Competition$.pick({
 
 router.post(
     '/:eid/admins',
-    parseRequest(Key.Body, BaseAdmin$),
+    parseRequest(Key.Body, CreateAdmin$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
     async (req: AuthenticatedRequest, res) => {
         try{
             const { eid } = Params$.parse(req.params);
-            const newAdmin = BaseAdmin$.parse(req.body);
+            const newAdmin = CreateAdmin$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid
@@ -31,7 +31,7 @@ router.post(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(Access.OWNER, req.user!.id, BaseAdmins$.parse(competition.admins), res)) {
+            if (!checkAdminRole(Access.OWNER, req.user!.id, BaseAdmin$.array().parse(competition.admins), res)) {
                 return;
             }
             try{

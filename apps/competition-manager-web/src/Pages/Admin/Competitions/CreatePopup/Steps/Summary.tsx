@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
 import { Buttons } from "./Buttons"
 import { StepProps } from ".."
-import { PaymentPlan, Option, BaseCompetitionWithRelationId$ } from "@competition-manager/schemas"
+import { PaymentPlan, Option, CreateCompetition$ } from "@competition-manager/schemas"
 import { createCompetition } from "../../../../../api"
 import { useNavigate } from "react-router-dom"
 
@@ -19,7 +19,7 @@ export const Summary: React.FC<SummaryProps> = ({
     handleBack,
     dataForm
 }) => {
-    const baseCompetition = BaseCompetitionWithRelationId$.parse({
+    const baseCompetition = CreateCompetition$.parse({
         ...dataForm,
         paymentPlanId: dataForm.plan.id,
         optionsId: dataForm.selectedOptions.map(option => option.id)

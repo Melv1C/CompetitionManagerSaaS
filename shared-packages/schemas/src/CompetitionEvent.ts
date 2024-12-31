@@ -16,18 +16,15 @@ export const CompetitionEvent$ = z.object({
 });
 export type CompetitionEvent = z.infer<typeof CompetitionEvent$>;
 
-export const BaseCompetitionEvent$ = CompetitionEvent$.pick({
-    name: true,
-    schedule: true,
-    place: true,
-    cost: true,
-    isInscriptionOpen: true,
-});
-export type BaseCompetitionEvent = z.infer<typeof BaseCompetitionEvent$>;
-
-export const BaseCompetitionEventWithRealtionId$ = BaseCompetitionEvent$.extend({
+export const CreateCompetitionEvent$ = CompetitionEvent$.omit({
+    id: true,
+    event: true,
+    categories: true,
+}).extend({
     eventId: Id$,
     categoriesId: z.array(Id$),
-    parentId: Id$.nullish(),
 })
-export type BaseCompetitionEventWithRealtionId = z.infer<typeof BaseCompetitionEventWithRealtionId$>;
+export type CreateCompetitionEvent = z.infer<typeof CreateCompetitionEvent$>;
+
+export const UpdateCompetitionEvent$ = CreateCompetitionEvent$
+export type UpdateCompetitionEvent = z.infer<typeof UpdateCompetitionEvent$>;

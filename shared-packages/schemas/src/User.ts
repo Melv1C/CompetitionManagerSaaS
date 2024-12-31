@@ -18,7 +18,6 @@ export const RoleLevel = {
     [Role.SUPERADMIN]: 4,
 }
 
-
 export const UserPassword$ = z.string().min(8, 'Password must be at least 8 characters long');
 
 export const User$ = z.object({
@@ -30,14 +29,11 @@ export const User$ = z.object({
 });
 export type User = z.infer<typeof User$>;
 
-export const PublicUser$ = User$.omit({ password: true });
-export type PublicUser = z.infer<typeof PublicUser$>;
-
-export const PublicUserWithoutRelations$ = PublicUser$.omit({ preferences: true });
-export type PublicUserWithoutRelations = z.infer<typeof PublicUserWithoutRelations$>;
-
-export const UserWithoutIdAndRelations$ = User$.omit({ id: true, preferences: true });
-export type UserWithoutIdAndRelations = z.infer<typeof UserWithoutIdAndRelations$>;
-
-export const BaseUser$ = User$.omit({ role: true, preferences: true, id: true });
+export const BaseUser$ = User$.omit({ preferences: true });
 export type BaseUser = z.infer<typeof BaseUser$>;
+
+export const CreateUser$ = User$.omit({ id: true, preferences: true, role: true });
+export type CreateUser = z.infer<typeof CreateUser$>;
+
+export const UpdateUser$ = User$.omit({ id: true, password: true, role: true });
+export type UpdateUser = z.infer<typeof UpdateUser$>;

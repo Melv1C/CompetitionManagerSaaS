@@ -4,7 +4,6 @@ import { Athlete$ } from './Athlete';
 import { Competition$ } from './Competition';
 import { CompetitionEvent$ } from './CompetitionEvent';
 
-
 export const Inscription$ = z.object({
     id: Id$,
     eid: Eid$,
@@ -16,13 +15,11 @@ export const Inscription$ = z.object({
 });
 export type Inscription = z.infer<typeof Inscription$>;
 
-export const BaseInscription$ = Inscription$.pick({
+export const CreateInscription$ = Inscription$.pick({
     paid: true,
     confirmed: true
-});
-export type BaseInscription = z.infer<typeof BaseInscription$>;
-
-export const BaseInscriptionWithRelationId$ = BaseInscription$.extend({
+}).extend({
     competitionEventEid: Eid$,
     athleteLicense: License$
 });
+export type CreateInscription = z.infer<typeof CreateInscription$>;
