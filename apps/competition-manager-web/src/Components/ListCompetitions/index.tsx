@@ -45,7 +45,8 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, li
                 display: 'flex', 
                 flexDirection: 'column',
                 gap: '1rem',
-                width: '100%',
+                width: 'calc(100% - 2rem)',
+                padding: '1rem',
             }}
         >
             {years.map(year => (
