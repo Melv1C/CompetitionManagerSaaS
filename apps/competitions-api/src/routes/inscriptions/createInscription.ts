@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/utils';
-import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
@@ -62,9 +62,10 @@ router.post(
             }
 
             try {
+                const listInscriptions = [];
                 for (const { athleteLicense, competitionEventEid, ...inscription } of DefaultInscription$.array().parse(req.body)) {
                     const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
-                    await prisma.inscription.create({
+                    const newInscription = await prisma.inscription.create({
                         data: {
                             athlete: {
                                 connect: {
@@ -84,8 +85,9 @@ router.post(
                             ...inscription
                         }
                     })
+                    listInscriptions.push(newInscription);
                 }
-                res.status(201).send('Inscription(s) created');
+                res.status(201).send(Inscription$.array().parse(listInscriptions));
             } catch(e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('Athlete license not valid');
