@@ -17,7 +17,7 @@ export const MaxWidth: React.FC<MaxWidthProps> = ({
                 flexDirection: 'column',
                 width: `calc(100% - 2rem)`,
                 maxWidth: maxWidth,
-                margin: 'auto',
+                margin: '0 auto',
                 padding: '1rem'
             }}
         >
