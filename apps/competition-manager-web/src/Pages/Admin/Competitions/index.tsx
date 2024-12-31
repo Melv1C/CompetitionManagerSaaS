@@ -30,7 +30,11 @@ export const AdminCompetitions = () => {
 
 	return (
 		<MaxWidth>
-			<Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
+			<Tabs 
+				value={activeTab} 
+				onChange={(_, newValue) => setActiveTab(newValue)}
+				centered
+			>
 				{items.map((item, index) => (
 					<Tab key={index} label={item.label} />
 				))}
