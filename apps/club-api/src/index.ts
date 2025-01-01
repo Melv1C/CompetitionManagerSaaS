@@ -15,9 +15,14 @@ const PREFIX = process.env.PREFIX || '/api';
 app.use(corsMiddleware);
 
 app.get(`${PREFIX}/clubs`, (req, res) => {
-    prisma.club.findMany().then(clubs => {
-        res.send(Club$.array().parse(clubs));
-    });
+    try {
+        prisma.club.findMany().then(clubs => {
+            res.send(Club$.array().parse(clubs));
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal server error");
+    }
 });
 
 app.listen(PORT, () => {
