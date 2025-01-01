@@ -12,7 +12,7 @@ import { CircleButton } from "../../../Components/CircleButton";
 
 export const AdminCompetitions = () => {
 
-	const { data: competitions, isLoading } = useQuery('admin-competitions', () => getCompetitions({ isAdmin: true }))
+	const { data: competitions, isLoading, isError } = useQuery('admin-competitions', () => getCompetitions({ isAdmin: true }))
 
 	const { isClub } = useRoles();
 
@@ -26,7 +26,8 @@ export const AdminCompetitions = () => {
 	const [isCreatePopupVisible, setIsCreatePopupVisible] = useState(false);
 
 	if (isLoading) return <Loading />;
-	if (!competitions) throw new Error('No competitions found');
+	if (isError) throw new Error('Error fetching competitions');
+	if (!competitions) throw new Error('Unexpected error: competitions is undefined');
 
 	return (
 		<MaxWidth>
