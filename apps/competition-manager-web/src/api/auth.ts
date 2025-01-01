@@ -16,11 +16,7 @@ export const register = async (email: string, password: string) => {
 };
 
 export const logout = async () => {
-    try {
-        await api.post('/users/logout');
-    } catch (error) {
-        console.error('Sign out error:', error);
-    }
+    await api.post('/users/logout');
 };
 
 export const getRefreshToken = async () => {
