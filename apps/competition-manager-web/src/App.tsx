@@ -1,21 +1,25 @@
-import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet } from 'react-router-dom'
-import './App.css'
 
+import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet } from 'react-router-dom'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ErrorBoundary } from 'react-error-boundary'
+
+import './App.css'
 import { Box, createTheme, ThemeProvider } from "@mui/material"
 import { faHome, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
 
 import { useAutoLogin } from './hooks'
 
 import { NavBar } from './Components'
+
 import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
 import { AdminCompetition } from './Pages/Admin/Competition'
-import Competitions from './Pages/Competitions'
-
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { Competitions } from './Pages/Competitions'
 import { SuperAdmin } from './Pages/SuperAdmin'
+import { ErrorFallback } from './Components';
+
 
 // must be extract in an other file
 const lightTheme = createTheme({
@@ -55,7 +59,14 @@ function App() {
 
   const router = createBrowserRouter(
     createRoutesFromElements([
-      <Route element={<><NavBar items={navItems} /><Outlet /></>} >
+      <Route element={
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <NavBar items={navItems} />
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Outlet />
+          </ErrorBoundary>
+        </ErrorBoundary>
+      }>
         <Route path="/" element={<h1>Home</h1>} />
         <Route path="/competitions" element={<Competitions />} />
         <Route path="/account" element={<Account />} />
@@ -70,15 +81,17 @@ function App() {
   useAutoLogin()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={lightTheme}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-          <RouterProvider router={router} />
-          </Box>
-        </LocalizationProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={lightTheme}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+              <RouterProvider router={router} />
+            </Box>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   )
 }
 
