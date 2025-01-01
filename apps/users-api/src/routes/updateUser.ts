@@ -5,34 +5,44 @@ import { Id$, Role, User$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
+const Params$ = User$.pick({
+    id: true,
+});
+
 const Body$ = User$.pick({ 
     email: true,
+    role: true,
 }).extend({
-    clubId: Id$,
+    clubId: Id$.nullish(),
 });
 
 router.post(
-    '/club',
+    '/:id',
     parseRequest(Key.Body, Body$),
+    parseRequest(Key.Params, Params$),
     checkRole(Role.SUPERADMIN),
     async (req, res) => {
         try {
-            const { email, clubId } = Body$.parse(req.body);
+            const { email, clubId, role } = Body$.parse(req.body);
             try {
-                await prisma.user.update({
+                const user = await prisma.user.update({
                     where: {
                         email: email
                     },
                     data: {
-                        role: Role.CLUB,
-                        club: {
+                        role: role,
+                        club: clubId ? {
                             connect: {
                                 id: clubId
-                            }
-                        }
+                            } 
+                        } : undefined 
+                    },
+                    include: {
+                        club: true,
+                        preferences: true
                     }
                 });
-                res.send("User club set");
+                res.send(User$.parse(user));
             } catch (e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send("user or club not found");
