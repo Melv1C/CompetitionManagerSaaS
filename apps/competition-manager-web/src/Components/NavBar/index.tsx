@@ -32,14 +32,15 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const userToken = useAtomValue(userTokenAtom);
     const { isAdmin, isLogged, isNotLogged, isSuperAdmin } = useRoles();
 
+    
+    const handleDrawerToggle = () => {
+        setIsMobileOpen((prev) => !prev);
+    };
+    
     useEffect(() => {
         setIsAuthPopupVisible(false);
     }, [userToken]);
-
-    const handleDrawerToggle = () => {
-        setIsMobileOpen((prev) => !prev);
-    }
-
+    
     return (
         <Box 
             sx={{ 
