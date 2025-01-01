@@ -4,12 +4,12 @@ import { ListCompetitions, Loading } from '../../Components';
 import { MaxWidth } from '../../Components/MaxWidth';
 
 
-const Competitions: React.FC = () => {
-    const { data: competitions, isLoading } = useQuery('competitions', () => getCompetitions());
+export const Competitions: React.FC = () => {
+    const { data: competitions, isLoading, isError } = useQuery('competitions', () => getCompetitions());
 
     if (isLoading) return <Loading />;
-
-    if (!competitions) throw new Error('No competitions found');
+    if (isError) throw new Error('Error fetching competitions');
+    if (!competitions) throw new Error('Unexpected error: competitions is undefined');
 
     return (
         <MaxWidth>
@@ -17,5 +17,3 @@ const Competitions: React.FC = () => {
         </MaxWidth>
     );
 };
-
-export default Competitions;

@@ -12,7 +12,6 @@ export const createPlan = async (plan: CreatePaymentPlan): Promise<PaymentPlan> 
 }
 
 export const updatePlan = async (id: Id, plan: UpdatePaymentPlan): Promise<PaymentPlan> => {
-    console.log('updatePlan', id, plan);
     const { data } = await api.put(`/offers/plans/${id}`, plan);
     return PaymentPlan$.parse(data);
 }

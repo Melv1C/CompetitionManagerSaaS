@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Route, Routes, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { getCompetition } from "../../../api/Competition/getCompetition";
+import { getCompetition } from "../../../api/Competition";
 import { faClock, faInfo, faRankingStar, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { Info } from "./Info";
 import { useSetAtom } from "jotai";
@@ -17,7 +17,7 @@ export const AdminCompetition = () => {
 
     if (!eid) throw new Error('No competition ID provided');
 
-    const { data: competition, isLoading } = useQuery(['competition', eid], () => getCompetition(eid, true));
+    const { data: competition, isLoading, isError } = useQuery(['competition', eid], () => getCompetition(eid, true));
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
     const navItems = [
@@ -32,6 +32,8 @@ export const AdminCompetition = () => {
             setCompetition(competition);
         }
     }, [competition, setCompetition]);
+
+    if (isError) throw new Error('Error fetching competition');
     
     return (
         <ScrollablePage>
