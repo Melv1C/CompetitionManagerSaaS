@@ -12,7 +12,7 @@ const Body$ = User$.pick({
 });
 
 router.post(
-    '/Club',
+    '/club',
     parseRequest(Key.Body, Body$),
     checkRole(Role.SUPERADMIN),
     async (req, res) => {
