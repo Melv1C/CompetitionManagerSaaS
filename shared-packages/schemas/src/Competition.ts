@@ -38,6 +38,7 @@ export const Competition$ = z.object({
     // Default settings
     admins: z.array(Admin$),
     email: Email$,
+    club: Club$.nullish(),
 
     // Advanced settings
     closeDate: Date$.nullish(),

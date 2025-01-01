@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { UserPreferences$ } from './UserPreferences';
 import { Email$, Id$ } from './Base';
+import { Club$ } from './Club';
 
 export enum Role {
     UNCONFIRMED_USER = 'unconfirmedUser',
@@ -25,7 +26,8 @@ export const User$ = z.object({
     email: Email$,
     role: z.nativeEnum(Role).default(Role.UNCONFIRMED_USER),
     preferences: UserPreferences$,
-    password: z.string()
+    password: z.string(),
+    club: Club$.nullish(),
 });
 export type User = z.infer<typeof User$>;
 

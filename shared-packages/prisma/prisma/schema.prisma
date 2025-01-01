@@ -22,7 +22,8 @@ model User {
     password    String
     preferences UserPreferences?
     admin       Admin[]
-
+    club        Club?     @relation(fields: [clubId], references: [id])
+    clubId      Int?      @map("club_id")
 
     @@map("users")
 }
@@ -132,7 +133,7 @@ model Competition {
     admins               Admin[]
     email                String
     closeDate            DateTime?           @map("close_date")
-    freeClubs            Club[]
+    freeClubs            Club[]              @relation("FreeClubsToCompetition")
     oneDayPermissions    String[]            @map("one_day_permission")        
     oneDayBibStart       Int                 @map("one_day_bib_start")
     oneDayAthletes       Athlete[]
@@ -140,6 +141,9 @@ model Competition {
     paymentPlanId        Int                 @map("payment_plan_id")
     options              Option[] 
     inscriptions         Inscription[]
+    club                 Club?               @relation(fields: [clubId], references: [id])
+    clubId               Int?                @map("club_id")
+    
     @@map("competitions")
 }
 
@@ -189,16 +193,18 @@ model PaymentPlan {
 // Club
 ////////////////
 model Club {
-    id               Int         @id @default(autoincrement())
+    id               Int           @id @default(autoincrement())
     name             String
-    abbr             String      @unique
+    abbr             String        @unique
     address          String?
     province         String?
     country          String
-    fedNumber        Int?        @map("fed_number")
-    fedAbbr          String?     @map("fed_abbr")
+    fedNumber        Int?          @map("fed_number")
+    fedAbbr          String?       @map("fed_abbr")
     athletes         Athlete[]
-    competition      Competition[]
+    competitions     Competition[]
+    users            User[]
+    freeCompetitions Competition[] @relation("FreeClubsToCompetition")
 
     @@map("clubs")
     
