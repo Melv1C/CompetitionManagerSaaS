@@ -6,19 +6,24 @@ import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } f
 export const router = Router();
 
 const getClubIdFromUserId = async (UserId: number) => {
-    const user = await prisma.user.findUnique({
-        where: {
-            id: UserId
-        },
-        include: {
-            club: {
-                select: {
-                    id: true
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: UserId
+            },
+            include: {
+                club: {
+                    select: {
+                        id: true
+                    }
                 }
             }
-        }
-    });
-    return user?.club?.id;
+        });
+        return user?.club?.id;
+    } catch (e) {
+        console.error(e);
+        return undefined;
+    }
 }
 
 router.post(
