@@ -68,6 +68,7 @@ export const DefaultCompetition$ = Competition$.omit({
     email: true,
     events: true,
     freeClubs: true,
+    club: true,
 });
 export type DefaultCompetition = z.infer<typeof DefaultCompetition$>;
 
@@ -79,6 +80,7 @@ export const UpdateCompetition$ = Competition$.omit({
     admins: true,
     freeClubs: true,
     events: true,
+    club: true,
 }).extend({
     optionsId: z.array(Id$).default([]),
     freeClubsId: z.array(Id$).default([]),
