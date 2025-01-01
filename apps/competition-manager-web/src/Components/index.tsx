@@ -16,3 +16,4 @@ export * from './MaxWidth';
 export * from './Icons';
 export * from './CircleButton';
 export * from './AccountCircle';
+export * from './ErrorFallback';
