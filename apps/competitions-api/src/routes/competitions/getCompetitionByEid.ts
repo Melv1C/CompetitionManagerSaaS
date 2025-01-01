@@ -41,46 +41,48 @@ router.get(
         try {
             const { isAdmin } = Query$.parse(req.query);
             const { competitionEid } = Params$.parse(req.params);
-            if (isAdmin && !req.user) {
-                res.status(401).send('Unauthorized');
-                return;
-            }
-            if (req.user && req.user.role === Role.SUPERADMIN) {
-                const competition = await prisma.competition.findUnique({
-                    where: {
-                        eid: competitionEid,
-                    },
-                    ...competitionQuery
-                });
-                if (!competition) {
-                    res.status(404).send('Competition not found');
+            if (isAdmin) {
+                if (!req.user) {
+                    res.status(401).send('Unauthorized');
                     return;
                 }
-                res.send(Competition$.parse(competition));
-                return;
-            }
-            if (isAdmin && isAuthorized(req.user!, Role.ADMIN)) {
-                const admin = await prisma.admin.findFirst({
-                    where: {
-                        userId: req.user!.id,
-                        competition: {
+                if (req.user.role === Role.SUPERADMIN) {
+                    const competition = await prisma.competition.findUnique({
+                        where: {
                             eid: competitionEid,
                         },
-                    },
-                    select: {
-                        competition: {
-                            ...competitionQuery
-                        },
-                    },
-                });
-                if (!admin) {
-                    res.status(404).send('Competition not found');
+                        ...competitionQuery
+                    });
+                    if (!competition) {
+                        res.status(404).send('Competition not found');
+                        return;
+                    }
+                    res.send(Competition$.parse(competition));
                     return;
                 }
-                res.send(Competition$.parse(admin.competition));
-                return;
+                if (isAuthorized(req.user, Role.ADMIN)) {
+                    const admin = await prisma.admin.findFirst({
+                        where: {
+                            userId: req.user!.id,
+                            competition: {
+                                eid: competitionEid,
+                            },
+                        },
+                        select: {
+                            competition: {
+                                ...competitionQuery
+                            },
+                        },
+                    });
+                    if (!admin) {
+                        res.status(404).send('Competition not found');
+                        return;
+                    }
+                    res.send(Competition$.parse(admin.competition));
+                    return;
+                }
             }
-
+            
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid,
