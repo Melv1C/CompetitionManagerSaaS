@@ -4,8 +4,8 @@ import { ListCompetitions, Loading } from '../../Components';
 import { MaxWidth } from '../../Components/MaxWidth';
 
 
-export const Competitions: React.FC = () => {
-    const { data: competitions, isLoading, isError } = useQuery('competitions', () => getCompetitions({ from: new Date() }));
+export const Results: React.FC = () => {
+    const { data: competitions, isLoading, isError } = useQuery('competitions', () => getCompetitions({ to: new Date() }));
 
     if (isLoading) return <Loading />;
     if (isError) throw new Error('Error fetching competitions');
@@ -13,7 +13,7 @@ export const Competitions: React.FC = () => {
 
     return (
         <MaxWidth>
-            <ListCompetitions competitions={competitions} isPast={false} />
+            <ListCompetitions competitions={competitions} isPast={true} />
         </MaxWidth>
     );
 };
