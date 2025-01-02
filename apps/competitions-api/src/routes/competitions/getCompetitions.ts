@@ -15,7 +15,7 @@ const Query$ = z.object({
 router.get(
     '/',
     parseRequest(Key.Params, Query$),
-    setUserIfExist(),
+    setUserIfExist,
     async (req: AuthenticatedRequest, res) => {
         try {
             const { isAdmin, toDate, fromDate } = Query$.parse(req.query);

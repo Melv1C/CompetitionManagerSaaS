@@ -3,7 +3,7 @@ import { verifyAccessToken } from '../jwtToken';
 import { AuthenticatedRequest } from './authenticatedRequest';
 
 
-export const setUserIfExist = () => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const setUserIfExist = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try{
         const accessToken = req.headers.authorization?.split(' ')[1];
         if (!accessToken) {

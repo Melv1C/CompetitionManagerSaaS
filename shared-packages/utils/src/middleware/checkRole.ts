@@ -6,7 +6,7 @@ import { isAuthorized } from '../isAuthorize';
 import { setUserIfExist } from './setUserIfExist';
 
 export const checkRole = (levelRequire: Role) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    setUserIfExist()(req, res, () => {
+    setUserIfExist(req, res, () => {
         if (!req.user) {
             res.status(401).send('Unauthorized');
             return;
