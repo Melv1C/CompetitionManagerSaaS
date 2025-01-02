@@ -28,7 +28,7 @@ export const Offers = () => {
     const planColumns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
         { field: 'name', headerName: 'Name', width: 150 },
-        { field: 'descriptions', headerName: 'Descriptions', width: 200 },
+        { field: 'description', headerName: 'Description', width: 200 },
         { field: 'price', headerName: 'Price', width: 110 },
         { field: 'includedOptions', headerName: 'Included Options', width: 200, valueFormatter: (value: Option[]) => value.map(option => option.name).join(', ') },
         {
@@ -47,7 +47,7 @@ export const Offers = () => {
     const optionColumns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 90 },
         { field: 'name', headerName: 'Name', width: 150 },
-        { field: 'descriptions', headerName: 'Descriptions', width: 200 },
+        { field: 'description', headerName: 'Description', width: 200 },
         { field: 'price', headerName: 'Price', width: 110 },
         {
             field: 'actions',
