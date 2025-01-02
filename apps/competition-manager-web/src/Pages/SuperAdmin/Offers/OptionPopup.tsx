@@ -31,16 +31,12 @@ export const OptionPopup: React.FC<OptionPopupProps> = ({isVisible, onClose, edi
         if (editOption) {
             updateOption(editOption.id, UpdateOption$.parse(option)).then((option) => {
                 onClose(Option$.parse(option))
-            }).catch((e) => {
-                console.log(e)
             })
             return;
         } 
 
         createOption(CreateOption$.parse(option)).then((option) => {
             onClose(Option$.parse(option))
-        }).catch((e) => {
-            console.log(e)
         })
     }
 

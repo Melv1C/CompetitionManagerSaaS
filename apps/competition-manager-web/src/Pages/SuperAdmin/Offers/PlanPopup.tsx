@@ -40,16 +40,12 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
         if (editPlan) {
             updatePlan(editPlan.id, UpdatePaymentPlan$.parse(plan)).then((plan) => {
                 onClose(PaymentPlan$.parse(plan))
-            }).catch((e) => {
-                console.log(e)
             })
             return;
         } 
 
         createPlan(CreatePaymentPlan$.parse(plan)).then((plan) => {
             onClose(PaymentPlan$.parse(plan))
-        }).catch((e) => {
-            console.log(e)
         })
     }
 

@@ -64,8 +64,8 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
         getPlans().then(plans => {
             setPlans(plans)
             setPlan(plans[0])
-        }).catch(console.error)
-        getOptions().then(setOptions).catch(console.error)
+        })
+        getOptions().then(setOptions)
     }, [])
 
     useEffect(() => {

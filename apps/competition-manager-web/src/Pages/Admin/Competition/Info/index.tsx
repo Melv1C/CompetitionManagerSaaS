@@ -1,19 +1,20 @@
 import { Box, Chip, Divider, FormControl, FormLabel, InputLabel, MenuItem, Select, Switch, Typography } from "@mui/material";
-import { useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { competitionAtom } from "../../../../GlobalsStates";
 import { useEffect, useMemo, useState } from "react";
 import { Loading } from "../../../../Components";
 import { MaxWidth } from "../../../../Components/MaxWidth";
 import { TextFieldWith$ } from "../../../../Components/FieldsWithSchema";
-import { Club, Competition, Competition$, PaymentMethod } from "@competition-manager/schemas";
+import { Club, Competition, Competition$, PaymentMethod, UpdateCompetition } from "@competition-manager/schemas";
 import { CircleButton } from "../../../../Components/CircleButton";
 import { Save } from "../../../../Components/Icons";
 import { MobileDatePicker, MobileDateTimePicker } from "@mui/x-date-pickers";
 import { useBlocker } from "react-router-dom";
 import { OnLeavePopup } from "./OnLeavePopup";
+import { updateCompetition } from "../../../../api";
 
 export const Info = () => {
-    const competition = useAtomValue(competitionAtom);
+    const [competition, setCompetition] = useAtom(competitionAtom);
     const [competitionState, setCompetitionState] = useState<Competition>();
     const [clubs] = useState<Club[]>([]);
 
@@ -25,7 +26,9 @@ export const Info = () => {
 
     const [isMultiDay, setIsMultiDay] = useState(competition?.closeDate !== null);
 
-    const isModified = JSON.stringify(competition) !== JSON.stringify(competitionState);
+    const isModified = useMemo(() => (
+        JSON.stringify(competition) !== JSON.stringify(competitionState)
+    ), [competition, competitionState]);
     
     const isFormValid = useMemo(() => (
         isNameValid && isDescriptionValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid
@@ -33,16 +36,35 @@ export const Info = () => {
     
     const isSaveEnabled = useMemo(() => isFormValid && isModified, [isFormValid, isModified]);
 
-    const blocker = useBlocker(isModified);
-    const [isBlock, setIsBlock] = useState(false);
-
     useEffect(() => {
-        if (competition && !competitionState) {
+        if (competition && (!competitionState || competition.eid !== competitionState.eid)) {
             setCompetitionState(competition);
             setIsMultiDay(competition.closeDate !== null);
         }
     }, [competition, competitionState]);
-    
+
+    const onSave = () => {
+        if (isSaveEnabled && competitionState) {
+            console.log(competitionState);
+            const updateCompetiton: UpdateCompetition = {
+                ...competitionState,
+                optionsId: competitionState.options.map((option) => option.id),
+                freeClubsId: competitionState.freeClubs.map((club) => club.id),
+            }
+            
+            updateCompetition(competitionState.eid, updateCompetiton)
+                .then((newCompetition) => {
+                    setCompetition(newCompetition);
+                    setCompetitionState(newCompetition);
+                })
+        }
+    };
+
+    // TODO: extract to custom hook
+    //--------------------------------------------------------------------------------
+    const blocker = useBlocker(isModified);
+    const [isBlock, setIsBlock] = useState(false);
+
     useEffect(() => {
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             if (isModified) {
@@ -73,7 +95,8 @@ export const Info = () => {
             blocker.proceed();
         }
     };
-
+    //--------------------------------------------------------------------------------
+    
     if (!competitionState) {
         return <Loading />
     }
@@ -117,7 +140,7 @@ export const Info = () => {
                     />
 
                     <CircleButton
-                        onClick={() => { }}
+                        onClick={onSave}
                         variant="contained"
                         color="success"
                         disabled={!isSaveEnabled}

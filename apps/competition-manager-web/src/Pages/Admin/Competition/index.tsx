@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { Route, Routes, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getCompetition } from "../../../api/Competition";
-import { faClock, faInfo, faRankingStar, faUsersGear } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping, faClock, faGears, faInfo, faRankingStar, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { Info } from "./Info";
 import { useSetAtom } from "jotai";
 import { competitionAtom } from "../../../GlobalsStates";
@@ -25,6 +25,8 @@ export const AdminCompetition = () => {
         { text: 'Schedule', icon: faClock, link: `/admin/competitions/${eid}/schedule` },
         { text: 'Results', icon: faRankingStar, link: `/admin/competitions/${eid}/results` },
         { text: 'Admins', icon: faUsersGear, link: `/admin/competitions/${eid}/admins` },
+        { text: 'Options', icon: faBasketShopping, link: `/admin/competitions/${eid}/options` },
+        { text: 'Settings', icon: faGears, link: `/admin/competitions/${eid}/settings` },
     ];
 
     useEffect(() => {
@@ -50,6 +52,8 @@ export const AdminCompetition = () => {
                         <Route path="/schedule" element={<Box>schedule</Box>} />
                         <Route path="/results" element={<Box>results</Box>} />
                         <Route path="/admins" element={<Box>admins</Box>} />
+                        <Route path="/options" element={<Box>options</Box>} />
+                        <Route path="/settings" element={<Box>settings</Box>} />
                     </Routes>
                 }
             </Box>
