@@ -16,11 +16,12 @@ router.post(
     checkRole(Role.SUPERADMIN),
     async (req, res) => {
         try {
-            const { email, clubId, role } = UpdateUser$.parse(req.body);
+            const { clubId, role } = UpdateUser$.parse(req.body);
+            const { id } = Params$.parse(req.params);
             try {
                 const user = await prisma.user.update({
                     where: {
-                        email: email
+                        id: id
                     },
                     data: {
                         role: role,
