@@ -7,7 +7,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import './App.css'
 import { Box, createTheme, ThemeProvider } from "@mui/material"
-import { faHome, faCalendarDays } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faCalendarDays, faRankingStar } from '@fortawesome/free-solid-svg-icons'
 
 import { useAutoLogin } from './hooks'
 
@@ -19,6 +19,7 @@ import { AdminCompetition } from './Pages/Admin/Competition'
 import { Competitions } from './Pages/Competitions'
 import { SuperAdmin } from './Pages/SuperAdmin'
 import { ErrorFallback } from './Components';
+import { Results } from './Pages/Results';
 
 
 // must be extract in an other file
@@ -55,6 +56,7 @@ function App() {
   const navItems = [
     { label: 'Home', href: '/', icon: faHome },
     { label: 'Competitions', href: '/competitions', icon: faCalendarDays },
+    { label: 'Results', href: '/results', icon: faRankingStar },
   ]
 
   const router = createBrowserRouter(
@@ -69,6 +71,7 @@ function App() {
       }>
         <Route path="/" element={<h1>Home</h1>} />
         <Route path="/competitions" element={<Competitions />} />
+        <Route path="/results" element={<Results />} />
         <Route path="/account" element={<Account />} />
         <Route path="/admin/competitions" element={<AdminCompetitions />} />
         <Route path="/admin/competitions/:eid/*" element={<AdminCompetition />} />
