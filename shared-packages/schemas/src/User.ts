@@ -38,7 +38,6 @@ export const CreateUser$ = User$.omit({ id: true, preferences: true, role: true,
 export type CreateUser = z.infer<typeof CreateUser$>;
 
 export const UpdateUser$ = User$.pick({ 
-    email: true,
     role: true,
 }).extend({
     clubId: Id$.nullish(),
