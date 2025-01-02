@@ -36,7 +36,7 @@ router.get(
     '/:competitionEid',
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Query, Query$),
-    setUserIfExist(),
+    setUserIfExist,
     async (req: AuthenticatedRequest, res) => {
         const { isAdmin } = Query$.parse(req.query);
         const { competitionEid } = Params$.parse(req.params);
