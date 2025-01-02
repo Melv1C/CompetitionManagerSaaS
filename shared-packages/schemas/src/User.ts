@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { UserPreferences$ } from './UserPreferences';
 import { Email$, Id$ } from './Base';
+import { Club$ } from './Club';
 
 export enum Role {
     UNCONFIRMED_USER = 'unconfirmedUser',
@@ -25,15 +26,19 @@ export const User$ = z.object({
     email: Email$,
     role: z.nativeEnum(Role).default(Role.UNCONFIRMED_USER),
     preferences: UserPreferences$,
-    password: z.string()
+    password: z.string(),
+    club: Club$.nullish(),
 });
 export type User = z.infer<typeof User$>;
 
 export const BaseUser$ = User$.omit({ preferences: true, password: true });
 export type BaseUser = z.infer<typeof BaseUser$>;
 
-export const CreateUser$ = User$.omit({ id: true, preferences: true, role: true });
+export const CreateUser$ = User$.omit({ id: true, preferences: true, role: true, club: true });
 export type CreateUser = z.infer<typeof CreateUser$>;
 
-export const UpdateUser$ = User$.omit({ id: true, password: true, role: true });
-export type UpdateUser = z.infer<typeof UpdateUser$>;
+export const UpdateUser$ = User$.pick({ 
+    role: true,
+}).extend({
+    clubId: Id$.nullish(),
+});

@@ -38,6 +38,7 @@ export const Competition$ = z.object({
     // Default settings
     admins: z.array(Admin$),
     email: Email$,
+    club: Club$.nullish(),
 
     // Advanced settings
     closeDate: Date$.nullish(),
@@ -67,6 +68,7 @@ export const DefaultCompetition$ = Competition$.omit({
     email: true,
     events: true,
     freeClubs: true,
+    club: true,
 });
 export type DefaultCompetition = z.infer<typeof DefaultCompetition$>;
 
@@ -78,6 +80,7 @@ export const UpdateCompetition$ = Competition$.omit({
     admins: true,
     freeClubs: true,
     events: true,
+    club: true,
 }).extend({
     optionsId: z.array(Id$).default([]),
     freeClubsId: z.array(Id$).default([]),

@@ -5,6 +5,25 @@ import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } f
 
 export const router = Router();
 
+const getClubIdFromUserId = async (UserId: number) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: UserId
+        },
+        include: {
+            club: {
+                select: {
+                    id: true
+                }
+            }
+        }
+    });
+    if (!user) {
+        throw new Error("user not found");
+    }
+    return user.club?.id;
+}
+
 router.post(
     '/',
     parseRequest(Key.Body, CreateCompetition$),
@@ -17,6 +36,7 @@ router.post(
         defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
         defaultCompetition.endInscriptionDate.setDate(defaultCompetition.endInscriptionDate.getDate() - 1);
         defaultCompetition.endInscriptionDate.setHours(23, 59, 59, 999);
+        const clubId = await getClubIdFromUserId(req.user!.id);
         const newCompetition = await prisma.competition.create({
             data: {
                 ...defaultCompetition,
@@ -38,7 +58,12 @@ router.post(
                             }
                         }
                     }
-                }
+                },
+                club: clubId ? {
+                    connect: {
+                        id: clubId
+                    }
+                } : undefined
             },
             include: {
                 paymentPlan: true,
@@ -51,7 +76,8 @@ router.post(
                             }
                         }
                     }
-                }
+                },
+                club: true
             }
         });
         res.send(Competition$.parse(newCompetition));
