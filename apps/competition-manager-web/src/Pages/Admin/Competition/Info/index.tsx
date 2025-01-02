@@ -37,7 +37,7 @@ export const Info = () => {
     const [isBlock, setIsBlock] = useState(false);
 
     useEffect(() => {
-        if (competition && !competitionState) {
+        if (competition && (!competitionState || competition.eid !== competitionState.eid)) {
             setCompetitionState(competition);
             setIsMultiDay(competition.closeDate !== null);
         }
