@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, Key, checkRole } from '@competition-manager/utils';
-import { Id$, Role, User$ } from '@competition-manager/schemas';
+import { Role, User$, UpdateUser$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -9,21 +9,14 @@ const Params$ = User$.pick({
     id: true,
 });
 
-const Body$ = User$.pick({ 
-    email: true,
-    role: true,
-}).extend({
-    clubId: Id$.nullish(),
-});
-
 router.post(
     '/:id',
-    parseRequest(Key.Body, Body$),
+    parseRequest(Key.Body, UpdateUser$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.SUPERADMIN),
     async (req, res) => {
         try {
-            const { email, clubId, role } = Body$.parse(req.body);
+            const { email, clubId, role } = UpdateUser$.parse(req.body);
             try {
                 const user = await prisma.user.update({
                     where: {

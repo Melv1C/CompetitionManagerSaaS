@@ -37,5 +37,9 @@ export type BaseUser = z.infer<typeof BaseUser$>;
 export const CreateUser$ = User$.omit({ id: true, preferences: true, role: true, club: true });
 export type CreateUser = z.infer<typeof CreateUser$>;
 
-export const UpdateUser$ = User$.omit({ id: true, password: true, role: true });
-export type UpdateUser = z.infer<typeof UpdateUser$>;
+export const UpdateUser$ = User$.pick({ 
+    email: true,
+    role: true,
+}).extend({
+    clubId: Id$.nullish(),
+});
