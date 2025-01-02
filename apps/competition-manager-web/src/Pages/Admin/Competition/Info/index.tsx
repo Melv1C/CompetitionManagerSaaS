@@ -23,6 +23,9 @@ export const Info = () => {
     const [isDateValid, setIsDateValid] = useState(true);
     const [isCloseDateValid, setIsCloseDateValid] = useState(true);
     const [isEmailValid, setIsEmailValid] = useState(true);
+    const [isStartInscriptionDateValid, setIsStartInscriptionDateValid] = useState(true);
+    const [isEndInscriptionDateValid, setIsEndInscriptionDateValid] = useState(true);
+
 
     const [isMultiDay, setIsMultiDay] = useState(competition?.closeDate !== null);
 
@@ -31,8 +34,8 @@ export const Info = () => {
     ), [competition, competitionState]);
     
     const isFormValid = useMemo(() => (
-        isNameValid && isDescriptionValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid
-    ), [isNameValid, isDescriptionValid, isDateValid, isMultiDay, isCloseDateValid, isEmailValid]);
+        isNameValid && isDescriptionValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid && isStartInscriptionDateValid && isEndInscriptionDateValid
+    ), [isNameValid, isDescriptionValid, isDateValid, isMultiDay, isCloseDateValid, isEmailValid, isStartInscriptionDateValid, isEndInscriptionDateValid]);
     
     const isSaveEnabled = useMemo(() => isFormValid && isModified, [isFormValid, isModified]);
 
@@ -45,7 +48,6 @@ export const Info = () => {
 
     const onSave = () => {
         if (isSaveEnabled && competitionState) {
-            console.log(competitionState);
             const updateCompetiton: UpdateCompetition = {
                 ...competitionState,
                 optionsId: competitionState.options.map((option) => option.id),
@@ -169,10 +171,15 @@ export const Info = () => {
                         <MobileDatePicker
                             label={isMultiDay ? 'Start Date' : 'Date'}
                             value={competitionState.date}
-                            onChange={(date) => setCompetitionState({ ...competitionState, date: date || new Date() })}
+                            onChange={(date) => {
+                                if (!date) {
+                                    setIsDateValid(false);
+                                    return;
+                                }
+                                setCompetitionState({ ...competitionState, date: date })
+                            }}
                             onError={(error) => setIsDateValid(!error)}
                             format="dd/MM/yyyy"
-                            disablePast
                             slotProps={{ textField: { required: true } }}
                         />
                     
@@ -195,12 +202,11 @@ export const Info = () => {
 
                         {isMultiDay && 
                             <MobileDatePicker
-                                label="Close Date"
+                                label="End Date"
                                 value={competitionState.closeDate}
-                                onChange={(date) => setCompetitionState({ ...competitionState, closeDate: date || undefined })}
+                                onChange={(date) => setCompetitionState({ ...competitionState, closeDate: date })} 
                                 onError={(error) => setIsCloseDateValid(!error)}
                                 format="dd/MM/yyyy"
-                                disablePast
                                 minDate={competitionState.date ? new Date(competitionState.date.getTime() + 24 * 60 * 60 * 1000) : undefined}
                                 slotProps={{ textField: { required: true } }}
                             />
@@ -242,12 +248,15 @@ export const Info = () => {
                             label="Start Inscription Date"
                             value={competitionState.startInscriptionDate}
                             onChange={(date) => {
-                                if (!date) return; //setIsDateValid(false);
+                                if (!date) {
+                                    setIsStartInscriptionDateValid(false);
+                                    return;
+                                }
                                 setCompetitionState({ ...competitionState, startInscriptionDate: date })
                             }}
-                            //onError={(error) => setIsDateValid(!error)}
+                            onError={(error) => setIsStartInscriptionDateValid(!error)}
                             format="dd/MM/yyyy HH:mm"
-                            disablePast
+                            maxDate={competitionState.date}
                         />
 
                         <MobileDateTimePicker
@@ -255,12 +264,14 @@ export const Info = () => {
                             label="End Inscription Date"
                             value={competitionState.endInscriptionDate}
                             onChange={(date) => {
-                                if (!date) return; //setIsDateValid(false);
+                                if (!date) {
+                                    setIsEndInscriptionDateValid(false);
+                                    return;
+                                }
                                 setCompetitionState({ ...competitionState, endInscriptionDate: date })
                             }}
-                            //onError={(error) => setIsDateValid(!error)}
+                            onError={(error) => setIsEndInscriptionDateValid(!error)}
                             format="dd/MM/yyyy HH:mm"
-                            disablePast
                             minDate={competitionState.startInscriptionDate ? new Date(competitionState.startInscriptionDate.getTime() + 24 * 60 * 60 * 1000) : undefined}
                             maxDate={competitionState.date}
                         />
