@@ -12,7 +12,7 @@ export enum SERVICE {
     COMPETITIONS = 'competitions-api',
     EVENTS = 'events-api',
     OFFERS = 'offers-api',
-    USERS = 'users'
+    USERS = 'users-api'
 }
 
 export enum STATUS {
