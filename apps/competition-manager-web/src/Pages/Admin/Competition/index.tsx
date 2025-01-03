@@ -5,14 +5,14 @@ import { useQuery } from "react-query";
 import { getCompetition } from "../../../api/Competition";
 import { faBasketShopping, faClock, faGears, faInfo, faRankingStar, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { Info } from "./Info";
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { competitionAtom } from "../../../GlobalsStates";
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../../../utils/constants";
 import { Loading, ScrollablePage, SideNav } from "../../../Components";
 
 
 export const AdminCompetition = () => {
-    const setCompetition = useSetAtom(competitionAtom);
+    const [globalComp, setCompetition] = useAtom(competitionAtom);
     const { eid } = useParams();
 
     if (!eid) throw new Error('No competition ID provided');
@@ -46,7 +46,7 @@ export const AdminCompetition = () => {
                     transition: 'width 0.3s',
                 }}
             >
-                {isLoading ? <Loading /> : 
+                {(isLoading || !globalComp) ? <Loading /> :
                     <Routes>
                         <Route path="/" element={<Info />} />
                         <Route path="/schedule" element={<Box>schedule</Box>} />
