@@ -30,3 +30,6 @@ export const Log$ = z.object({
     metadata: Json$.default({}),
 });
 export type Log = z.infer<typeof Log$>;
+
+export const CreateLog$ = Log$.omit({ id: true, date: true });
+export type CreateLog = z.infer<typeof CreateLog$>;
