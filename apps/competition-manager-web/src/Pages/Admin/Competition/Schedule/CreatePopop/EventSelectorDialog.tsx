@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, TextField, Tabs, Tab, List, ListItem, Button, Box, ListItemButton } from '@mui/material';
+import { Dialog, DialogTitle, Tabs, Tab, List, Box, ListItemButton } from '@mui/material';
 import { Event } from '@competition-manager/schemas';
 
 interface GroupedEvents {
