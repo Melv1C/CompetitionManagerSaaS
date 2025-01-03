@@ -227,3 +227,16 @@ model Inscription {
 
     @@map("inscriptions")
 }
+
+////////////////
+// Log
+////////////////
+model Log {
+    id            Int      @id @default(autoincrement())
+    service       String
+    status        String
+    message       String
+    date          DateTime
+
+    @@map("logs")
+}
