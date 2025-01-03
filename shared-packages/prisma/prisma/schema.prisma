@@ -237,6 +237,7 @@ model Log {
     status        String
     message       String
     date          DateTime
+    metadata      Json
 
     @@map("logs")
 }

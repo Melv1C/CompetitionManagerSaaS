@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import { Date$, Id$ } from './Base';
 
+export const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));
+export type Json = z.infer<typeof Json$>;
+
 export enum SERVICE {
     REACT = 'react',
     ATHLETES = 'athletes-api',
@@ -24,5 +27,6 @@ export const Log$ = z.object({
     status: z.nativeEnum(STATUS),
     message: z.string(),
     date: Date$,
+    metadata: Json$.default({}),
 });
 export type Log = z.infer<typeof Log$>;
