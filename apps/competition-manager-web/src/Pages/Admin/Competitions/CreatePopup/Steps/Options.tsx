@@ -1,6 +1,6 @@
 import { Box, Card, CardActionArea, Checkbox, Typography } from "@mui/material"
 import { StepProps } from ".."
-import { Buttons } from "./Buttons"
+import { StepperButtons as Buttons } from "../../../../../Components";
 import { Option, PaymentPlan } from "@competition-manager/schemas"
 
 type OptionssProps = StepProps & {

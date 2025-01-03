@@ -4,7 +4,7 @@ import { StepProps } from ".."
 import { useState } from "react";
 import { TextFieldWith$ } from "../../../../../Components/FieldsWithSchema";
 import { Competition$ } from "@competition-manager/schemas";
-import { Buttons } from "./Buttons";
+import { StepperButtons as Buttons } from "../../../../../Components";
 
 type InfosProps = StepProps & {
     name: string,

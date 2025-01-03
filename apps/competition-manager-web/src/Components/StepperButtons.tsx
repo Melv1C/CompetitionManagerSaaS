@@ -8,11 +8,11 @@ type ButtonProps = {
     isSubmit?: boolean
 }
 
-type ButtonsProps = {
+type StepperButtonsProps = {
     buttons: ButtonProps[]
 }
 
-export const Buttons: React.FC<ButtonsProps> = ({ buttons }) => {
+export const StepperButtons: React.FC<StepperButtonsProps> = ({ buttons }) => {
     return (
         <Box sx={{ display: 'flex', gap: '1rem', mt: 4 }}>
             {buttons.map(({ label, onClick, disabled, isSubmit }) => (

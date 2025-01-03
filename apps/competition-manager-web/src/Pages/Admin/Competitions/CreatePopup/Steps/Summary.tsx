@@ -1,5 +1,5 @@
 import { Box } from "@mui/material"
-import { Buttons } from "./Buttons"
+import { StepperButtons as Buttons } from "../../../../../Components";
 import { StepProps } from ".."
 import { PaymentPlan, Option, CreateCompetition$ } from "@competition-manager/schemas"
 import { createCompetition } from "../../../../../api"
