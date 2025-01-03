@@ -3,10 +3,6 @@ import { Date$, Id$, License$, Name$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
-// unuse but keep if needed
-const Json$ = z.record(z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]));
-export type Json = z.infer<typeof Json$>;
-
 export enum ONE_DAY_BIB {
     MIN = 9900,
     MAX = 9999,
