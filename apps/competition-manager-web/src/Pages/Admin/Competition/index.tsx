@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 import { competitionAtom } from "../../../GlobalsStates";
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../../../utils/constants";
 import { Loading, ScrollablePage, SideNav } from "../../../Components";
+import { Schedule } from "./Schedule";
 
 
 export const AdminCompetition = () => {
@@ -49,7 +50,7 @@ export const AdminCompetition = () => {
                 {(isLoading || !globalComp) ? <Loading /> :
                     <Routes>
                         <Route path="/" element={<Info />} />
-                        <Route path="/schedule" element={<Box>schedule</Box>} />
+                        <Route path="/schedule" element={<Schedule />} />
                         <Route path="/results" element={<Box>results</Box>} />
                         <Route path="/admins" element={<Box>admins</Box>} />
                         <Route path="/options" element={<Box>options</Box>} />
