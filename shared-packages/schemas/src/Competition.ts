@@ -39,6 +39,7 @@ export const Competition$ = z.object({
     admins: z.array(Admin$),
     email: Email$,
     club: Club$.nullish(),
+    isDeleted: z.boolean().default(false),
 
     // Advanced settings
     closeDate: Date$.nullish(),
@@ -81,6 +82,7 @@ export const UpdateCompetition$ = Competition$.omit({
     freeClubs: true,
     events: true,
     club: true,
+    isDeleted: true,
 }).extend({
     optionsId: z.array(Id$).default([]),
     freeClubsId: z.array(Id$).default([]),

@@ -143,6 +143,7 @@ model Competition {
     inscriptions         Inscription[]
     club                 Club?               @relation(fields: [clubId], references: [id])
     clubId               Int?                @map("club_id")
+    isDeleted            Boolean             @map("is_deleted")
     
     @@map("competitions")
 }
@@ -207,7 +208,6 @@ model Club {
     freeCompetitions Competition[] @relation("FreeClubsToCompetition")
 
     @@map("clubs")
-    
 }
 
 ////////////////
@@ -224,6 +224,8 @@ model Inscription {
     competitionId       Int                @map("competition_id")
     paid                Int
     confirmed           Boolean
+    isAbsent            Boolean            @map("is_absent")
+    isDeleted           Boolean            @map("is_deleted")
 
     @@map("inscriptions")
 }
