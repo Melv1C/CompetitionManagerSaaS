@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from './authenticatedRequest';
 
 
 export const setUserIfExist = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    try{
+    try {
         const accessToken = req.headers.authorization?.split(' ')[1];
         if (!accessToken) {
             next();

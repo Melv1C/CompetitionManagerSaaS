@@ -22,12 +22,10 @@ const Query$ = z.object({
     admin: z.string()
 });
 
-const Body$ = z.array(CreateInscription$);
-
 router.post(
     '/:eid/inscriptions',
     parseRequest(Key.Params, Params$),
-    parseRequest(Key.Body, Body$),
+    parseRequest(Key.Body, z.array(CreateInscription$)),
     parseRequest(Key.Query, Query$),
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
