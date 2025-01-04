@@ -84,27 +84,3 @@ export const SelectEvent: React.FC<SelectEventProps> = ({
         </Box>
     );
 };
-
-
-/*
-events = [{
-    id: Id,
-    name: string,
-    abbr: string,
-    group: string,
-    type: string
-}, ... ]
-
-
-groups = [{
-    label: string,
-    items: [{
-        id: Id,
-        name: string,
-        abbr: string,
-        group: string,
-        type: string
-    }, ...]
-}, ...]
-*/
-
