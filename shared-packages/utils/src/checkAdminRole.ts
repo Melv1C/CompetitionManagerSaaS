@@ -10,7 +10,7 @@ const isAdminAuthorized = (admin: BaseAdmin, levelRequire: Access) => {
     return admin.access.includes(levelRequire);
 }
 
-export const checkAdminRole = async (levelRequire: Access, userId: number, admins: BaseAdmin[], res: Response) => {
+export const checkAdminRole = (levelRequire: Access, userId: number, admins: BaseAdmin[], res: Response) => {
     const admin = admins.find(admin => admin.userId === userId);
     if (!admin) {
         res.status(401).send('Unauthorized');
