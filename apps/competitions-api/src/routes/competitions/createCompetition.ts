@@ -29,57 +29,71 @@ router.post(
     parseRequest(Key.Body, CreateCompetition$),
     checkRole(Role.CLUB),
     async (req: AuthenticatedRequest, res) => {
-        // TODO: stripe
-        const { paymentPlanId, optionsId, ...competition } = CreateCompetition$.parse(req.body);
-        const defaultCompetition = DefaultCompetition$.parse(competition);
-        // Set endInscriptionDate to the day before the competition by default
-        defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
-        defaultCompetition.endInscriptionDate.setDate(defaultCompetition.endInscriptionDate.getDate() - 1);
-        defaultCompetition.endInscriptionDate.setHours(23, 59, 59, 999);
-        const clubId = await getClubIdFromUserId(req.user!.id);
-        const newCompetition = await prisma.competition.create({
-            data: {
-                ...defaultCompetition,
-                email: req.user!.email,
-                paymentPlan: {
-                    connect: {
-                        id: paymentPlanId
-                    }
-                },
-                options: {
-                    connect: optionsId?.map(id => ({ id }))
-                },
-                admins: {
-                    create: {
-                        access: [Access.OWNER],
-                        user: {
+        try {
+            // TODO: stripe
+            const { paymentPlanId, optionsId, ...competition } = CreateCompetition$.parse(req.body);
+            const defaultCompetition = DefaultCompetition$.parse(competition);
+            // Set endInscriptionDate to the day before the competition by default
+            defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
+            defaultCompetition.endInscriptionDate.setDate(defaultCompetition.endInscriptionDate.getDate() - 1);
+            defaultCompetition.endInscriptionDate.setHours(23, 59, 59, 999);
+            const clubId = await getClubIdFromUserId(req.user!.id);
+            try {
+                const newCompetition = await prisma.competition.create({
+                    data: {
+                        ...defaultCompetition,
+                        email: req.user!.email,
+                        paymentPlan: {
                             connect: {
-                                id: req.user!.id
+                                id: paymentPlanId
                             }
-                        }
-                    }
-                },
-                club: clubId ? {
-                    connect: {
-                        id: clubId
-                    }
-                } : undefined
-            },
-            include: {
-                paymentPlan: true,
-                options: true,
-                admins: {
+                        },
+                        options: {
+                            connect: optionsId?.map(id => ({ id }))
+                        },
+                        admins: {
+                            create: {
+                                access: [Access.OWNER],
+                                user: {
+                                    connect: {
+                                        id: req.user!.id
+                                    }
+                                }
+                            }
+                        },
+                        club: clubId ? {
+                            connect: {
+                                id: clubId
+                            }
+                        } : undefined
+                    },
                     include: {
-                        user: {
+                        paymentPlan: true,
+                        options: true,
+                        admins: {
                             include: {
-                                preferences: true
+                                user: {
+                                    include: {
+                                        preferences: true
+                                    }
+                                }
                             }
-                        }
+                        },
+                        club: true
                     }
-                },
-                club: true
+                });
+                res.send(Competition$.parse(newCompetition));
+            } catch (e:any) {
+                if (e.code === 'P2025') {
+                    res.status(400).send('Wrong payment plan id or option id');
+                    return;
+                }
+                console.log(e);
+                res.status(500).send('Internal server error');
             }
-        });
-        res.send(Competition$.parse(newCompetition));
+        } catch (error) {
+            console.log(error);
+            res.status(500).send('Internal server error');
+        }
     }
 );

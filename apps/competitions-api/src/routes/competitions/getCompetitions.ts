@@ -40,6 +40,7 @@ router.get(
                         where: {
                             userId: req.user!.id,
                             competition: {
+                                isDeleted: false,
                                 date: {
                                     gte: fromDate,
                                     lte: toDate,
@@ -57,6 +58,7 @@ router.get(
             const competitions = await prisma.competition.findMany({
                 where: {
                     publish: true,
+                    isDeleted: false,
                     date: {
                         gte: fromDate,
                         lte: toDate,

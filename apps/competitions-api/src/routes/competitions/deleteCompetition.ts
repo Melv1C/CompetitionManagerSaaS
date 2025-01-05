@@ -34,12 +34,15 @@ router.delete(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(Access.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
+            if (req.user!.role != Role.SUPERADMIN && !checkAdminRole(Access.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
                 return;
             }
-            await prisma.competition.delete({
+            await prisma.competition.update({
                 where: {
                     eid: competitionEid
+                },
+                data: {
+                    isDeleted: true
                 }
             });
             res.send('Competition deleted');

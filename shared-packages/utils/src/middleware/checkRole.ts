@@ -1,5 +1,4 @@
 import { Response, NextFunction } from 'express';
-import { verifyAccessToken } from '../jwtToken';
 import { AuthenticatedRequest } from './authenticatedRequest';
 import { Role } from '@competition-manager/schemas';
 import { isAuthorized } from '../isAuthorize';
