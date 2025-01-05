@@ -66,6 +66,7 @@ router.get(
                             userId: req.user!.id,
                             competition: {
                                 eid: competitionEid,
+                                isDeleted: false,
                             },
                         },
                         select: {
@@ -86,7 +87,8 @@ router.get(
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid,
-                    publish: true
+                    publish: true,
+                    isDeleted: false,
                 },
                 ...competitionQuery,
                 include: {
