@@ -11,7 +11,7 @@ export const Inscription$ = z.object({
     Competition: Competition$,
     CompetitionEvent$: CompetitionEvent$,
     paid: Price$.default(0),
-    confirmed: z.boolean().default(false),
+    isConfirmed: z.boolean().default(false),
     isDeleted: z.boolean().default(false),
     isAbsent: z.boolean().default(false),
 });
