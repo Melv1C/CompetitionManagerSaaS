@@ -46,7 +46,7 @@ model UserPreferences {
 /////////////////////////
 model Athlete {
     id            Int          @id @default(autoincrement())
-    license       Int
+    license       String
     firstName     String       @map("first_name")
     lastName      String       @map("last_name")
     bib           Int

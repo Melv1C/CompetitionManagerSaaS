@@ -10,7 +10,7 @@ export enum ONE_DAY_BIB {
 }
 
 export const OneDayMetadata$ = z.object({
-    license: z.number().positive(),
+    license: License$,
     club: z.string(),
 });
 export type OneDayMetadata = z.infer<typeof OneDayMetadata$>;

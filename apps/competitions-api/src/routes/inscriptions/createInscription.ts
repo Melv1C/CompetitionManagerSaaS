@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/utils';
-import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$ } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$, License } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 
 export const router = Router();
 
-const findAthleteWithLicense = async (license: number, oneDayAthletes: Athlete[] = []) => {
+const findAthleteWithLicense = async (license: License, oneDayAthletes: Athlete[] = []) => {
     return oneDayAthletes.find((a) => a.license === license) || Athlete$.parse(await prisma.athlete.findFirstOrThrow({
         where: {
             license: license,
