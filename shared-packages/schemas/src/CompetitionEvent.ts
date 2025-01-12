@@ -1,10 +1,11 @@
 import { z } from 'zod';
-import { Id$, Name$, Price$ } from './Base';
+import { Eid$, Id$, Name$, Price$ } from './Base';
 import { Category$ } from './Category';
 import { Event$ } from './Event';
 
 export const CompetitionEvent$ = z.object({
     id: Id$,
+    eid: Eid$,
     name: Name$,
     event: Event$,
     schedule: z.coerce.date().min(new Date()),
