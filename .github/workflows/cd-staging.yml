@@ -17,6 +17,7 @@ jobs:
       categories-api: ${{ steps.changed-services.outputs.categories-api }}
       competitions-api: ${{ steps.changed-services.outputs.competitions-api }}
       offers-api: ${{ steps.changed-services.outputs.offers-api }}
+      stripe-api: ${{ steps.changed-services.outputs.stripe-api }}
 
     steps:
       - name: Checkout code
@@ -55,6 +56,9 @@ jobs:
               - shared-packages/**
             offers-api:
               - apps/offers-api/**
+              - shared-packages/**
+            stripe-api:
+              - apps/stripe-api/**
               - shared-packages/**
 
       - name: Build and Push Migrations
@@ -120,6 +124,13 @@ jobs:
           docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
           docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
           
+      - name: Build and Push Stripe API
+        if: steps.changed-services.outputs.stripe-api == 'true'
+        run: |
+          app="stripe-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
 
   deploy-to-staging:
     runs-on: ubuntu-latest
