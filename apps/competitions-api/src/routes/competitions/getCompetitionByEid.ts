@@ -8,7 +8,12 @@ export const router = Router();
 
 const competitionQuery = {
     include: {
-        events: true,
+        events: {
+            include: {
+                categories: true,
+                event: true,
+            },
+        },
         paymentPlan: {
             include: {
                 includedOptions: true,

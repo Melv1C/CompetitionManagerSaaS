@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
-import { BaseAdmin$, Eid$, UpdateCompetitionEvent$, Access, Role } from '@competition-manager/schemas';
+import { BaseAdmin$, Eid$, UpdateCompetitionEvent$, Access, Role, CompetitionEvent$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -65,9 +65,13 @@ router.put(
                         },
                         ...(parentId && { parentEvent: { connect: { id: parentId } } }),
 
+                    },
+                    include: {
+                        event: true,
+                        categories: true,
                     }
                 });
-                res.send(newCompetitionEvent);
+                res.send(CompetitionEvent$.parse(newCompetitionEvent));
             } catch(e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('Wrong category id');
