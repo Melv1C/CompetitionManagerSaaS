@@ -1,7 +1,7 @@
 import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper } from "@mui/material"
 import { useEffect, useState } from "react"
 import { CloseButton, StepperButtons } from "../../../../../Components"
-import { Category, CompetitionEvent, Event, Name, Date, PaymentMethod } from "@competition-manager/schemas"
+import { Category, CompetitionEvent, Event, PaymentMethod } from "@competition-manager/schemas"
 import { SelectEventCategory } from "./Steps/SelectEventCategory"
 import { Infos } from "./Steps/Infos"
 import { competitionAtom } from "../../../../../GlobalsStates"
@@ -28,8 +28,8 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
     const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
     const [name, setName] = useState<CompetitionEvent["name"]>('')
     const [schedule, setSchedule] = useState<CompetitionEvent["schedule"]>()
-    const [place, setPlace] = useState<CompetitionEvent["place"]>()
-    const [cost, setCost] = useState<CompetitionEvent["cost"]>(0)
+    const [place] = useState<CompetitionEvent["place"]>()
+    const [cost] = useState<CompetitionEvent["cost"]>(0)
     
     const [activeStep, setActiveStep] = useState(0)
 

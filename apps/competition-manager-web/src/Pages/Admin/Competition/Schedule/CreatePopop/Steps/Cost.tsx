@@ -1,7 +1,5 @@
-import React from 'react'
-
 export const Cost = () => {
-  return (
-    <div>Cost</div>
-  )
+    return (
+        <div>Cost</div>
+    )
 }
