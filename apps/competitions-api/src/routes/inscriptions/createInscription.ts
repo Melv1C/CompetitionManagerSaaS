@@ -35,6 +35,7 @@ router.post(
             //TODO check if the athlete is in the right category
             const { admin } = Query$.parse(req.query);
             const { eid } = Params$.parse(req.params);
+            const inscriptions = z.array(CreateInscription$).parse(req.body);
 
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -61,7 +62,8 @@ router.post(
 
             try {
                 const listInscriptions = [];
-                for (const { athleteLicense, competitionEventEid, ...inscription } of DefaultInscription$.array().parse(req.body)) {
+                for (const { athleteLicense, competitionEventEid, ...inscription } of inscriptions) {
+                    const defaultInscription = DefaultInscription$.parse(inscription);
                     const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                     const newInscription = await prisma.inscription.create({
                         data: {
@@ -80,7 +82,7 @@ router.post(
                                     eid: competitionEventEid
                                 }
                             },
-                            ...inscription
+                            ...defaultInscription
                         }
                     })
                     listInscriptions.push(newInscription);
