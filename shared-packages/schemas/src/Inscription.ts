@@ -1,7 +1,6 @@
 import z from 'zod';
 import { Id$, Eid$, Price$, License$ } from './Base';
 import { Athlete$ } from './Athlete';
-import { Competition$ } from './Competition';
 import { CompetitionEvent$ } from './CompetitionEvent';
 
 export const Inscription$ = z.object({
