@@ -18,8 +18,7 @@ export type Date = z.infer<typeof Date$>;
 export const Price$ = z.coerce.number().nonnegative();
 export type Price = z.infer<typeof Price$>;
 
-//export const License$ = z.string().min(1, "License must be at least 1 character long").max(20, "License must be at most 20 characters long");
-export const License$ = z.number().positive();
+export const License$ = z.string().min(1, "License must be at least 1 character long").max(20, "License must be at most 20 characters long");
 export type License = z.infer<typeof License$>;
 
 export const Email$ = z.string().email();

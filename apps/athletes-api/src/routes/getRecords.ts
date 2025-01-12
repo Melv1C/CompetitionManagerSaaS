@@ -4,11 +4,12 @@ import 'dotenv/config';
 import { parseRequest, isBestResult, Key } from '@competition-manager/utils';
 import { BeathleticsResult } from '../utils/BeathleticsResult';
 import { getResults } from '../utils/getResult';
+import { License$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
 const Param$ = z.object({
-    license: z.string().min(1, {message: 'License must be at least 1 characters long'})
+    license: License$
 });
 
 const Body$ = z.object({

@@ -62,7 +62,7 @@ router.post(
                             }
                         },
                         bib : newBib,
-                        license : newBib
+                        license : newBib.toString(),
                     }
                 });
                 setTimeout(async () => {

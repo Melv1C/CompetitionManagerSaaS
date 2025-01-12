@@ -1,6 +1,6 @@
 [
     {
-        "license": 10000,
+        "license": "10000",
         "firstName": "Tom",
         "lastName": "Dupond",
         "bib": 1000,
@@ -9,7 +9,7 @@
         "clubAbbr": "USTA"
     },
     {
-        "license": 10001,
+        "license": "10001",
         "firstName": "Alice",
         "lastName": "Durand",
         "bib": 1001,
@@ -18,7 +18,7 @@
         "clubAbbr": "OSGA"
     },
     {
-        "license": 10002,
+        "license": "10002",
         "firstName": "Bob",
         "lastName": "Montreil",
         "bib": 1002,
@@ -27,7 +27,7 @@
         "clubAbbr": "USTA"
     },
     {
-        "license": 10003,
+        "license": "10003",
         "firstName": "Charlie",
         "lastName": "Lefevre",
         "bib": 1003,
@@ -36,7 +36,7 @@
         "clubAbbr": "ATH"
     },
     {
-        "license": 10004,
+        "license": "10004",
         "firstName": "David",
         "lastName": "Gros",
         "bib": 1004,
@@ -45,7 +45,7 @@
         "clubAbbr": "USTA"
     },
     {
-        "license": 10005,
+        "license": "10005",
         "firstName": "Eve",
         "lastName": "Verstappen",
         "bib": 1005,
@@ -54,7 +54,7 @@
         "clubAbbr": "OSGA"
     },
     {
-        "license": 10006,
+        "license": "10006",
         "firstName": "Frank",
         "lastName": "Leroy",
         "bib": 1006,
@@ -63,7 +63,7 @@
         "clubAbbr": "ATH"
     },
     {
-        "license": 10007,
+        "license": "10007",
         "firstName": "Grace",
         "lastName": "Bottas",
         "bib": 1007,
@@ -72,7 +72,7 @@
         "clubAbbr": "USTA"
     },
     {
-        "license": 10008,
+        "license": "10008",
         "firstName": "Hugo",
         "lastName": "Vettel",
         "bib": 1008,
@@ -81,7 +81,7 @@
         "clubAbbr": "OSGA"
     },
     {
-        "license": 10009,
+        "license": "10009",
         "firstName": "Isabelle",
         "lastName": "Hamilton",
         "bib": 1009,
@@ -90,7 +90,7 @@
         "clubAbbr": "ATH"
     },
     {
-        "license": 10010,
+        "license": "10010",
         "firstName": "Jack",
         "lastName": "Ricciardo",
         "bib": 1010,
@@ -99,7 +99,7 @@
         "clubAbbr": "USTA"
     },
     {
-        "license": 10011,
+        "license": "10011",
         "firstName": "Katie",
         "lastName": "Alonso",
         "bib": 1011,
@@ -108,7 +108,7 @@
         "clubAbbr": "OSGA"
     },
     {
-        "license": 10012,
+        "license": "10012",
         "firstName": "Liam",
         "lastName": "Sainz",
         "bib": 1012,

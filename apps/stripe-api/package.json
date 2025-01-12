@@ -1,0 +1,30 @@
+{
+  "name": "stripe-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@competition-manager/utils": "file:../../shared-packages/utils",
+    "@competition-manager/stripe": "file:../../shared-packages/stripe",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "stripe": "^17.5.0",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.1",
+    "@types/stripe": "^8.0.416",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
+  }
+}
