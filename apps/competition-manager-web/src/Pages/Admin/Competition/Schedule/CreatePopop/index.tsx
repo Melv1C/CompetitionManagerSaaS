@@ -1,8 +1,12 @@
 import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper } from "@mui/material"
 import { useEffect, useState } from "react"
 import { CloseButton, StepperButtons } from "../../../../../Components"
-import { SelectEvent } from "./SelectEvent"
-import { Event } from "@competition-manager/schemas"
+import { Category, CompetitionEvent, Event, Name, Date, PaymentMethod } from "@competition-manager/schemas"
+import { SelectEventCategory } from "./Steps/SelectEventCategory"
+import { Infos } from "./Steps/Infos"
+import { competitionAtom } from "../../../../../GlobalsStates"
+import { useAtomValue } from "jotai"
+import { Summary } from "./Steps/Summary"
 
 export type StepProps = {
     handleBack: () => void
@@ -16,7 +20,16 @@ type CreatePopupProps = {
 
 export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) => {
 
+    const competition = useAtomValue(competitionAtom)
+
+    if (!competition) throw new Error('No competition found')
+
     const [selectedEvent, setSelectedEvent] = useState<Event>()
+    const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
+    const [name, setName] = useState<CompetitionEvent["name"]>('')
+    const [schedule, setSchedule] = useState<CompetitionEvent["schedule"]>()
+    const [place, setPlace] = useState<CompetitionEvent["place"]>()
+    const [cost, setCost] = useState<CompetitionEvent["cost"]>(0)
     
     const [activeStep, setActiveStep] = useState(0)
 
@@ -29,18 +42,9 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
     }
 
     const steps = [
-        { label: 'Select Event', content: <SelectEvent handleNext={handleNext} selectedEvent={selectedEvent} onSelect={setSelectedEvent} /> },
-        { label: 'Step 2', content: 
-        <Box>
-            Step 2 content
-            <StepperButtons
-                buttons={[
-                    { label: 'Back', onClick: handleBack },
-                    { label: 'Next', onClick: handleNext },
-                ]}
-            />
-        </Box> },
-        { label: 'Step 3', content: 
+        { label: 'Event & Categories', content: <SelectEventCategory handleNext={handleNext} selectedEvent={selectedEvent} onSelectedEvent={setSelectedEvent} selectedCategories={selectedCategories} onSelectedCategories={setSelectedCategories} /> },
+        { label: 'Basic Information', content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} schedule={schedule} setSchedule={setSchedule} /> },
+        { label: 'Places', content: 
         <Box>
             Step 3 content
             <StepperButtons
@@ -50,6 +54,32 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
                 ]}
             />
         </Box> },
+        ...(competition.method !== PaymentMethod.FREE ? [{ label: 'Payment', content:
+        <Box>
+            Payment content
+            <StepperButtons
+                buttons={[
+                    { label: 'Back', onClick: handleBack },
+                    { label: 'Next', onClick: handleNext },
+                ]}
+            />
+        </Box> }] : []),
+        { label: 'Summary', content: 
+            <Summary 
+                handleBack={handleBack} 
+                handleNext={handleNext} 
+                competitionEvent={{ 
+                    id: 0,
+                    name, 
+                    schedule: schedule!,
+                    place, 
+                    cost, 
+                    event: selectedEvent!, 
+                    categories: selectedCategories, 
+                    isInscriptionOpen: true,
+                }} 
+            />
+        },
     ]
 
     useEffect(() => {
