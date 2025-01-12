@@ -19,6 +19,7 @@ export type CompetitionEvent = z.infer<typeof CompetitionEvent$>;
 
 export const CreateCompetitionEvent$ = CompetitionEvent$.omit({
     id: true,
+    eid: true,
     event: true,
     categories: true,
 }).extend({
