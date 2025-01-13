@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@competition-manager/schemas": "file:../../shared-packages/schemas",
+    "@competition-manager/utils": "file:../../shared-packages/utils",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
