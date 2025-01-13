@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 
-export const corsMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const corsMiddleware = (_: Request, res: Response, next: NextFunction) => {
 
     const allowOrigin = process.env.ALLOW_ORIGIN || '*';
 
