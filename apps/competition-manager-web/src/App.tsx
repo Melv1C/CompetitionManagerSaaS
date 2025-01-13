@@ -20,6 +20,8 @@ import { Competitions } from './Pages/Competitions'
 import { SuperAdmin } from './Pages/SuperAdmin'
 import { ErrorFallback } from './Components';
 import { Results } from './Pages/Results';
+import { ProtectedRoute } from './Components/ProtectedRoute';
+import { Role } from '@competition-manager/schemas';
 
 
 // must be extract in an other file
@@ -73,9 +75,21 @@ function App() {
         <Route path="/competitions" element={<Competitions />} />
         <Route path="/results" element={<Results />} />
         <Route path="/account" element={<Account />} />
-        <Route path="/admin/competitions" element={<AdminCompetitions />} />
-        <Route path="/admin/competitions/:eid/*" element={<AdminCompetition />} />
-        <Route path="/superadmin/*" element={<SuperAdmin />} />
+        <Route path="/admin/competitions" element={
+          <ProtectedRoute requiredRole={Role.ADMIN} redirectPath="/">
+            <AdminCompetitions />
+          </ProtectedRoute>}
+        />
+        <Route path="/admin/competitions/:eid" element={
+          <ProtectedRoute requiredRole={Role.ADMIN} redirectPath="/">
+            <AdminCompetition />
+          </ProtectedRoute>}
+        />
+        <Route path="/superadmin" element={
+          <ProtectedRoute requiredRole={Role.SUPERADMIN} redirectPath="/">
+            <SuperAdmin />
+          </ProtectedRoute>}
+        />
         <Route path="*" element={<h1>Not Found</h1>} />
       </Route>
     ])

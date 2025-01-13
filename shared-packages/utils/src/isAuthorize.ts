@@ -1,6 +1,5 @@
-import { UserFromToken } from './middleware/authenticatedRequest';
-import { Role, RoleLevel } from '@competition-manager/schemas';
+import { Role, RoleLevel, TokenData } from '@competition-manager/schemas';
 
-export const isAuthorized = (user: UserFromToken, levelRequire: Role) => {
+export const isAuthorized = (user: TokenData, levelRequire: Role) => {
     return RoleLevel[user.role] >= RoleLevel[levelRequire];
 }
