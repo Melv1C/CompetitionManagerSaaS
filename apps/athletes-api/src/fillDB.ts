@@ -83,7 +83,7 @@ const addNewAthletes = async () => {
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].split('\t');
         if (parseInt(line[0]) > 10000) {
-            const athleteData = CreateAthlete$.parse({
+            const athleteData = {
                 license: line[0],
                 bib: parseInt(line[1]),
                 firstName: line[3],
@@ -91,9 +91,12 @@ const addNewAthletes = async () => {
                 gender: line[5],
                 birthdate: line[6],
                 clubAbbr: line[9]
-            });
+            };
 
-            if (!checkValidityOfAthlete(athleteData)) continue;
+            if (!checkValidityOfAthlete(athleteData)) {
+                console.log('Invalid athlete:', athleteData);
+                continue;
+            }
 
             const { clubAbbr, ...athlete } = CreateAthlete$.parse(athleteData);
             const club = await createClub(clubAbbr) // get or create if not exist
