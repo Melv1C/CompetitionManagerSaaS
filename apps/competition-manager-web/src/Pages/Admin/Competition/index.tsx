@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Route, Routes, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { getCompetition } from "../../../api/Competition";
+import { getCompetition, getInscriptions } from "../../../api";
 import { faBasketShopping, faClock, faGears, faInfo, faRankingStar, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { Info } from "./Info";
 import { useAtom } from "jotai";
-import { competitionAtom } from "../../../GlobalsStates";
+import { competitionAtom, inscriptionsAtom } from "../../../GlobalsStates";
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../../../utils/constants";
 import { Loading, ScrollablePage, SideNav } from "../../../Components";
 import { Schedule } from "./Schedule";
@@ -14,11 +14,16 @@ import { Schedule } from "./Schedule";
 
 export const AdminCompetition = () => {
     const [globalComp, setCompetition] = useAtom(competitionAtom);
+    const [globalInscriptions, setInscriptions] = useAtom(inscriptionsAtom);
     const { eid } = useParams();
 
     if (!eid) throw new Error('No competition ID provided');
 
-    const { data: competition, isLoading, isError } = useQuery(['competition', eid], () => getCompetition(eid, true));
+    const { data: competition, isLoading: isCompetitionLoading, isError: isCompetitionError } = useQuery(['competition', eid], () => getCompetition(eid, true));
+    const { data: inscriptions, isLoading: isInscriptionsLoading, isError: isInscriptionsError } = useQuery(['inscriptions', eid], () => getInscriptions(eid));
+    const isLoading = isCompetitionLoading || isInscriptionsLoading;
+    const isLoaded = globalComp && globalInscriptions;
+
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
     const navItems = [
@@ -36,7 +41,14 @@ export const AdminCompetition = () => {
         }
     }, [competition, setCompetition]);
 
-    if (isError) throw new Error('Error fetching competition');
+    useEffect(() => {
+        if (inscriptions) {
+            setInscriptions(inscriptions);
+        }
+    }, [inscriptions, setInscriptions]);
+
+    if (isCompetitionError) throw new Error('Error while fetching competition');
+    if (isInscriptionsError) throw new Error('Error while fetching inscriptions');
     
     return (
         <ScrollablePage>
@@ -47,7 +59,7 @@ export const AdminCompetition = () => {
                     transition: 'width 0.3s',
                 }}
             >
-                {(isLoading || !globalComp) ? <Loading /> :
+                {(isLoading || !isLoaded) ? <Loading /> :
                     <Routes>
                         <Route path="/" element={<Info />} />
                         <Route path="/schedule" element={<Schedule />} />
