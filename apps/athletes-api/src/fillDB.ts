@@ -47,6 +47,9 @@ const createClub = async (clubAbbr: string) => {
 
 const addNewAthletes = async () => {
 
+    console.log('---------------------------------');
+    console.log('Adding new athletes ...');
+
     const athletes = await prisma.athlete.findMany({
         where: {
             competitionId: null
@@ -103,10 +106,11 @@ const addNewAthletes = async () => {
     } else {
         console.log('New athletes:', newAthletes);
     }
+    console.log('---------------------------------');
 }
 
 export const initDb = async () =>{
-    // Run the function every day at 3:00 AM
+    await addNewAthletes();
     const interval = 1000 * 60 * 60 * 24;
     const now = new Date();
     const millisTill3 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 3, 0, 0, 0).getTime() - now.getTime();
