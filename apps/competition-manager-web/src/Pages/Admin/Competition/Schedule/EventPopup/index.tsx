@@ -13,23 +13,24 @@ export type StepProps = {
     handleNext: () => void
 }
 
-type CreatePopupProps = {  
+type EventPopupProps = {  
     isVisible: boolean
     onClose: () => void
+    initialEvent?: CompetitionEvent
 }
 
-export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) => {
+export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, initialEvent }) => {
 
     const competition = useAtomValue(competitionAtom)
 
     if (!competition) throw new Error('No competition found')
 
-    const [selectedEvent, setSelectedEvent] = useState<Event>()
-    const [selectedCategories, setSelectedCategories] = useState<Category[]>([])
-    const [name, setName] = useState<CompetitionEvent["name"]>('')
-    const [schedule, setSchedule] = useState<CompetitionEvent["schedule"]>()
-    const [place] = useState<CompetitionEvent["place"]>()
-    const [cost] = useState<CompetitionEvent["cost"]>(0)
+    const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(initialEvent?.event)
+    const [selectedCategories, setSelectedCategories] = useState<Category[]>(initialEvent?.categories || [])
+    const [name, setName] = useState<CompetitionEvent["name"]>(initialEvent?.name || '')
+    const [schedule, setSchedule] = useState<CompetitionEvent["schedule"] | undefined>(initialEvent?.schedule)
+    const [place] = useState<CompetitionEvent["place"]>(initialEvent?.place)
+    const [cost] = useState<CompetitionEvent["cost"]>(initialEvent?.cost || 0)
     
     const [activeStep, setActiveStep] = useState(0)
 
@@ -69,7 +70,8 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
                 handleBack={handleBack} 
                 handleNext={handleNext} 
                 competitionEvent={{ 
-                    id: 0,
+                    id: initialEvent?.id || 0,
+                    eid: initialEvent?.eid || '',
                     name, 
                     schedule: schedule!,
                     place, 

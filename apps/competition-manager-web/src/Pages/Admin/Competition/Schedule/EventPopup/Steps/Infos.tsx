@@ -65,7 +65,6 @@ export const Infos: React.FC<InfosProps> = ({
                         label="Schedule"
                         value={schedule}
                         onChange={(date) => {
-                            console.log(date)
                             if (!date) {
                                 setIsScheduleValid(false);
                                 return;
