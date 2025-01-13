@@ -5,3 +5,4 @@ export * from "./checkAdminRole";
 export * from "./isAuthorize";
 export * from "./sendEmail";
 export * from "./hashPassword";
+export * from "./isNodeEnv";

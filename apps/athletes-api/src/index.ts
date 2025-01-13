@@ -3,13 +3,13 @@ import 'dotenv/config'
 import { initDb, initDbDev } from "./fillDB";
 import routes from './routes';
 
-import { corsMiddleware } from '@competition-manager/utils';
+import { corsMiddleware, isNodeEnv, NODE_ENV } from '@competition-manager/utils';
 
 
-if (process.env.NODE_ENV === 'production') {
-    initDb();
-} else {
+if (isNodeEnv(NODE_ENV.LOCAL)) {
     initDbDev();
+} else {
+    initDb();
 }
 
 const app = express();
