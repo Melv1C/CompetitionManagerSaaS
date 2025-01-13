@@ -5,6 +5,14 @@ import { prisma } from '@competition-manager/prisma';
 import devData from './data.json';
 import foreignClubData from './foreignClub.json';
 
+const checkValidityOfAthlete = (athlete: any) => {
+    if (new Date(athlete.birthdate) < new Date('1900-01-01')) return false;
+    if (new Date(athlete.birthdate) > new Date()) return false;
+
+    return true;
+}
+
+
 const createForeignClub = async () => {
     for (const clubData of foreignClubData) {
         const club = await prisma.club.findUnique({
@@ -84,6 +92,9 @@ const addNewAthletes = async () => {
                 birthdate: line[6],
                 clubAbbr: line[9]
             });
+
+            if (!checkValidityOfAthlete(athleteData)) continue;
+
             const { clubAbbr, ...athlete } = CreateAthlete$.parse(athleteData);
             const club = await createClub(clubAbbr) // get or create if not exist
             if (!athletes.find(a => a.license === athlete.license)) {
