@@ -21,7 +21,7 @@ const Query$ = z.object({
 });
 
 router.get(
-    '',
+    '/',
     parseRequest(Key.Query, Query$), 
     async (req, res) => {
         const { key } = Query$.parse(req.query);
@@ -44,6 +44,6 @@ router.get(
             return;
         }
         const sortedAthletes = await orderAthletes(athletes.map((athlete) => Athlete$.parse(athlete)), key);
-        res.send(sortedAthletes);
+        res.send(Athlete$.array().parse(sortedAthletes));
     }
 );
