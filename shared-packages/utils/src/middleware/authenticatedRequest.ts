@@ -1,6 +1,5 @@
 import { Request } from 'express';
-import { TokenData, User$ } from '@competition-manager/schemas';
-import { z } from 'zod';
+import { TokenData } from '@competition-manager/schemas';
 
 export interface AuthenticatedRequest extends Request {
     user?: TokenData;
