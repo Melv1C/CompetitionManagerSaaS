@@ -5,18 +5,22 @@ import { useEffect, useMemo, useState } from "react";
 import { Loading } from "../../../../Components";
 import { MaxWidth } from "../../../../Components/MaxWidth";
 import { TextFieldWith$ } from "../../../../Components/FieldsWithSchema";
-import { Club, Competition, Competition$, PaymentMethod, UpdateCompetition } from "@competition-manager/schemas";
+import { Competition, Competition$, Id, PaymentMethod, UpdateCompetition } from "@competition-manager/schemas";
 import { CircleButton } from "../../../../Components/CircleButton";
 import { Save } from "../../../../Components/Icons";
 import { MobileDatePicker, MobileDateTimePicker } from "@mui/x-date-pickers";
 import { useBlocker } from "react-router-dom";
 import { OnLeavePopup } from "./OnLeavePopup";
 import { updateCompetition } from "../../../../api";
+import { useQuery } from "react-query";
+import { getClubs } from "../../../../api";
 
 export const Info = () => {
+    const { data: clubs } = useQuery('clubs', getClubs);
+
     const [competition, setCompetition] = useAtom(competitionAtom);
     const [competitionState, setCompetitionState] = useState<Competition>();
-    const [clubs] = useState<Club[]>([]);
+    const clubsId = useMemo(() => competitionState?.freeClubs.map((club) => club.id) || [], [competitionState]);
 
     const [isNameValid, setIsNameValid] = useState(true);
     const [isDescriptionValid, setIsDescriptionValid] = useState(true);
@@ -308,19 +312,26 @@ export const Info = () => {
                                     labelId="freeClubsLabel"
                                     label="Free Clubs"
                                     multiple
-                                    value={competitionState.freeClubs}
-                                    onChange={(e) => setCompetitionState({ ...competitionState, freeClubs: e.target.value as Club[] })}
+                                    value={clubsId}
+                                    onChange={(e) => {
+                                        const selectedClubs = e.target.value as Id[];
+                                        const freeClubs = clubs?.filter((club) => selectedClubs.includes(club.id)) || [];
+                                        setCompetitionState({ ...competitionState, freeClubs: freeClubs })
+                                    }}
                                     renderValue={(selected) => (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                            {selected.map((value) => (
-                                                <Chip key={value.id} label={value.name} />
-                                            ))}
+                                            {(selected as Id[]).map((id) => {
+                                                const club = clubs?.find((club) => club.id === id);
+                                                return (
+                                                    <Chip key={id} label={club?.abbr} />
+                                                )
+                                            })}
                                         </Box>
                                     )}
                                 >
-                                    {clubs.map((option) => (
-                                        <MenuItem key={option.id} value={option.id}>
-                                            {option.name}
+                                    {clubs?.map((club) => (
+                                        <MenuItem key={club.id} value={club.id}>
+                                            {club.abbr}
                                         </MenuItem>
                                     ))}
                                 </Select>
