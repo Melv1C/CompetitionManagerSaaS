@@ -17,13 +17,13 @@ RUN chmod +x ./build-shared-packages.sh
 RUN sh ./build-shared-packages.sh
 
 # Set the working directory in the container
-WORKDIR /competition-manager/apps/club-api
+WORKDIR /competition-manager/apps/clubs-api
 
 # Copy the application files
-COPY apps/club-api/src src
-COPY apps/club-api/package.json package.json
-COPY apps/club-api/package-lock.json package-lock.json
-COPY apps/club-api/tsconfig.json tsconfig.json
+COPY apps/clubs-api/src src
+COPY apps/clubs-api/package.json package.json
+COPY apps/clubs-api/package-lock.json package-lock.json
+COPY apps/clubs-api/tsconfig.json tsconfig.json
 
 # Install the dependencies
 RUN npm install

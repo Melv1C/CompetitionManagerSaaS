@@ -1,4 +1,4 @@
-# Club-api
+# Clubs-api
 ## Build
 in the root directory of the whole project run the following command
 ./build-apps.sh name-api (file need to be in lf)
