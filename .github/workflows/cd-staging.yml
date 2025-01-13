@@ -15,6 +15,7 @@ jobs:
       athletes-api: ${{ steps.changed-services.outputs.athletes-api }}
       events-api: ${{ steps.changed-services.outputs.events-api }}
       categories-api: ${{ steps.changed-services.outputs.categories-api }}
+      clubs-api: ${{ steps.changed-services.outputs.clubs-api }}
       competitions-api: ${{ steps.changed-services.outputs.competitions-api }}
       offers-api: ${{ steps.changed-services.outputs.offers-api }}
       stripe-api: ${{ steps.changed-services.outputs.stripe-api }}
@@ -50,6 +51,9 @@ jobs:
               - shared-packages/**
             categories-api:
               - apps/categories-api/**
+              - shared-packages/**
+            clubs-api:
+              - apps/clubs-api/**
               - shared-packages/**
             competitions-api:
               - apps/competitions-api/**
@@ -104,6 +108,14 @@ jobs:
         if: steps.changed-services.outputs.categories-api == 'true'
         run: |
           app="categories-api"
+          dockerfile="apps/$app/Dockerfile"
+          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
+          docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
+
+      - name: Build and Push Clubs API
+        if: steps.changed-services.outputs.clubs-api == 'true'
+        run: |
+          app="clubs-api"
           dockerfile="apps/$app/Dockerfile"
           docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:staging .
           docker push ${{ secrets.DOCKER_USERNAME }}/$app:staging
