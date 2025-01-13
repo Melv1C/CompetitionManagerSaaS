@@ -5,3 +5,4 @@ export * from "./Inscription";
 export * from "./OffersCRUD";
 export * from "./getEvents";
 export * from "./getCategories";
+export * from "./getClubs";
