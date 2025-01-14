@@ -1,17 +1,15 @@
 import { Router } from 'express';
-import { parseRequest, sendEmail, generateResetPasswordToken, Key } from '@competition-manager/utils';
+import { parseRequest, sendEmail, generateResetPasswordToken, Key } from '@competition-manager/backend-utils';
 import { Email, EmailData$, TokenData$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
+import { env } from '..';
 
 export const router = Router();
 
 const sendRestPasswordEmail = (email: Email, token: string) => {
-    if (!process.env.BASE_URL) {
-        throw new Error('BASE_URL not set');
-    }
-    const url = new URL(process.env.BASE_URL);
-    url.pathname = `${process.env.PREFIX}/users/reset-password`;
+    const url = new URL(env.BASE_URL);
+    url.pathname = `${env.PREFIX}/users/reset-password`;
     url.searchParams.set('token', token);
     const emailData = EmailData$.parse({
         to: email,
