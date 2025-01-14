@@ -2,8 +2,9 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import 'dotenv/config';
 import { z } from 'zod';
-import { parseRequest, checkRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
+import { parseRequest, checkRole, AuthenticatedRequest, Key } from '@competition-manager/backend-utils';
 import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
+import { env } from '..';
 
 export const router = Router();
 
@@ -79,7 +80,7 @@ router.post(
                             }
                         });
                     }
-                }, Number(process.env.OneDayExpirationTime) || 24*60*60*1000);
+                }, env.ONE_DAY_ATHLETE_TIMEOUT);
                 res.send(newOneDayAth);
             } catch(e: any) {
                 if (e.code === 'P2025') {

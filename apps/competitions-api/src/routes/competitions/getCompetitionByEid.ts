@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { Key, parseRequest, setUserIfExist, AuthenticatedRequest, isAuthorized } from '@competition-manager/utils';
+import { Key, parseRequest, setUserIfExist, AuthenticatedRequest } from '@competition-manager/backend-utils';
+import { isAuthorized } from '@competition-manager/utils';
 import { Eid$, Role, Competition$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 

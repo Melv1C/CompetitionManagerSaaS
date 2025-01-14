@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/utils';
+import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/backend-utils';
 import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$, License } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';

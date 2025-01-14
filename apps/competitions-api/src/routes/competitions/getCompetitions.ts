@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { DisplayCompetition$, Role, Date$ } from '@competition-manager/schemas';
 import { z } from 'zod';
-import { AuthenticatedRequest, isAuthorized, Key, parseRequest, setUserIfExist } from '@competition-manager/utils';
+import { AuthenticatedRequest, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
+import { isAuthorized } from '@competition-manager/utils';
 
 export const router = Router();
 
