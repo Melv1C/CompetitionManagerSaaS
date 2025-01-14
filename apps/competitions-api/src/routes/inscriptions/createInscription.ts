@@ -61,7 +61,6 @@ router.post(
             
             if (!isAdmin){
                 const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
-                console.log(fullUrl);
                 const session = await createCheckoutSession(
                     inscriptions.map(({ competitionEventEid }) => {
                         const event = competition.events.find((e) => e.eid === competitionEventEid);
@@ -88,7 +87,10 @@ router.post(
                             return {
                                 athleteId: athlete.id,
                                 competitionEventId: event.id,
-                                perf: "TODO"
+                                perf: "TODO",
+                                competitionId: competition.id,
+                                userId: req.user!.id,
+                                type: "inscriptions",
                             };
                         }))
                     }
