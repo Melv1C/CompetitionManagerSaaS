@@ -6,5 +6,5 @@ const env$ = z.object({
     VITE_LOCAL_ACCESS_TOKEN: z.string().optional(),
 });
 
-export const env =  env$.parse(import.meta.env);
+export const env = env$.parse(import.meta.env);
 

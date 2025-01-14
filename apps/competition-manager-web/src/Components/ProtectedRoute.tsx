@@ -5,7 +5,6 @@ import { Role } from "@competition-manager/schemas";
 import { isAuthorized } from "@competition-manager/utils";
 import { Navigate } from "react-router-dom";
 
-
 type ProtectedRouteProps = PropsWithChildren<{
     requiredRole: Role;
     redirectPath: string;
