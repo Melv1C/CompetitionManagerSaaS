@@ -1,19 +1,24 @@
 import express from "express";
 import 'dotenv/config';
 
-import { corsMiddleware, Key, parseRequest } from '@competition-manager/utils';
+import { corsMiddleware, Key, parseRequest } from '@competition-manager/backend-utils';
 import { prisma } from "@competition-manager/prisma";
 import { z } from 'zod';
-import { DefaultCompetition$, DefaultInscription$ } from "../../../shared-packages/schemas/src";
+import { NODE_ENV } from "@competition-manager/utils";
+import { DefaultInscription$, Id$ } from "@competition-manager/schemas";
 
-// Ensure Id$ is defined as a ZodTypeAny
-const Id$ = z.number();
+const env$ = z.object({
+    NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
+    PORT: z.string().default('3000'),
+    PREFIX: z.string().default('/api'),
+    ALLOW_ORIGIN: z.string().default('*'),
+    //STRIPE_SECRET_KEY: z.string().startsWith('sk')
+});
+
+export const env = env$.parse(process.env);
 
 const app = express();
 app.use(express.json());
-
-const PORT = process.env.PORT || 3000;
-const PREFIX = process.env.PREFIX || '/api';
 
 app.use(corsMiddleware);
 
@@ -30,7 +35,7 @@ const Isncription$ = z.object({
     competitionEventId: Id$,
 });
 
-app.post(`${PREFIX}/stripe/webhook`, 
+app.post(`${env.PREFIX}/stripe/webhook`, 
     //parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
@@ -88,7 +93,7 @@ app.post(`${PREFIX}/stripe/webhook`,
 );
 
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(env.PORT, () => {
+    console.log(`Server is running on port ${env.PORT}`);
 });
 
