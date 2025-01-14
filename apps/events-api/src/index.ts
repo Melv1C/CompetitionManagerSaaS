@@ -2,27 +2,33 @@ import express from "express";
 import 'dotenv/config';
 import { fillDB } from "./fillDB";
 import { prisma } from "@competition-manager/prisma";
-
-import { corsMiddleware } from '@competition-manager/utils';
+import { corsMiddleware } from '@competition-manager/backend-utils';
 import { Event$ } from "@competition-manager/schemas";
+import { z } from 'zod';
+import { NODE_ENV } from "@competition-manager/utils";
+
+const env$ = z.object({
+    NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
+    PORT: z.string().default('3000'),
+    PREFIX: z.string().default('/api'),
+    ALLOW_ORIGIN: z.string().default('*'),
+});
+
+export const env = env$.parse(process.env);
 
 fillDB();
 
 const app = express();
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-const PREFIX = process.env.PREFIX || '/api';
-
 app.use(corsMiddleware);
 
-app.get(`${PREFIX}/events`, (req, res) => {
+app.get(`${env.PREFIX}/events`, (req, res) => {
     prisma.event.findMany().then(events => {
         res.send(Event$.array().parse(events));
     });
 });
 
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(env.PORT, () => {
+    console.log(`Server is running on port ${env.PORT}`);
 });
