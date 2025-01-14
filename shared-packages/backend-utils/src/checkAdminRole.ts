@@ -1,8 +1,6 @@
 import { Response } from 'express';
 import { Access, BaseAdmin } from '@competition-manager/schemas';
 
-
-
 const isAdminAuthorized = (admin: BaseAdmin, levelRequire: Access) => {
     if (admin.access.includes(Access.OWNER)) {
         return true;
