@@ -3,6 +3,7 @@ import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } fr
 import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$, License } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
+import { createCheckoutSession } from '@competition-manager/stripe';
 
 export const router = Router();
 
@@ -19,7 +20,7 @@ const Params$ = Competition$.pick({
 });
 
 const Query$ = z.object({
-    admin: z.string()
+    isAdmin: z.coerce.boolean().default(false),
 });
 
 router.post(
@@ -33,9 +34,9 @@ router.post(
             //TODO check place 
             //TODO check if the event is open
             //TODO check if the athlete is in the right category
-            const { admin } = Query$.parse(req.query);
+            const { isAdmin } = Query$.parse(req.query);
             const { eid } = Params$.parse(req.params);
-            const inscriptions = z.array(CreateInscription$).parse(req.body);
+            const inscriptions = CreateInscription$.array().parse(req.body);
 
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -43,7 +44,13 @@ router.post(
                 },
                 include: {
                     admins: true,
-                    oneDayAthletes: true
+                    oneDayAthletes: true,
+                    events: {
+                        include: {
+                            categories: true,
+                            event: true
+                        }
+                    }
                 }
             });
 
@@ -52,12 +59,49 @@ router.post(
                 return;
             }
             
-            if (!admin){
-                //TODO stripe
-            } else{
-                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
-                    return;
-                }
+            if (!isAdmin){
+                const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
+                const session = await createCheckoutSession(
+                    inscriptions.map(({ competitionEventEid }) => {
+                        const event = competition.events.find((e) => e.eid === competitionEventEid);
+                        if (!event) throw new Error('Event not found');
+                        return {
+                            price_data: {
+                                currency: 'eur',
+                                product_data: {
+                                    name: `${event.name}`,
+                                },
+                                unit_amount: event.cost * 100,
+                            },
+                            quantity: 1,
+                        };
+                    }),
+                    fullUrl,
+                    fullUrl,
+                    req.user!.email,
+                    {
+                        inscriptions: JSON.stringify(inscriptions.map( async ({ athleteLicense, competitionEventEid, ...inscription }) => {
+                            const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                            const event = competition.events.find((e) => e.eid === competitionEventEid);
+                            if (!event) throw new Error('Event not found');
+                            return {
+                                athleteId: athlete.id,
+                                competitionEventId: event.id,
+                                perf: "TODO",
+                                competitionId: competition.id,
+                                userId: req.user!.id,
+                                type: "inscriptions",
+                            };
+                        }))
+                    }
+                );
+                console.log(session.url);
+                res.send(session.url || '/qsrgqerh');
+                return;
+            }
+
+            if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
+                return;
             }
 
             try {
@@ -88,7 +132,7 @@ router.post(
                     listInscriptions.push(newInscription);
                 }
                 res.status(201).send(Inscription$.array().parse(listInscriptions));
-            } catch(e: any) {
+            } catch (e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('Athlete license not valid');
                     return;
