@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@competition-manager/schemas": "file:../schemas",
-    "stripe": "^17.5.0"
+    "stripe": "^17.5.0",
+    "zod": "^3.24.1"
   }
 }
