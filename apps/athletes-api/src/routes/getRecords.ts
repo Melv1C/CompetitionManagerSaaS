@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import 'dotenv/config';
-import { parseRequest, isBestResult, Key } from '@competition-manager/utils';
+import { isBestResult } from '@competition-manager/utils';
+import { Key, parseRequest } from '@competition-manager/backend-utils';
 import { BeathleticsResult } from '../utils/BeathleticsResult';
 import { getResults } from '../utils/getResult';
 import { License$ } from '@competition-manager/schemas';

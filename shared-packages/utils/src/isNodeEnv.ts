@@ -5,6 +5,6 @@ export enum NODE_ENV {
     PROD = 'prod'
 }
 
-export function isNodeEnv(env: NODE_ENV): boolean {
-    return process.env.NODE_ENV === env;
+export function isNodeEnv(value: NODE_ENV, env: NODE_ENV): boolean {
+    return value === env;
 }

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, Key, verifyVerificationToken, generateAccessToken } from '@competition-manager/utils';
+import { parseRequest, Key, verifyVerificationToken, generateAccessToken } from '@competition-manager/backend-utils';
 import { EncodeToken$, Role, User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 

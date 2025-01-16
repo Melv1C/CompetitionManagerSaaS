@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key } from '@competition-manager/backend-utils';
 
 export const router = Router();
 

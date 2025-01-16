@@ -1,9 +1,9 @@
 import axios from 'axios';
-import 'dotenv/config'
 import { CreateAthlete$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import devData from './data.json';
 import foreignClubData from './foreignClub.json';
+import { env } from '.';
 
 const checkValidityOfAthlete = (athlete: any) => {
     if (new Date(athlete.birthdate) < new Date('1900-01-01')) return false;
@@ -75,8 +75,8 @@ const addNewAthletes = async () => {
             'Connection': 'keep-alive'
         },
         auth: {
-            username: process.env.LBFA_USER || '',
-            password: process.env.LBFA_PASS || ''
+            username: env.LBFA_USER,
+            password: env.LBFA_PASS
         }
     })
     const lines = data.split('\n');

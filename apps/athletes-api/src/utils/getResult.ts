@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { BeathleticsResult, BeathleticsResult$ } from './BeathleticsResult';
 import { License } from '@competition-manager/schemas';
+import { env } from '..';
 
 export const getResults = async (license: License, events: string[], maxYears: number) => {
-    const { data } = await axios.get(process.env.RECORDS_API + `/athlete/new/${license}`);
+    const { data } = await axios.get(env.RECORDS_API + `/athlete/new/${license}`);
     const results = data.results;
     let records: BeathleticsResult[] = [];
     for (let result of results) {

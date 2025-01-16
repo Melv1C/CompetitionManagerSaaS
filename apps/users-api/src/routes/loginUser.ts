@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePassword } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePassword } from '@competition-manager/backend-utils';
 import { User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
+import { isNodeEnv, NODE_ENV } from '@competition-manager/utils';
+import { env } from '..';
 
 export const router = Router();
 
@@ -39,7 +41,7 @@ router.post(
         const refreshToken = generateRefreshToken(tokenData);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: isNodeEnv(env.NODE_ENV, NODE_ENV.PROD),
             sameSite: 'strict',
             maxAge: 30 * 24 * 60 * 60 * 1000,   // 30 days
         }).send(accessToken);

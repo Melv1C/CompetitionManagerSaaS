@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, verifyResetPasswordToken, Key, hashPassword } from '@competition-manager/utils';
+import { parseRequest, verifyResetPasswordToken, Key, hashPassword } from '@competition-manager/backend-utils';
 import { EncodeToken$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';

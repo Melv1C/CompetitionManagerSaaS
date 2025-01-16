@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/utils';
+import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/backend-utils';
 import { BaseAdmin$, Eid$, CreateCompetitionEvent$, Access, Role, CompetitionEvent$ } from '@competition-manager/schemas';
 
 export const router = Router();

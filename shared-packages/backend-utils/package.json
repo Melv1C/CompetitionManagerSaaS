@@ -1,7 +1,6 @@
 {
-  "name": "@competition-manager/schemas",
+  "name": "@competition-manager/backend-utils",
   "version": "1.0.0",
-  "description": "",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "exports": {
@@ -22,11 +21,22 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.8.1",
+    "@types/nodemailer": "^6.4.17",
+    "@types/bcrypt": "^5.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@competition-manager/prisma": "file:../prisma",
+    "@competition-manager/schemas": "file:../schemas",
+    "@competition-manager/utils": "file:../utils",
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.16",
     "zod": "^3.24.1"
   }
 }

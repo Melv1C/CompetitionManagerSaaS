@@ -1,8 +1,8 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from './authenticatedRequest';
 import { Role } from '@competition-manager/schemas';
-import { isAuthorized } from '../isAuthorize';
 import { setUserIfExist } from './setUserIfExist';
+import { isAuthorized } from '@competition-manager/utils';
 
 export const checkRole = (levelRequire: Role) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     setUserIfExist(req, res, () => {

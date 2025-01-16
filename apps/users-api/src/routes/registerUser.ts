@@ -1,17 +1,16 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword } from '@competition-manager/utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword } from '@competition-manager/backend-utils';
 import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$, Role } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
+import { env } from '..';
+import { isNodeEnv, NODE_ENV } from '@competition-manager/utils';
 
 export const router = Router();
 
 const sendVerificationEmail = (email: Email, verificationToken: string) => {
-    if (!process.env.BASE_URL) {
-        throw new Error('BASE_URL not set');
-    }
-    const url = new URL(process.env.BASE_URL);
-    url.pathname = `${process.env.PREFIX}/users/verify-email`;
+    const url = new URL(env.BASE_URL);
+    url.pathname = `${env.PREFIX}/users/verify-email`;
     url.searchParams.set('token', verificationToken);
     const emailData = EmailData$.parse({
         to: email,
@@ -59,7 +58,7 @@ router.post(
             }
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: isNodeEnv(env.NODE_ENV, NODE_ENV.PROD),
                 sameSite: 'strict',
                 maxAge: 30 * 24 * 60 * 60 * 1000,
             }).send(accessToken);
