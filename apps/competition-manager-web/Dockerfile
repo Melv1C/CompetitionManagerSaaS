@@ -6,11 +6,14 @@ WORKDIR /competition-manager
 
 # Copy shared_package to the application directory
 COPY shared-packages/schemas shared-packages/schemas
-
-# Set the working directory to shared package
-WORKDIR /competition-manager/shared-packages/schemas
+COPY shared-packages/utils shared-packages/utils
 
 # Install the dependencies and build the shared package
+WORKDIR /competition-manager/shared-packages/schemas
+RUN npm install
+RUN npm run build
+
+WORKDIR /competition-manager/shared-packages/utils
 RUN npm install
 RUN npm run build
 
