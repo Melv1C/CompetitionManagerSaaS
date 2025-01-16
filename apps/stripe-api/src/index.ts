@@ -11,8 +11,7 @@ const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
     PORT: z.string().default('3000'),
     PREFIX: z.string().default('/api'),
-    ALLOW_ORIGIN: z.string().default('*'),
-    //STRIPE_SECRET_KEY: z.string().startsWith('sk')
+    ALLOW_ORIGIN: z.string().default('*')
 });
 
 export const env = env$.parse(process.env);
@@ -36,7 +35,7 @@ const Isncription$ = z.object({
 });
 
 app.post(`${env.PREFIX}/stripe/webhook`, 
-    //parseRequest(Key.Body, Body$),
+    parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
             const { metadata } = Body$.parse(req.body).data.object;
