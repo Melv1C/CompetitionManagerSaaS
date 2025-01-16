@@ -2,9 +2,9 @@ import express from "express";
 import 'dotenv/config';
 import { corsMiddleware } from '@competition-manager/backend-utils';
 import { prisma } from "@competition-manager/prisma";
-import { Club$ } from "../../../shared-packages/schemas/src";
 import { z } from 'zod';
 import { NODE_ENV } from "@competition-manager/utils";
+import { Club$ } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
