@@ -35,7 +35,7 @@ const Isncription$ = z.object({
 });
 
 app.post(`${env.PREFIX}/stripe/webhook`, 
-    //parseRequest(Key.Body, Body$),
+    parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
             const { metadata } = Body$.parse(req.body).data.object;
