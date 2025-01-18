@@ -12,6 +12,8 @@ import { AuthPopup } from "../AuthPopup";
 import { useRoles } from "../../hooks";
 import { useAtomValue } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
+import { LanguageSelector } from "./LanguageSelector";
+import { useTranslation } from "react-i18next";
 
 type NavItemProps = {
     label: string;
@@ -24,7 +26,9 @@ export type NavBarProps = {
 };
 
 export const NavBar: React.FC<NavBarProps> = ({ items }) => {
-  
+
+    const { t } = useTranslation('navigation');
+      
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const isMobile = useMediaQuery('(max-width:900px)');
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
@@ -88,6 +92,12 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         )}  
                     </Box>
 
+
+                    {/* add link to language switcher */}
+                    {!isMobile && (
+                        <LanguageSelector />
+                    )}
+
                     {/* add link to super admin dashboard */}
                     {isSuperAdmin && (
                         <Box>
@@ -136,7 +146,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                     }} 
                                     onClick={() => setIsAuthPopupVisible(true)}
                                 >
-                                    Sign In
+                                    {t('login')}
                                 </Button>
                                 <AuthPopup isVisible={isAuthPopupVisible} onClose={() => setIsAuthPopupVisible(false)} />
                             </>
