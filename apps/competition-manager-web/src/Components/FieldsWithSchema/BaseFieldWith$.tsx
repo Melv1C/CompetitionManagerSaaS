@@ -1,5 +1,6 @@
 import { FormControl, FormControlProps, FormLabel, FormLabelProps, TextField, TextFieldProps } from '@mui/material';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ZodSchema } from 'zod';
 
 export type FieldValueProps<T = any> = {
@@ -36,6 +37,9 @@ export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
     formLabelProps,
     ...props
 }) => {
+
+    const { t } = useTranslation('zod');
+
     const [hasBlurred, setHasBlurred] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -56,7 +60,7 @@ export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
                     }
                     const { success, error} = validator.Schema$.safeParse(e.target.value);
                     validator.setIsValid(success);
-                    setErrorMsg(error?.errors?.map(e => e.message).join(', ') ?? '');
+                    setErrorMsg(error?.errors?.map(e => t(e.message)).join(', ') ?? '');
                 }}
                 {...props}
             />
