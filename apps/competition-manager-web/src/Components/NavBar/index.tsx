@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { AppBar, Box, Button, IconButton, Toolbar, useMediaQuery } from "@mui/material";
+import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, IconDefinition, faRightToBracket, faUserGear, faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,7 +9,7 @@ import { MobileNav } from "./MobileNav";
 import { AccountCircle } from "../AccountCircle";
 import { Logo } from "../Logo";
 import { AuthPopup } from "../AuthPopup";
-import { useRoles } from "../../hooks";
+import { useRoles, useDeviceSize } from "../../hooks";
 import { useAtomValue } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { LanguageSelector } from "./LanguageSelector";
@@ -30,7 +30,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const { t } = useTranslation('navigation');
       
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const isMobile = useMediaQuery('(max-width:900px)');
+    const { isTablet } = useDeviceSize();
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
     const userToken = useAtomValue(userTokenAtom);
@@ -59,7 +59,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         alignItems: 'center' 
                     }}
                 >
-                    {isMobile && (
+                    {isTablet && (
                         <Box sx={{ marginRight: '1rem' }}>
                             <Button 
                                 color="inherit" 
@@ -75,7 +75,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         <Logo />
                     </Link>
                     <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
-                        {!isMobile && (
+                        {!isTablet && (
                             <>
                                 {items.map((item) => (
                                     <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -94,7 +94,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
 
 
                     {/* add link to language switcher */}
-                    {!isMobile && (
+                    {!isTablet && (
                         <LanguageSelector />
                     )}
 
@@ -140,7 +140,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                     color="inherit"
                                     sx={{ 
                                         textTransform: 'none', 
-                                        fontSize: isMobile ? '1rem' : '1.2rem',
+                                        fontSize: isTablet ? '1rem' : '1.2rem',
                                         border: '2px solid white',
                                         padding: '0.2rem 1rem',
                                     }} 
