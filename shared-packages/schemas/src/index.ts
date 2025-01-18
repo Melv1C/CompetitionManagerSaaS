@@ -17,3 +17,5 @@ export * from './UserPreferences';
 export * from './Inscription';
 export * from './EmailData';
 export * from './Log';
+
+export * from './Translations';
