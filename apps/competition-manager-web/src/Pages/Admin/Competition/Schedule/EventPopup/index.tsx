@@ -7,6 +7,7 @@ import { Infos } from "./Steps/Infos"
 import { competitionAtom } from "../../../../../GlobalsStates"
 import { useAtomValue } from "jotai"
 import { Summary } from "./Steps/Summary"
+import { useTranslation } from "react-i18next"
 
 export type StepProps = {
     handleBack: () => void
@@ -20,6 +21,8 @@ type EventPopupProps = {
 }
 
 export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, initialEvent }) => {
+
+    const { t } = useTranslation('eventPopup')
 
     const competition = useAtomValue(competitionAtom)
 
@@ -43,29 +46,29 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
     }
 
     const steps = [
-        { label: 'Event & Categories', content: <SelectEventCategory handleNext={handleNext} selectedEvent={selectedEvent} onSelectedEvent={setSelectedEvent} selectedCategories={selectedCategories} onSelectedCategories={setSelectedCategories} /> },
-        { label: 'Basic Information', content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} schedule={schedule} setSchedule={setSchedule} /> },
-        { label: 'Places', content: 
+        { label: `${t('glossary:event')} & ${t('glossary:categories')}`, content: <SelectEventCategory handleNext={handleNext} selectedEvent={selectedEvent} onSelectedEvent={setSelectedEvent} selectedCategories={selectedCategories} onSelectedCategories={setSelectedCategories} /> },
+        { label: t('basicInformation'), content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} schedule={schedule} setSchedule={setSchedule} /> },
+        { label: t('glossary:places'), content: 
         <Box>
             Step 3 content
             <StepperButtons
                 buttons={[
-                    { label: 'Back', onClick: handleBack },
-                    { label: 'Next', onClick: handleNext },
+                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:next'), onClick: handleNext },
                 ]}
             />
         </Box> },
-        ...(competition.method !== PaymentMethod.FREE ? [{ label: 'Payment', content:
+        ...(competition.method !== PaymentMethod.FREE ? [{ label: t('paymentInformation'), content:
         <Box>
-            Payment content
+            {t('paymentInformation')}
             <StepperButtons
                 buttons={[
-                    { label: 'Back', onClick: handleBack },
-                    { label: 'Next', onClick: handleNext },
+                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:next'), onClick: handleNext },
                 ]}
             />
         </Box> }] : []),
-        { label: 'Summary', content: 
+        { label: t('glossary:summary'), content: 
             <Summary 
                 handleBack={handleBack} 
                 handleNext={handleNext} 
@@ -104,7 +107,7 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
         >
             <Box>
                 <DialogTitle variant="h5" align="center" id="create-competition-event-title">
-                    Create Competition Event
+                    {initialEvent ? t('editEvent') : t('createEvent')}
                 </DialogTitle>
                 <CloseButton onClose={onClose} />
             </Box>

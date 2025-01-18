@@ -1,0 +1,9 @@
+{
+    "createEvent": "Create Event",
+    "updateEvent": "Update Event",
+    "basicInformation": "Basic Information",
+    "paymentInformation": "Payment Information",
+    "selectedEvent": "Selected Event",
+    "selectEvent": "Select Event",
+    "selectCategories": "Select Categories"
+}

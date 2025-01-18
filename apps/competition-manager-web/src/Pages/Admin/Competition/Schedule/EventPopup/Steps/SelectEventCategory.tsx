@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { EventSelectorDialog } from "./Dialogs/EventSelectorDialog";
 import { CategorySelectorDialog } from "./Dialogs/CategorySelectorDialog";
+import { useTranslation } from "react-i18next";
 
 type SelectEventProps = {
     handleNext: () => void;
@@ -24,6 +25,9 @@ export const SelectEventCategory: React.FC<SelectEventProps> = ({
     selectedCategories,
     onSelectedCategories
 }) => {
+
+    const { t } = useTranslation('eventPopup');
+
     const { data: events, isLoading: isEventsLoading, isError: isEventsError } = useQuery(['events'], getEvents);
     const { data: categories, isLoading: isCategoriesLoading, isError: isCategoriesError } = useQuery(['categories'], getCategories);
     
@@ -66,9 +70,9 @@ export const SelectEventCategory: React.FC<SelectEventProps> = ({
                 }}
             >
                 <TextField
-                    label="Épreuve sélectionnée"
+                    // label="Épreuve sélectionnée"
+                    label={t('selectedEvent')}
                     value={selectedEvent?.name || ""}
-                    placeholder="Aucune épreuve sélectionnée"
                     fullWidth
                     slotProps={{
                         input: {
@@ -95,11 +99,13 @@ export const SelectEventCategory: React.FC<SelectEventProps> = ({
                 )}
 
                 <FormControl fullWidth>
-                    <InputLabel id="categoriesSelectLabel">Catégories</InputLabel>
+                    <InputLabel id="categoriesSelectLabel">
+                        {t('glossary:categories')}
+                    </InputLabel>
                     <Select
                         id="categoriesSelect"
                         labelId="categoriesSelectLabel"
-                        label="Catégories"
+                        label={t('glossary:categories')}
                         multiple
                         value={selectedCategories}
                         onClick={() => setIsCategoryDialogOpen(true)}
@@ -125,11 +131,7 @@ export const SelectEventCategory: React.FC<SelectEventProps> = ({
                         sx={{
                             paddingRight: "14px"
                         }}
-                    >
-                    </Select>
-
-                    
-
+                    />
                 </FormControl>
                 
                 {isCategoryDialogOpen && (
@@ -145,7 +147,7 @@ export const SelectEventCategory: React.FC<SelectEventProps> = ({
 
             <StepperButtons
                 buttons={[
-                    { label: 'Next', onClick: handleNext, disabled: !selectedEvent || selectedCategories.length === 0 }
+                    { label: t('buttons:next'), onClick: handleNext, disabled: !selectedEvent || selectedCategories.length === 0 }
                 ]}
             />
 

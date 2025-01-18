@@ -4,6 +4,7 @@ import { StepperButtons } from "../../../../../../Components"
 import { useAtom } from "jotai"
 import { competitionAtom } from "../../../../../../GlobalsStates"
 import { createCompetitionEvent, updateCompetitionEvent } from "../../../../../../api"
+import { useTranslation } from "react-i18next"
 
 type SummaryProps = {
     handleBack: () => void
@@ -17,12 +18,12 @@ export const Summary: React.FC<SummaryProps> = ({
     competitionEvent,
 }) => {
 
+    const { t } = useTranslation('eventPopup');
+
     const [competition, setCompetition] = useAtom(competitionAtom)
     if (!competition) throw new Error('No competition found')
 
     const isCreate = competitionEvent.id === 0;
-    console.log('isCreate', isCreate)
-    console.log('competitionEvent', competitionEvent)
 
     const onCreate = async () => {
         const createCompetitionEventData = CreateCompetitionEvent$.parse({
@@ -63,7 +64,7 @@ export const Summary: React.FC<SummaryProps> = ({
             >
                 <FormControl>
                     <TextField
-                        label="Event"
+                        label={t('glossary:event')}
                         value={competitionEvent.event.name}
                         slotProps={{
                             input: { readOnly: true }
@@ -73,7 +74,7 @@ export const Summary: React.FC<SummaryProps> = ({
 
                 <FormControl>
                     <TextField
-                        label="Categories"
+                        label={t('glossary:categories')}
                         value={competitionEvent.categories.map(c => c.abbr).join(', ')}
                         slotProps={{
                             input: { readOnly: true }
@@ -83,7 +84,7 @@ export const Summary: React.FC<SummaryProps> = ({
 
                 <FormControl>
                     <TextField
-                        label="Schedule"
+                        label={t('labels:schedule')}
                         value={competitionEvent.schedule.toLocaleDateString() + ' ' + competitionEvent.schedule.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         slotProps={{
                             input: { readOnly: true }
@@ -93,7 +94,7 @@ export const Summary: React.FC<SummaryProps> = ({
 
                 <FormControl>
                     <TextField
-                        label="Name"
+                        label={t('labels:name')}
                         value={competitionEvent.name}
                         slotProps={{
                             input: { readOnly: true }
@@ -104,7 +105,7 @@ export const Summary: React.FC<SummaryProps> = ({
 
                 <FormControl>
                     <TextField
-                        label="Place"
+                        label={t('glossary:place')}
                         value={competitionEvent.place ? competitionEvent.place : 'No limit'}
                         slotProps={{
                             input: { readOnly: true }
@@ -114,8 +115,8 @@ export const Summary: React.FC<SummaryProps> = ({
 
                 <FormControl>
                     <TextField
-                        label="Cost"
-                        value={competitionEvent.cost === 0 ? 'Free' : competitionEvent.cost.toString()}
+                        label={t('glossary:price')}
+                        value={competitionEvent.cost === 0 ? t('glossary:free') : competitionEvent.cost.toString()}
                         slotProps={{
                             input: { readOnly: true }
                         }}
@@ -125,8 +126,8 @@ export const Summary: React.FC<SummaryProps> = ({
 
             <StepperButtons
                 buttons={[
-                    { label: 'Back', onClick: handleBack },
-                    isCreate ? { label: 'Create', onClick: onCreate } : { label: 'Update', onClick: onUpdate },
+                    { label: t('buttons:back'), onClick: handleBack },
+                    isCreate ? { label: t('buttons:create'), onClick: onCreate } : { label: 'Update', onClick: onUpdate },
                 ]}
             />
         </Box>

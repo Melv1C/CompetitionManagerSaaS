@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Checkbox, Dialog, DialogTitle, Grid, List, ListItemButton } from '@mui/material';
 import { Category, Gender } from '@competition-manager/schemas';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -19,6 +20,8 @@ export const CategorySelectorDialog: React.FC<CategorySelectorDialogProps> = ({
     onClose,
     onSelect,
 }) => {
+
+    const { t } = useTranslation('eventPopup');
 
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(initialSelectedCategories);
 
@@ -42,7 +45,7 @@ export const CategorySelectorDialog: React.FC<CategorySelectorDialogProps> = ({
             fullWidth 
             maxWidth="sm"
         >
-            <DialogTitle>Choisir les catégories</DialogTitle>
+            <DialogTitle>{t('selectCategories')}</DialogTitle>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <List>
@@ -84,7 +87,7 @@ export const CategorySelectorDialog: React.FC<CategorySelectorDialogProps> = ({
                     margin: 2,
                 }}
             >
-                Valider
+                {t('buttons:validate')}
             </Button>
         </Dialog>
     );
