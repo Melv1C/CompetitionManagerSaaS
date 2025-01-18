@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 
 type OnLeavePopupProps = {
@@ -7,19 +8,22 @@ type OnLeavePopupProps = {
 }
 
 export const OnLeavePopup = ({ onStay, onLeave }: OnLeavePopupProps) => {
+
+    const { t } = useTranslation();
+
     return (
         <Dialog
             open
             fullWidth
             maxWidth="xs"
         >
-            <DialogTitle>Are you sure you want to leave?</DialogTitle>
+            <DialogTitle>{t('adminCompetition:onLeavePopup')}</DialogTitle>
             <DialogActions>
                 <Button onClick={onStay} color="primary">
-                    Stay
+                    {t('buttons:stay')}
                 </Button>
                 <Button onClick={onLeave} color="primary">
-                    Leave
+                    {t('buttons:leave')}
                 </Button>
             </DialogActions>
         </Dialog>

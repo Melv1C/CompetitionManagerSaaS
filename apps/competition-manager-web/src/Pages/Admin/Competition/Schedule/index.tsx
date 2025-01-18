@@ -6,8 +6,11 @@ import { competitionAtom, inscriptionsAtom } from "../../../../GlobalsStates";
 import { useState } from "react";
 import { EventPopup } from "./EventPopup";
 import { CompetitionEvent, CompetitionEvent$ } from "@competition-manager/schemas";
+import { useTranslation } from "react-i18next";
 
 export const Schedule = () => {
+
+    const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
     const inscriptions = useAtomValue(inscriptionsAtom);
@@ -23,7 +26,7 @@ export const Schedule = () => {
     const columns: GridColDef[] = [
         { 
             field: 'schedule', 
-            headerName: 'Time', 
+            headerName: t('labels:schedule'),
             width: 100, 
             valueFormatter: (value: Date) => {
                 if (competition.closeDate) {
@@ -32,8 +35,8 @@ export const Schedule = () => {
                 return value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }
         },
-        { field: 'name', headerName: 'Name', width: 150 },
-        { field: '', headerName: 'Inscriptions', width: 100, valueGetter: (_, row) => {
+        { field: 'name', headerName: t('labels:name'), width: 150 },
+        { field: '', headerName: t('glossary:inscriptions'), width: 100, valueGetter: (_, row) => {
             const inscriptionsCount = inscriptions.filter(i => i.competitionEvent.id === row.id).length;
             return inscriptionsCount;
         }, renderCell: (params) => (
@@ -54,12 +57,12 @@ export const Schedule = () => {
                 </Badge>
             </Box>
         )},
-        { field: 'place', headerName: 'Place', width: 100 },
-        { field: 'cost', headerName: 'Cost', width: 100, valueFormatter: (value: number) => {
-            if (value === 0) return 'Free';
+        { field: 'place', headerName: t('glossary:place'), width: 100 },
+        { field: 'cost', headerName: t('glossary:price'), width: 100, valueFormatter: (value: number) => {
+            if (value === 0) return t('glossary:free');
             return value + '€';
         }},
-        { field: 'actions', headerName: 'Actions', width: 150, renderCell: (params) => (
+        { field: 'actions', headerName: t('labels:actions'), width: 150, renderCell: (params) => (
             <Box>
                 <CircleButton size="2rem" color="primary" onClick={() => {
                     setSelectedEvent(CompetitionEvent$.parse(params.row));
@@ -104,7 +107,7 @@ export const Schedule = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <FormControl>
                     <TextField
-                        label="Name"
+                        label={t('glossary:competition')}
                         value={competition.name}
                         slotProps={{ input: { readOnly: true } }}
 
