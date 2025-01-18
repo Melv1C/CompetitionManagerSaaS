@@ -2,6 +2,7 @@ import { Box, Card, CardActionArea, CardContent, CardHeader, Typography } from "
 import { StepProps } from ".."
 import { StepperButtons as Buttons } from "../../../../../Components";
 import { PaymentPlan } from "@competition-manager/schemas"
+import { useTranslation } from "react-i18next";
 
 type PlansProps = Omit<StepProps, 'handleBack'> & {
     plans: PaymentPlan[]
@@ -15,6 +16,8 @@ export const Plans: React.FC<PlansProps> = ({
     plan,
     setPlan
 }) => {
+
+    const { t } = useTranslation()
 
     return (
         <>
@@ -41,7 +44,7 @@ export const Plans: React.FC<PlansProps> = ({
 
             <Buttons 
                 buttons={[
-                    { label: 'Next', onClick: handleNext, disabled: !plan }
+                    { label: t('buttons:next'), onClick: handleNext, disabled: !plan }
                 ]}
             />
         </>

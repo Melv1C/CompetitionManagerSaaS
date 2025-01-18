@@ -2,6 +2,7 @@ import { Box, Card, CardActionArea, Checkbox, Typography } from "@mui/material"
 import { StepProps } from ".."
 import { StepperButtons as Buttons } from "../../../../../Components";
 import { Option, PaymentPlan } from "@competition-manager/schemas"
+import { useTranslation } from "react-i18next";
 
 type OptionssProps = StepProps & {
     plan: PaymentPlan
@@ -18,6 +19,8 @@ export const Options: React.FC<OptionssProps> = ({
     selectedOptions,
     setSelectedOptions
 }) => {
+
+    const { t } = useTranslation()
 
     const isSelected = (option: Option) => selectedOptions.map(o => o.id).includes(option.id)
     const isIncluded = (option: Option) => plan.includedOptions.map(o => o.id).includes(option.id)
@@ -90,8 +93,8 @@ export const Options: React.FC<OptionssProps> = ({
             </Box>
 
             <Buttons buttons={[
-                { label: 'Back', onClick: handleBack },
-                { label: 'Next', onClick: handleNext }
+                { label: t('buttons:back'), onClick: handleBack },
+                { label: t('buttons:next'), onClick: handleNext }
             ]} />
         </>
     )

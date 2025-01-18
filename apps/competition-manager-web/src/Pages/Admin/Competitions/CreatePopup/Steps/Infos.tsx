@@ -5,6 +5,7 @@ import { useState } from "react";
 import { TextFieldWith$ } from "../../../../../Components/FieldsWithSchema";
 import { Competition$ } from "@competition-manager/schemas";
 import { StepperButtons as Buttons } from "../../../../../Components";
+import { useTranslation } from "react-i18next";
 
 type InfosProps = StepProps & {
     name: string,
@@ -25,6 +26,8 @@ export const Infos: React.FC<InfosProps> = ({
     closeDate,
     setCloseDate,
 }) => {
+
+    const { t } = useTranslation()
 
     const [isMultiDay, setIsMultiDay] = useState(closeDate ? true : false)
     const [isNameValid, setIsNameValid] = useState(Competition$.shape.name.safeParse(name).success)
@@ -49,7 +52,7 @@ export const Infos: React.FC<InfosProps> = ({
             >
                 <TextFieldWith$
                     id="name"
-                    label={{ value: 'Name' }}
+                    label={{ value: t('labels:name') }}
                     value={{ value: name, onChange: setName }}
                     validator={{ 
                         Schema$: Competition$.shape.name,
@@ -67,7 +70,7 @@ export const Infos: React.FC<InfosProps> = ({
                     }}
                 >
                     <DatePicker
-                        label={isMultiDay ? 'Start Date' : 'Date'}
+                        label={isMultiDay ? t('labels:start_date') : t('labels:date')}
                         value={date}
                         onChange={(date) => setDate(date || undefined)}
                         onError={(error) => setIsDateValid(!error)}
@@ -81,7 +84,7 @@ export const Infos: React.FC<InfosProps> = ({
                         <FormLabel
                             sx={{ textAlign: 'center' }}
                         >
-                            Multi Day
+                            {t('labels:multi_day')}
                         </FormLabel>
                         <Switch
                             checked={isMultiDay}
@@ -96,7 +99,7 @@ export const Infos: React.FC<InfosProps> = ({
 
                     {isMultiDay && 
                         <DatePicker
-                            label="Close Date"
+                            label={t('labels:end_date')}
                             value={closeDate}
                             onChange={(date) => setCloseDate(date || undefined)}
                             onError={(error) => setIsCloseDateValid(!error)}
@@ -111,9 +114,9 @@ export const Infos: React.FC<InfosProps> = ({
 
             <Buttons 
                 buttons={[
-                    { label: 'Back', onClick: handleBack },
+                    { label: t('buttons:back'), onClick: handleBack },
                     { 
-                        label: 'Next',
+                        label: t('buttons:next'),
                         onClick: handleNext, 
                         disabled: !isNameValid || !date || !isDateValid || (isMultiDay && !closeDate || !isCloseDateValid)
                     }
