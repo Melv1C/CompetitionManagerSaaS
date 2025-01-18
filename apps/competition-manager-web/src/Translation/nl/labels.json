@@ -1,0 +1,22 @@
+{
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "email": "E-mail",
+    "firstName": "Voornaam",
+    "lastName": "Achternaam",
+    "name": "Naam",
+    "description": "Beschrijving",
+    "date": "Datum",
+    "start_date": "Startdatum",
+    "end_date": "Einddatum",
+    "multi_day": "Meerdere dagen",
+    "price": "Prijs",
+    "publish": "Publiceren",
+    "contactEmail": "Contact E-mail",
+    "startInscriptionDate": "Start inschrijfdatum",
+    "endInscriptionDate": "Eind inschrijfdatum",
+    "paymentMethod": "Betaalmethode",
+    "freeClubs": "Gratis clubs",
+    "schedule": "Tijdschema",
+    "actions": "Acties"
+}
