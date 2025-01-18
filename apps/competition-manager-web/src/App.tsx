@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ErrorBoundary } from 'react-error-boundary'
+import { useTranslation } from 'react-i18next';
 
 import './App.css'
 import { Box, createTheme, ThemeProvider } from "@mui/material"
@@ -23,6 +24,7 @@ import { ErrorFallback } from './Components';
 import { Results } from './Pages/Results';
 import { ProtectedRoute } from './Components/ProtectedRoute';
 import { Role } from '@competition-manager/schemas';
+import { Home } from './Pages/Home';
 
 
 // must be extract in an other file
@@ -55,10 +57,12 @@ const queryClient = new QueryClient()
 
 function App() {
 
+    const { t } = useTranslation()
+
     const navItems = [
-        { label: 'Home', href: '/', icon: faHome },
-        { label: 'Competitions', href: '/competitions', icon: faCalendarDays },
-        { label: 'Results', href: '/results', icon: faRankingStar },
+        { label: t('navigation:home'), href: '/', icon: faHome },
+        { label: t('glossary:competitions'), href: '/competitions', icon: faCalendarDays },
+        { label: t('glossary:results'), href: '/results', icon: faRankingStar },
     ]
     
     const router = createBrowserRouter(
