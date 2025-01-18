@@ -80,12 +80,12 @@ function App() {
             <AdminCompetitions />
           </ProtectedRoute>}
         />
-        <Route path="/admin/competitions/:eid" element={
+        <Route path="/admin/competitions/:eid/*" element={
           <ProtectedRoute requiredRole={Role.ADMIN} redirectPath="/">
             <AdminCompetition />
           </ProtectedRoute>}
         />
-        <Route path="/superadmin" element={
+        <Route path="/superadmin/*" element={
           <ProtectedRoute requiredRole={Role.SUPERADMIN} redirectPath="/">
             <SuperAdmin />
           </ProtectedRoute>}
