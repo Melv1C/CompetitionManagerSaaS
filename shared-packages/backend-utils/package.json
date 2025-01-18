@@ -26,6 +26,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.8.1",
     "@types/nodemailer": "^6.4.17",
+    "@types/stripe": "^8.0.416",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
@@ -37,7 +38,9 @@
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
+    "stripe": "^17.5.0",
     "winston": "^3.17.0",
+    "winston-transport": "^4.9.0",
     "zod": "^3.24.1"
   }
 }

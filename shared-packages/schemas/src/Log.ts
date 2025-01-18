@@ -1,11 +1,6 @@
 import { z } from 'zod';
 import { Date$, Id$ } from './Base';
 
-export const basicType$ = z.union([z.string(), z.number(), z.boolean(), z.null(), z.array(z.string()), z.array(z.number()), z.array(z.boolean())]);
-export type basicType = z.infer<typeof basicType$>;
-export const Json$ = z.record(basicType$);
-export type Json = z.infer<typeof Json$>;
-
 export enum SERVICE {
     REACT = 'react',
     ATHLETES = 'athletes-api',
@@ -17,31 +12,31 @@ export enum SERVICE {
     USERS = 'users-api'
 }
 
-export enum STATUS {
-    INFO = 'info',
-    WARNING = 'warning',
-    ERROR = 'error',
+export enum LEVEL {
+    error = "error",
+    warn =  "warn",
+    info = "info",
+    http = "http",
+    verbose = "verbose",
+    debug = "debug",
+    silly = "silly"
 }
-
-export const logMetadata$ = z.union([
-    Json$,
-    z.object({
-        body: Json$,
-        params: Json$,
-        query: Json$,
-    }).catchall(basicType$),
-]);
-export type logMetadata = z.infer<typeof logMetadata$>;
   
 export const Log$ = z.object({
     id: Id$,
+    level: z.nativeEnum(LEVEL),
     service: z.nativeEnum(SERVICE),
-    status: z.nativeEnum(STATUS),
+    path: z.string().nullish(),
+    status: z.number().positive().nullish(),
+    userId: Id$.nullish(),
     message: z.string(),
     date: Date$,
-    metadata: logMetadata$.default({}),
+    metadata: z.any().default({}),
 });
 export type Log = z.infer<typeof Log$>;
 
-export const CreateLog$ = Log$.omit({ id: true, date: true });
+export const CreateLog$ = Log$.omit({ id: true, date: true});
 export type CreateLog = z.infer<typeof CreateLog$>;
+
+export const LogInfo$ = CreateLog$.omit({ service: true });
+export type LogInfo = z.infer<typeof LogInfo$>;
