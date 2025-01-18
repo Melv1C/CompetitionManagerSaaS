@@ -11,12 +11,15 @@ import { decodeToken } from "../../utils/decodeToken";
 import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
+import { useTranslation } from "react-i18next";
 
 type SignUpProps = {
     onToggle: () => void;
 };
 
 export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
+
+    const { t } = useTranslation('auth');
 
     const setUserToken = useSetAtom(userTokenAtom);
 
@@ -32,7 +35,9 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
     return (
         <>
-            <Typography variant="h4" sx={{ textAlign: 'center' }}>Sign Up</Typography>
+            <Typography variant="h4" sx={{ textAlign: 'center' }}>
+                {t('register')}
+            </Typography>
 
             <Box 
                 component="form"
@@ -45,12 +50,12 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                 onSubmit={async (e) => {
                     e.preventDefault();
                     if (!isFormValid) {
-                        setErrorMsg('Please fill out the form correctly');
+                        setErrorMsg(t('error.invalidForm'));
                         return;
                     }
 
                     if (password !== confirmPassword) {
-                        setErrorMsg('Passwords do not match');
+                        setErrorMsg(t('error.passwordMismatch'));
                         return;
                     }
 
@@ -62,14 +67,14 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                         if (isAxiosError(error) && error.response) {
                             setErrorMsg(error.response.data.message);
                         } else {
-                            setErrorMsg('An unknown error occurred');
+                            setErrorMsg(t('error.unknown'));
                         }
                     }
                 }}
             >
                 <TextFieldWith$ 
                     id="email" 
-                    label={{ value: 'Email' , hasExtrenLabel: true}}
+                    label={{ value: t('email') , hasExtrenLabel: true}}
                     value={{ value: email, onChange: setEmail }} 
                     validator={{ Schema$: Email$, isValid: isEmailValid, setIsValid: setIsEmailValid }} 
                     required
@@ -77,7 +82,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
                 <PasswordFieldWith$ 
                     id="password" 
-                    label={{ value: 'Password', hasExtrenLabel: true }}
+                    label={{ value: t('password'), hasExtrenLabel: true }}
                     value={{ value: password, onChange: setPassword }} 
                     validator={{ Schema$: UserPassword$, isValid: isPasswordValid, setIsValid: setIsPasswordValid }}
                     required
@@ -85,7 +90,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
                 <PasswordFieldWith$
                     id="confirmPassword"
-                    label={{ value: 'Confirm Password', hasExtrenLabel: true }}
+                    label={{ value: t('confirmPassword'), hasExtrenLabel: true }}
                     value={{ value: confirmPassword, onChange: setConfirmPassword }}
                     validator={{ Schema$: UserPassword$, isValid: isConfirmPasswordValid, setIsValid: setIsConfirmPasswordValid }}
                     required
@@ -96,7 +101,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     color="primary"
                     type="submit"
                 >
-                    Sign Up
+                    {t('register')}
                 </Button>
 
                 {errorMsg && (
@@ -105,12 +110,12 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
             </Box>
 
-            <Divider>or</Divider>
+            <Divider>{t('or')}</Divider>
 
             <Typography sx={{ textAlign: 'center' }}>
-                Already have an account? {' '}
+                {t('alreadyHaveAccount')}{' '}
                 <Link onClick={onToggle} sx={{ cursor: 'pointer' }}>
-                    Sign In
+                    {t('login')}
                 </Link>
             </Typography>
         </>
