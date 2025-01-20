@@ -19,6 +19,7 @@ import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
 import { AdminCompetition } from './Pages/Admin/Competition'
 import { Competitions } from './Pages/Competitions'
+import { Competition } from './Pages/Competition'
 import { SuperAdmin } from './Pages/SuperAdmin'
 import { ErrorFallback } from './Components';
 import { Results } from './Pages/Results';
@@ -77,6 +78,7 @@ function App() {
             }>
                 <Route path="/" element={<h1>{<Home />}</h1>} />
                 <Route path="/competitions" element={<Competitions />} />
+                <Route path="/competitions/:eid/*" element={<Competition />} />
                 <Route path="/results" element={<Results />} />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRole={Role.UNCONFIRMED_USER} redirectPath="/">
