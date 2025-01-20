@@ -97,20 +97,6 @@ router.get(
                     isDeleted: false,
                 },
                 ...competitionQuery,
-                include: {
-                    paymentPlan: true,
-                    options: true,
-                    admins: {
-                        include: {
-                            user: {
-                                include: {
-                                    preferences: true
-                                }
-                            }
-                        }
-                    },
-                    club: true,
-                },
             });
             if (!competition) {
                 res.status(404).send('Competition not found');
