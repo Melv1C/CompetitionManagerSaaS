@@ -7,6 +7,7 @@ import auth from './auth.json';
 import createCompetition from './createCompetition.json';
 import adminCompetition from './adminCompetition.json';
 import eventPopup from './eventPopup.json';
+import inscription from './inscription.json';
 
 import { zodTranslations } from '@competition-manager/schemas';
 
@@ -21,4 +22,5 @@ export default {
     createCompetition,
     adminCompetition,
     eventPopup,
+    inscription
 }
