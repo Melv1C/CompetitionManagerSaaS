@@ -12,6 +12,9 @@
     
     "AbbrTooShort1": "Afkorting moet minstens 1 teken lang zijn",
     "AbbrTooLong10": "Afkorting mag maximaal 10 tekens lang zijn",
+
+    "SearchValueTooShort3": "Zoekwaarde moet minstens 3 tekens lang zijn",
+    "SearchValueTooLong50": "Zoekwaarde mag maximaal 50 tekens lang zijn",
     
     "DateTooEarly": "Datum moet later zijn dan 1900-01-01",
 

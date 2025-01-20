@@ -3,7 +3,7 @@ import { Date$, Id$, License$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
-export const AthleteKey$ = z.string().min(1, {message: 'KeyTooShort1'}).max(50, {message: 'KeyTooLong50'});
+export const AthleteKey$ = z.string().min(3, {message: 'SearchValueTooShort3'}).max(50, {message: 'SearchValueTooLong50'});
 export type AthleteKey = z.infer<typeof AthleteKey$>;
 
 export enum ONE_DAY_BIB {
