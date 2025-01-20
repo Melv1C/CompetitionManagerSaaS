@@ -1,6 +1,6 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Box, Card, CardContent, CardHeader, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
+import { Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { getAthletes } from "../../../../api"
 import { Athlete as AthleteType, AthleteKey$ } from "@competition-manager/schemas"
@@ -143,24 +143,21 @@ const SearchAthlete: React.FC<SearchAthleteProps> = ({ isVisible, onAthleteSelec
                     maxHeight: 300,
                 }}
             >
+                {isLoading && <Loading />}
 
                 <List disablePadding>
-                    {isLoading && <Loading />}
                     {athletes && athletes.map((athlete: AthleteType, index: number) => (
-                        <>
-                            <ListItem key={athlete.id} disablePadding>
-                                <ListItemButton onClick={() => onAthleteSelect(athlete)}>
-                                    <ListItemIcon>
-                                        <Bib value={athlete.bib} size="sm" />
-                                    </ListItemIcon>
-                                    <ListItemText 
-                                        primary={`${athlete.firstName} ${athlete.lastName}`} 
-                                        secondary={`${athlete.club.abbr} - ${getCategoryAbbr(athlete.birthdate, athlete.gender, competition?.date)}`}
-                                    />
-                                </ListItemButton>
-                            </ListItem>
-                            {index < athletes.length - 1 && <Divider />}
-                        </>
+                        <ListItem key={athlete.id} disablePadding divider={index !== athletes.length - 1}>
+                            <ListItemButton onClick={() => onAthleteSelect(athlete)}>
+                                <ListItemIcon>
+                                    <Bib value={athlete.bib} size="sm" />
+                                </ListItemIcon>
+                                <ListItemText 
+                                    primary={`${athlete.firstName} ${athlete.lastName}`} 
+                                    secondary={`${athlete.club.abbr} - ${getCategoryAbbr(athlete.birthdate, athlete.gender, competition?.date)}`}
+                                />
+                            </ListItemButton>
+                        </ListItem>
                     ))}
                 </List>
             </Paper>
