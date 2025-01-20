@@ -18,3 +18,4 @@ export * from './CircleButton';
 export * from './AccountCircle';
 export * from './ErrorFallback';
 export * from './StepperButtons';
+export * from './Bib';
