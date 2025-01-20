@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { Key, parseRequest } from '@competition-manager/backend-utils';
-import { Athlete, Athlete$ } from '@competition-manager/schemas';
+import { Athlete, Athlete$, AthleteKey$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -15,7 +15,7 @@ const orderAthletes = async (athletes: Athlete[], key:string) => {
 };
 
 const Query$ = z.object({
-    key: z.string().min(1, {message: 'Key must be at least 1 characters long'})
+    key: AthleteKey$,
 });
 
 router.get(
@@ -35,6 +35,9 @@ router.get(
                     },
                     { competitionId: null }
                 ]
+            },
+            include: {
+                club: true
             }
         });
         if (athletes.length == 0) {

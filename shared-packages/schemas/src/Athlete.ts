@@ -3,6 +3,9 @@ import { Date$, Id$, License$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
+export const AthleteKey$ = z.string().min(1, {message: 'KeyTooShort1'}).max(50, {message: 'KeyTooLong50'});
+export type AthleteKey = z.infer<typeof AthleteKey$>;
+
 export enum ONE_DAY_BIB {
     MIN = 9900,
     MAX = 9999,
