@@ -63,7 +63,7 @@ export const Summary: React.FC<SummaryProps> = ({
             
             <Buttons buttons={
                 [
-                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
                     { label: t('buttons:pay'), onClick: onSubmit }
                 ]
             } />

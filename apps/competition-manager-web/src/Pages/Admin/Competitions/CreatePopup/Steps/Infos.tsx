@@ -114,7 +114,7 @@ export const Infos: React.FC<InfosProps> = ({
 
             <Buttons 
                 buttons={[
-                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
                     { 
                         label: t('buttons:next'),
                         onClick: handleNext, 
