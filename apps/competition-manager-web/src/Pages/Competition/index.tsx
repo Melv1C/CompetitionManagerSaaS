@@ -55,7 +55,7 @@ export const Competition = () => {
         }
     }, [inscriptions, setInscriptions]);
 
-    const [activeTab, setActiveTab] = useState(extract(location.pathname.replace(`/competitions/${eid}`, '')) || '/');
+    const [activeTab, setActiveTab] = useState(extract(location.pathname.replace(`/competitions/${eid}`, '')) || '');
 
     if (isCompetitionError) throw new Error('Error while fetching competition');
     if (isInscriptionsError) throw new Error('Error while fetching inscriptions');
