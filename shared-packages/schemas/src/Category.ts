@@ -2,24 +2,26 @@ import z from 'zod';
 import { Abbr$, Id$, Name$ } from './Base';
 import { Gender$ } from './Gender';
 
-enum AbbrBaseCategory {
+export enum AbbrBaseCategory {
     KAN = 'KAN',
     BEN = 'BEN',
     PUP = 'PUP',
     MIN = 'MIN',
     CAD = 'CAD',
+    SCO = 'SCO',
     JUN = 'JUN',
     ESP = 'ESP',
     SEN = 'SEN',
     MAS = 'MAS',
 }
 
-enum BaseCategory {
+export enum BaseCategory {
     KANGOUROU = 'Kangourou',
     BENJAMIN = 'Benjamin',
     PUPILLE = 'Pupille',
     MINIME = 'Minime',
     CADET = 'Cadet',
+    SCOLAIRE = 'Scolaire',
     JUNIOR = 'Junior',
     ESPOIR = 'Espoir',
     SENIOR = 'Senior',
