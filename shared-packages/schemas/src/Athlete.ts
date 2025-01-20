@@ -3,6 +3,9 @@ import { Date$, Id$, License$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
+export const AthleteKey$ = z.string().min(1, {message: 'KeyTooShort1'}).max(50, {message: 'KeyTooLong50'});
+export type AthleteKey = z.infer<typeof AthleteKey$>;
+
 export enum ONE_DAY_BIB {
     MIN = 9900,
     MAX = 9999,
@@ -18,8 +21,6 @@ export type OneDayMetadata = z.infer<typeof OneDayMetadata$>;
 export const Athlete$ = z.object({
     id: Id$,
     license: License$,
-    // firstName: z.string().min(1, {message: 'First name must be at least 1 characters long'}).max(50, {message: 'First name must be at most 50 characters long'}),
-    // lastName: z.string().min(1, {message: 'Last name must be at least 1 characters long'}).max(50, {message: 'Last name must be at most 50 characters long'}),
     firstName: z.string().min(1, 'FirstNameTooShort1').max(50, 'FirstNameTooLong50'),
     lastName: z.string().min(1, 'LastNameTooShort1').max(50, 'LastNameTooLong50'),
     bib: z.number().positive('BibMustBePositive'),
