@@ -23,15 +23,19 @@ router.get(
     parseRequest(Key.Query, Query$), 
     async (req, res) => {
         const { key } = Query$.parse(req.query);
+        const keys = key.split(' ');
+
         const athletes = await prisma.athlete.findMany({
             where: {
                 AND: [
-                    { 
-                        OR: [
-                            { firstName: { contains: key, mode: 'insensitive' } },
-                            { lastName: { contains: key, mode: 'insensitive' } },
-                            { bib: !isNaN(parseInt(key)) ? parseInt(key) : undefined }
-                        ]
+                    {
+                        AND: keys.map((k) => ({
+                            OR: [
+                                { firstName: { contains: k, mode: 'insensitive' } },
+                                { lastName: { contains: k, mode: 'insensitive' } },
+                                { bib: !isNaN(parseInt(k)) ? parseInt(k) : undefined }
+                            ]
+                        }))
                     },
                     { competitionId: null }
                 ]
