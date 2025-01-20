@@ -9,6 +9,7 @@ import { Infos } from "./Steps/Infos"
 import { Summary } from "./Steps/Summary"
 import { Option, PaymentPlan } from "@competition-manager/schemas"
 import { getOptions, getPlans } from "../../../../api"
+import { useTranslation } from "react-i18next"
 
 export type StepProps = {
     handleBack: () => void
@@ -21,6 +22,8 @@ type CreatePopupProps = {
 }
 
 export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) => {
+
+    const { t } = useTranslation('createCompetition')
     
     const [activeStep, setActiveStep] = useState(0)
 
@@ -43,19 +46,19 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
 
     const steps = [
         {
-            label: 'Choose Plan',
+            label: t('selectPlan'),
             content: <Plans handleNext={handleNext} plans={plans} plan={plan!} setPlan={setPlan} />,
         },
         {
-            label: 'Select Options',
+            label: t('selectOptions'),
             content: <Options handleBack={handleBack} handleNext={handleNext} plan={plan!} options={options} selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} />,
         },
         {
-            label: 'Basic Information',
+            label: t('infos'),
             content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} date={date} setDate={setDate} closeDate={closeDate} setCloseDate={setCloseDate} />,
         },
         {
-            label: 'Summary',
+            label: t('glossary:summary'),
             content: <Summary handleBack={handleBack} dataForm={{ plan: plan!, selectedOptions, name, date: date!, closeDate }} />,
         },
     ]
@@ -87,7 +90,7 @@ export const CreatePopup: React.FC<CreatePopupProps> = ({ isVisible, onClose }) 
         >
             <Box>
                 <DialogTitle variant="h5" align="center">
-                    Create Competition
+                    {t('title')}
                 </DialogTitle>
                 <CloseButton onClose={onClose} />
             </Box>

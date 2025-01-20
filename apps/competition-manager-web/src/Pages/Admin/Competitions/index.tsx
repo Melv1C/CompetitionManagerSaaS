@@ -9,16 +9,19 @@ import { MaxWidth } from "../../../Components/MaxWidth";
 import { getCompetitions } from "../../../api";
 import { useQuery } from "react-query";
 import { CircleButton } from "../../../Components/CircleButton";
+import { useTranslation } from "react-i18next";
 
 export const AdminCompetitions = () => {
+
+	const { t } = useTranslation();
 
 	const { data: competitions, isLoading, isError } = useQuery('admin-competitions', () => getCompetitions({ isAdmin: true }))
 
 	const { isClub } = useRoles();
 
 	const items = [
-		{ label: 'A venir' },
-		{ label: 'Passées' },
+		{ label: t('upcoming') },
+		{ label: t('past') }
 	]
 
 	const [activeTab, setActiveTab] = useState(0);

@@ -10,9 +10,13 @@ import { competitionAtom, inscriptionsAtom } from "../../../GlobalsStates";
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../../../utils/constants";
 import { Loading, ScrollablePage, SideNav } from "../../../Components";
 import { Schedule } from "./Schedule";
+import { useTranslation } from "react-i18next";
 
 
 export const AdminCompetition = () => {
+
+    const { t } = useTranslation();
+
     const [globalComp, setCompetition] = useAtom(competitionAtom);
     const [globalInscriptions, setInscriptions] = useAtom(inscriptionsAtom);
     const { eid } = useParams();
@@ -27,12 +31,12 @@ export const AdminCompetition = () => {
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
     const navItems = [
-        { text: 'Info', icon: faInfo, link: `/admin/competitions/${eid}` },
-        { text: 'Schedule', icon: faClock, link: `/admin/competitions/${eid}/schedule` },
-        { text: 'Results', icon: faRankingStar, link: `/admin/competitions/${eid}/results` },
-        { text: 'Admins', icon: faUsersGear, link: `/admin/competitions/${eid}/admins` },
-        { text: 'Options', icon: faBasketShopping, link: `/admin/competitions/${eid}/options` },
-        { text: 'Settings', icon: faGears, link: `/admin/competitions/${eid}/settings` },
+        { text: t('navigation:info'), icon: faInfo, link: `/admin/competitions/${eid}` },
+        { text: t('navigation:schedule'), icon: faClock, link: `/admin/competitions/${eid}/schedule` },
+        { text: t('glossary:results'), icon: faRankingStar, link: `/admin/competitions/${eid}/results` },
+        { text: t('navigation:admins'), icon: faUsersGear, link: `/admin/competitions/${eid}/admins` },
+        { text: t('navigation:options'), icon: faBasketShopping, link: `/admin/competitions/${eid}/options` },
+        { text: t('navigation:settings'), icon: faGears, link: `/admin/competitions/${eid}/settings` },
     ];
 
     useEffect(() => {

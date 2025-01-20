@@ -1,0 +1,22 @@
+{
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "name": "Name",
+    "description": "Description",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "multi_day": "Multi Day",
+    "price": "Price",
+    "publish": "Publish",
+    "contactEmail": "Contact Email",
+    "startInscriptionDate": "Start Inscription Date",
+    "endInscriptionDate": "End Inscription Date",
+    "paymentMethod": "Payment Method",
+    "freeClubs": "Free Clubs",
+    "schedule": "Schedule",
+    "actions": "Actions"
+}

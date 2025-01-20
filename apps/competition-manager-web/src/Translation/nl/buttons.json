@@ -1,0 +1,16 @@
+{
+    "create": "Aanmaken",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "submit": "Indienen",
+    "back": "Terug",
+    "next": "Volgende",
+    "add": "Toevoegen",
+    "pay": "Betalen",
+    "stay": "Blijven",
+    "leave": "Verlaten",
+    "validate": "Valideren",
+    "confirm": "Bevestigen"
+}

@@ -1,0 +1,26 @@
+{
+    "IdMustBePositive": "Id moet positief zijn",
+
+    "NameTooShort3": "Naam moet minstens 3 tekens lang zijn",
+    "NameTooLong255": "Naam mag maximaal 255 tekens lang zijn",
+
+    "FirstNameTooShort1": "Voornaam moet minstens 1 teken lang zijn",
+    "FirstNameTooLong50": "Voornaam mag maximaal 50 tekens lang zijn",
+
+    "LastNameTooShort1": "Achternaam moet minstens 1 teken lang zijn",
+    "LastNameTooLong50": "Achternaam mag maximaal 50 tekens lang zijn",
+    
+    "AbbrTooShort1": "Afkorting moet minstens 1 teken lang zijn",
+    "AbbrTooLong10": "Afkorting mag maximaal 10 tekens lang zijn",
+    
+    "DateTooEarly": "Datum moet later zijn dan 1900-01-01",
+
+    "PriceMustBeNonNegative": "Prijs moet niet-negatief zijn",
+
+    "LicenseTooShort1": "Licentie moet minstens 1 teken lang zijn",
+    "LicenseTooLong20": "Licentie mag maximaal 20 tekens lang zijn",
+    
+    "InvalidEmail": "Ongeldig e-mailadres",
+
+    "BibMustBePositive": "Startnummer moet positief zijn"
+}

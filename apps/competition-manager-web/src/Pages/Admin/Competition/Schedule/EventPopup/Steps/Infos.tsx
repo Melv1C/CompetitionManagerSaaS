@@ -5,6 +5,7 @@ import { useState } from "react"
 import { MobileDateTimePicker, MobileTimePicker } from "@mui/x-date-pickers"
 import { useAtomValue } from "jotai"
 import { competitionAtom } from "../../../../../../GlobalsStates"
+import { useTranslation } from "react-i18next"
 
 type InfosProps = {
     handleBack: () => void
@@ -23,6 +24,8 @@ export const Infos: React.FC<InfosProps> = ({
     schedule,
     setSchedule,
 }) => {
+
+    const { t } = useTranslation('eventPopup');
 
     const competition = useAtomValue(competitionAtom)
 
@@ -45,7 +48,7 @@ export const Infos: React.FC<InfosProps> = ({
                 {competition.closeDate ? 
                     <MobileDateTimePicker
                         ampm={false}
-                        label="Schedule"
+                        label={t('labels:schedule')}
                         value={schedule}
                         onChange={(date) => {
                             if (!date) {
@@ -62,7 +65,7 @@ export const Infos: React.FC<InfosProps> = ({
                 :
                     <MobileTimePicker
                         ampm={false}
-                        label="Schedule"
+                        label={t('labels:schedule')}
                         value={schedule}
                         onChange={(date) => {
                             if (!date) {
@@ -82,7 +85,7 @@ export const Infos: React.FC<InfosProps> = ({
 
                 <TextFieldWith$
                     id="name"
-                    label={{ value: 'Name' }}
+                    label={{ value: t('labels:name') }}
                     value={{ value: name, onChange: setName }}
                     validator={{ Schema$: CompetitionEvent$.shape.name, isValid: isNameValid, setIsValid: setIsNameValid }}
                 />
@@ -91,8 +94,8 @@ export const Infos: React.FC<InfosProps> = ({
 
             <StepperButtons
                 buttons={[
-                    { label: 'Back', onClick: handleBack },
-                    { label: 'Next', onClick: handleNext, disabled: !isValid },
+                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:next'), onClick: handleNext, disabled: !isValid },
                 ]}
             />
 

@@ -4,6 +4,7 @@ import { StepProps } from ".."
 import { PaymentPlan, Option, CreateCompetition$ } from "@competition-manager/schemas"
 import { createCompetition } from "../../../../../api"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next";
 
 type SummaryProps = Omit<StepProps, 'handleNext'> & {
     dataForm : {
@@ -19,6 +20,9 @@ export const Summary: React.FC<SummaryProps> = ({
     handleBack,
     dataForm
 }) => {
+
+    const { t } = useTranslation()
+
     const baseCompetition = CreateCompetition$.parse({
         ...dataForm,
         paymentPlanId: dataForm.plan.id,
@@ -45,22 +49,22 @@ export const Summary: React.FC<SummaryProps> = ({
             >
                 <Box>
                     <Box>
-                        <Box>Plan: {dataForm.plan.name}</Box>
-                        <Box>Options: {dataForm.selectedOptions.map(option => option.name).join(', ')}</Box>
+                        <Box>{t('glossary:plan')}: {dataForm.plan.name}</Box>
+                        <Box>{t('glossary:options')}: {dataForm.selectedOptions.map(option => option.name).join(', ')}</Box>
                     </Box>
 
                     <Box>
-                        <Box>Name: {dataForm.name}</Box>
-                        <Box>Date: {dataForm.date?.toLocaleDateString()}</Box>
-                        {dataForm.closeDate && <Box>Close Date: {dataForm.closeDate?.toLocaleDateString()}</Box>}
+                        <Box>{t('labels:name')}: {dataForm.name}</Box>
+                        <Box>{t('labels:date')}: {dataForm.date?.toLocaleDateString()}</Box>
+                        {dataForm.closeDate && <Box>{t('labels:end_date')}: {dataForm.closeDate?.toLocaleDateString()}</Box>}
                     </Box>
                 </Box>
             </Box>
             
             <Buttons buttons={
                 [
-                    { label: 'Back', onClick: handleBack },
-                    { label: 'Pay', onClick: onSubmit }
+                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:pay'), onClick: onSubmit }
                 ]
             } />
         </Box>

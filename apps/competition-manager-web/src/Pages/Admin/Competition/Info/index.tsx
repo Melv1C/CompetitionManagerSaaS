@@ -14,8 +14,12 @@ import { OnLeavePopup } from "./OnLeavePopup";
 import { updateCompetition } from "../../../../api";
 import { useQuery } from "react-query";
 import { getClubs } from "../../../../api";
+import { useTranslation } from "react-i18next";
 
 export const Info = () => {
+
+    const { t } = useTranslation();
+
     const { data: clubs } = useQuery('clubs', getClubs);
 
     const [competition, setCompetition] = useAtom(competitionAtom);
@@ -128,7 +132,7 @@ export const Info = () => {
                         <FormLabel
                             sx={{ textAlign: 'center' }}
                         >
-                            Publish
+                            {t('labels:publish')}
                         </FormLabel>
                         <Switch
                             checked={competitionState.publish}
@@ -139,7 +143,7 @@ export const Info = () => {
 
                     <TextFieldWith$
                         id="name"
-                        label={{ value: "Name" }}
+                        label={{ value: t('labels:name') }}
                         value={{ value: competitionState.name, onChange: (value) => setCompetitionState({ ...competitionState, name: value }) }}
                         validator={{ Schema$: Competition$.shape.name, isValid: isNameValid, setIsValid: setIsNameValid }}
                         formControlProps={{ fullWidth: true }}
@@ -173,7 +177,7 @@ export const Info = () => {
                     >
 
                         <MobileDatePicker
-                            label={isMultiDay ? 'Start Date' : 'Date'}
+                            label={isMultiDay ? t('labels:start_date') : t('labels:date')}
                             value={competitionState.date}
                             onChange={(date) => {
                                 if (!date) {
@@ -191,7 +195,7 @@ export const Info = () => {
                             <FormLabel
                                 sx={{ textAlign: 'center' }}
                             >
-                                Multi Day
+                                {t('labels:multi_day')}
                             </FormLabel>
                             <Switch
                                 checked={isMultiDay}
@@ -206,7 +210,7 @@ export const Info = () => {
 
                         {isMultiDay && 
                             <MobileDatePicker
-                                label="End Date"
+                                label={t('labels:end_date')}
                                 value={competitionState.closeDate}
                                 onChange={(date) => setCompetitionState({ ...competitionState, closeDate: date })} 
                                 onError={(error) => setIsCloseDateValid(!error)}
@@ -219,7 +223,7 @@ export const Info = () => {
 
                     <TextFieldWith$
                         id="description"
-                        label={{ value: "Description" }}
+                        label={{ value: t('labels:description') }}
                         value={{ value: competitionState.description, onChange: (value) => setCompetitionState({ ...competitionState, description: value }) }}
                         validator={{ Schema$: Competition$.shape.description, isValid: isDescriptionValid, setIsValid: setIsDescriptionValid }}
                         multiline
@@ -227,18 +231,18 @@ export const Info = () => {
 
                     <Divider />
 
-                    <Typography variant="h6">Contact Information</Typography>
+                    <Typography variant="h6">{t('adminCompetition:contactInformation')}</Typography>
 
                     <TextFieldWith$
-                        id="email"
-                        label={{ value: "Contact Email" }}
+                        id="contactEmail"
+                        label={{ value: t('labels:contactEmail') }}
                         value={{ value: competitionState.email, onChange: (value) => setCompetitionState({ ...competitionState, email: value }) }}
                         validator={{ Schema$: Competition$.shape.email, isValid: isEmailValid, setIsValid: setIsEmailValid }}
                     />
 
                     <Divider />
 
-                    <Typography variant="h6">Inscription Information</Typography>
+                    <Typography variant="h6">{t('adminCompetition:inscriptionInformation')}</Typography>
 
                     <Box
                         sx={{
@@ -249,7 +253,7 @@ export const Info = () => {
                     >
                         <MobileDateTimePicker
                             ampm={false}
-                            label="Start Inscription Date"
+                            label={t('labels:startInscriptionDate')}
                             value={competitionState.startInscriptionDate}
                             onChange={(date) => {
                                 if (!date) {
@@ -265,7 +269,7 @@ export const Info = () => {
 
                         <MobileDateTimePicker
                             ampm={false}
-                            label="End Inscription Date"
+                            label={t('labels:endInscriptionDate')}
                             value={competitionState.endInscriptionDate}
                             onChange={(date) => {
                                 if (!date) {
@@ -290,7 +294,7 @@ export const Info = () => {
                     >
 
                         <FormControl sx={{ minWidth: 120 }}>
-                            <InputLabel id="methodLabel">Payment Method</InputLabel>
+                            <InputLabel id="methodLabel">{t('labels:paymentMethod')}</InputLabel>
                             <Select
                                 id="method"
                                 labelId="methodLabel"
@@ -306,7 +310,7 @@ export const Info = () => {
 
                         {competitionState.method !== PaymentMethod.FREE &&
                             <FormControl sx={{ minWidth: 120 }}>
-                                <InputLabel id="freeClubsLabel">Free Clubs</InputLabel>
+                                <InputLabel id="freeClubsLabel">{t('labels:freeClubs')}</InputLabel>
                                 <Select
                                     id="freeClubs"
                                     labelId="freeClubsLabel"

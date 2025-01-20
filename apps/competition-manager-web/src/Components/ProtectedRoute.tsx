@@ -4,6 +4,7 @@ import { userTokenAtom } from "../GlobalsStates";
 import { Role } from "@competition-manager/schemas";
 import { isAuthorized } from "@competition-manager/utils";
 import { Navigate } from "react-router-dom";
+import { Loading } from "./Loading";
 
 type ProtectedRouteProps = PropsWithChildren<{
     requiredRole: Role;
@@ -17,7 +18,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
     const userToken = useAtomValue(userTokenAtom);
 
-    if (!userToken) throw new Error('UserToken is not defined');
+    if (!userToken) return <Loading />; // Wait for userToken to be fetched
 
     if (userToken === 'NOT_LOGGED' || !isAuthorized(userToken, requiredRole)) {
         return <Navigate to={redirectPath} />;

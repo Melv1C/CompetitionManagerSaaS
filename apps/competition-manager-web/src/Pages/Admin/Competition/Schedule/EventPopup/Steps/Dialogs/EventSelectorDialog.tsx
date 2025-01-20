@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, Tabs, Tab, List, Box, ListItemButton } from '@mui/material';
 import { Event } from '@competition-manager/schemas';
+import { useTranslation } from 'react-i18next';
 
 interface GroupedEvents {
     label: string;
@@ -20,6 +21,9 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
     onClose,
     onSelect,
 }) => {
+
+    const { t } = useTranslation('eventPopup');
+
     const [selectedGroup, setSelectedGroup] = useState(0);
 
     const filteredEvents = groupedEvents[selectedGroup]?.items;
@@ -31,7 +35,7 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
             fullWidth 
             maxWidth="sm"
         >
-            <DialogTitle>Choisir une épreuve</DialogTitle>
+            <DialogTitle>{t('selectEvent')}</DialogTitle>
             <Box p={2}>
                 <Tabs value={selectedGroup} onChange={(_, newValue) => setSelectedGroup(newValue)} variant="scrollable">
                     {groupedEvents.map((group, index) => (
@@ -46,11 +50,8 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
                                 onSelect(event); // Appelle la fonction onSelect avec l'épreuve sélectionnée
                                 onClose(); // Ferme le Dialog
                             }}
-                            sx={{
-
-                            }}
                         >
-                        {event.name}
+                            {event.name}
                         </ListItemButton>
                     ))}
                 </List>

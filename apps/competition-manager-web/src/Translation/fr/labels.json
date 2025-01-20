@@ -1,0 +1,22 @@
+{
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "email": "Email",
+    "firstName": "Prénom",
+    "lastName": "Nom de famille",
+    "name": "Nom",
+    "description": "Description",
+    "date": "Date",
+    "start_date": "Date de début",
+    "end_date": "Date de fin",
+    "multi_day": "Multi-jour",
+    "price": "Prix",
+    "publish": "Publier",
+    "contactEmail": "Email de contact",
+    "startInscriptionDate": "Date de début des inscriptions",
+    "endInscriptionDate": "Date de fin des inscriptions",
+    "paymentMethod": "Moyen de paiement",
+    "freeClubs": "Clubs gratuits",
+    "schedule": "Horaire",
+    "actions": "Actions"
+}
