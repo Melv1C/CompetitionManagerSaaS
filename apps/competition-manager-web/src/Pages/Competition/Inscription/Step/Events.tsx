@@ -122,6 +122,7 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
             {totalCost > 0 && (
                 <Box display="flex" justifyContent="flex-end" mt={2}>
                     {t('inscription:totalCost')}: {totalCost}€
+                    {/* TODO: Need to specify if the payment is online or in place */}
                 </Box>
             )}
 
