@@ -37,9 +37,7 @@ export const Athlete: React.FC<AthleteProps> = ({ handleNext }) => {
                 <>
                     <Card 
                         sx={{ 
-                            width: '100%', 
-                            maxWidth: 300, 
-                            mx: 'auto',
+                            width: '100%',
                             mb: 2
                         }}
                     >
@@ -47,7 +45,11 @@ export const Athlete: React.FC<AthleteProps> = ({ handleNext }) => {
                             avatar={<Bib value={athlete.bib} size="lg" />}
                             title={`${athlete.firstName} ${athlete.lastName}`}
                             titleTypographyProps={{ variant: 'h5' }}
-                            sx={{ textAlign: 'right' }}
+                            sx={{ 
+                                textAlign: 'right',
+                                borderBottom: 1,
+                                borderColor: 'divider'
+                            }}
                         />
                         <CardContent sx={{ padding: 0 }}>
                             <List disablePadding>

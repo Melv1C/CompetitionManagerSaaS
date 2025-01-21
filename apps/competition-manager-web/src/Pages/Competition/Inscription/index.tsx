@@ -50,7 +50,7 @@ export const Inscription = () => {
             </Stepper>
 
             {!isMobile && (
-                <Box display="flex" flexDirection="column" alignItems="center" width="80%" mx="auto">
+                <Box display="flex" flexDirection="column" alignItems="center" width="80%" mx="auto" maxWidth={400}>
                     {steps[activeStep].content}
                 </Box>
             )}
