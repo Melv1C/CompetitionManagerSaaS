@@ -1,27 +1,34 @@
-import { Box, Button } from '@mui/material'
+import { Box, BoxProps, Button, ButtonProps } from '@mui/material'
 import React from 'react'
 
-type ButtonProps = {
+type MyButtonProps = {
     label: string
     onClick: () => void
+    variant?: ButtonProps['variant']
     disabled?: boolean
     isSubmit?: boolean
 }
 
-type StepperButtonsProps = {
-    buttons: ButtonProps[]
+type StepperButtonsProps = BoxProps & {
+    buttons: MyButtonProps[]
+    buttonProps?: ButtonProps
 }
 
-export const StepperButtons: React.FC<StepperButtonsProps> = ({ buttons }) => {
+export const StepperButtons: React.FC<StepperButtonsProps> = ({ 
+    buttons,
+    buttonProps,
+    ...props
+}) => {
     return (
-        <Box sx={{ display: 'flex', gap: '1rem', mt: 4 }}>
-            {buttons.map(({ label, onClick, disabled, isSubmit }) => (
+        <Box display="flex" mt={2} gap={2} justifyContent={buttons.length === 1 ? 'flex-end' : 'space-between'} {...props}>
+            {buttons.map(({ label, onClick, variant, disabled, isSubmit }) => (
                 <Button 
                     key={label}
-                    variant="contained" 
                     onClick={onClick}
+                    variant={variant || 'contained'}
                     disabled={disabled}
                     type={isSubmit ? 'submit' : 'button'}
+                    {...buttonProps}
                 >
                     {label}
                 </Button>

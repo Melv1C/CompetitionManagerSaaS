@@ -53,7 +53,7 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
             Step 3 content
             <StepperButtons
                 buttons={[
-                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
                     { label: t('buttons:next'), onClick: handleNext },
                 ]}
             />
@@ -63,7 +63,7 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
             {t('paymentInformation')}
             <StepperButtons
                 buttons={[
-                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
                     { label: t('buttons:next'), onClick: handleNext },
                 ]}
             />

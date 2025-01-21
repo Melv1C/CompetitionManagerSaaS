@@ -126,7 +126,7 @@ export const Summary: React.FC<SummaryProps> = ({
 
             <StepperButtons
                 buttons={[
-                    { label: t('buttons:back'), onClick: handleBack },
+                    { label: t('buttons:previous'), onClick: handleBack },
                     isCreate ? { label: t('buttons:create'), onClick: onCreate } : { label: 'Update', onClick: onUpdate },
                 ]}
             />

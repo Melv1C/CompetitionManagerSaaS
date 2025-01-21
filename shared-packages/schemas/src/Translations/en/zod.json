@@ -12,6 +12,9 @@
     
     "AbbrTooShort1": "Abbreviation must be at least 1 character long",
     "AbbrTooLong10": "Abbreviation must be at most 10 characters long",
+
+    "SearchValueTooShort3": "Search value must be at least 3 characters long",
+    "SearchValueTooLong50": "Search value must be at most 50 characters long",
     
     "DateTooEarly": "Date must be later than 1900-01-01",
 
