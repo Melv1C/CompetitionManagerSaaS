@@ -23,7 +23,7 @@ export const Athlete: React.FC<AthleteProps> = ({ handleNext }) => {
     const competition = useAtomValue(competitionAtom)
 
     const setAthlete = (athlete: AthleteType | undefined) => {
-        setInscriptionData({ athlete })
+        setInscriptionData((prev) => ({ ...prev, athlete }))
     }
 
     return (
