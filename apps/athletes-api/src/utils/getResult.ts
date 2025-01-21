@@ -1,30 +1,34 @@
 import axios from 'axios';
-import { BeathleticsResult, BeathleticsResult$ } from './BeathleticsResult';
-import { License } from '@competition-manager/schemas';
+import { BeathleticsResult$, Event, Event$, License } from '@competition-manager/schemas';
 import { env } from '..';
+import { z } from 'zod';
 
-export const getResults = async (license: License, events: string[], maxYears: number) => {
+export const BeathleticsResults$ = z.record(Event$.shape.name, z.array(BeathleticsResult$));
+export type BeathleticsResults = z.infer<typeof BeathleticsResults$>;
+
+export const getResults = async (license: License, events: Event["name"][], from: Date = new Date(0), to: Date = new Date()) => {
     const { data } = await axios.get(env.RECORDS_API + `/athlete/new/${license}`);
     const results = data.results;
-    let records: BeathleticsResult[] = [];
+    let records: BeathleticsResults = {};
     for (let result of results) {
         if (!result.result.discipline.eventType) continue;
         let discipline = result.result.discipline.eventType.name_fr;
         if (!events.includes(discipline)) continue;
         let date = new Date(result.result.discipline.competition.startDate);
-        if (maxYears < (new Date().getFullYear() - date.getFullYear())) continue;
+        if (date < from || date > to) continue;
         if (result.result.newTrials && result.result.newTrials.length > 0) {
             for (let j = 0; j < result.result.newTrials.length; j++) {
                 if (result.result.newTrials[j].homologationBest) {
-                    records.push(BeathleticsResult$.parse({
-                        discipline: discipline,
+
+                    if (!records[discipline]) records[discipline] = [];
+
+                    records[discipline].push(BeathleticsResult$.parse({
                         date: date,
                         perf: parseFloat(result.result.newTrials[j].rankingPerf),
-                        type: result.result.newTrials[j].perftype
                     }));
                 }
             }
         }
     }
-    return records;
+    return BeathleticsResults$.parse(records);
 }
