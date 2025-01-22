@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { BeathleticsResult$, Event, Event$, License } from '@competition-manager/schemas';
+import { Event, Event$, License, Record$ } from '@competition-manager/schemas';
 import { env } from '..';
 import { z } from 'zod';
 
-export const BeathleticsResults$ = z.record(Event$.shape.name, z.array(BeathleticsResult$));
+export const BeathleticsResults$ = z.record(Event$.shape.name, z.array(Record$));
 export type BeathleticsResults = z.infer<typeof BeathleticsResults$>;
 
 export const getResults = async (license: License, events: Event["name"][], from: Date = new Date(0), to: Date = new Date()) => {
@@ -22,7 +22,7 @@ export const getResults = async (license: License, events: Event["name"][], from
 
                     if (!records[discipline]) records[discipline] = [];
 
-                    records[discipline].push(BeathleticsResult$.parse({
+                    records[discipline].push(Record$.parse({
                         date: date,
                         perf: parseFloat(result.result.newTrials[j].rankingPerf),
                     }));
