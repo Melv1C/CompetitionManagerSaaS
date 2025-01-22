@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDeviceSize } from "../../../hooks";
 import { Athlete } from "./Step/Athlete";
 import { Events } from "./Step/Events";
+import { Records } from "./Step/Records";
 
 
 export const Inscription = () => {
@@ -25,7 +26,7 @@ export const Inscription = () => {
     const steps = [
         { label: t('glossary:athlete'), content: <Athlete handleNext={handleNext} /> },
         { label: t('glossary:events'), content: <Events handleNext={handleNext} handleBack={handleBack} /> },
-        { label: t('glossary:personalBest') },
+        { label: t('glossary:personalBest'), content: <Records handleNext={handleNext} handleBack={handleBack} /> },
         { label: t('glossary:summary') }
     ];
 
