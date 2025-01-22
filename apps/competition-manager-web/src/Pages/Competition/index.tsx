@@ -8,6 +8,7 @@ import { getCompetition, getInscriptions } from "../../api";
 import { Loading, MaxWidth } from "../../Components";
 import { useEffect, useState } from "react";
 import { Inscription } from "./Inscription";
+import { Schedule } from "./Schedule";
 
 /**
  * Extracts the first part of a path
@@ -83,7 +84,7 @@ export const Competition = () => {
             <Routes>
                 <Route path="/" element={<Box>{globalComp.name}</Box>} />
                 <Route path="/register" element={<Inscription />} />
-                <Route path="/schedule" element={<Box>{t('navigation:schedule')}</Box>} />
+                <Route path="/schedule" element={<Schedule />} />
                 <Route path="/inscriptions" element={<Box>{t('glossary:inscriptions')}</Box>} />
                 <Route path="/results" element={<Box>{t('glossary:results')}</Box>} />
                 <Route path="*" element={<Navigate to={`/competitions/${eid}`} />} />
