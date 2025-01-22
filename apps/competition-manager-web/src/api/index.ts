@@ -7,3 +7,4 @@ export * from "./getEvents";
 export * from "./getCategories";
 export * from "./getClubs";
 export * from "./getAthletes";
+export * from "./getRecords";
