@@ -8,7 +8,7 @@ import { MobileDatePicker } from "@mui/x-date-pickers"
 type UpdateRecordPopupProps = {
     onClose: () => void,
     event: Event,
-    record: Record,
+    record?: Record,
     onRecordUpdated: (record: Record) => void
 }
 
@@ -21,12 +21,12 @@ export const UpdateRecordPopup: React.FC<UpdateRecordPopupProps> = ({
 
     const { t } = useTranslation()
 
-    const [perf, setPerf] = useState(record.perf)
-    const [date, setDate] = useState<Date | null>(record.date)
+    const [perf, setPerf] = useState(record?.perf)
+    const [date, setDate] = useState<Date | null>(record?.date || null)
 
     const isEnable = useMemo(() => {
-        return perf !== undefined && date !== null && perf !== record.perf
-    }, [perf, date, record.perf])
+        return perf !== undefined && date !== null && perf !== record?.perf
+    }, [perf, date, record?.perf])
 
     return (
         <Dialog
@@ -57,17 +57,17 @@ export const UpdateRecordPopup: React.FC<UpdateRecordPopupProps> = ({
 
                 {event.type === EventType.TIME ? (
                     <TimeInput
-                        value={perf}
+                        value={perf || 0}
                         onChange={(value) => setPerf(value)}
                     />
                 ) : (event.type === EventType.DISTANCE || event.type === EventType.HEIGHT) ? (
                     <DistanceInput
-                        value={perf}
+                        value={perf || 0}
                         onChange={(value) => setPerf(value)}
                     />
                 ) : event.type === EventType.POINTS ? (
                     <PointsInput
-                        value={perf}
+                        value={perf || 0}
                         onChange={(value) => setPerf(value)}
                     />
                 ) : (
@@ -98,7 +98,7 @@ export const UpdateRecordPopup: React.FC<UpdateRecordPopupProps> = ({
                     onClick={() => {
                         if (date === null) throw new Error('Unexpected null date')
 
-                        onRecordUpdated({perf, date})
+                        onRecordUpdated({perf: perf || 0, date})
                         onClose()
                     }}
                     color="primary"

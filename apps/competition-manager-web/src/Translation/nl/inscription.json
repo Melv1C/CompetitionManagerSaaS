@@ -7,5 +7,6 @@
     "remainingPlace": "Resterende plaats",
     "noRemainingPlaces": "Geen plaatsen meer beschikbaar",
     "totalCost": "Totale kosten",
-    "updatePersonalBest": "Update persoonlijk record"
+    "updatePersonalBest": "Update persoonlijk record",
+    "noPersonalBest": "Geen persoonlijk record"
 }

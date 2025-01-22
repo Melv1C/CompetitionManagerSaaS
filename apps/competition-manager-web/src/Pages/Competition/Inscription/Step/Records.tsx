@@ -74,7 +74,7 @@ export const Records: React.FC<RecordsProps> = ({
                                         {' '}
                                         ({record.date.toLocaleDateString()})
                                     </>
-                                ) : t('records:noRecord')}
+                                ) : t('inscription:noPersonalBest')}
                             />
                             <ListItemIcon>
                                 <CircleButton onClick={() => handleOpenPopup(record, selectedEvent.event)}>
