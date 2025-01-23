@@ -6,5 +6,7 @@
     "remainingPlaces": "Remaining places",
     "remainingPlace": "Remaining place",
     "noRemainingPlaces": "No remaining places",
-    "totalCost": "Total cost"
+    "totalCost": "Total cost",
+    "updatePersonalBest": "Update personal best",
+    "noPersonalBest": "No personal best"
 }

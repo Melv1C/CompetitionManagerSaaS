@@ -2,13 +2,14 @@ import z from 'zod';
 import { Event$ } from './Event';
 import { Date$ } from './Base';
 
-export const BeathleticsResult$ = z.object({
-    date: Date$,
+export const Record$ = z.object({
     perf: z.number(),
+    date: Date$,
+    place: z.string().nullish(),
 });
 
-export type BeathleticsResult = z.infer<typeof BeathleticsResult$>;
+export type Record = z.infer<typeof Record$>;
 
-export const Records$ = z.record(Event$.shape.name, BeathleticsResult$.nullable());
+export const Records$ = z.record(Event$.shape.name, Record$.nullable());
 
 export type Records = z.infer<typeof Records$>;

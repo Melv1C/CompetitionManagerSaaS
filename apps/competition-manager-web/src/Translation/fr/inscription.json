@@ -6,5 +6,7 @@
     "remainingPlaces": "Places restantes",
     "remainingPlace": "Place restante",
     "noRemainingPlaces": "Plus de places disponibles",
-    "totalCost": "Coût total"
+    "totalCost": "Coût total",
+    "updatePersonalBest": "Mettre à jour la meilleure performance",
+    "noPersonalBest": "Pas de meilleure performance"
 }
