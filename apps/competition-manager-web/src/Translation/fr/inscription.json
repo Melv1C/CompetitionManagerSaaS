@@ -2,5 +2,9 @@
     "changeAthlete": "Changer l'athlète",
     "searchAthlete": {
         "placeholder": "Nom et/ou n° de dossard"
-    }
+    },
+    "remainingPlaces": "Places restantes",
+    "remainingPlace": "Place restante",
+    "noRemainingPlaces": "Plus de places disponibles",
+    "totalCost": "Coût total"
 }

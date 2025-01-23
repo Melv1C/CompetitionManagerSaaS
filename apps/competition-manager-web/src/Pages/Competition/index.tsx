@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { useQuery } from "react-query";
 import { getCompetition, getInscriptions } from "../../api";
 import { Loading, MaxWidth } from "../../Components";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { Inscription } from "./Inscription";
 
 /**
@@ -55,7 +55,7 @@ export const Competition = () => {
         }
     }, [inscriptions, setInscriptions]);
 
-    const [activeTab, setActiveTab] = useState(extract(location.pathname.replace(`/competitions/${eid}`, '')) || '');
+    const activeTab = useMemo(() => extract(location.pathname.replace(`/competitions/${eid}`, '')) || '', [location.pathname]);
 
     if (isCompetitionError) throw new Error('Error while fetching competition');
     if (isInscriptionsError) throw new Error('Error while fetching inscriptions');
@@ -68,7 +68,6 @@ export const Competition = () => {
 
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
                 <Tabs value={activeTab} onChange={(_, v) => {
-                    setActiveTab(v);
                     if (v === "") return navigate(`/competitions/${eid}`);
                     navigate(`/competitions/${eid}/${v}`);
                 }} variant="scrollable" scrollButtons allowScrollButtonsMobile>

@@ -2,5 +2,9 @@
     "changeAthlete": "Wijzig de atleet",
     "searchAthlete": {
         "placeholder": "Naam en/of startnummer"
-    }
+    },
+    "remainingPlaces": "Resterende plaatsen",
+    "remainingPlace": "Resterende plaats",
+    "noRemainingPlaces": "Geen plaatsen meer beschikbaar",
+    "totalCost": "Totale kosten"
 }

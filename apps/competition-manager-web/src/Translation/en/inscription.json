@@ -2,5 +2,9 @@
     "changeAthlete": "Change athlete",
     "searchAthlete": {
         "placeholder": "Name and/or bib number"
-    }
+    },
+    "remainingPlaces": "Remaining places",
+    "remainingPlace": "Remaining place",
+    "noRemainingPlaces": "No remaining places",
+    "totalCost": "Total cost"
 }
