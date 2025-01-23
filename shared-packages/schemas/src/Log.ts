@@ -31,7 +31,7 @@ export const Log$ = z.object({
     userId: Id$.nullish(),
     message: z.string(),
     date: Date$,
-    metadata: z.any().default({}),
+    metadata: z.any().nullish(),
 });
 export type Log = z.infer<typeof Log$>;
 
