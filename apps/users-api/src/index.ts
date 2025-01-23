@@ -1,10 +1,11 @@
 import express from "express";
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
-import { corsMiddleware } from '@competition-manager/backend-utils';
+import { corsMiddleware, createLogger, Key, logRequestMiddleware, OmitType } from '@competition-manager/backend-utils';
 import routes from './routes';
 import { z } from 'zod';
 import { NODE_ENV } from "@competition-manager/utils";
+import { SERVICE } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
@@ -27,11 +28,20 @@ const env$ = z.object({
 
 export const env = env$.parse(process.env);
 
+export const logger = createLogger(SERVICE.USERS);
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
 app.use(corsMiddleware);
+
+const omit: OmitType = [
+    { key: Key.Body, field: 'password' },
+    { key: 'response' }
+];
+
+app.use(logRequestMiddleware(logger, omit));
 
 app.use(`${env.PREFIX}/users`, routes);
 

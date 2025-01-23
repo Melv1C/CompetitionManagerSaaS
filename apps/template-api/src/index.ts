@@ -17,10 +17,12 @@ const env$ = z.object({
 
 export const env = env$.parse(process.env);
 
+//export const logger = createLogger(SERVICE.CHANGEME);
 const app = express();
 app.use(express.json());
 
 app.use(corsMiddleware);
+
 
 //app.use(`${env.PREFIX}/CHANGEME`, routes);
 

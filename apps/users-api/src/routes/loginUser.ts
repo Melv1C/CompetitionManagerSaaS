@@ -5,7 +5,7 @@ import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePa
 import { User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 import { isNodeEnv, NODE_ENV } from '@competition-manager/utils';
-import { env } from '..';
+import { logger } from '..';
 
 export const router = Router();
 
@@ -41,7 +41,7 @@ router.post(
         const refreshToken = generateRefreshToken(tokenData);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: isNodeEnv(env.NODE_ENV, NODE_ENV.PROD),
+            secure: isNodeEnv(NODE_ENV.PROD),
             sameSite: 'strict',
             maxAge: 30 * 24 * 60 * 60 * 1000,   // 30 days
         }).send(accessToken);

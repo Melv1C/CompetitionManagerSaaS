@@ -19,7 +19,7 @@ const env$ = z.object({
 
 export const env = env$.parse(process.env);
 
-if (isNodeEnv(env.NODE_ENV, NODE_ENV.LOCAL)) {
+if (isNodeEnv(NODE_ENV.LOCAL)) {
     console.log('Local environment');
     initDbDev();
 } else {
