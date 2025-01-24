@@ -148,6 +148,12 @@ const SearchAthlete: React.FC<SearchAthleteProps> = ({ isVisible, onAthleteSelec
                 {isLoading && <Loading />}
 
                 <List disablePadding>
+                    {athletes && athletes.length === 0 && (
+                        <ListItem>
+                            <ListItemText primary={t('inscription:noAthletesFound')} />
+                        </ListItem>
+                    )}
+
                     {athletes && athletes.map((athlete: AthleteType, index: number) => (
                         <ListItem key={athlete.id} disablePadding divider={index !== athletes.length - 1}>
                             <ListItemButton onClick={() => onAthleteSelect(athlete)}>
