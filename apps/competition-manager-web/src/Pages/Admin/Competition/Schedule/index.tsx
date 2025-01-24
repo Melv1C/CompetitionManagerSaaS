@@ -30,9 +30,9 @@ export const Schedule = () => {
             width: 100, 
             valueFormatter: (value: Date) => {
                 if (competition.closeDate) {
-                    return value.toLocaleDateString() + ' ' + value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    return value.toLocaleDateString() + ' ' + value.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
                 }
-                return value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                return value.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
             }
         },
         { field: 'name', headerName: t('labels:name'), width: 150 },

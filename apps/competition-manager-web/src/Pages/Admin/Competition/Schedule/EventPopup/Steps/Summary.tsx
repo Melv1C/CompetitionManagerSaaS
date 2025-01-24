@@ -85,7 +85,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('labels:schedule')}
-                        value={competitionEvent.schedule.toLocaleDateString() + ' ' + competitionEvent.schedule.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        value={competitionEvent.schedule.toLocaleDateString() + ' ' + competitionEvent.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
                         slotProps={{
                             input: { readOnly: true }
                         }}

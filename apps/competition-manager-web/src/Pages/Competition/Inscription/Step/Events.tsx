@@ -108,7 +108,7 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
                     >
                         <ListItemButton onClick={() => toggleEvent(event)}>
                             <ListItemAvatar>
-                                {event.schedule.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                                {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
                             </ListItemAvatar>
                             <ListItemText
                                 primary={event.name}

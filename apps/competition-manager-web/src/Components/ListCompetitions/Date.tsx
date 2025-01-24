@@ -1,4 +1,5 @@
 import { Box } from "@mui/material";
+import i18n from "../../i18n";
 
 type DateProps = {
     date: Date;
@@ -27,7 +28,7 @@ export const Date: React.FC<DateProps> = ({ date }) => {
                     color: 'white',
                 }}
             >
-                {date.toLocaleString('en', { month: 'short'})}
+                {date.toLocaleString(i18n.language, { month: 'short' }).charAt(0).toUpperCase() + date.toLocaleString(i18n.language, { month: 'short' }).slice(1)}
             </Box>
             <Box
                 sx={{
