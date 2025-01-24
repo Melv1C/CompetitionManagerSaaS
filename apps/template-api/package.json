@@ -15,6 +15,7 @@
   "dependencies": {
     "@competition-manager/backend-utils": "file:../../shared-packages/backend-utils",
     "@competition-manager/utils": "file:../../shared-packages/utils",
+    "@competition-manager/schemas": "file:../../shared-packages/schemas",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "ts-node": "^10.9.2",

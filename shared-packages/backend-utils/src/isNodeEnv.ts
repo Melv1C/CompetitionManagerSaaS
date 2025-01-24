@@ -1,10 +1,5 @@
+import { NODE_ENV } from '@competition-manager/schemas';
 import { z } from 'zod';
-
-export enum NODE_ENV {
-    LOCAL = 'local',
-    STAGING = 'staging',
-    PROD = 'prod'
-}
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),

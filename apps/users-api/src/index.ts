@@ -4,8 +4,7 @@ import cookieParser from 'cookie-parser';
 import { corsMiddleware, createLogger, Key, logRequestMiddleware, OmitType } from '@competition-manager/backend-utils';
 import routes from './routes';
 import { z } from 'zod';
-import { NODE_ENV } from "@competition-manager/utils";
-import { SERVICE } from "@competition-manager/schemas";
+import { NODE_ENV, SERVICE } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),

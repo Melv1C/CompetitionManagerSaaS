@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { AuthenticatedRequest, Key } from '../middleware';
 import { Logger } from 'winston';
 
