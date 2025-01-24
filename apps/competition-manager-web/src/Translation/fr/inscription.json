@@ -3,6 +3,7 @@
     "searchAthlete": {
         "placeholder": "Nom et/ou n° de dossard"
     },
+    "noAthletesFound": "Aucun athlète trouvé",
     "remainingPlaces": "Places restantes",
     "remainingPlace": "Place restante",
     "noRemainingPlaces": "Plus de places disponibles",

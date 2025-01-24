@@ -3,6 +3,7 @@
     "searchAthlete": {
         "placeholder": "Naam en/of startnummer"
     },
+    "noAthletesFound": "Geen atleten gevonden",
     "remainingPlaces": "Resterende plaatsen",
     "remainingPlace": "Resterende plaats",
     "noRemainingPlaces": "Geen plaatsen meer beschikbaar",
