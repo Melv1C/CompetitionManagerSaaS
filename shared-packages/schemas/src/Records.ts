@@ -5,7 +5,7 @@ import { Date$ } from './Base';
 export const Record$ = z.object({
     perf: z.number(),
     date: Date$,
-    place: z.string().nullish(),
+    location: z.string().nullish(),
 });
 
 export type Record = z.infer<typeof Record$>;

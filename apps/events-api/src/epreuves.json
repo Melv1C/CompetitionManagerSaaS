@@ -73,7 +73,7 @@
     },
     {
         "name": "1500 mètres steeple 0,762m",
-        "abbr": "1500m Steeple",
+        "abbr": "1500m St.",
         "type": "time",
         "group": "middle"
     },
@@ -85,13 +85,13 @@
     },
     {
         "name": "2000 mètres steeple 0,762m",
-        "abbr": "2000m Steeple",
+        "abbr": "2000m St.",
         "type": "time",
         "group": "middle"
     },
     {
         "name": "2000 mètres steeple 0,914m",
-        "abbr": "2000m Steeple",
+        "abbr": "2000m St.",
         "type": "time",
         "group": "middle"
     },
@@ -103,13 +103,13 @@
     },
     {
         "name": "3000 mètres steeple 0,762m",
-        "abbr": "3000m Steeple",
+        "abbr": "3000m St.",
         "type": "time",
         "group": "middle"
     },
     {
         "name": "3000 mètres steeple 0,914m",
-        "abbr": "3000m Steeple",
+        "abbr": "3000m St.",
         "type": "time",
         "group": "middle"
     },
@@ -337,7 +337,7 @@
     },
     {
         "name": "Balle de hockey",
-        "abbr": "Balle de hockey",
+        "abbr": "Balle H.",
         "type": "distance",
         "group": "throw"
     },

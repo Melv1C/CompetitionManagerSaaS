@@ -12,6 +12,9 @@ const findAthleteWithLicense = async (license: License, oneDayAthletes: Athlete[
         where: {
             license: license,
             competitionId: null
+        },
+        include: {
+            club: true
         }
     }));
 }
@@ -61,43 +64,55 @@ router.post(
             
             if (!isAdmin){
                 const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
-                const session = await createCheckoutSession(
-                    inscriptions.map(({ competitionEventEid }) => {
-                        const event = competition.events.find((e) => e.eid === competitionEventEid);
-                        if (!event) throw new Error('Event not found');
-                        return {
-                            price_data: {
-                                currency: 'eur',
-                                product_data: {
-                                    name: `${event.name}`,
-                                },
-                                unit_amount: event.cost * 100,
-                            },
-                            quantity: 1,
-                        };
-                    }),
-                    fullUrl,
-                    fullUrl,
-                    req.user!.email,
-                    {
-                        inscriptions: JSON.stringify(inscriptions.map( async ({ athleteLicense, competitionEventEid, ...inscription }) => {
-                            const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                try {
+                    const session = await createCheckoutSession(
+                        inscriptions.map(({ competitionEventEid }) => {
                             const event = competition.events.find((e) => e.eid === competitionEventEid);
                             if (!event) throw new Error('Event not found');
                             return {
-                                athleteId: athlete.id,
-                                competitionEventId: event.id,
-                                perf: "TODO",
-                                competitionId: competition.id,
-                                userId: req.user!.id,
-                                type: "inscriptions",
+                                price_data: {
+                                    currency: 'eur',
+                                    product_data: {
+                                        name: `${event.name}`,
+                                    },
+                                    unit_amount: event.cost * 100,
+                                },
+                                quantity: 1,
                             };
-                        }))
+                        }),
+                        fullUrl,
+                        fullUrl,
+                        req.user!.email,
+                        {
+                            inscriptions: JSON.stringify(inscriptions.map( async ({ athleteLicense, competitionEventEid, record }) => {
+                                const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                                const event = competition.events.find((e) => e.eid === competitionEventEid);
+                                if (!event) throw new Error('Event not found');
+                                return {
+                                    athleteId: athlete.id,
+                                    bib: athlete.bib,
+                                    clubId: athlete.club.id,
+                                    competitionEventId: event.id,
+                                    record,
+                                    competitionId: competition.id,
+                                    userId: req.user!.id,
+                                    type: "inscriptions",
+                                };
+                            }))
+                        }
+                    );
+                    console.log(session.url);
+                    res.send(session.url || '/qsrgqerh');
+                    return;
+                } catch (e) {
+                    if (e instanceof Error && e.message === 'Event not found') {
+                        res.status(404).send('Event not found');
+                        return;
                     }
-                );
-                console.log(session.url);
-                res.send(session.url || '/qsrgqerh');
-                return;
+                    console.error(e);
+                    res.status(500).send('Internal server error');
+                    return;
+                }
             }
 
             if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
@@ -106,7 +121,7 @@ router.post(
 
             try {
                 const listInscriptions = [];
-                for (const { athleteLicense, competitionEventEid, ...inscription } of inscriptions) {
+                for (const { athleteLicense, competitionEventEid, record, ...inscription } of inscriptions) {
                     const defaultInscription = DefaultInscription$.parse(inscription);
                     const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                     const newInscription = await prisma.inscription.create({
@@ -121,14 +136,46 @@ router.post(
                                     eid: eid
                                 }
                             },
+                            user: {
+                                connect: {
+                                    id: req.user!.id
+                                }
+                            },
+                            bib: athlete.bib,
+                            ...(record ? {
+                                record: {
+                                    create: record
+                                }
+                            } : {}),
+                            club: {
+                                connect: {
+                                    id: athlete.club.id
+                                }
+                            },
                             competitionEvent: {
                                 connect: {
                                     eid: competitionEventEid
                                 }
                             },
                             ...defaultInscription
+                        },
+                        include: {
+                            athlete: {
+                                include: {
+                                    club: true
+                                }
+                            },
+                            competitionEvent: {
+                                include: {
+                                    event: true,
+                                    categories: true
+                                }
+                            },
+                            user: true,
+                            club: true,
+                            record: true
                         }
-                    })
+                    });
                     listInscriptions.push(newInscription);
                 }
                 res.status(201).send(Inscription$.array().parse(listInscriptions));
