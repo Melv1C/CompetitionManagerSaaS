@@ -2,6 +2,7 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { useAtomValue } from "jotai";
 import { useTranslation } from "react-i18next"
 import { competitionAtom, inscriptionsAtom } from "../../GlobalsStates";
+import { ShowUsersNumber } from "../../Components";
 
 
 export const Schedule = () => {
@@ -29,7 +30,7 @@ export const Schedule = () => {
                     <TableRow>
                         <TableCell width={50}>{t('labels:schedule')}</TableCell>
                         <TableCell>{t('glossary:event')}</TableCell>
-                        <TableCell align="center" width={50}>{t('glossary:inscriptions')}</TableCell>
+                        <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -37,7 +38,7 @@ export const Schedule = () => {
                         <TableRow key={event.id}>
                             <TableCell>{event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}</TableCell>
                             <TableCell>{event.name}</TableCell>
-                            <TableCell align="center">{inscriptions.filter(i => i.competitionEvent.id === event.id).length}</TableCell>
+                            <TableCell align="center"><ShowUsersNumber value={inscriptions.filter(i => i.competitionEvent.id === event.id).length} /></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
