@@ -36,6 +36,7 @@ export const Category$ = z.object({
     abbrBaseCategory: z.nativeEnum(AbbrBaseCategory),
     gender: Gender$,
     masterAgeGroup: z.number().positive().nullish(),
+    order : z.number().positive(),
 });
 export type Category = z.infer<typeof Category$>;
 
