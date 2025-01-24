@@ -21,5 +21,8 @@ export type Price = z.infer<typeof Price$>;
 export const License$ = z.string().min(1, "LicenseTooShort1").max(20, "LicenseTooLong20");
 export type License = z.infer<typeof License$>;
 
+export const Bib$ = z.number().positive('BibMustBePositive');
+export type Bib = z.infer<typeof Bib$>;
+
 export const Email$ = z.string().email('InvalidEmail');
 export type Email = z.infer<typeof Email$>;

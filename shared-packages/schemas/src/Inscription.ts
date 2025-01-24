@@ -1,7 +1,19 @@
 import z from 'zod';
-import { Id$, Eid$, Price$, License$ } from './Base';
+import { Id$, Eid$, Price$, License$, Bib$ } from './Base';
 import { Athlete$ } from './Athlete';
 import { CompetitionEvent$ } from './CompetitionEvent';
+import { BaseUser$ } from './User';
+import { Club$ } from './Club';
+import { Record$ } from './Records';
+
+export enum InscriptionStatus {
+    REGISTERED = 'registered',
+    REJECTED = 'rejected',
+    PENDING = 'pending',
+    ACCEPTED = 'accepted',
+    CONFIRMED = 'confirmed',
+    ABSENT = 'absent'
+}
 
 export const Inscription$ = z.object({
     id: Id$,
@@ -9,14 +21,17 @@ export const Inscription$ = z.object({
     athlete: Athlete$,
     competitionEvent: CompetitionEvent$,
     paid: Price$.default(0),
-    isConfirmed: z.boolean().default(false),
+    status: z.nativeEnum(InscriptionStatus).default(InscriptionStatus.ACCEPTED),
+    user: BaseUser$,
+    bib: Bib$,
+    club: Club$,
+    record: Record$.nullish(),
     isDeleted: z.boolean().default(false),
-    isAbsent: z.boolean().default(false),
 });
 export type Inscription = z.infer<typeof Inscription$>;
 
 export const CreateInscription$ = Inscription$.pick({
-    //TODO pick record, ...
+    record: true,
 }).extend({
     competitionEventEid: Eid$,
     athleteLicense: License$
@@ -28,6 +43,9 @@ export const DefaultInscription$ = Inscription$.omit({
     eid: true,
     athlete: true,
     competitionEvent: true,
+    user: true,
+    record: true,
+    club: true,
+    bib: true,
 });
-
 export type DefaultInscription = z.infer<typeof DefaultInscription$>;

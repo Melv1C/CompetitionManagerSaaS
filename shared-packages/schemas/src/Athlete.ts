@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Date$, Id$, License$ } from './Base';
+import { Bib$, Date$, Id$, License$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
@@ -23,7 +23,7 @@ export const Athlete$ = z.object({
     license: License$,
     firstName: z.string().min(1, 'FirstNameTooShort1').max(50, 'FirstNameTooLong50'),
     lastName: z.string().min(1, 'LastNameTooShort1').max(50, 'LastNameTooLong50'),
-    bib: z.number().positive('BibMustBePositive'),
+    bib: Bib$,
     gender: Gender$,
     birthdate: Date$,
     club: Club$,
