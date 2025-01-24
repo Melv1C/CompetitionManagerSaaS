@@ -22,9 +22,9 @@ export const logRequestMiddleware = (logger: Logger, omits: OmitType = []) => (r
         const { statusCode } = res;
         const userId = req.user?.id || null;
 
-        metadata["body"] = Object.keys(req.body).length !== 0 ? req.body : undefined;
-        metadata["params"] = Object.keys(req.params).length !== 0 ? req.params : undefined;
-        metadata["query"] = Object.keys(req.query).length !== 0 ? req.query : undefined;
+        metadata["body"] = req.body && typeof req.body === 'object' && Object.keys(req.body).length !== 0 ? req.body : undefined;
+        metadata["params"] = req.params && typeof req.params === 'object' && Object.keys(req.params).length !== 0 ? req.params : undefined;
+        metadata["query"] = req.query && typeof req.query === 'object' && Object.keys(req.query).length !== 0 ? req.query : undefined;
 
         for (const omit of omits) {
             const key = metadata[omit.key];
