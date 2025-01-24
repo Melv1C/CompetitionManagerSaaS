@@ -4,3 +4,4 @@ export * from "./checkAdminRole";
 export * from "./sendEmail";
 export * from "./hashPassword";
 export * from "./logger";
+export * from "./isNodeEnv";

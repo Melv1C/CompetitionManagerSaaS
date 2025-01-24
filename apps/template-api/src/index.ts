@@ -6,7 +6,7 @@ import { corsMiddleware } from '@competition-manager/backend-utils';
 import routes from './routes';
 
 import { z } from 'zod';
-import { NODE_ENV } from "@competition-manager/utils";
+import { NODE_ENV } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),

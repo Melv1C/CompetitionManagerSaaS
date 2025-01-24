@@ -1,8 +1,8 @@
 import { prisma } from "@competition-manager/prisma"
-import { CreateLog, SERVICE } from "@competition-manager/schemas"
+import { CreateLog, SERVICE, NODE_ENV } from "@competition-manager/schemas"
 import winston from "winston"
 import { PrismaTransport } from "./transportPrisma"
-import { isNodeEnv, NODE_ENV } from "@competition-manager/utils";
+import { isNodeEnv } from "../isNodeEnv";
 
 const { combine, timestamp, json } = winston.format;
 

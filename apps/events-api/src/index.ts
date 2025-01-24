@@ -3,9 +3,8 @@ import 'dotenv/config';
 import { fillDB } from "./fillDB";
 import { prisma } from "@competition-manager/prisma";
 import { corsMiddleware } from '@competition-manager/backend-utils';
-import { Event$ } from "@competition-manager/schemas";
+import { Event$, NODE_ENV } from "@competition-manager/schemas";
 import { z } from 'zod';
-import { NODE_ENV } from "@competition-manager/utils";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),

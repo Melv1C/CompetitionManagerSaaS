@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePassword } from '@competition-manager/backend-utils';
-import { User$ } from '@competition-manager/schemas';
+import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePassword, isNodeEnv } from '@competition-manager/backend-utils';
+import { NODE_ENV, User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
-import { isNodeEnv, NODE_ENV } from '@competition-manager/utils';
 import { logger } from '..';
 
 export const router = Router();
