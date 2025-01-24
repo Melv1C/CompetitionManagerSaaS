@@ -16,14 +16,15 @@ datasource db {
 // User
 /////////////////////////
 model User {
-    id          Int       @id @default(autoincrement())
-    email       String    @unique
-    role        String
-    password    String
-    preferences UserPreferences?
-    admin       Admin[]
-    club        Club?     @relation(fields: [clubId], references: [id])
-    clubId      Int?      @map("club_id")
+    id              Int              @id @default(autoincrement())
+    email           String           @unique
+    role            String
+    password        String
+    preferences     UserPreferences?
+    admin           Admin[]
+    club            Club?            @relation(fields: [clubId], references: [id])
+    clubId          Int?             @map("club_id")
+    inscriptions    Inscription[]
 
     @@map("users")
 }
@@ -206,6 +207,7 @@ model Club {
     competitions     Competition[]
     users            User[]
     freeCompetitions Competition[] @relation("FreeClubsToCompetition")
+    inscriptions     Inscription[]
 
     @@map("clubs")
 }
@@ -223,11 +225,30 @@ model Inscription {
     competition         Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId       Int                @map("competition_id")
     paid                Int
-    isConfirmed         Boolean            @map("is_confirmed")
-    isAbsent            Boolean            @map("is_absent")
+    status              String
+    user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId              Int                @map("user_id")
+    bib                 Int
+    club                Club               @relation(fields: [clubId], references: [id]) //liaison ou juste abbr
+    clubId              Int                @map("club_id")
+    record              Record?            
     isDeleted           Boolean            @map("is_deleted")
-
+    
     @@map("inscriptions")
+}
+
+////////////////
+// Record
+////////////////
+model Record {
+    id              Int             @id @default(autoincrement())
+    perf            Int
+    date            DateTime
+    location        String?
+    inscriptions    Inscription     @relation(fields: [inscriptionId], references: [id])
+    inscriptionId   Int             @unique @map("inscription_id")
+
+    @@map("records")
 }
 
 ////////////////
