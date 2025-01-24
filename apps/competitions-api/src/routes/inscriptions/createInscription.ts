@@ -84,14 +84,16 @@ router.post(
                         fullUrl,
                         req.user!.email,
                         {
-                            inscriptions: JSON.stringify(inscriptions.map( async ({ athleteLicense, competitionEventEid, ...inscription }) => {
+                            inscriptions: JSON.stringify(inscriptions.map( async ({ athleteLicense, competitionEventEid, record }) => {
                                 const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                                 const event = competition.events.find((e) => e.eid === competitionEventEid);
                                 if (!event) throw new Error('Event not found');
                                 return {
                                     athleteId: athlete.id,
+                                    bib: athlete.bib,
+                                    clubId: athlete.club.id,
                                     competitionEventId: event.id,
-                                    perf: "TODO",
+                                    record,
                                     competitionId: competition.id,
                                     userId: req.user!.id,
                                     type: "inscriptions",
@@ -173,7 +175,7 @@ router.post(
                             club: true,
                             record: true
                         }
-                    })
+                    });
                     listInscriptions.push(newInscription);
                 }
                 res.status(201).send(Inscription$.array().parse(listInscriptions));

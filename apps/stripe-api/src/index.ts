@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { corsMiddleware, Key, parseRequest } from '@competition-manager/backend-utils';
 import { prisma } from "@competition-manager/prisma";
 import { z } from 'zod';
-import { DefaultInscription$, Id$, NODE_ENV } from "@competition-manager/schemas";
+import { Bib$, DefaultInscription$, Id$, NODE_ENV, Record$ } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
@@ -29,8 +29,13 @@ const Body$ = z.object({
 });
 
 const Isncription$ = z.object({
+    competitionId: Id$,  
     athleteId: Id$,
     competitionEventId: Id$,
+    record: Record$.nullish(),
+    userId: Id$,
+    bib: Bib$,
+    clubId: Id$,
 });
 
 app.post(`${env.PREFIX}/stripe/webhook`, 
@@ -51,26 +56,59 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                     
                     const inscriptions = Isncription$.array().parse(JSON.parse(metadata.inscriptions));
 
-                    for (const { athleteId, competitionEventId, ...inscription } of inscriptions) {
+                    for (const inscription of inscriptions) {
+                        const defaultInscription = DefaultInscription$.parse(inscription);
                         const newInscription = await prisma.inscription.create({
                             data: {
                                 athlete: {
                                     connect: {
-                                        id: athleteId,
-                                    },
-                                },
-                                competitionEvent: {
-                                    connect: {
-                                        id: competitionEventId,
-                                    },
+                                        id : inscription.athleteId
+                                    }
                                 },
                                 competition: {
                                     connect: {
-                                        id: metadata.competitionId,
-                                    },
+                                        id: inscription.competitionId
+                                    }
                                 },
-                                ...DefaultInscription$.parse(inscription),
+                                user: {
+                                    connect: {
+                                        id: inscription.userId
+                                    }
+                                },
+                                bib: inscription.bib,
+                                ...(inscription.record ? {
+                                    record: {
+                                        create: inscription.record
+                                    }
+                                } : {}),
+                                club: {
+                                    connect: {
+                                        id: inscription.clubId
+                                    }
+                                },
+                                competitionEvent: {
+                                    connect: {
+                                        id: inscription.competitionEventId
+                                    }
+                                },
+                                ...defaultInscription
                             },
+                            include: {
+                                athlete: {
+                                    include: {
+                                        club: true
+                                    }
+                                },
+                                competitionEvent: {
+                                    include: {
+                                        event: true,
+                                        categories: true
+                                    }
+                                },
+                                user: true,
+                                club: true,
+                                record: true
+                            }
                         });
                         console.log(newInscription);
                     }
