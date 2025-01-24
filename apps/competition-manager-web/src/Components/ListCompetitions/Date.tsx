@@ -8,6 +8,7 @@ export const Date: React.FC<DateProps> = ({ date }) => {
     return (
         <Box
             sx={{
+                width: '3rem',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
