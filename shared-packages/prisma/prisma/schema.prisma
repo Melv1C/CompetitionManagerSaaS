@@ -88,6 +88,7 @@ model Category {
     abbrBaseCategory  String             @map("abbr_base_category")
     gender            String
     masterAgeGroup    Int?               @map("master_age_group")
+    order             Int
     competitionEvents CompetitionEvent[]
 
     @@map("categories")
