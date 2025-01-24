@@ -35,7 +35,7 @@ export const Schedule = () => {
                 <TableBody>
                     {events.map(event => (
                         <TableRow key={event.id}>
-                            <TableCell>{event.schedule.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
+                            <TableCell>{event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}</TableCell>
                             <TableCell>{event.name}</TableCell>
                             <TableCell align="center">{inscriptions.filter(i => i.competitionEvent.id === event.id).length}</TableCell>
                         </TableRow>
