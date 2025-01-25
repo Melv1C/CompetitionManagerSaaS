@@ -15,4 +15,4 @@ COPY package-lock.json package-lock.json
 RUN npm install
 
 # Migrate the database
-CMD ["npm", "run", "migrate"]
+CMD ["npm", "run", "migrate:prod"]
