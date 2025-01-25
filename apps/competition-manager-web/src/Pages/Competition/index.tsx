@@ -9,6 +9,8 @@ import { Loading, MaxWidth } from "../../Components";
 import { useEffect, useMemo } from "react";
 import { Inscription } from "./Inscription";
 import { Schedule } from "./Schedule";
+import { useCompetition } from "../../hooks";
+import { Competition as CompetitionType } from "@competition-manager/schemas";
 
 /**
  * Extracts the first part of a path
@@ -27,15 +29,9 @@ function extract(path: string): string | null {
 
 export const Competition = () => {
 
-    const { t } = useTranslation();
-
     const [globalComp, setCompetition] = useAtom(competitionAtom);
     const [globalInscriptions, setInscriptions] = useAtom(inscriptionsAtom);
     const { eid } = useParams();
-
-    const navigate = useNavigate();
-
-    const location = useLocation();
 
     if (!eid) throw new Error('No competition ID provided');
 
@@ -56,8 +52,6 @@ export const Competition = () => {
         }
     }, [inscriptions, setInscriptions]);
 
-    const activeTab = useMemo(() => extract(location.pathname.replace(`/competitions/${eid}`, '')) || '', [location.pathname]);
-
     if (isCompetitionError) throw new Error('Error while fetching competition');
     if (isInscriptionsError) throw new Error('Error while fetching inscriptions');
 
@@ -66,28 +60,50 @@ export const Competition = () => {
     return (
         <MaxWidth>
             <Typography variant="h4" textAlign='center'>{globalComp.name}</Typography>
-
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <Tabs value={activeTab} onChange={(_, v) => {
-                    if (v === "") return navigate(`/competitions/${eid}`);
-                    navigate(`/competitions/${eid}/${v}`);
-                }} variant="scrollable" scrollButtons allowScrollButtonsMobile>
-                    <Tab label={t('navigation:overview')} value="" />
-                    <Tab label={t('navigation:register')} value="register" />
-                    <Tab label={t('navigation:schedule')} value="schedule" />
-                    <Tab label={t('glossary:inscriptions')} value="inscriptions" />
-                    <Tab label={t('glossary:results')} value="results" />
-                </Tabs>
-            </Box>
-            
-            <Routes>
-                <Route path="/" element={<Box>{globalComp.name}</Box>} />
-                <Route path="/register" element={<Inscription />} />
-                <Route path="/schedule" element={<Schedule />} />
-                <Route path="/inscriptions" element={<Box>{t('glossary:inscriptions')}</Box>} />
-                <Route path="/results" element={<Box>{t('glossary:results')}</Box>} />
-                <Route path="*" element={<Navigate to={`/competitions/${eid}`} />} />
-            </Routes>
+            <CompetitionNavbar competition={globalComp} />
         </MaxWidth>
     )
 }
+
+type CompetitionNavbarProps = {
+    competition: CompetitionType;
+}
+
+const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({ competition }) => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const {isPast, isFuture, isCurrent} = useCompetition();
+
+    const activeTab = useMemo(() => extract(location.pathname.replace(`/competitions/${competition.eid}`, '')) || '', [location.pathname]);
+
+    return (
+        <>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                <Tabs value={activeTab} onChange={(_, v) => {
+                    if (v === "") return navigate(`/competitions/${competition.eid}`);
+                    navigate(`/competitions/${competition.eid}/${v}`);
+                }} variant="scrollable" scrollButtons allowScrollButtonsMobile>
+                    <Tab label={t('navigation:overview')} value="" />
+                    {isFuture && <Tab label={t('navigation:register')} value="register" />}
+                    <Tab label={t('navigation:schedule')} value="schedule" />
+                    {(isFuture || isCurrent) && <Tab label={t('glossary:inscriptions')} value="inscriptions" />}
+                    {isCurrent && <Tab label={t('glossary:liveResults')} value="liveResults" />}
+                    {isPast && <Tab label={t('glossary:results')} value="results" />}
+                </Tabs>
+            </Box>
+
+            <Routes>
+                <Route path="/" element={<Box>{competition.name}</Box>} />
+                {isFuture && <Route path="/register" element={<Inscription />} />}
+                <Route path="/schedule" element={<Schedule />} />
+                {(isFuture || isCurrent) && <Route path="/inscriptions" element={<Box>{t('glossary:inscriptions')}</Box>} />}
+                {isCurrent && <Route path="/liveResults" element={<Box>{t('glossary:liveResults')}</Box>} />}
+                {isPast && <Route path="/results" element={<Box>{t('glossary:results')}</Box>} />}
+                <Route path="*" element={<Navigate to={`/competitions/${competition.eid}`} />} />
+            </Routes>
+        
+        </>
+    )
+}
+

@@ -19,3 +19,4 @@ export * from './AccountCircle';
 export * from './ErrorFallback';
 export * from './StepperButtons';
 export * from './Bib';
+export * from './ShowUsersNumber';

@@ -1,6 +1,6 @@
-import { Badge, Box, Divider, FormControl, TextField } from "@mui/material";
+import { Box, Divider, FormControl, TextField } from "@mui/material";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Add, CircleButton, Delete, Edit, MaxWidth, Users } from "../../../../Components";
+import { Add, CircleButton, Delete, Edit, MaxWidth, ShowUsersNumber } from "../../../../Components";
 import { useAtomValue } from "jotai";
 import { competitionAtom, inscriptionsAtom } from "../../../../GlobalsStates";
 import { useState } from "react";
@@ -18,7 +18,7 @@ export const Schedule = () => {
     if (!competition) throw new Error('No competition found');
     if (!inscriptions) throw new Error('No inscriptions found');
 
-    const events = competition.events
+    const events = [...competition.events].sort((a, b) => a.schedule.getTime() - b.schedule.getTime());
 
     const [isEventPopupVisible, setIsEventPopupVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<CompetitionEvent>();
@@ -36,26 +36,11 @@ export const Schedule = () => {
             }
         },
         { field: 'name', headerName: t('labels:name'), width: 150 },
-        { field: '', headerName: t('glossary:inscriptions'), width: 100, valueGetter: (_, row) => {
+        { field: 'inscriptions', headerName: t('glossary:inscriptions'), width: 100, align: 'center',valueGetter: (_, row) => {
             const inscriptionsCount = inscriptions.filter(i => i.competitionEvent.id === row.id).length;
             return inscriptionsCount;
         }, renderCell: (params) => (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                <Badge badgeContent={params.value} color="info" showZero max={999} overlap="circular">
-                    <Box 
-                        sx={{ 
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '1.5rem',
-                            height: '1.5rem',
-                            padding: '0.5rem',
-                        }}
-                    >
-                        <Users size="lg" />
-                    </Box>
-                </Badge>
-            </Box>
+            <ShowUsersNumber value={params.value as number} />
         )},
         { field: 'place', headerName: t('glossary:place'), width: 100 },
         { field: 'cost', headerName: t('glossary:price'), width: 100, valueFormatter: (value: number) => {
@@ -117,13 +102,8 @@ export const Schedule = () => {
                 <Divider />
 
                 <DataGrid
-                    rows={events}
                     columns={columns}
-                    initialState={{ 
-                        sorting: {
-                            sortModel: [{ field: 'schedule', sort: 'asc' }],
-                        }
-                    }}
+                    rows={events}
                 />
             </Box>
         </MaxWidth>
