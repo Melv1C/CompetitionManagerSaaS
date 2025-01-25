@@ -17,6 +17,7 @@
 
   "scripts": {
     "migrate": "prisma migrate dev",
+    "migrate:prod": "prisma migrate deploy",
     "generate": "prisma generate",
     "start": "ts-node src/index.ts",
     "build": "tsc"
