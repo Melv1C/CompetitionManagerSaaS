@@ -20,3 +20,4 @@ export * from './ErrorFallback';
 export * from './StepperButtons';
 export * from './Bib';
 export * from './ShowUsersNumber';
+export * from './WYSIWYG';
