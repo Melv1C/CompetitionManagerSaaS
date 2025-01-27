@@ -5,6 +5,7 @@ import { useDeviceSize } from "../../../hooks";
 import { Athlete } from "./Step/Athlete";
 import { Events } from "./Step/Events";
 import { Records } from "./Step/Records";
+import { Summary } from "./Step/Summary";
 
 
 export const Inscription = () => {
@@ -27,7 +28,7 @@ export const Inscription = () => {
         { label: t('glossary:athlete'), content: <Athlete handleNext={handleNext} /> },
         { label: t('glossary:events'), content: <Events handleNext={handleNext} handleBack={handleBack} /> },
         { label: t('glossary:personalBest'), content: <Records handleNext={handleNext} handleBack={handleBack} /> },
-        { label: t('glossary:summary') }
+        { label: t('glossary:summary'), content: <Summary handleBack={handleBack} /> }
     ];
 
     return (
