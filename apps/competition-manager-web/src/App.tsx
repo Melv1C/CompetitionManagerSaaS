@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 
 import './App.css'
 import { Box, createTheme, ThemeProvider } from "@mui/material"
-import { faHome, faCalendarDays, faRankingStar } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faCalendarDays, faTrophy } from '@fortawesome/free-solid-svg-icons'
 
 import { useAutoLogin } from './hooks'
 
@@ -63,7 +63,7 @@ function App() {
     const navItems = [
         { label: t('navigation:home'), href: '/', icon: faHome },
         { label: t('glossary:competitions'), href: '/competitions', icon: faCalendarDays },
-        { label: t('glossary:results'), href: '/results', icon: faRankingStar },
+        { label: t('glossary:results'), href: '/results', icon: faTrophy },
     ]
     
     const router = createBrowserRouter(

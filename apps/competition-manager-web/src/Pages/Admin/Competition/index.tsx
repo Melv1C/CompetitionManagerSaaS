@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import { Route, Routes, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getCompetition, getInscriptions } from "../../../api";
-import { faBasketShopping, faClock, faGears, faInfo, faRankingStar, faUsersGear } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping, faClock, faGears, faInfo, faTrophy, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { Info } from "./Info";
 import { useAtom } from "jotai";
 import { competitionAtom, inscriptionsAtom } from "../../../GlobalsStates";
@@ -33,7 +33,7 @@ export const AdminCompetition = () => {
     const navItems = [
         { text: t('navigation:info'), icon: faInfo, link: `/admin/competitions/${eid}` },
         { text: t('navigation:schedule'), icon: faClock, link: `/admin/competitions/${eid}/schedule` },
-        { text: t('glossary:results'), icon: faRankingStar, link: `/admin/competitions/${eid}/results` },
+        { text: t('glossary:results'), icon: faTrophy, link: `/admin/competitions/${eid}/results` },
         { text: t('navigation:admins'), icon: faUsersGear, link: `/admin/competitions/${eid}/admins` },
         { text: t('navigation:options'), icon: faBasketShopping, link: `/admin/competitions/${eid}/options` },
         { text: t('navigation:settings'), icon: faGears, link: `/admin/competitions/${eid}/settings` },
