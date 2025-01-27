@@ -25,5 +25,9 @@
     
     "InvalidEmail": "Email invalide",
 
-    "BibMustBePositive": "Le dossard doit être positif"
+    "BibMustBePositive": "Le dossard doit être positif",
+
+    "PlaceMustBeInteger": "La place doit être un entier",
+    "PlaceMustBePositive": "La place doit être positive",
+    "PlaceTooHigh": "La place doit être au maximum 100"
 }

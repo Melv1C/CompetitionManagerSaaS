@@ -25,5 +25,9 @@
     
     "InvalidEmail": "Invalid email",
 
-    "BibMustBePositive": "Bib must be positive"
+    "BibMustBePositive": "Bib must be positive",
+
+    "PlaceMustBeInteger": "Place must be an integer",
+    "PlaceMustBePositive": "Place must be positive",
+    "PlaceTooHigh": "Place must be at most 100"
 }
