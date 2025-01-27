@@ -42,18 +42,28 @@ export const Records: React.FC<RecordsProps> = ({
         setIsPopupOpen(true);
     }
 
-    const { data: fetchrecords, isLoading, isError } = useQuery(['records', athlete.license, selectedEvents.map((e) => e.event.name)], 
-        () => getRecords(athlete.license, selectedEvents.map((e) => e.event.name)),
-        { enabled: !records }
+    const { data: fetchrecords, isLoading, isError } = useQuery(
+        ['records', athlete.license, selectedEvents.map((e) => e.event.name)], 
+        () => getRecords(athlete.license, selectedEvents.map((e) => e.event.name))
     );
 
     if (isError) throw new Error('Error while fetching records');
 
     useEffect(() => {
-        if (!records && fetchrecords) {
-            setRecords(fetchrecords);
+        if (fetchrecords) {
+            if (!records) {
+                setRecords(fetchrecords);
+                return;
+            }
+            const newRecords = { ...records };
+            for (const [eventName, record] of Object.entries(fetchrecords)) {
+                if (!records[eventName]) {
+                    newRecords[eventName] = record;
+                }
+            }
+            setRecords(newRecords);
         }
-    }, [records, fetchrecords]);
+    }, [fetchrecords]);
 
     if (isLoading || !records) return <Loading />
 
