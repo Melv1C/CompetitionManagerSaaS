@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build"
+    "generate-meta-tag": "node ./node_modules/react-cache-buster/dist/generate-meta-tag.js",
+    "build": "npm run generate-meta-tag && tsc -b && vite build"
   },
   "dependencies": {
     "@competition-manager/schemas": "file:../../shared-packages/schemas",
@@ -26,6 +27,7 @@
     "jotai": "^2.10.1",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "react-cache-buster": "^0.1.8",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^5.0.0",
     "react-i18next": "^15.4.0",
