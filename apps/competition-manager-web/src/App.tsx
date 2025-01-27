@@ -22,7 +22,6 @@ import { Competitions } from './Pages/Competitions'
 import { Competition } from './Pages/Competition'
 import { SuperAdmin } from './Pages/SuperAdmin'
 import { ErrorFallback } from './Components';
-import { Results } from './Pages/Results';
 import { ProtectedRoute } from './Components/ProtectedRoute';
 import { Role } from '@competition-manager/schemas';
 import { Home } from './Pages/Home';
@@ -62,8 +61,8 @@ function App() {
 
     const navItems = [
         { label: t('navigation:home'), href: '/', icon: faHome },
-        { label: t('glossary:competitions'), href: '/competitions', icon: faCalendarDays },
-        { label: t('glossary:results'), href: '/results', icon: faTrophy },
+        { label: t('navigation:calendar'), href: '/competitions', icon: faCalendarDays },
+        { label: t('glossary:results'), href: '/competitions?isPast=true', icon: faTrophy },
     ]
     
     const router = createBrowserRouter(
@@ -79,7 +78,6 @@ function App() {
                 <Route path="/" element={<h1>{<Home />}</h1>} />
                 <Route path="/competitions" element={<Competitions />} />
                 <Route path="/competitions/:eid/*" element={<Competition />} />
-                <Route path="/results" element={<Results />} />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRole={Role.UNCONFIRMED_USER} redirectPath="/">
                         <Account />
