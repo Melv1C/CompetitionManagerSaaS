@@ -22,5 +22,6 @@
     "price": "Price",
     "free": "Free",
     "summary": "Summary",
-    "personalBest": "Personal Best"
+    "personalBest": "Personal Best",
+    "total": "Total"
 }
