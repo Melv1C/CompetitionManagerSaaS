@@ -42,7 +42,10 @@ export const Schedule = () => {
         }, renderCell: (params) => (
             <ShowUsersNumber value={params.value as number} />
         )},
-        { field: 'place', headerName: t('glossary:place'), width: 100 },
+        { field: 'place', headerName: t('glossary:place'), width: 100, valueFormatter: (value: CompetitionEvent['place']) => {
+            if (!value) return '-';
+            return value;
+        }},
         { field: 'cost', headerName: t('glossary:price'), width: 100, valueFormatter: (value: number) => {
             if (value === 0) return t('glossary:free');
             return value + '€';
