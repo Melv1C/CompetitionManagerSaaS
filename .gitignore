@@ -28,3 +28,6 @@ dist/
 
 # vite
 .vite/
+
+# React cache buster meta file
+apps/competition-manager-web/public/meta.json
