@@ -1,14 +1,12 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { DisplayCompetition$, Role, Date$ } from '@competition-manager/schemas';
-import { z } from 'zod';
+import { DisplayCompetition$, Role, Date$, AdminQuery$ } from '@competition-manager/schemas';
 import { AuthenticatedRequest, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
 
 export const router = Router();
 
-const Query$ = z.object({
-    isAdmin: z.coerce.boolean().default(false),
+const Query$ = AdminQuery$.extend({
     fromDate: Date$.optional(),
     toDate: Date$.optional(),
 });

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key } from '@competition-manager/backend-utils';
-import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$, License } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athlete, Athlete$, Access, Role, Inscription$, License, AdminQuery$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
@@ -22,9 +22,7 @@ const Params$ = Competition$.pick({
     eid: true
 });
 
-const Query$ = z.object({
-    isAdmin: z.coerce.boolean().default(false),
-});
+const Query$ = AdminQuery$;
 
 router.post(
     '/:eid/inscriptions',

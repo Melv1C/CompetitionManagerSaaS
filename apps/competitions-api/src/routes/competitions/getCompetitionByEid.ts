@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { Key, parseRequest, setUserIfExist, AuthenticatedRequest } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
-import { Eid$, Role, Competition$ } from '@competition-manager/schemas';
+import { Eid$, Role, Competition$, AdminQuery$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 
 export const router = Router();
@@ -34,9 +34,7 @@ const Params$ = z.object({
     competitionEid: Eid$,
 });
 
-const Query$ = z.object({
-    isAdmin: z.coerce.boolean().default(false),
-});
+const Query$ = AdminQuery$;
 
 router.get(
     '/:competitionEid',
