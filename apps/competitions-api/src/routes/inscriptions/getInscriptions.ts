@@ -25,7 +25,6 @@ router.get(
                             isDeleted: false
                         },
                         include: {
-                            user: true,
                             club: true,
                             competitionEvent: {
                                 include: {
@@ -33,11 +32,7 @@ router.get(
                                     categories: true
                                 }
                             },
-                            athlete: {
-                                include: {
-                                    club: true
-                                }
-                            },
+                            athlete: true,
                             record: true
                         }
                     }
