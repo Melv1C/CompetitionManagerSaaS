@@ -19,7 +19,7 @@ router.put(
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid, eventEid } = Params$.parse(req.params);
-            const { categoriesId, parentId, eventId, ...competitionEvent } = UpdateCompetitionEvent$.parse(req.body);
+            const { categoriesId, parentEid, eventId, ...competitionEvent } = UpdateCompetitionEvent$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
@@ -63,7 +63,7 @@ router.put(
                                 id: eventId
                             }
                         },
-                        ...(parentId && { parentEvent: { connect: { id: parentId } } }),
+                        ...(parentEid && { parentEvent: { connect: { eid: parentEid } } }),
 
                     },
                     include: {

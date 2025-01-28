@@ -22,9 +22,11 @@ export const CreateCompetitionEvent$ = CompetitionEvent$.omit({
     eid: true,
     event: true,
     categories: true,
+    parentId: true,
 }).extend({
     eventId: Id$,
     categoriesId: z.array(Id$),
+    parentEid: Eid$.nullish(),
 })
 export type CreateCompetitionEvent = z.infer<typeof CreateCompetitionEvent$>;
 
