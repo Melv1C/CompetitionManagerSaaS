@@ -74,7 +74,7 @@ export const Summary: React.FC<SummaryProps> = ({
                                             <TableCell>
                                                 {event.name}
                                             </TableCell>
-                                            <TableCell padding="none" width={75} align="center">{record ? formatPerf(record.perf, event.event.type) : '-'}</TableCell>
+                                            <TableCell padding="none" width={75} align="right">{record ? formatPerf(record.perf, event.event.type) : '-'}</TableCell>
                                             <TableCell padding="none" width={50} align="right">{event.cost} €</TableCell>
                                         </TableRow>
                                     )
