@@ -112,9 +112,10 @@ router.post(
                     return;
                 }
             }
-
-            if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
-                return;
+            if (req.user!.role !== Role.SUPERADMIN) {
+                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
+                    return;
+                }
             }
 
             try {
