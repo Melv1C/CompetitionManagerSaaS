@@ -2,7 +2,7 @@ import { Box, Chip, Divider, FormControl, FormLabel, InputLabel, MenuItem, Selec
 import { useAtom } from "jotai";
 import { competitionAtom } from "../../../../GlobalsStates";
 import { useEffect, useMemo, useState } from "react";
-import { Loading } from "../../../../Components";
+import { Loading, WysiwygEditor } from "../../../../Components";
 import { MaxWidth } from "../../../../Components/MaxWidth";
 import { TextFieldWith$ } from "../../../../Components/FieldsWithSchema";
 import { Competition, Competition$, Id, PaymentMethod, UpdateCompetition } from "@competition-manager/schemas";
@@ -27,7 +27,6 @@ export const Info = () => {
     const clubsId = useMemo(() => competitionState?.freeClubs.map((club) => club.id) || [], [competitionState]);
 
     const [isNameValid, setIsNameValid] = useState(true);
-    const [isDescriptionValid, setIsDescriptionValid] = useState(true);
     const [isDateValid, setIsDateValid] = useState(true);
     const [isCloseDateValid, setIsCloseDateValid] = useState(true);
     const [isEmailValid, setIsEmailValid] = useState(true);
@@ -42,8 +41,8 @@ export const Info = () => {
     ), [competition, competitionState]);
     
     const isFormValid = useMemo(() => (
-        isNameValid && isDescriptionValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid && isStartInscriptionDateValid && isEndInscriptionDateValid
-    ), [isNameValid, isDescriptionValid, isDateValid, isMultiDay, isCloseDateValid, isEmailValid, isStartInscriptionDateValid, isEndInscriptionDateValid]);
+        isNameValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid && isStartInscriptionDateValid && isEndInscriptionDateValid
+    ), [isNameValid, isDateValid, isMultiDay, isCloseDateValid, isEmailValid, isStartInscriptionDateValid, isEndInscriptionDateValid]);
     
     const isSaveEnabled = useMemo(() => isFormValid && isModified, [isFormValid, isModified]);
 
@@ -221,12 +220,10 @@ export const Info = () => {
                         }
                     </Box>
 
-                    <TextFieldWith$
-                        id="description"
-                        label={{ value: t('labels:description') }}
-                        value={{ value: competitionState.description, onChange: (value) => setCompetitionState({ ...competitionState, description: value }) }}
-                        validator={{ Schema$: Competition$.shape.description, isValid: isDescriptionValid, setIsValid: setIsDescriptionValid }}
-                        multiline
+                    <WysiwygEditor
+                        value={competitionState.description}
+                        onChange={(value) => setCompetitionState({ ...competitionState, description: value })}
+                        placeholder={t('labels:description')}
                     />
 
                     <Divider />

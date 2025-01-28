@@ -25,7 +25,7 @@ export const Schedule = () => {
                 margin: 'auto',
             }}
         >
-            <Table stickyHeader>
+            <Table size="small">
                 <TableHead>
                     <TableRow>
                         <TableCell width={50}>{t('labels:schedule')}</TableCell>
