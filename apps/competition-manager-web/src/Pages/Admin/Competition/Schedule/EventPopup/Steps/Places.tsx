@@ -3,22 +3,30 @@ import { BaseFieldWith$, StepperButtons } from "../../../../../../Components";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CompetitionEvent, Place$ } from "@competition-manager/schemas";
+import { useAtom } from "jotai";
+import { competitionEventDataAtom } from "../../../../../../GlobalsStates";
 
 type PlacesProps = {
     handleNext: () => void;
     handleBack: () => void;
-    place: CompetitionEvent["place"];
-    setPlace: (place: CompetitionEvent["place"]) => void;
 };
 
 export const Places: React.FC<PlacesProps> = ({ 
     handleNext, 
     handleBack,
-    place,
-    setPlace,
 }) => {
 
     const { t } = useTranslation()
+
+    const [{place}, setCompetitionEventData] = useAtom(competitionEventDataAtom);
+
+    const setPlace = (place: CompetitionEvent["place"]) => {
+        setCompetitionEventData((prev) => ({
+            ...prev,
+            place,
+        }))
+    }
+
 
     const [hasLimit, setHasLimit] = useState(place !== undefined && place !== null)
     

@@ -49,7 +49,7 @@ export const CategorySelectorDialog: React.FC<CategorySelectorDialogProps> = ({
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <List>
-                        {categories.filter(category => category.gender === Gender.M).map((category) => (
+                        {categories.filter(category => category.gender === Gender.M).sort((a, b) => a.order - b.order).map((category) => (
                             <ListItemButton key={category.id} onClick={handleToggle(category)}>
                                 <Checkbox
                                     checked={selectedCategories.indexOf(category) !== -1}
@@ -63,7 +63,7 @@ export const CategorySelectorDialog: React.FC<CategorySelectorDialogProps> = ({
                 </Grid>
                 <Grid item xs={6}>
                     <List>
-                        {categories.filter(category => category.gender === Gender.F).map((category) => (
+                        {categories.filter(category => category.gender === Gender.F).sort((a, b) => a.order - b.order).map((category) => (
                             <ListItemButton key={category.id} onClick={handleToggle(category)}>
                                 <Checkbox
                                     checked={selectedCategories.indexOf(category) !== -1}

@@ -26,18 +26,18 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
 
     if (!athlete) throw new Error('Athlete not found')
 
-    const events = competition.events.filter((event) => checkCategory(event, athlete, competition.date)) || [];
+    const events = competition.events.filter((event) => !event.parentId).filter((event) => checkCategory(event, athlete, competition.date)) || [];
 
     const toggleEvent = (event: CompetitionEvent) => {
         if (selectedEvents.some((e) => e.id === event.id)) {
             setInscriptionData((prev) => ({
                 ...prev,
-                selectedEvents: prev.selectedEvents.filter((e) => e.id !== event.id)
+                selectedEvents: prev.selectedEvents.filter((e) => (e.id !== event.id) && (e.parentId !== event.id))
             }))
         } else {
             setInscriptionData((prev) => ({
                 ...prev,
-                selectedEvents: [...prev.selectedEvents, event]
+                selectedEvents: [...prev.selectedEvents, event, ...competition.events.filter((e) => e.parentId === event.id)]
             }))
         }
     }
@@ -56,7 +56,7 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
         return (
             <>
                 {cost > 0 && (
-                    <Box component="span" mr={2}>
+                    <Box component="span" mr={2} sx={{ color: 'primary.main', fontWeight: 'bold' }}>
                         {cost}€
                     </Box>
                 )}

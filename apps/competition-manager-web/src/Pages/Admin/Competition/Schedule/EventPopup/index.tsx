@@ -1,11 +1,11 @@
 import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper } from "@mui/material"
 import { useEffect, useState } from "react"
 import { CloseButton } from "../../../../../Components"
-import { Category, CompetitionEvent, Event, PaymentMethod } from "@competition-manager/schemas"
+import { CompetitionEvent, PaymentMethod } from "@competition-manager/schemas"
 import { SelectEventCategory } from "./Steps/SelectEventCategory"
 import { Infos } from "./Steps/Infos"
-import { competitionAtom } from "../../../../../GlobalsStates"
-import { useAtomValue } from "jotai"
+import { competitionAtom, competitionEventDataAtom } from "../../../../../GlobalsStates"
+import { useAtomValue, useSetAtom } from "jotai"
 import { Summary } from "./Steps/Summary"
 import { useTranslation } from "react-i18next"
 import { Places } from "./Steps/Places"
@@ -20,22 +20,21 @@ type EventPopupProps = {
     isVisible: boolean
     onClose: () => void
     initialEvent?: CompetitionEvent
+    initialChildren?: CompetitionEvent[]
 }
 
-export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, initialEvent }) => {
-
+export const EventPopup: React.FC<EventPopupProps> = ({ 
+    isVisible,
+    onClose,
+    initialEvent,
+    initialChildren = [],
+}) => {
     const { t } = useTranslation('eventPopup')
 
     const competition = useAtomValue(competitionAtom)
-
     if (!competition) throw new Error('No competition found')
 
-    const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(initialEvent?.event)
-    const [selectedCategories, setSelectedCategories] = useState<Category[]>(initialEvent?.categories || [])
-    const [name, setName] = useState<CompetitionEvent["name"]>(initialEvent?.name || '')
-    const [schedule, setSchedule] = useState<CompetitionEvent["schedule"] | undefined>(initialEvent?.schedule)
-    const [place, setPlace] = useState<CompetitionEvent["place"]>(initialEvent?.place)
-    const [cost, setCost] = useState<CompetitionEvent["cost"]>(initialEvent?.cost || 0)
+    const setCompetitionEventData = useSetAtom(competitionEventDataAtom);
     
     const [activeStep, setActiveStep] = useState(0)
 
@@ -48,25 +47,31 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
     }
 
     const steps = [
-        { label: `${t('glossary:event')} & ${t('glossary:categories')}`, content: <SelectEventCategory handleNext={handleNext} selectedEvent={selectedEvent} onSelectedEvent={setSelectedEvent} selectedCategories={selectedCategories} onSelectedCategories={setSelectedCategories} /> },
-        { label: t('basicInformation'), content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} schedule={schedule} setSchedule={setSchedule} /> },
-        { label: t('glossary:places'), content: <Places handleBack={handleBack} handleNext={handleNext} place={place} setPlace={setPlace} /> },
-        ...(competition.method !== PaymentMethod.FREE ? [{ label: t('paymentInformation'), content: <Cost handleBack={handleBack} handleNext={handleNext} cost={cost} setCost={setCost} /> }] : []),
+        { label: `${t('glossary:event')} & ${t('glossary:categories')}`, content: 
+            <SelectEventCategory handleNext={handleNext}/> 
+        },
+        { label: t('basicInformation'), content: 
+            <Infos 
+                handleBack={handleBack} 
+                handleNext={handleNext} 
+            /> 
+        },
+        { label: t('glossary:places'), content: 
+            <Places 
+                handleBack={handleBack} 
+                handleNext={handleNext}
+            /> 
+        },
+        ...(competition.method !== PaymentMethod.FREE ? [{ label: t('paymentInformation'), content: 
+            <Cost 
+                handleBack={handleBack} 
+                handleNext={handleNext} 
+            /> 
+        }] : []),
         { label: t('glossary:summary'), content: 
             <Summary 
                 handleBack={handleBack} 
                 handleNext={handleNext} 
-                competitionEvent={{ 
-                    id: initialEvent?.id || 0,
-                    eid: initialEvent?.eid || '',
-                    name, 
-                    schedule: schedule!,
-                    place, 
-                    cost, 
-                    event: selectedEvent!, 
-                    categories: selectedCategories, 
-                    isInscriptionOpen: true,
-                }} 
             />
         },
     ]
@@ -81,6 +86,26 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
             onClose()
         }
     }, [activeStep, onClose, steps.length])
+
+    useEffect(() => {
+        if (initialEvent) {
+            setCompetitionEventData({
+                eid: initialEvent.eid,
+                event: initialEvent.event,
+                categories: initialEvent.categories,
+                name: initialEvent.name,
+                schedule: initialEvent.schedule,
+                place: initialEvent.place,
+                cost: initialEvent.cost,
+                children: initialChildren.map(child => ({
+                    eid: child.eid,
+                    event: child.event,
+                    name: child.name,
+                    schedule: child.schedule,
+                })),
+            })
+        }
+    }, [initialEvent, setCompetitionEventData])
 
     return (
         <Dialog
