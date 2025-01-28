@@ -4,6 +4,7 @@ import { Competition$, CreateInscription$, DefaultInscription$, BaseAdmin$, Athl
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
+import { isAuthorized } from '@competition-manager/utils';
 
 export const router = Router();
 
@@ -112,8 +113,7 @@ router.post(
                     return;
                 }
             }
-
-            if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
+            if (!isAuthorized(req.user!, Role.SUPERADMIN) && !checkAdminRole(Access.INSCRIPTIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)){
                 return;
             }
 
