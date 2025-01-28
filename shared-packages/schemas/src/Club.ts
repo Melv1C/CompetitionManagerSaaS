@@ -13,5 +13,3 @@ export const Club$ = z.object({
 
 });
 export type Club = z.infer<typeof Club$>;
-
-export const BaseClub$ = Club$.omit({ id: true });
