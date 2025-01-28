@@ -1,4 +1,5 @@
 import './i18n'
+import { version } from '../package.json';
 
 import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider, Outlet } from 'react-router-dom'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -6,6 +7,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ErrorBoundary } from 'react-error-boundary'
 import { useTranslation } from 'react-i18next';
+import CacheBuster from 'react-cache-buster';
 
 import './App.css'
 import { Box, createTheme, ThemeProvider } from "@mui/material"
@@ -13,7 +15,7 @@ import { faHome, faCalendarDays, faRankingStar } from '@fortawesome/free-solid-s
 
 import { useAutoLogin } from './hooks'
 
-import { NavBar } from './Components'
+import { Loading, NavBar } from './Components'
 
 import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
@@ -24,8 +26,9 @@ import { SuperAdmin } from './Pages/SuperAdmin'
 import { ErrorFallback } from './Components';
 import { Results } from './Pages/Results';
 import { ProtectedRoute } from './Components/ProtectedRoute';
-import { Role } from '@competition-manager/schemas';
+import { NODE_ENV, Role } from '@competition-manager/schemas';
 import { Home } from './Pages/Home';
+import { isNodeEnv } from './env';
 
 
 // must be extract in an other file
@@ -108,17 +111,23 @@ function App() {
     useAutoLogin()
 
     return (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <QueryClientProvider client={queryClient}>
-                <ThemeProvider theme={lightTheme}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-                            <RouterProvider router={router} />
-                        </Box>
-                    </LocalizationProvider>
-                </ThemeProvider>
-            </QueryClientProvider>
-        </ErrorBoundary>
+        <CacheBuster
+            currentVersion={version}
+            isEnabled={!isNodeEnv(NODE_ENV.LOCAL)} //If false, the library is disabled.
+            loadingComponent={<Loading />} //If not pass, nothing appears at the time of new version check.
+        >
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <QueryClientProvider client={queryClient}>
+                    <ThemeProvider theme={lightTheme}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+                                <RouterProvider router={router} />
+                            </Box>
+                        </LocalizationProvider>
+                    </ThemeProvider>
+                </QueryClientProvider>
+            </ErrorBoundary>
+        </CacheBuster>
     )
 }
 
