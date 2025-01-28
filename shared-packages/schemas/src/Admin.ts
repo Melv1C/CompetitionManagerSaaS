@@ -10,6 +10,10 @@ export enum Access {
     LIVERESULTS = 'liveResults',
 }
 
+export const AdminQuery$ = z.object({
+    isAdmin: z.coerce.boolean().default(false),
+});
+
 export const Admin$ = z.object({
     id: Id$,
     user: BaseUser$,
