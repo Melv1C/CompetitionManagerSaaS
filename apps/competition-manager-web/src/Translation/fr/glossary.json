@@ -22,5 +22,6 @@
     "price": "Prix",
     "free": "Gratuit",
     "summary": "Résumé",
-    "personalBest": "Meilleure performance"
+    "personalBest": "Meilleure performance",
+    "total": "Total"
 }
