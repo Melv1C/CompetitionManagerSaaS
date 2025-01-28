@@ -26,7 +26,8 @@ export const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                     [{ align: [] }],
                     ["bold", "italic", "underline", "strike", "blockquote"],
                     [{ color: [] }, { background: [] }],
-                    [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }]
+                    [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+                    ["link"]
                 ],
             }}
         />
