@@ -6,5 +6,7 @@
     "selectedEvent": "Geselecteerd onderdeel",
     "selectEvent": "Selecteer onderdeel",
     "selectCategories": "Selecteer categorieën",
-    "hasPlaceLimit": "Is er een plaatslimiet ?"
+    "hasPlaceLimit": "Is er een plaatslimiet ?",
+    "subEvent": "Subonderdeel",
+    "addSubEvent": "Subonderdeel toevoegen"
 }

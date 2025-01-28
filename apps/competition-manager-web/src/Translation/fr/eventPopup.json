@@ -6,5 +6,7 @@
     "selectedEvent": "Épreuve sélectionnée",
     "selectEvent": "Sélectionner une épreuve",
     "selectCategories": "Sélectionner les catégories",
-    "hasPlaceLimit": "Y a-t-il une limite de places ?"
+    "hasPlaceLimit": "Y a-t-il une limite de places ?",
+    "subEvent": "Sous-épreuve",
+    "addSubEvent": "Ajouter une sous-épreuve"
 }
