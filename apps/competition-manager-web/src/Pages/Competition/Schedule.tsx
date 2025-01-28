@@ -34,7 +34,7 @@ export const Schedule = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {events.map(event => (
+                    {events.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map(event => (
                         <TableRow key={event.id}>
                             <TableCell>{event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}</TableCell>
                             <TableCell>{event.name}</TableCell>
