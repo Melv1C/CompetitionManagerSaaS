@@ -15,7 +15,7 @@ const Query$ = z.object({
 
 router.get(
     '/',
-    parseRequest(Key.Params, Query$),
+    parseRequest(Key.Query, Query$),
     setUserIfExist,
     async (req: AuthenticatedRequest, res) => {
         try {
