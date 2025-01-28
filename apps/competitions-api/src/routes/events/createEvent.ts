@@ -18,7 +18,7 @@ router.post(
     async (req: AuthenticatedRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
-            const { eventId, categoriesId, parentId, ...competitionEvent } = CreateCompetitionEvent$.parse(req.body);
+            const { eventId, categoriesId, parentEid, ...competitionEvent } = CreateCompetitionEvent$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid
@@ -64,7 +64,7 @@ router.post(
                                 eid: competitionEid
                             }
                         },
-                        ...(parentId && { parentEvent: { connect: { id: parentId } } })
+                        ...(parentEid && { parentEvent: { connect: { eid: parentEid } } })
                     },
                     include: {
                         event: true,
