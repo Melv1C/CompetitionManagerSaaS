@@ -12,6 +12,7 @@ import { Schedule } from "./Schedule";
 import { useCompetition } from "../../hooks";
 import { Competition as CompetitionType } from "@competition-manager/schemas";
 import { Overview } from "./Overview";
+import { Inscriptions } from "./Inscriptions";
 
 /**
  * Extracts the first part of a path
@@ -98,7 +99,7 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({ competition }) =>
                 <Route path="/" element={<Overview />} />
                 {isFuture && <Route path="/register" element={<Inscription />} />}
                 <Route path="/schedule" element={<Schedule />} />
-                {(isFuture || isCurrent) && <Route path="/inscriptions" element={<Box>{t('glossary:inscriptions')}</Box>} />}
+                {(isFuture || isCurrent) && <Route path="/inscriptions" element={<Inscriptions />} />}
                 {isCurrent && <Route path="/liveResults" element={<Box>{t('glossary:liveResults')}</Box>} />}
                 {isPast && <Route path="/results" element={<Box>{t('glossary:results')}</Box>} />}
                 <Route path="*" element={<Navigate to={`/competitions/${competition.eid}`} />} />

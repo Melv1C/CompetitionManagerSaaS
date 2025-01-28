@@ -21,3 +21,4 @@ export * from './StepperButtons';
 export * from './Bib';
 export * from './ShowUsersNumber';
 export * from './WYSIWYG';
+export * from './FilterMenu';
