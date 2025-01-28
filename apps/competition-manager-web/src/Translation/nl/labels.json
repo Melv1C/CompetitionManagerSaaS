@@ -20,5 +20,6 @@
     "schedule": "Tijdschema",
     "actions": "Acties",
     "birthdate": "Geboortedatum",
-    "placeLimit": "Plaatslimiet"
+    "placeLimit": "Plaatslimiet",
+    "selectAll": "Selecteer alles"
 }

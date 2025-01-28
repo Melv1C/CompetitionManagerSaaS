@@ -20,5 +20,6 @@
     "schedule": "Schedule",
     "actions": "Actions",
     "birthdate": "Birthdate",
-    "placeLimit": "Place Limit"
+    "placeLimit": "Place Limit",
+    "selectAll": "Select All"
 }
