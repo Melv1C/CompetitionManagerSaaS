@@ -25,5 +25,9 @@
     
     "InvalidEmail": "Ongeldig e-mailadres",
 
-    "BibMustBePositive": "Startnummer moet positief zijn"
+    "BibMustBePositive": "Startnummer moet positief zijn",
+
+    "PlaceMustBeInteger": "Plaats moet een geheel getal zijn",
+    "PlaceMustBePositive": "Plaats moet positief zijn",
+    "PlaceTooHigh": "Plaats moet maximaal 100 zijn"
 }

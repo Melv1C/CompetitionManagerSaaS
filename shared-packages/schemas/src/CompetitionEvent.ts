@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Date$, Eid$, Id$, Name$, Price$ } from './Base';
+import { Date$, Eid$, Id$, Name$, Place$, Price$ } from './Base';
 import { Category$ } from './Category';
 import { Event$ } from './Event';
 
@@ -10,7 +10,7 @@ export const CompetitionEvent$ = z.object({
     event: Event$,
     schedule: Date$,
     categories: z.array(Category$),
-    place: z.number().positive().int().nullish(),
+    place: Place$.nullish(),
     parentId: Id$.nullish(),
     cost: Price$,
     isInscriptionOpen: z.boolean().default(true),

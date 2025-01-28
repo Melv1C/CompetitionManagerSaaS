@@ -1,6 +1,6 @@
 import { Box, Dialog, DialogContent, DialogTitle, Step, StepContent, StepLabel, Stepper } from "@mui/material"
 import { useEffect, useState } from "react"
-import { CloseButton, StepperButtons } from "../../../../../Components"
+import { CloseButton } from "../../../../../Components"
 import { Category, CompetitionEvent, Event, PaymentMethod } from "@competition-manager/schemas"
 import { SelectEventCategory } from "./Steps/SelectEventCategory"
 import { Infos } from "./Steps/Infos"
@@ -8,6 +8,8 @@ import { competitionAtom } from "../../../../../GlobalsStates"
 import { useAtomValue } from "jotai"
 import { Summary } from "./Steps/Summary"
 import { useTranslation } from "react-i18next"
+import { Places } from "./Steps/Places"
+import { Cost } from "./Steps/Cost"
 
 export type StepProps = {
     handleBack: () => void
@@ -32,8 +34,8 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
     const [selectedCategories, setSelectedCategories] = useState<Category[]>(initialEvent?.categories || [])
     const [name, setName] = useState<CompetitionEvent["name"]>(initialEvent?.name || '')
     const [schedule, setSchedule] = useState<CompetitionEvent["schedule"] | undefined>(initialEvent?.schedule)
-    const [place] = useState<CompetitionEvent["place"]>(initialEvent?.place)
-    const [cost] = useState<CompetitionEvent["cost"]>(initialEvent?.cost || 0)
+    const [place, setPlace] = useState<CompetitionEvent["place"]>(initialEvent?.place)
+    const [cost, setCost] = useState<CompetitionEvent["cost"]>(initialEvent?.cost || 0)
     
     const [activeStep, setActiveStep] = useState(0)
 
@@ -48,26 +50,8 @@ export const EventPopup: React.FC<EventPopupProps> = ({ isVisible, onClose, init
     const steps = [
         { label: `${t('glossary:event')} & ${t('glossary:categories')}`, content: <SelectEventCategory handleNext={handleNext} selectedEvent={selectedEvent} onSelectedEvent={setSelectedEvent} selectedCategories={selectedCategories} onSelectedCategories={setSelectedCategories} /> },
         { label: t('basicInformation'), content: <Infos handleBack={handleBack} handleNext={handleNext} name={name} setName={setName} schedule={schedule} setSchedule={setSchedule} /> },
-        { label: t('glossary:places'), content: 
-        <Box>
-            Step 3 content
-            <StepperButtons
-                buttons={[
-                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
-                    { label: t('buttons:next'), onClick: handleNext },
-                ]}
-            />
-        </Box> },
-        ...(competition.method !== PaymentMethod.FREE ? [{ label: t('paymentInformation'), content:
-        <Box>
-            {t('paymentInformation')}
-            <StepperButtons
-                buttons={[
-                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
-                    { label: t('buttons:next'), onClick: handleNext },
-                ]}
-            />
-        </Box> }] : []),
+        { label: t('glossary:places'), content: <Places handleBack={handleBack} handleNext={handleNext} place={place} setPlace={setPlace} /> },
+        ...(competition.method !== PaymentMethod.FREE ? [{ label: t('paymentInformation'), content: <Cost handleBack={handleBack} handleNext={handleNext} cost={cost} setCost={setCost} /> }] : []),
         { label: t('glossary:summary'), content: 
             <Summary 
                 handleBack={handleBack} 

@@ -19,5 +19,6 @@
     "freeClubs": "Clubs gratuits",
     "schedule": "Horaire",
     "actions": "Actions",
-    "birthdate": "Date de naissance"
+    "birthdate": "Date de naissance",
+    "placeLimit": "Limite de places"
 }

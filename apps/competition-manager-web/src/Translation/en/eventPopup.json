@@ -5,5 +5,6 @@
     "paymentInformation": "Payment Information",
     "selectedEvent": "Selected Event",
     "selectEvent": "Select Event",
-    "selectCategories": "Select Categories"
+    "selectCategories": "Select Categories",
+    "hasPlaceLimit": "Is there a place limit ?"
 }
