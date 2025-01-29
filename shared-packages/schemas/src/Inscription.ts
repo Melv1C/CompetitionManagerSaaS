@@ -51,14 +51,8 @@ export const DefaultInscription$ = Inscription$.omit({
 });
 export type DefaultInscription = z.infer<typeof DefaultInscription$>;
 
-export const UserInscription$ = Inscription$.omit({
-    id: true,
+export const DisplayInscription$ = Inscription$.omit({
     user: true,
-});
-export type UserInscription = z.infer<typeof UserInscription$>;
-
-export const DisplayInscription$ = UserInscription$.omit({
     paid: true,
-    isDeleted: true,
 });
 export type DisplayInscription = z.infer<typeof DisplayInscription$>;
