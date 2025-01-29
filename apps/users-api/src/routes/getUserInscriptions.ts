@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { Eid$, Role, UserInscription$ } from '@competition-manager/schemas';
+import { Eid$, Role, Inscription$ } from '@competition-manager/schemas';
 import { AuthenticatedRequest, Key, parseRequest, checkRole } from '@competition-manager/backend-utils';
 import { z } from 'zod';
 
@@ -41,7 +41,7 @@ router.get(
                 res.status(404).send('Competition not found');
                 return;
             }
-            res.send(UserInscription$.array().parse(inscriptions));
+            res.send(Inscription$.array().parse(inscriptions));
         } catch(error) {
             console.error(error);
             res.status(500).send('Internal server error');
