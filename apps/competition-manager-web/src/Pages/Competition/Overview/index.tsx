@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { Infos } from "./Infos";
 import { Descriptions } from "./Descriptions";
+import { Events } from "./Events";
 
 
 export const Overview = () => {
@@ -17,6 +18,7 @@ export const Overview = () => {
         >
             <Infos />
             <Descriptions />
+            <Events />
         </Box>
     );
 }
