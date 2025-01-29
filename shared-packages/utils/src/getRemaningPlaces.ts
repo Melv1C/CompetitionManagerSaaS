@@ -1,4 +1,4 @@
-import { CompetitionEvent, Inscription } from "@competition-manager/schemas"
+import { CompetitionEvent, DisplayInscription } from "@competition-manager/schemas"
 
 /**
  * Get the remaining places of the event
@@ -6,7 +6,7 @@ import { CompetitionEvent, Inscription } from "@competition-manager/schemas"
  * @param inscriptions The inscriptions of the competition
  * @returns The remaining places
  */
-export const getRemainingPlaces = (event: CompetitionEvent, inscriptions: Inscription[]): number => {
+export const getRemainingPlaces = (event: CompetitionEvent, inscriptions: DisplayInscription[]): number => {
     if (!event.place) throw new Error('Event has no place limit')
     const eventInscriptions = inscriptions.filter((inscription) => inscription.competitionEvent.id === event.id)
     return event.place - eventInscriptions.length
