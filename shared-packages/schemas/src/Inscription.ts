@@ -1,5 +1,5 @@
 import z from 'zod';
-import { Id$, Eid$, Price$, License$, Bib$ } from './Base';
+import { Id$, Eid$, Price$, License$, Bib$, Date$ } from './Base';
 import { BaseAthlete$ } from './Athlete';
 import { CompetitionEvent$ } from './CompetitionEvent';
 import { BaseUser$ } from './User';
@@ -27,6 +27,7 @@ export const Inscription$ = z.object({
     club: Club$,
     record: Record$.nullish(),
     isDeleted: z.boolean().default(false),
+    date: Date$.default(() => new Date()),
 });
 export type Inscription = z.infer<typeof Inscription$>;
 

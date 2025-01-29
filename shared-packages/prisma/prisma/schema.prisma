@@ -234,6 +234,7 @@ model Inscription {
     clubId              Int                @map("club_id")
     record              Record?            
     isDeleted           Boolean            @map("is_deleted")
+    date                DateTime
     
     @@map("inscriptions")
 }
