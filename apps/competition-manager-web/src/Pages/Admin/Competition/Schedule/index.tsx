@@ -18,10 +18,11 @@ export const Schedule = () => {
     if (!competition) throw new Error('No competition found');
     if (!inscriptions) throw new Error('No inscriptions found');
 
-    const events = [...competition.events].sort((a, b) => a.schedule.getTime() - b.schedule.getTime());
+    const events = [...competition.events.filter(e => !e.parentId)].sort((a, b) => a.schedule.getTime() - b.schedule.getTime());
 
     const [isEventPopupVisible, setIsEventPopupVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<CompetitionEvent>();
+    const [selectedChildren, setSelectedChildren] = useState<CompetitionEvent[]>([]);
 
     const columns: GridColDef[] = [
         { 
@@ -54,6 +55,7 @@ export const Schedule = () => {
             <Box>
                 <CircleButton size="2rem" color="primary" onClick={() => {
                     setSelectedEvent(CompetitionEvent$.parse(params.row));
+                    setSelectedChildren(competition.events.filter(e => e.parentId === params.row.id));
                     setIsEventPopupVisible(true);
                 }}>
                     <Edit />
@@ -79,6 +81,7 @@ export const Schedule = () => {
                 color="secondary"
                 onClick={() => {
                     setSelectedEvent(undefined);
+                    setSelectedChildren([]);
                     setIsEventPopupVisible(true);
                 }}
             >
@@ -89,6 +92,7 @@ export const Schedule = () => {
                     isVisible={isEventPopupVisible}
                     onClose={() => setIsEventPopupVisible(false)}
                     initialEvent={selectedEvent}
+                    initialChildren={selectedChildren}
                 />
             )}
 

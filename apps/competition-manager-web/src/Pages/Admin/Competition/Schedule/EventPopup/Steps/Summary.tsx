@@ -1,21 +1,19 @@
-import { CompetitionEvent, CreateCompetitionEvent$, UpdateCompetitionEvent$ } from "@competition-manager/schemas"
+import { CreateCompetitionEvent$, UpdateCompetitionEvent$ } from "@competition-manager/schemas"
 import { Box, FormControl, TextField } from "@mui/material"
 import { StepperButtons } from "../../../../../../Components"
-import { useAtom } from "jotai"
-import { competitionAtom } from "../../../../../../GlobalsStates"
+import { useAtom, useAtomValue } from "jotai"
+import { competitionAtom, competitionEventDataAtom } from "../../../../../../GlobalsStates"
 import { createCompetitionEvent, updateCompetitionEvent } from "../../../../../../api"
 import { useTranslation } from "react-i18next"
 
 type SummaryProps = {
     handleBack: () => void
     handleNext: () => void
-    competitionEvent: CompetitionEvent
 }
 
 export const Summary: React.FC<SummaryProps> = ({ 
     handleBack, 
-    handleNext, 
-    competitionEvent,
+    handleNext,
 }) => {
 
     const { t } = useTranslation('eventPopup');
@@ -23,33 +21,71 @@ export const Summary: React.FC<SummaryProps> = ({
     const [competition, setCompetition] = useAtom(competitionAtom)
     if (!competition) throw new Error('No competition found')
 
-    const isCreate = competitionEvent.id === 0;
+    const competitionEventData = useAtomValue(competitionEventDataAtom);
+
+    const isCreate = !competitionEventData.eid
+
+    if (!competitionEventData.event) throw new Error('No event found')
+    if (!competitionEventData.schedule) throw new Error('No schedule found')
 
     const onCreate = async () => {
         const createCompetitionEventData = CreateCompetitionEvent$.parse({
-            ...competitionEvent,
-            eventId: competitionEvent.event.id,
-            categoriesId: competitionEvent.categories.map(c => c.id)
+            ...competitionEventData,
+            eventId: competitionEventData.event!.id,
+            categoriesId: competitionEventData.categories.map(c => c.id)
         })
         const createdCompetitionEvent = await createCompetitionEvent(competition.eid, createCompetitionEventData)
+
+        const createdChildren = await Promise.all(competitionEventData.children.map(async (child) => {
+            const createSubCompetitionEventData = CreateCompetitionEvent$.parse({
+                ...child,
+                eventId: child.event!.id,
+                place: competitionEventData.place,
+                cost: 0,
+                categoriesId: competitionEventData.categories.map(c => c.id),
+                parentEid: createdCompetitionEvent.eid
+            })
+            return await createCompetitionEvent(competition.eid, createSubCompetitionEventData)
+        }));
+
         setCompetition({
             ...competition,
-            events: [...competition.events, createdCompetitionEvent]
+            events: [...competition.events, createdCompetitionEvent, ...createdChildren]
         })
         handleNext()
     }
 
     const onUpdate = async () => {
         const updateCompetitionEventData = UpdateCompetitionEvent$.parse({
-            ...competitionEvent,
-            eventId: competitionEvent.event.id,
-            categoriesId: competitionEvent.categories.map(c => c.id)
+            ...competitionEventData,
+            eventId: competitionEventData.event!.id,
+            categoriesId: competitionEventData.categories.map(c => c.id)
         })
-        const updatedCompetitionEvent = await updateCompetitionEvent(competition.eid, competitionEvent.eid, updateCompetitionEventData)
+        const updatedCompetitionEvent = await updateCompetitionEvent(competition.eid, competitionEventData.eid!, updateCompetitionEventData)
+
+        const updatedChildren = await Promise.all(competitionEventData.children.map(async (child) => {
+            const updateSubCompetitionEventData = UpdateCompetitionEvent$.parse({
+                ...child,
+                eventId: child.event!.id,
+                place: competitionEventData.place,
+                cost: 0,
+                categoriesId: competitionEventData.categories.map(c => c.id),
+                parentEid: updatedCompetitionEvent.eid
+            })
+            return await updateCompetitionEvent(competition.eid, child.eid!, updateSubCompetitionEventData)
+        }));
+
+        const updatedEvents = [
+            ...competition.events.filter(e => e.eid !== updatedCompetitionEvent.eid).filter(e => !updatedChildren.map(c => c.eid).includes(e.eid)),
+            updatedCompetitionEvent,
+            ...updatedChildren
+        ]
+
         setCompetition({
             ...competition,
-            events: competition.events.map(e => e.eid === updatedCompetitionEvent.eid ? updatedCompetitionEvent : e)
+            events: updatedEvents
         })
+
         handleNext()
     }
 
@@ -65,7 +101,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('glossary:event')}
-                        value={competitionEvent.event.name}
+                        value={competitionEventData.event.name}
                         slotProps={{
                             input: { readOnly: true }
                         }}
@@ -75,7 +111,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('glossary:categories')}
-                        value={competitionEvent.categories.map(c => c.abbr).join(', ')}
+                        value={competitionEventData.categories.map(c => c.abbr).join(', ')}
                         slotProps={{
                             input: { readOnly: true }
                         }}
@@ -85,7 +121,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('labels:schedule')}
-                        value={competitionEvent.schedule.toLocaleDateString() + ' ' + competitionEvent.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
+                        value={competitionEventData.schedule.toLocaleDateString() + ' ' + competitionEventData.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
                         slotProps={{
                             input: { readOnly: true }
                         }}
@@ -95,7 +131,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('labels:name')}
-                        value={competitionEvent.name}
+                        value={competitionEventData.name}
                         slotProps={{
                             input: { readOnly: true }
                         }}
@@ -106,7 +142,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('glossary:place')}
-                        value={competitionEvent.place ? competitionEvent.place : 'No limit'}
+                        value={competitionEventData.place ? competitionEventData.place : 'No limit'}
                         slotProps={{
                             input: { readOnly: true }
                         }}
@@ -116,7 +152,7 @@ export const Summary: React.FC<SummaryProps> = ({
                 <FormControl>
                     <TextField
                         label={t('glossary:price')}
-                        value={competitionEvent.cost === 0 ? t('glossary:free') : competitionEvent.cost.toString()}
+                        value={competitionEventData.cost === 0 ? t('glossary:free') : competitionEventData.cost.toString()}
                         slotProps={{
                             input: { readOnly: true }
                         }}

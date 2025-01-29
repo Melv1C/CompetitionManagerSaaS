@@ -3,23 +3,30 @@ import { useTranslation } from "react-i18next"
 import { BaseFieldWith$, StepperButtons } from "../../../../../../Components"
 import { CompetitionEvent, CompetitionEvent$ } from "@competition-manager/schemas"
 import { useState } from "react"
+import { useAtom } from "jotai"
+import { competitionEventDataAtom } from "../../../../../../GlobalsStates"
 
 type CostProps = {
     handleNext: () => void
     handleBack: () => void
-    cost: CompetitionEvent["cost"]
-    setCost: (cost: CompetitionEvent["cost"]) => void
 }
 
 
 export const Cost: React.FC<CostProps> = ({
     handleNext,
-    handleBack,
-    cost,
-    setCost
+    handleBack
 }) => {
 
     const { t } = useTranslation()
+
+    const [{cost}, setCompetitionEventData] = useAtom(competitionEventDataAtom);
+
+    const setCost = (cost: CompetitionEvent["cost"]) => {
+        setCompetitionEventData((prev) => ({
+            ...prev,
+            cost,
+        }))
+    }
 
     const [isValid, setIsValid] = useState(true)
 

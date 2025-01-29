@@ -6,5 +6,7 @@
     "selectedEvent": "Selected Event",
     "selectEvent": "Select Event",
     "selectCategories": "Select Categories",
-    "hasPlaceLimit": "Is there a place limit ?"
+    "hasPlaceLimit": "Is there a place limit ?",
+    "subEvent": "Sub Event",
+    "addSubEvent": "Add Sub Event"
 }
