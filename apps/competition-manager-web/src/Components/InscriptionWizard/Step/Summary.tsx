@@ -1,27 +1,31 @@
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useTranslation } from "react-i18next";
-import { competitionAtom, inscriptionDataAtom, userInscriptionsAtom } from "../../../GlobalsStates";
+import { adminInscriptionsAtom, competitionAtom, inscriptionDataAtom, inscriptionsAtom, userInscriptionsAtom } from "../../../GlobalsStates";
 import { Box, Card, CardContent, CardHeader, Checkbox, Divider, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
 import { Bib, StepperButtons } from "../../../Components";
 import { formatPerf } from "../../../utils";
 import { useMemo, useState } from "react";
 import { CreateInscription$, PaymentMethod } from "@competition-manager/schemas";
-import { createInscriptions } from "../../../api";
+import { createInscriptions, CreateInscriptionsResponseType } from "../../../api";
 import { getFees, isAthleteInAFreeClub } from "@competition-manager/utils";
 
 type SummaryProps = {
     isAdmin: boolean;
     handleBack: () => void;
+    handleNext: () => void;
 }
 
 export const Summary: React.FC<SummaryProps> = ({
     isAdmin,
-    handleBack
+    handleBack,
+    handleNext
 }) => {
     const { t } = useTranslation();
     
     const competition = useAtomValue(competitionAtom);
-    const userInscriptions = useAtomValue(userInscriptionsAtom);
+    const [userInscriptions, setUserInscriptions] = useAtom(userInscriptionsAtom);
+    const setInscriptions = useSetAtom(inscriptionsAtom); 
+    const setAdminInscriptions = useSetAtom(adminInscriptionsAtom);
     if (!competition) throw new Error('Competition not found');
     if (!userInscriptions) throw new Error('User inscriptions not found');
 
@@ -39,9 +43,16 @@ export const Summary: React.FC<SummaryProps> = ({
             record: inscriptionData.record,
         })));
 
-        const data = await createInscriptions(competition.eid, createInscriptionData);
-        console.log(data);
-        // TODO: Handle response: redirect to url ?
+        const {type, url, inscriptions: newInscriptions} = await createInscriptions(competition.eid, createInscriptionData, isAdmin);
+        if (type === CreateInscriptionsResponseType.URL) {
+            // Redirect to url
+            window.location.href = url!;
+        } else {
+            setInscriptions((prev) => [...prev!.filter((inscription) => inscription.athlete.license !== athlete.license), ...newInscriptions]);
+            setUserInscriptions((prev) => [...prev!.filter((inscription) => inscription.athlete.license !== athlete.license), ...newInscriptions]);
+            if (isAdmin) setAdminInscriptions((prev) => [...prev!.filter((inscription) => inscription.athlete.license !== athlete.license), ...newInscriptions]);
+        }
+        handleNext();
     }
     
     const totalCost = useMemo(() => {
@@ -57,7 +68,7 @@ export const Summary: React.FC<SummaryProps> = ({
 
     const remainingCost = Math.max(0, totalCost - alreadyPaid);
 
-    const fees = getFees(remainingCost); //competition.isFeesAdditionnal ? getFees(remainingCost) : 0;
+    const fees = getFees(remainingCost); //TODO: competition.isFeesAdditionnal ? getFees(remainingCost) : 0;
 
     const totalToPay = remainingCost + fees;
 
