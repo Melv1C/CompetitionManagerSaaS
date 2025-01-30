@@ -7,6 +7,10 @@ export const userTokenAtom = atom<TokenData | 'NOT_LOGGED' | null>(null);
 export const competitionAtom = atom<Competition | null>(null);
 // Store the inscriptions of the current competition
 export const inscriptionsAtom = atom<DisplayInscription[] | null>(null);
+// Store the inscriptions of the current user
+export const userInscriptionsAtom = atom<Inscription[] | null>(null);
+// Store the inscriptions get as an admin
+export const adminInscriptionsAtom = atom<Inscription[] | null>(null);
 
 // Store the data of the inscription form
 type InscriptionData = {
