@@ -1,5 +1,5 @@
-import { CompetitionEvent, PaymentMethod } from "@competition-manager/schemas";
-import { Box, Checkbox, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Table, TableBody, TableCell, TableRow } from "@mui/material"
+import { CompetitionEvent } from "@competition-manager/schemas";
+import { Box, Checkbox, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material"
 import { useTranslation } from "react-i18next";
 import { StepperButtons } from "../../../Components";
 import { useAtom, useAtomValue } from "jotai";
@@ -52,10 +52,6 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
             inscriptionsData: [...prev.inscriptionsData, { eid: '', competitionEvent: event, record: undefined, paid: 0 }]
         }))
     }
-    
-    const alreadyPaid = useMemo(() => 
-        currentInscriptions.reduce((total, inscription) => total + inscription.paid, 0)
-    , [currentInscriptions]);
 
     /**
      * Show the cost (if greater than 0) of the selected events
@@ -104,11 +100,6 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
         )
     }
 
-    const totalCost = useMemo(() => {
-        if (isAthleteInAFreeClub(competition, athlete)) return 0;
-        return selectedEvents.reduce((total, event) => total + event.cost, 0);
-    }, [competition, athlete, selectedEvents]);
-
     return (
         <Box width={1}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -136,46 +127,6 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
                     </ListItem>
                 ))}
             </List>
-
-            {totalCost > 0 &&  !isAdmin && (
-                <Box 
-                    display="flex" 
-                    justifyContent="flex-end"
-                >
-                    <Table size="small" sx={{ width: 'fit-content' }}>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell>{t('inscription:totalCost')}</TableCell>
-                                <TableCell align="right">{`${totalCost} €`}</TableCell>
-                            </TableRow>
-                            {alreadyPaid > 0 && (
-                                <>
-                                    <TableRow>
-                                        <TableCell>{t('inscription:alreadyPaid')}</TableCell>
-                                        <TableCell align="right">{`${alreadyPaid} €`}</TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell>{t('inscription:remainingToPay')}</TableCell>
-                                        <TableCell align="right">{`${Math.max(0, totalCost - alreadyPaid)} €`}</TableCell>
-                                    </TableRow>
-                                </>
-                                
-                            )}
-                            {competition.method === PaymentMethod.ONLINE && (
-                                <TableRow>
-                                    <TableCell colSpan={2}>{t('inscription:toPayOnline')}</TableCell>
-                                </TableRow>
-                            )}
-                            {competition.method === PaymentMethod.ONPLACE && (
-                                <TableRow>
-                                    <TableCell colSpan={2}>{t('inscription:toPayOnPlace')}</TableCell>
-                                </TableRow>
-                            )}
-
-                        </TableBody>
-                    </Table>
-                </Box>
-            )}
 
             <StepperButtons 
                 buttons={[
