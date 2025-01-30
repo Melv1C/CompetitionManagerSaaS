@@ -1,17 +1,14 @@
 import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
-import { competitionAtom, inscriptionsAtom } from "../../GlobalsStates";
-import { useAtom } from "jotai";
-import { useQuery } from "react-query";
-import { getCompetition, getInscriptions } from "../../api";
 import { Loading, MaxWidth } from "../../Components";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
+import { useCompetition, useFetchCompetitionData } from "../../hooks";
+import { Competition as CompetitionType } from "@competition-manager/schemas";
+
+import { Overview } from "./Overview";
 import { Inscription } from "./Inscription";
 import { Schedule } from "./Schedule";
-import { useCompetition } from "../../hooks";
-import { Competition as CompetitionType } from "@competition-manager/schemas";
-import { Overview } from "./Overview";
 import { Inscriptions } from "./Inscriptions";
 
 /**
@@ -30,39 +27,17 @@ function extract(path: string): string | null {
 }
 
 export const Competition = () => {
-
-    const [globalComp, setCompetition] = useAtom(competitionAtom);
-    const [globalInscriptions, setInscriptions] = useAtom(inscriptionsAtom);
     const { eid } = useParams();
-
     if (!eid) throw new Error('No competition ID provided');
 
-    const { data: competition, isLoading: isCompetitionLoading, isError: isCompetitionError } = useQuery(['competition', eid], () => getCompetition(eid));
-    const { data: inscriptions, isLoading: isInscriptionsLoading, isError: isInscriptionsError } = useQuery(['inscriptions', eid], () => getInscriptions(eid));
-    const isLoading = isCompetitionLoading || isInscriptionsLoading;
-    const isLoaded = globalComp && globalInscriptions;
+    const { competition, isLoading } = useFetchCompetitionData(eid);
 
-    useEffect(() => {
-        if (competition) {
-            setCompetition(competition);
-        }
-    }, [competition, setCompetition]);
-
-    useEffect(() => {
-        if (inscriptions) {
-            setInscriptions(inscriptions);
-        }
-    }, [inscriptions, setInscriptions]);
-
-    if (isCompetitionError) throw new Error('Error while fetching competition');
-    if (isInscriptionsError) throw new Error('Error while fetching inscriptions');
-
-    if (isLoading || !isLoaded) return <Loading />;
+    if (isLoading) return <Loading />;
 
     return (
         <MaxWidth>
-            <Typography variant="h4" textAlign='center'>{globalComp.name}</Typography>
-            <CompetitionNavbar competition={globalComp} />
+            <Typography variant="h4" textAlign='center'>{competition!.name}</Typography>
+            <CompetitionNavbar competition={competition!} />
         </MaxWidth>
     )
 }
