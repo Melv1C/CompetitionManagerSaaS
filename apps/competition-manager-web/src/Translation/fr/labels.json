@@ -21,5 +21,7 @@
     "actions": "Actions",
     "birthdate": "Date de naissance",
     "placeLimit": "Limite de places",
-    "selectAll": "Tout sélectionner"
+    "selectAll": "Tout sélectionner",
+    "paid": "Payé",
+    "status": "Statut"
 }
