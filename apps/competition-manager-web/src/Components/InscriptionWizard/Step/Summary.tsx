@@ -7,7 +7,7 @@ import { formatPerf } from "../../../utils";
 import { useMemo, useState } from "react";
 import { CreateInscription$, PaymentMethod } from "@competition-manager/schemas";
 import { createInscriptions } from "../../../api";
-import { isAthleteInAFreeClub } from "@competition-manager/utils";
+import { getFees, isAthleteInAFreeClub } from "@competition-manager/utils";
 
 type SummaryProps = {
     isAdmin: boolean;
@@ -29,17 +29,6 @@ export const Summary: React.FC<SummaryProps> = ({
     if (!athlete) throw new Error('Athlete not found');
     if (inscriptionsData.length === 0) throw new Error('No selected events');
 
-    const alreadyPaid = useMemo(() =>
-        userInscriptions
-            .filter((inscription) => inscription.athlete.license === athlete.license)
-            .reduce((total, inscription) => total + inscription.paid, 0)
-    , [athlete, userInscriptions]);
-
-    const totalCost = useMemo(() => {
-        if (isAthleteInAFreeClub(competition, athlete)) return 0;
-        return inscriptionsData.reduce((total, inscriptionData) => total + inscriptionData.competitionEvent.cost, 0);
-    }, [competition, athlete, inscriptionsData]);
-
     const [isAccepted, setIsAccepted] = useState(false);
 
     const handleConfirm = async () => {
@@ -54,6 +43,23 @@ export const Summary: React.FC<SummaryProps> = ({
         console.log(data);
         // TODO: Handle response: redirect to url ?
     }
+    
+    const totalCost = useMemo(() => {
+        if (isAthleteInAFreeClub(competition, athlete)) return 0;
+        return inscriptionsData.reduce((total, inscriptionData) => total + inscriptionData.competitionEvent.cost, 0);
+    }, [competition, athlete, inscriptionsData]);
+
+    const alreadyPaid = useMemo(() =>
+        userInscriptions
+            .filter((inscription) => inscription.athlete.license === athlete.license)
+            .reduce((total, inscription) => total + inscription.paid, 0)
+    , [athlete, userInscriptions]);
+
+    const remainingCost = Math.max(0, totalCost - alreadyPaid);
+
+    const fees = getFees(remainingCost); //competition.isFeesAdditionnal ? getFees(remainingCost) : 0;
+
+    const totalToPay = remainingCost + fees;
 
     return (
         <Box width={1}>
@@ -111,39 +117,55 @@ export const Summary: React.FC<SummaryProps> = ({
                             <TableContainer sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                 <Table size="small" sx={{ width: 'fit-content' }}>
                                     <TableBody>
-                                        <TableRow>
-                                            <TableCell>{t('inscription:totalCost')}</TableCell>
-                                            <TableCell align="right">{`${totalCost} €`}</TableCell>
-                                        </TableRow>
-                                        {alreadyPaid > 0 && (
-                                            <>
-                                                <TableRow>
-                                                    <TableCell>{t('inscription:alreadyPaid')}</TableCell>
-                                                    <TableCell align="right">{`${alreadyPaid} €`}</TableCell>
-                                                </TableRow>
-                                                <TableRow>
-                                                    <TableCell>{t('inscription:remainingToPay')}</TableCell>
-                                                    <TableCell align="right">{`${Math.max(0, totalCost - alreadyPaid)} €`}</TableCell>
-                                                </TableRow>
-                                            </>
+                                        {totalCost !== totalToPay && (
+                                            <TableRow>
+                                                <TableCell />
+                                                <TableCell align="right">{`${totalCost} €`}</TableCell>
+                                            </TableRow>
                                         )}
-                                        {competition.method === PaymentMethod.ONLINE && (
-                                            <TableRow sx={{
-                                                // hide last border
-                                                '&:last-child td, &:last-child th': {
+                                        {alreadyPaid > 0 && (
+                                            <TableRow>
+                                                <TableCell>{t('inscription:alreadyPaid')}</TableCell>
+                                                <TableCell align="right">{`- ${alreadyPaid} €`}</TableCell>
+                                            </TableRow>
+                                        )}
+                                        {fees > 0 && (
+                                            <TableRow>
+                                                <TableCell>{t('inscription:fees')}</TableCell>
+                                                <TableCell align="right">{`${fees} €`}</TableCell>
+                                            </TableRow>
+                                        )}
+                                        <TableRow 
+                                            sx={{
+                                                borderTopWidth: totalCost !== totalToPay ? 2 : 0,
+                                                borderTopStyle: 'solid',
+                                                '& td, & th': {
                                                     border: 0,
                                                 },
-                                            }}>
+                                            }}
+                                        >
+                                            <TableCell>{t('glossary:total')}</TableCell>
+                                            <TableCell align="right">{`${totalToPay} €`}</TableCell>
+                                        </TableRow>
+                                        {competition.method === PaymentMethod.ONLINE && (
+                                            <TableRow 
+                                                sx={{
+                                                    '& td, & th': {
+                                                        border: 0,
+                                                    },
+                                                }}
+                                            >
                                                 <TableCell align="right" colSpan={2}>{t('inscription:toPayOnline')}</TableCell>
                                             </TableRow>
                                         )}
                                         {competition.method === PaymentMethod.ONPLACE && (
-                                            <TableRow sx={{
-                                                // hide last border
-                                                '&:last-child td, &:last-child th': {
-                                                    border: 0,
-                                                },
-                                            }}>
+                                            <TableRow 
+                                                sx={{
+                                                    '& td, & th': {
+                                                        border: 0,
+                                                    },
+                                                }}
+                                            >
                                                 <TableCell align="right" colSpan={2}>{t('inscription:toPayOnPlace')}</TableCell>
                                             </TableRow>
                                         )}
