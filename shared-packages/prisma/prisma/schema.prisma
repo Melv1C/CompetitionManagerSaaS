@@ -244,7 +244,7 @@ model Inscription {
 ////////////////
 model Record {
     id              Int             @id @default(autoincrement())
-    perf            Int
+    perf            Float
     date            DateTime
     location        String?
     inscriptions    Inscription     @relation(fields: [inscriptionId], references: [id])
