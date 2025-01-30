@@ -15,5 +15,6 @@
     "updatePersonalBest": "Update persoonlijk record",
     "noPersonalBest": "Geen persoonlijk record",
     "acceptTerms": "Ik accepteer het gebruik van mijn persoonlijke gegevens in het kader van deze wedstrijd",
-    "athleteAlreadyInscribedNotByYou": "Deze atleet is al ingeschreven voor deze wedstrijd door een andere gebruiker. In geval van twijfel, neem contact op met de organisator."
+    "athleteAlreadyInscribedNotByYou": "Deze atleet is al ingeschreven voor deze wedstrijd door een andere gebruiker. In geval van twijfel, neem contact op met de organisator.",
+    "success": "Uw inschrijving is succesvol opgeslagen"
 }

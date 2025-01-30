@@ -1,4 +1,4 @@
-import { Box, Step, StepContent, StepLabel, Stepper } from "@mui/material";
+import { Box, Step, StepContent, StepLabel, Stepper, Typography } from "@mui/material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDeviceSize } from "../../hooks";
@@ -35,7 +35,7 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
         { label: t('glossary:athlete'), content: <Athlete isAdmin={isAdmin} handleNext={handleNext} /> },
         { label: t('glossary:events'), content: <Events isAdmin={isAdmin} handleNext={handleNext} handleBack={handleBack} /> },
         { label: t('glossary:personalBest'), content: <Records isAdmin={isAdmin} handleNext={handleNext} handleBack={handleBack} /> },
-        { label: t('glossary:summary'), content: <Summary isAdmin={isAdmin} handleBack={handleBack} /> }
+        { label: t('glossary:summary'), content: <Summary isAdmin={isAdmin} handleBack={handleBack} handleNext={handleNext} /> }
     ];
 
     return (
@@ -51,7 +51,11 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
                         <StepLabel>{step.label}</StepLabel>
                         {isVertical && (
                             <StepContent>
-                                {step.content}
+                                {activeStep === steps.length ? (
+                                    <SuccessStep />
+                                ) : (
+                                    steps[activeStep].content
+                                )}
                             </StepContent>
                         )}
                     </Step>
@@ -60,9 +64,22 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
 
             {!isVertical && (
                 <Box display="flex" flexDirection="column" alignItems="center" width="80%" mx="auto" maxWidth={400}>
-                    {steps[activeStep].content}
+                    {activeStep === steps.length ? (
+                        <SuccessStep />
+                    ) : (
+                        steps[activeStep].content
+                    )}
                 </Box>
             )}
         </>
+    )
+}
+
+const SuccessStep = () => {
+
+    const { t } = useTranslation();
+
+    return (
+        <Typography variant="h4">{t('inscription:success')}</Typography>
     )
 }
