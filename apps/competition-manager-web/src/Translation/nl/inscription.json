@@ -8,7 +8,12 @@
     "remainingPlace": "Resterende plaats",
     "noRemainingPlaces": "Geen plaatsen meer beschikbaar",
     "totalCost": "Totale kosten",
+    "alreadyPaid": "Al betaald",
+    "remainingToPay": "Nog te betalen",
+    "toPayOnline": "Online te betalen",
+    "toPayOnPlace": "Ter plaatse te betalen",
     "updatePersonalBest": "Update persoonlijk record",
     "noPersonalBest": "Geen persoonlijk record",
-    "acceptTerms": "Ik accepteer het gebruik van mijn persoonlijke gegevens in het kader van deze wedstrijd"
+    "acceptTerms": "Ik accepteer het gebruik van mijn persoonlijke gegevens in het kader van deze wedstrijd",
+    "athleteAlreadyInscribedNotByYou": "Deze atleet is al ingeschreven voor deze wedstrijd door een andere gebruiker. In geval van twijfel, neem contact op met de organisator."
 }

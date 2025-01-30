@@ -8,7 +8,12 @@
     "remainingPlace": "Place restante",
     "noRemainingPlaces": "Plus de places disponibles",
     "totalCost": "Coût total",
+    "alreadyPaid": "Déjà payé",
+    "remainingToPay": "Reste à payer",
+    "toPayOnline": "À payer en ligne",
+    "toPayOnPlace": "À payer sur place",
     "updatePersonalBest": "Mettre à jour la meilleure performance",
     "noPersonalBest": "Pas de meilleure performance",
-    "acceptTerms": "J'accepte l'utilisation de mes données personnelles dans le cadre de cette compétition"
+    "acceptTerms": "J'accepte l'utilisation de mes données personnelles dans le cadre de cette compétition",
+    "athleteAlreadyInscribedNotByYou": "Cet athlète est déjà inscrit à cette compétition par un autre utilisateur. En cas de problème, veuillez contacter l'organisateur."
 }
