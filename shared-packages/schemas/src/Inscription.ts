@@ -1,6 +1,6 @@
 import z from 'zod';
 import { Id$, Eid$, Price$, License$, Bib$, Date$ } from './Base';
-import { BaseAthlete$ } from './Athlete';
+import { AthleteWithoutClub$ } from './Athlete';
 import { CompetitionEvent$ } from './CompetitionEvent';
 import { BaseUser$ } from './User';
 import { Club$ } from './Club';
@@ -18,7 +18,7 @@ export enum InscriptionStatus {
 export const Inscription$ = z.object({
     id: Id$,
     eid: Eid$,
-    athlete: BaseAthlete$,
+    athlete: AthleteWithoutClub$,
     competitionEvent: CompetitionEvent$,
     paid: Price$.default(0),
     status: z.nativeEnum(InscriptionStatus).default(InscriptionStatus.ACCEPTED),

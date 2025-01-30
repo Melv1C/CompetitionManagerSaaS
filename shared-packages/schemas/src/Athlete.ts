@@ -31,13 +31,12 @@ export const Athlete$ = z.object({
 });
 export type Athlete = z.infer<typeof Athlete$>;
 
-export const BaseAthlete$ = Athlete$.omit({ 
-    id: true,
-    club: true,
-});
-export type BaseAthlete = z.infer<typeof BaseAthlete$>;
+export const AthleteWithoutClub$ = Athlete$.omit({club: true});
+export type AthleteWithoutClub = z.infer<typeof AthleteWithoutClub$>;
 
-export const CreateAthlete$ = BaseAthlete$.extend({
+export const CreateAthlete$ = AthleteWithoutClub$.omit({
+    id: true,
+}).extend({
     clubAbbr: z.string().default('NA'),
 });
 export type CreateAthlete = z.infer<typeof CreateAthlete$>;
