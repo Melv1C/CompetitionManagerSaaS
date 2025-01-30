@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import { corsMiddleware, createLogger, Key, logRequestMiddleware, OmitType } from '@competition-manager/backend-utils';
 import routes from './routes';
 import { z } from 'zod';
-import { NODE_ENV, SERVICE } from "@competition-manager/schemas";
+import { Boolean$, NODE_ENV, SERVICE } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
@@ -20,7 +20,7 @@ const env$ = z.object({
     NODEMAILER_SERVICE: z.string().default('Gmail'),
     NODEMAILER_HOST: z.string().default('smtp.gmail.com'),
     NODEMAILER_PORT: z.string().default('465'),
-    NODEMAILER_SECURE: z.coerce.boolean().default(true),
+    NODEMAILER_SECURE: Boolean$.default(true),
     NODEMAILER_USER: z.string(),
     NODEMAILER_PASS: z.string(),
 });

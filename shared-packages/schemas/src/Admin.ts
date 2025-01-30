@@ -1,5 +1,5 @@
 import z from 'zod';
-import { Id$ } from './Base';
+import { Boolean$, Id$ } from './Base';
 import { BaseUser$ } from './User';
 
 export enum Access {
@@ -11,8 +11,9 @@ export enum Access {
 }
 
 export const AdminQuery$ = z.object({
-    isAdmin: z.coerce.boolean().default(false),
+    isAdmin: Boolean$.default(false)
 });
+export type AdminQuery = z.infer<typeof AdminQuery$>;
 
 export const Admin$ = z.object({
     id: Id$,

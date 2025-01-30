@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const Boolean$ = z.union([z.boolean(), z.string().transform((val) => JSON.parse(val)).pipe(z.boolean())]);
+export type Boolean = z.infer<typeof Boolean$>;
+
 export const Id$ = z.coerce.number().positive('IdMustBePositive');
 export type Id = z.infer<typeof Id$>;
 
