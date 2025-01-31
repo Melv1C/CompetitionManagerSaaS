@@ -37,7 +37,6 @@ export const Summary: React.FC<SummaryProps> = ({
 
     const handleConfirm = async () => {
         const createInscriptionData = CreateInscription$.array().parse(inscriptionsData.map(inscriptionData => ({
-            eid: inscriptionData.eid, // TODO: Check works
             competitionEventEid: inscriptionData.competitionEvent.eid,
             athleteLicense: athlete.license,
             record: inscriptionData.record,
