@@ -7,8 +7,14 @@
     "remainingPlaces": "Remaining places",
     "remainingPlace": "Remaining place",
     "noRemainingPlaces": "No remaining places",
-    "totalCost": "Total cost",
+    "alreadyPaid": "Already paid",
+    "fees": "Fees",
+    "remainingToPay": "Remaining to pay",
+    "toPayOnline": "To pay online",
+    "toPayOnPlace": "To pay on place",
     "updatePersonalBest": "Update personal best",
     "noPersonalBest": "No personal best",
-    "acceptTerms": "I accept the use of my personal data in the context of this competition"
+    "acceptTerms": "I accept the use of my personal data in the context of this competition",
+    "athleteAlreadyInscribedNotByYou": "This athlete is already registered for this competition by another user. In case of doubt, please contact the organizer.",
+    "success": "Your inscription has been successfully saved"
 }

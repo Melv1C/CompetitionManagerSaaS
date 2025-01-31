@@ -1,30 +1,49 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
-import { useState } from "react"
-import { getAthletes } from "../../../../api"
+import { useMemo, useState } from "react"
+import { getAthletes } from "../../../api"
 import { Athlete as AthleteType, AthleteKey$ } from "@competition-manager/schemas"
 import { useQuery } from "react-query"
 import { useTranslation } from "react-i18next"
-import { Bib, Loading, StepperButtons } from "../../../../Components"
-import { competitionAtom, inscriptionDataAtom } from "../../../../GlobalsStates"
+import { Bib, Loading, StepperButtons } from "../../../Components"
+import { competitionAtom, inscriptionDataAtom, inscriptionsAtom, userInscriptionsAtom } from "../../../GlobalsStates"
 import { getCategoryAbbr } from "@competition-manager/utils"
 import { useAtom, useAtomValue } from "jotai"
 
 type AthleteProps = {
-    handleNext: () => void
+    isAdmin: boolean;
+    handleNext: () => void;
 }
 
-export const Athlete: React.FC<AthleteProps> = ({ handleNext }) => {
+export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
 
-    const { t } = useTranslation()
+    const { t } = useTranslation();
     
-    const [{ athlete }, setInscriptionData] = useAtom(inscriptionDataAtom)
-    const competition = useAtomValue(competitionAtom)
+    const competition = useAtomValue(competitionAtom);
+    if (!competition) throw new Error('No competition found');
+    const inscriptions = useAtomValue(inscriptionsAtom);
+    if (!inscriptions) throw new Error('No inscriptions found');
+    const userInscriptions = useAtomValue(userInscriptionsAtom);
+    if (!userInscriptions) throw new Error('No user inscriptions found');
+
+    const [{ athlete }, setInscriptionData] = useAtom(inscriptionDataAtom);
 
     const setAthlete = (athlete: AthleteType | undefined) => {
-        setInscriptionData((prev) => ({ ...prev, athlete }))
+        setInscriptionData({ athlete, inscriptionsData: [] });
     }
+
+    const isAlreadyInscribed = useMemo(() => {
+        if (!athlete) return false
+        return inscriptions.some(i => i.athlete.license === athlete.license)
+    }, [athlete, inscriptions])
+
+    const isUserInscribed = useMemo(() => {
+        if (!athlete) return false
+        return userInscriptions.some(i => i.athlete.license === athlete.license)
+    }, [athlete, userInscriptions])
+
+    const isDisabled = isAlreadyInscribed && !isUserInscribed && !isAdmin
 
     return (
         <Box width="100%">
@@ -59,7 +78,7 @@ export const Athlete: React.FC<AthleteProps> = ({ handleNext }) => {
                                 </ListItem>
                                 <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="h6">{t('glossary:category')}</Typography>
-                                    <Typography variant="subtitle1">{getCategoryAbbr(athlete.birthdate, athlete.gender, competition?.date)}</Typography>
+                                    <Typography variant="subtitle1">{getCategoryAbbr(athlete.birthdate, athlete.gender, competition.date)}</Typography>
                                 </ListItem>
                                 <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="h6">{t('labels:birthdate')}</Typography>
@@ -68,10 +87,17 @@ export const Athlete: React.FC<AthleteProps> = ({ handleNext }) => {
                             </List>
                         </CardContent>
                     </Card>
+
+                    {(isAlreadyInscribed && !isUserInscribed) && (
+                        <Typography variant="body2" color="error">
+                            {t('inscription:athleteAlreadyInscribedNotByYou')}
+                        </Typography>
+                    )}
+
                     <StepperButtons
                         buttons={[
                             { label: t('inscription:changeAthlete'), onClick: () => setAthlete(undefined), variant: 'outlined' },
-                            { label: t('buttons:next'), onClick: handleNext }
+                            { label: t('buttons:next'), onClick: handleNext, disabled: isDisabled }
                         ]}
                     />
                 </>
@@ -87,14 +113,14 @@ type SearchAthleteProps = {
 
 const SearchAthlete: React.FC<SearchAthleteProps> = ({ isVisible, onAthleteSelect }) => {
 
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
-    const competition = useAtomValue(competitionAtom)
+    const competition = useAtomValue(competitionAtom);
 
-    const [searchValue, setSearchValue] = useState<string>('')
-    const [isValid, setIsValid] = useState<boolean>(true)
+    const [searchValue, setSearchValue] = useState<string>('');
+    const [isValid, setIsValid] = useState<boolean>(true);
     const [errorMsg, setErrorMsg] = useState('');
-    const { data: athletes, isLoading, isError, refetch } = useQuery(['athletes', searchValue], () => getAthletes(searchValue), { enabled: false })
+    const { data: athletes, isLoading, isError, refetch } = useQuery(['athletes', searchValue], () => getAthletes(searchValue), { enabled: false });
 
     const handleSearch = async () => {
         const { success, error } = AthleteKey$.safeParse(searchValue)

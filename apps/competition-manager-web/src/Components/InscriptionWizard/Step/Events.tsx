@@ -1,45 +1,56 @@
 import { CompetitionEvent } from "@competition-manager/schemas";
 import { Box, Checkbox, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material"
 import { useTranslation } from "react-i18next";
-import { StepperButtons } from "../../../../Components";
+import { StepperButtons } from "../../../Components";
 import { useAtom, useAtomValue } from "jotai";
-import { competitionAtom, inscriptionDataAtom, inscriptionsAtom } from "../../../../GlobalsStates";
-import { checkCategory, getRemainingPlaces } from "@competition-manager/utils";
-import { useMemo } from "react";
+import { competitionAtom, inscriptionDataAtom, inscriptionsAtom, userInscriptionsAtom } from "../../../GlobalsStates";
+import { checkCategory, getRemainingPlaces, isAthleteInAFreeClub } from "@competition-manager/utils";
+import { useEffect, useMemo } from "react";
 
 type EventsProps = {
+    isAdmin: boolean;
     handleNext: () => void;
     handleBack: () => void;
 }
 
-export const Events = ({ handleNext, handleBack }: EventsProps) => {
+export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
+
+    const { currentInscriptions } = useGetCurrentInscription(isAdmin);
 
     const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
-    const inscriptions = useAtomValue(inscriptionsAtom)
+    const inscriptions = useAtomValue(inscriptionsAtom);
+    if (!competition) throw new Error('Competition not found');
+    if (!inscriptions) throw new Error('Inscriptions not found');
 
-    if (!competition) throw new Error('Competition not found')
-    if (!inscriptions) throw new Error('Inscriptions not found')
+    const [{ athlete, inscriptionsData }, setInscriptionData] = useAtom(inscriptionDataAtom);
+    if (!athlete) throw new Error('Athlete not found');
 
-    const [{ athlete, selectedEvents }, setInscriptionData] = useAtom(inscriptionDataAtom)
+    const selectedEvents = useMemo(() => inscriptionsData.map((inscription) => inscription.competitionEvent), [inscriptionsData]);
 
-    if (!athlete) throw new Error('Athlete not found')
-
-    const events = competition.events.filter((event) => !event.parentId).filter((event) => checkCategory(event, athlete, competition.date)) || [];
+    const events = useMemo(() => competition.events.filter((event) => !event.parentId).filter((event) => checkCategory(event, athlete, competition.date)) || [], [competition, athlete]);
 
     const toggleEvent = (event: CompetitionEvent) => {
         if (selectedEvents.some((e) => e.id === event.id)) {
             setInscriptionData((prev) => ({
                 ...prev,
-                selectedEvents: prev.selectedEvents.filter((e) => (e.id !== event.id) && (e.parentId !== event.id))
+                inscriptionsData: prev.inscriptionsData.filter((inscription) => inscription.competitionEvent.id !== event.id)
             }))
-        } else {
+            return;
+        }
+        const currentInscription = currentInscriptions.find((inscription) => inscription.competitionEvent.id === event.id);
+        if (currentInscription) {
             setInscriptionData((prev) => ({
                 ...prev,
-                selectedEvents: [...prev.selectedEvents, event, ...competition.events.filter((e) => e.parentId === event.id)]
+                inscriptionsData: [...prev.inscriptionsData, currentInscription]
             }))
+            return;
         }
+        setInscriptionData((prev) => ({
+            ...prev,
+            inscriptionsData: [...prev.inscriptionsData, { eid: '', competitionEvent: event, record: undefined, paid: 0 }]
+        }))
     }
 
     /**
@@ -50,7 +61,7 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
     */
 
     const secondaryText = (event: CompetitionEvent) => {
-        const cost = event.cost;
+        const cost = isAthleteInAFreeClub(competition, athlete) ? 0 : event.cost;
         const remainingPlaces = event.place ? getRemainingPlaces(event, inscriptions) : 100;
         
         return (
@@ -89,8 +100,6 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
         )
     }
 
-    const totalCost = useMemo(() => selectedEvents.reduce((total, event) => total + event.cost, 0), [selectedEvents])
-
     return (
         <Box width={1}>
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -119,13 +128,6 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
                 ))}
             </List>
 
-            {totalCost > 0 && (
-                <Box display="flex" justifyContent="flex-end" mt={2}>
-                    {t('inscription:totalCost')}: {totalCost}€
-                    {/* TODO: Need to specify if the payment is online or in place */}
-                </Box>
-            )}
-
             <StepperButtons 
                 buttons={[
                     { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
@@ -134,4 +136,52 @@ export const Events = ({ handleNext, handleBack }: EventsProps) => {
             />
         </Box>
     )
+}
+
+
+const useGetCurrentInscription = (isAdmin: boolean) => {
+    const userInscriptions = useAtomValue(userInscriptionsAtom);
+    const inscriptions = useAtomValue(inscriptionsAtom);
+    if (!userInscriptions) throw new Error('User inscriptions not found');
+    if (!inscriptions) throw new Error('Inscriptions not found');
+    const [{ athlete,inscriptionsData }, setInscriptionData] = useAtom(inscriptionDataAtom);
+    if (!athlete) throw new Error('Athlete not found');
+
+    const currentUserInscriptions = useMemo(() => 
+        userInscriptions.filter((inscription) => inscription.athlete.license === athlete.license).map((inscription) => ({
+            eid: inscription.eid,
+            competitionEvent: inscription.competitionEvent,
+            record: inscription.record,
+            paid: inscription.paid
+        }))
+    , [athlete, userInscriptions]);
+
+    const currentInscriptions = useMemo(() => 
+        inscriptions.filter((inscription) => inscription.athlete.license === athlete.license).map((inscription) => ({
+            eid: inscription.eid,
+            competitionEvent: inscription.competitionEvent,
+            record: inscription.record,
+            paid: 0
+        }))
+    , [athlete, inscriptions]);
+
+    useEffect(() => {
+        if (inscriptionsData.length > 0) return;
+
+        if (currentUserInscriptions.length > 0) {
+            setInscriptionData((prev) => ({
+                ...prev,
+                inscriptionsData: currentUserInscriptions
+            }))
+            return;
+        }
+        if (isAdmin && currentInscriptions.length > 0) {
+            setInscriptionData((prev) => ({
+                ...prev,
+                inscriptionsData: currentInscriptions
+            }))
+        }
+    }, [currentUserInscriptions, currentInscriptions, setInscriptionData])
+
+    return { currentInscriptions: currentUserInscriptions.length > 0 ? currentUserInscriptions : isAdmin ? currentInscriptions : [] }
 }

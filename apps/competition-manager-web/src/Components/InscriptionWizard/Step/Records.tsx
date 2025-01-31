@@ -1,17 +1,18 @@
 import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { CircleButton, Edit, Loading, StepperButtons } from "../../../../Components";
+import { CircleButton, Edit, Loading, StepperButtons } from "../../../Components";
 import { useTranslation } from "react-i18next";
 import { useAtom, useAtomValue } from "jotai";
-import { competitionAtom, inscriptionDataAtom } from "../../../../GlobalsStates";
+import { competitionAtom, inscriptionDataAtom, inscriptionsAtom } from "../../../GlobalsStates";
 import { useQuery } from "react-query";
-import { getRecords } from "../../../../api";
-import { formatPerf } from "../../../../utils";
+import { getRecords } from "../../../api";
+import { formatPerf } from "../../../utils";
 import { Event, Record, Records as RecordsType } from "@competition-manager/schemas";
 import { useEffect, useState } from "react";
 import { UpdateRecordPopup } from "./UpdateRecordPopup";
 
 
 type RecordsProps = {
+    isAdmin: boolean;
     handleNext: () => void;
     handleBack: () => void;
 }
@@ -24,13 +25,31 @@ export const Records: React.FC<RecordsProps> = ({
     const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
+    const inscriptions = useAtomValue(inscriptionsAtom);
     if (!competition) throw new Error('Competition not found');
+    if (!inscriptions) throw new Error('Inscriptions not found');
 
-    const [{ athlete, selectedEvents, records }, setInscriptionData] = useAtom(inscriptionDataAtom);
+    const [{ athlete, inscriptionsData }, setInscriptionData] = useAtom(inscriptionDataAtom);
     if (!athlete) throw new Error('Athlete not found');
-    if (selectedEvents.length === 0) throw new Error('No selected events');
+    if (inscriptionsData.length === 0) throw new Error('No selected events');
 
-    const setRecords = (records: RecordsType) => setInscriptionData((prev) => ({ ...prev, records }));
+    const setFetchRecords = (records: RecordsType) => {
+        const newInscriptionsData = inscriptionsData.map((inscriptionData) => {
+            const record = inscriptionData.record ?? records[inscriptionData.competitionEvent.event.name] ?? null;
+            return { ...inscriptionData, record };
+        });
+        setInscriptionData((prev) => ({ ...prev, inscriptionsData: newInscriptionsData }));
+    }
+
+    const setNewRecord = (record: Record, event: Event) => {
+        const newInscriptionsData = inscriptionsData.map((inscriptionData) => {
+            if (inscriptionData.competitionEvent.event.name === event.name) {
+                return { ...inscriptionData, record };
+            }
+            return inscriptionData;
+        });
+        setInscriptionData((prev) => ({ ...prev, inscriptionsData: newInscriptionsData }));
+    }
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [eventInPopup, setEventInPopup] = useState<Event | null>(null);
@@ -43,43 +62,33 @@ export const Records: React.FC<RecordsProps> = ({
     }
 
     const { data: fetchrecords, isLoading, isError } = useQuery(
-        ['records', athlete.license, selectedEvents.map((e) => e.event.name)], 
-        () => getRecords(athlete.license, selectedEvents.map((e) => e.event.name))
+        ['records', athlete.license, inscriptionsData.map((i) => i.competitionEvent.event.name)],
+        () => getRecords(athlete.license, inscriptionsData.map((i) => i.competitionEvent.event.name))
     );
 
     if (isError) throw new Error('Error while fetching records');
 
     useEffect(() => {
         if (fetchrecords) {
-            if (!records) {
-                setRecords(fetchrecords);
-                return;
-            }
-            const newRecords = { ...records };
-            for (const [eventName, record] of Object.entries(fetchrecords)) {
-                if (!records[eventName]) {
-                    newRecords[eventName] = record;
-                }
-            }
-            setRecords(newRecords);
+            setFetchRecords(fetchrecords);
         }
     }, [fetchrecords]);
 
-    if (isLoading || !records) return <Loading />
+    if (isLoading) return <Loading />
 
     return (
         <Box width={1}>
             <List>
-                {selectedEvents.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map((selectedEvent) => {
-                    const record = records[selectedEvent.event.name]
+                {inscriptionsData.sort((a, b) => a.competitionEvent.schedule.getTime() - b.competitionEvent.schedule.getTime()).map((inscriptionData) => {
+                    const record = inscriptionData.record ?? null;
                     return (
-                        <ListItem key={selectedEvent.id}>
+                        <ListItem key={inscriptionData.competitionEvent.id}>
                             <ListItemText
-                                primary={selectedEvent.name}
+                                primary={inscriptionData.competitionEvent.name}
                                 secondary={record ? (
                                     <>
                                         <Typography component="span" variant="body2" fontWeight="bold">
-                                            {formatPerf(record.perf, selectedEvent.event.type)}
+                                            {formatPerf(record.perf, inscriptionData.competitionEvent.event.type)}
                                         </Typography>
                                         {' '}
                                         ({record.date.toLocaleDateString()})
@@ -87,7 +96,7 @@ export const Records: React.FC<RecordsProps> = ({
                                 ) : t('inscription:noPersonalBest')}
                             />
                             <ListItemIcon>
-                                <CircleButton onClick={() => handleOpenPopup(record, selectedEvent.event)}>
+                                <CircleButton onClick={() => handleOpenPopup(record, inscriptionData.competitionEvent.event)}>
                                     <Edit size="xl"/>   
                                 </CircleButton>
                             </ListItemIcon>
@@ -101,7 +110,7 @@ export const Records: React.FC<RecordsProps> = ({
                     onClose={() => setIsPopupOpen(false)} 
                     event={eventInPopup!} 
                     record={recordInPopup!} 
-                    onRecordUpdated={(record) => setRecords({ ...records, [eventInPopup!.name]: record })} 
+                    onRecordUpdated={(record) => setNewRecord(record, eventInPopup!)}
                 />
             }
 

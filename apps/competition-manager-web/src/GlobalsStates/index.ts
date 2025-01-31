@@ -1,4 +1,4 @@
-import { Athlete, Competition, CompetitionEvent, DisplayInscription, Records, TokenData } from '@competition-manager/schemas';
+import { Athlete, Competition, CompetitionEvent, DisplayInscription, Inscription, TokenData } from '@competition-manager/schemas';
 import { atom } from 'jotai';
 
 export const userTokenAtom = atom<TokenData | 'NOT_LOGGED' | null>(null);
@@ -7,18 +7,25 @@ export const userTokenAtom = atom<TokenData | 'NOT_LOGGED' | null>(null);
 export const competitionAtom = atom<Competition | null>(null);
 // Store the inscriptions of the current competition
 export const inscriptionsAtom = atom<DisplayInscription[] | null>(null);
+// Store the inscriptions of the current user
+export const userInscriptionsAtom = atom<Inscription[] | null>(null);
+// Store the inscriptions get as an admin
+export const adminInscriptionsAtom = atom<Inscription[] | null>(null);
 
 // Store the data of the inscription form
 type InscriptionData = {
     athlete?: Athlete;
-    selectedEvents: CompetitionEvent[];
-    records?: Records;
+    inscriptionsData: {
+        eid: Inscription["eid"];
+        competitionEvent: Inscription["competitionEvent"];
+        record?: Inscription["record"];
+        paid: Inscription["paid"];
+    }[];
 };
 
 export const inscriptionDataAtom = atom<InscriptionData>({
     athlete: undefined,
-    selectedEvents: [],
-    records: undefined,
+    inscriptionsData: [],
 });
 
 // Store the data of the competition event form
