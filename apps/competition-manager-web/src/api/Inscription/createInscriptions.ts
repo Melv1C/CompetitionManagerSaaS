@@ -9,7 +9,6 @@ export enum CreateInscriptionsResponseType {
 
 export const createInscriptions = async (eid: string, inscriptions: CreateInscription[], isAdmin: boolean = false) => {
     const { data } = await api.post(`/competitions/${eid}/inscriptions`, inscriptions, { params: { isAdmin } });
-    console.log(data);
     switch (typeof data) {
         case 'string':
             return {
