@@ -1,6 +1,6 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
+import { Alert, Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
 import { useMemo, useState } from "react"
 import { getAthletes } from "../../../api"
 import { Athlete as AthleteType, AthleteKey$ } from "@competition-manager/schemas"
@@ -89,9 +89,9 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
                     </Card>
 
                     {(isAlreadyInscribed && !isUserInscribed) && (
-                        <Typography variant="body2" color="error">
+                        <Alert severity={isAdmin ? 'warning' : 'error'}>
                             {t('inscription:athleteAlreadyInscribedNotByYou')}
-                        </Typography>
+                        </Alert>
                     )}
 
                     <StepperButtons
