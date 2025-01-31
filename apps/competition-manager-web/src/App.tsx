@@ -61,6 +61,7 @@ const queryClient = new QueryClient()
 function App() {
 
     const { t } = useTranslation()
+    useAutoLogin()
 
     const navItems = [
         { label: t('navigation:home'), href: '/', icon: faHome },
@@ -105,8 +106,6 @@ function App() {
             </Route>
         ])
     )
-
-    useAutoLogin()
 
     return (
         <CacheBuster
