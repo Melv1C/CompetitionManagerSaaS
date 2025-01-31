@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {isAxiosError} from "axios";
-import { Email$, UserPassword$ } from "@competition-manager/schemas";
+import { Email$, Password$ } from "@competition-manager/schemas";
 
 import { Alert, Box, Button, Divider, Link, Typography } from "@mui/material";
 
@@ -84,7 +84,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     id="password" 
                     label={{ value: t('password'), hasExtrenLabel: true }}
                     value={{ value: password, onChange: setPassword }} 
-                    validator={{ Schema$: UserPassword$, isValid: isPasswordValid, setIsValid: setIsPasswordValid }}
+                    validator={{ Schema$: Password$, isValid: isPasswordValid, setIsValid: setIsPasswordValid }}
                     required
                 />
 
@@ -92,7 +92,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     id="confirmPassword"
                     label={{ value: t('confirmPassword'), hasExtrenLabel: true }}
                     value={{ value: confirmPassword, onChange: setConfirmPassword }}
-                    validator={{ Schema$: UserPassword$, isValid: isConfirmPasswordValid, setIsValid: setIsConfirmPasswordValid }}
+                    validator={{ Schema$: Password$, isValid: isConfirmPasswordValid, setIsValid: setIsConfirmPasswordValid }}
                     required
                 />
 
