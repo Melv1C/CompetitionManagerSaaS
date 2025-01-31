@@ -21,11 +21,7 @@ router.get(
             const { eid } = Params$.parse(req.params);
             const { isAdmin } = AdminQuery$.parse(req.query);
 
-            if (isAdmin && !req.user) {
-                res.status(401).send('Unauthorized');
-                return;
-            }
-            if (isAdmin && !isAuthorized(req.user!, Role.SUPERADMIN) && !isAuthorized(req.user!, Role.ADMIN)) {
+            if (isAdmin && (!req.user || !isAuthorized(req.user, Role.ADMIN))) {
                 res.status(401).send('Unauthorized');
                 return;
             }
