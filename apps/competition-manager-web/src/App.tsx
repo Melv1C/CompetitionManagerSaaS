@@ -28,6 +28,7 @@ import { ProtectedRoute } from './Components/ProtectedRoute';
 import { NODE_ENV, Role } from '@competition-manager/schemas';
 import { Home } from './Pages/Home';
 import { isNodeEnv } from './env';
+import { ResetPassword } from './Pages/ResetPassword';
 
 
 // must be extract in an other file
@@ -102,6 +103,7 @@ function App() {
                         <SuperAdmin />
                     </ProtectedRoute>}
                 />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="*" element={<h1>Not Found</h1>} />
             </Route>
         ])
