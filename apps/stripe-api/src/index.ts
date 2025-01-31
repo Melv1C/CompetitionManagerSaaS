@@ -1,10 +1,10 @@
 import express from "express";
 import 'dotenv/config';
 
-import { corsMiddleware, Key, parseRequest } from '@competition-manager/backend-utils';
+import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions } from '@competition-manager/backend-utils';
 import { prisma } from "@competition-manager/prisma";
 import { z } from 'zod';
-import { Bib$, DefaultInscription$, Id$, NODE_ENV, Record$ } from "@competition-manager/schemas";
+import { Athlete$, CreateInscription, Eid$, Id$, Inscription$, InscriptionStatus, License, License$, NODE_ENV, Record$ } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
@@ -28,15 +28,20 @@ const Body$ = z.object({
     }),
 });
 
-const Isncription$ = z.object({
-    competitionId: Id$,  
-    athleteId: Id$,
-    competitionEventId: Id$,
-    record: Record$.nullish(),
+enum WebhookType {
+    INSCRIPTIONS = 'inscriptions',
+}
+
+const InscriptionMetadata$ = z.object({
+    competitionEid: Eid$,
     userId: Id$,
-    bib: Bib$,
-    clubId: Id$,
+    inscriptions: z.object({
+        athlete: License$,
+        event: Eid$,
+        record: Record$.nullish()
+    }).array(),
 });
+
 
 app.post(`${env.PREFIX}/stripe/webhook`, 
     parseRequest(Key.Body, Body$),
@@ -50,77 +55,96 @@ app.post(`${env.PREFIX}/stripe/webhook`,
             });
             if (!user) throw new Error('User not found');
             console.log(user);
-            switch (metadata.type) {
-                case 'inscription':
+            switch (z.nativeEnum(WebhookType).parse(metadata.type)) {
+                case WebhookType.INSCRIPTIONS:
                     console.log('Payment intent webhook received', metadata);
-                    
-                    const inscriptions = Isncription$.array().parse(JSON.parse(metadata.inscriptions));
 
-                    for (const inscription of inscriptions) {
-                        const defaultInscription = DefaultInscription$.parse(inscription);
-                        const newInscription = await prisma.inscription.create({
-                            data: {
-                                athlete: {
-                                    connect: {
-                                        id : inscription.athleteId
-                                    }
-                                },
-                                competition: {
-                                    connect: {
-                                        id: inscription.competitionId
-                                    }
-                                },
-                                user: {
-                                    connect: {
-                                        id: inscription.userId
-                                    }
-                                },
-                                bib: inscription.bib,
-                                ...(inscription.record ? {
-                                    record: {
-                                        create: inscription.record
-                                    }
-                                } : {}),
-                                club: {
-                                    connect: {
-                                        id: inscription.clubId
-                                    }
-                                },
-                                competitionEvent: {
-                                    connect: {
-                                        id: inscription.competitionEventId
-                                    }
-                                },
-                                ...defaultInscription
-                            },
-                            include: {
-                                athlete: {
-                                    include: {
-                                        club: true
-                                    }
-                                },
-                                competitionEvent: {
-                                    include: {
-                                        event: true,
-                                        categories: true
-                                    }
-                                },
-                                user: true,
-                                club: true,
-                                record: true
-                            }
+                    const inscriptions = Object.entries(metadata)
+                        .filter(([key]) => !isNaN(+key))
+                        .sort(([a], [b]) => +a - +b)
+                        .map(([_, value]) => JSON.parse(value as string));
+
+                    const inscriptionsData = InscriptionMetadata$.parse({
+                        ...metadata,
+                        inscriptions,
+                    });
+
+                    const inscriptionsGroupedByAthlete = Object.values(inscriptionsData.inscriptions.reduce((acc, inscription) => {
+                        if (!acc[inscription.athlete]) {
+                            acc[inscription.athlete] = {
+                                athleteLicense: inscription.athlete,
+                                inscriptions: [],
+                            };
+                        }
+                        acc[inscription.athlete].inscriptions.push({
+                            competitionEventEid: inscription.event,
+                            record: inscription.record,
                         });
-                        console.log(newInscription);
-                    }
+                        return acc;
+                    }, {} as Record<string, { athleteLicense: License, inscriptions: CreateInscription["inscriptions"] }>));
+
+                    const competition = await prisma.competition.findUnique({
+                        where: {
+                            eid: inscriptionsData.competitionEid,
+                        },
+                        include: {
+                            oneDayAthletes: true,
+                            events: {
+                                include: {
+                                    categories: true,
+                                    event: true
+                                }
+                            },
+                            inscriptions: {
+                                include: {
+                                    user: true,
+                                    athlete: true,
+                                    club: true,
+                                    competitionEvent: {
+                                        include: {
+                                            event: true,
+                                            categories: true
+                                        }
+                                    },
+                                    record: true
+                                }
+                            }
+                        }
+                    });
+                    if (!competition) throw new Error('Competition not found');
+
+                    saveInscriptions(
+                        inscriptionsData.competitionEid, 
+                        await Promise.all(inscriptionsGroupedByAthlete.map(async ({ athleteLicense, inscriptions }) => {
+                            const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                            const userId = inscriptionsData.userId;
+                            return {
+                                userId,
+                                athlete,
+                                inscriptions: inscriptions.map((data) => {
+                                    const event = competition.events.find((e) => e.eid === data.competitionEventEid);
+                                    if (!event) throw new Error('Event not found');
+                                    return {
+                                        data,
+                                        meta: {
+                                            status: InscriptionStatus.ACCEPTED,
+                                            paid: event.cost, //TODO: Compute knowing the already paid amount
+                                        },
+                                        
+                                    };
+                                })
+                            };
+                        })),
+                        Inscription$.array().parse(competition.inscriptions)
+                    )
                     
                     break;
                 default:
                     throw new Error('Unknown webhook type');
             }
 
+            res.send('OK');
 
-            console.log('Stripe webhook received', metadata);
-            res.send('Stripe webhook received');
         } catch (e: any) {
             console.error(e);
             res.status(500).send(e.message);
