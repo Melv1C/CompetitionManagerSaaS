@@ -19,14 +19,12 @@ export const RoleLevel = {
     [Role.SUPERADMIN]: 4,
 }
 
-export const UserPassword$ = z.string().min(8, 'Password must be at least 8 characters long');
-
 export const User$ = z.object({
     id: Id$,
     email: Email$,
     role: z.nativeEnum(Role).default(Role.UNCONFIRMED_USER),
     preferences: UserPreferences$,
-    password: z.string(),
+    password: z.string(), // Hashed password so we can't use Password$
     club: Club$.nullish(),
 });
 export type User = z.infer<typeof User$>;

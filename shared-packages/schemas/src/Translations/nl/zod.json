@@ -25,6 +25,9 @@
     
     "InvalidEmail": "Ongeldig e-mailadres",
 
+    "PasswordTooShort8": "Wachtwoord moet minstens 8 tekens lang zijn",
+    "PasswordTooLong50": "Wachtwoord mag maximaal 50 tekens lang zijn",
+
     "BibMustBePositive": "Startnummer moet positief zijn",
 
     "PlaceMustBeInteger": "Plaats moet een geheel getal zijn",

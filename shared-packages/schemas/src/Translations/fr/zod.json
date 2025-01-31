@@ -25,6 +25,9 @@
     
     "InvalidEmail": "Email invalide",
 
+    "PasswordTooShort8": "Le mot de passe doit comporter au moins 8 caractères",
+    "PasswordTooLong50": "Le mot de passe doit comporter au maximum 50 caractères",
+
     "BibMustBePositive": "Le dossard doit être positif",
 
     "PlaceMustBeInteger": "La place doit être un entier",

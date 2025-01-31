@@ -25,6 +25,9 @@
     
     "InvalidEmail": "Invalid email",
 
+    "PasswordTooShort8": "Password must be at least 8 characters long",
+    "PasswordTooLong50": "Password must be at most 50 characters long",
+
     "BibMustBePositive": "Bib must be positive",
 
     "PlaceMustBeInteger": "Place must be an integer",
