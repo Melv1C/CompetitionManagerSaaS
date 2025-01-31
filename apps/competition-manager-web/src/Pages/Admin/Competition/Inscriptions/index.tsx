@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAtomValue, useSetAtom } from "jotai";
 import { adminInscriptionsAtom, competitionAtom, inscriptionDataAtom } from "../../../../GlobalsStates";
 import { Athlete, Club, Inscription } from "@competition-manager/schemas";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { InscriptionPopup } from "./InscriptionPopup";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { getCategoryAbbr } from "@competition-manager/utils";
@@ -19,6 +19,8 @@ export const Inscriptions = () => {
     const adminInscriptions = useAtomValue(adminInscriptionsAtom);
     if (!competition) throw new Error('No competition found');
     if (!adminInscriptions) throw new Error('No inscriptions found');
+
+    const sortInscriptions = useMemo(() => adminInscriptions.sort((a, b) => b.date.getTime() - a.date.getTime()), [adminInscriptions]);
 
     const setInscriptionData = useSetAtom(inscriptionDataAtom);
     
@@ -37,7 +39,7 @@ export const Inscriptions = () => {
         { field: 'competitionEvent', headerName: t('glossary:event'), valueFormatter: (value: Inscription["competitionEvent"]) => value.name, width: 150 },
         { field: 'record', headerName: t('glossary:personalBest'), type: 'number', valueFormatter: (value: Inscription["record"], row: Inscription) => value?.perf ? formatPerf(value.perf, row.competitionEvent.event.type) : '-', width: 100 },
         { field: 'status', headerName: t('labels:status'), width: 100 },
-        { field: 'paid', headerName: t('labels:paid'), type: 'number', valueFormatter: (value: Inscription["paid"]) => `${value} €`, width: 75 },
+        { field: 'paid', headerName: t('labels:paid'), type: 'number', valueFormatter: (value: Inscription["paid"]) => `${value} €`, width: 50 },
         { field: 'user', headerName: t('labels:email'), valueFormatter: (value: Inscription["user"]) => value.email, width: 200 },
         { field: 'actions', headerName: t('labels:actions'), renderCell: ({ row }: { row: Inscription }) => (
             <Box>
@@ -94,7 +96,7 @@ export const Inscriptions = () => {
 
                 <DataGrid
                     columns={columns}
-                    rows={adminInscriptions}
+                    rows={sortInscriptions}
                     initialState={{ 
                         columns: {
                             columnVisibilityModel: {
