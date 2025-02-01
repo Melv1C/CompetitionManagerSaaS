@@ -27,7 +27,7 @@ export const Inscriptions = () => {
     const [isClubFilterMenuOpen, setIsClubFilterMenuOpen] = useState(false);
     const [isEventFilterMenuOpen, setIsEventFilterMenuOpen] = useState(false); 
 
-    const filteredInscriptions = useMemo(() => inscriptions.filter(i => { // TODO: Filter by timestamp
+    const filteredInscriptions = useMemo(() => inscriptions.sort((a, b) => b.date.getTime() - a.date.getTime()).filter(i => {
         return categoryFilter.includes(getCategoryAbbr(i.athlete.birthdate, i.athlete.gender, competition.date))
             && clubfilter.includes(i.club.abbr)
             && eventFilter.includes(i.competitionEvent.name);
