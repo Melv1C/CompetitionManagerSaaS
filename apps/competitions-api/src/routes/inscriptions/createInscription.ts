@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense } from '@competition-manager/backend-utils';
-import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
@@ -172,7 +172,7 @@ router.post(
                         req.user!.email,
                         alreadyPaid * 100,
                         {
-                            type: 'inscriptions', //TODO: use enum from webhooks
+                            type: WebhookType.INSCRIPTIONS,
                             competitionEid: eid,
                             userId: req.user!.id,
                             ...inscriptions.reduce((acc, i, index) => {
