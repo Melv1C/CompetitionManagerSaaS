@@ -20,8 +20,6 @@ export const createCheckoutSession = async (
     metadata?: Stripe.MetadataParam
 ) => {
 
-    console.log(metadata);
-
     const coupon = couponValue > 0 ? await stripe.coupons.create({
         amount_off: couponValue,
         currency: 'eur',
