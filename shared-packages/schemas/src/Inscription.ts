@@ -31,11 +31,13 @@ export const Inscription$ = z.object({
 });
 export type Inscription = z.infer<typeof Inscription$>;
 
-export const CreateInscription$ = Inscription$.pick({
-    record: true,
-}).extend({
-    competitionEventEid: Eid$,
-    athleteLicense: License$
+export const CreateInscription$ = z.object({
+    athleteLicense: License$,
+    inscriptions: Inscription$.pick({
+        record: true, 
+    }).extend({
+        competitionEventEid: Eid$
+    }).array()
 });
 export type CreateInscription = z.infer<typeof CreateInscription$>;
 

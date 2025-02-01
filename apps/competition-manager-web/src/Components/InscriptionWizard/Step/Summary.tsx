@@ -36,11 +36,13 @@ export const Summary: React.FC<SummaryProps> = ({
     const [isAccepted, setIsAccepted] = useState(false);
 
     const handleConfirm = async () => {
-        const createInscriptionData = CreateInscription$.array().parse(inscriptionsData.map(inscriptionData => ({
-            competitionEventEid: inscriptionData.competitionEvent.eid,
+        const createInscriptionData = CreateInscription$.array().parse([{
             athleteLicense: athlete.license,
-            record: inscriptionData.record,
-        })));
+            inscriptions: inscriptionsData.map((inscriptionData) => ({
+                competitionEventEid: inscriptionData.competitionEvent.eid,
+                record: inscriptionData.record,
+            }))
+        }]);
 
         const {type, url, inscriptions: newInscriptions} = await createInscriptions(competition.eid, createInscriptionData, isAdmin);
         if (type === CreateInscriptionsResponseType.URL) {

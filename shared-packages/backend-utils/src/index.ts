@@ -5,3 +5,5 @@ export * from "./sendEmail";
 export * from "./hashPassword";
 export * from "./logger";
 export * from "./isNodeEnv";
+export * from "./saveInscriptions";
+export * from "./findAthleteWithLicense";
