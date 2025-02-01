@@ -1,0 +1,18 @@
+{
+    "info": {
+        "title": "Accountinformatie",
+        "unconfirmedEmail": {
+            "title": "Onbevestigd e-mailadres",
+            "message": "Uw e-mailadres is nog niet bevestigd. Controleer uw inbox voor een bevestigingsmail.",
+            "resend": "Bevestigingsmail opnieuw verzenden"
+        },
+        "isAdmin": "U heeft een beheerdersaccount",
+        "isSuperAdmin": "U heeft een superbeheerderaccount",
+        "changePassword": {
+            "title": "Wachtwoord wijzigen",
+            "instructions": "Kies een nieuw wachtwoord voor uw account",
+            "newPassword": "Nieuw wachtwoord",
+            "confirmNewPassword": "Bevestig nieuw wachtwoord"
+        }
+    }
+}

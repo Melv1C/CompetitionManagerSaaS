@@ -1,0 +1,19 @@
+{
+    "info": {
+        "title": "Informations du compte",
+        "unconfirmedEmail": {
+            "title": "Email non confirmé",
+            "message": "Votre adresse email n'a pas encore été confirmée. Veuillez vérifier votre boîte de réception pour un email de confirmation.",
+            "resend": "Renvoyer l'email de confirmation"
+        },
+        "isAdmin": "Vous avez un compte administrateur",
+        "isSuperAdmin": "Vous avez un compte super administrateur",
+        "changePassword": {
+            "title": "Changer le mot de passe",
+            "instructions": "Choisissez un nouveau mot de passe pour votre compte",
+            "oldPassword": "Ancien mot de passe",
+            "newPassword": "Nouveau mot de passe",
+            "confirmNewPassword": "Confirmer le nouveau mot de passe"
+        }
+    }
+}
