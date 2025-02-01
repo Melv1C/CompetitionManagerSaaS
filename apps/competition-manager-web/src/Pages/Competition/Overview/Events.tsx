@@ -40,6 +40,7 @@ export const Events = () => {
                 if (allBaseCategories.filter(c => c.gender === gender).length > 0) {
                     return (
                         <Card 
+                            key={gender}
                             sx={{ 
                                 minWidth: 250,
                                 maxWidth: 300,

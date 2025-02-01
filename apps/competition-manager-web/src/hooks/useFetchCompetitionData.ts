@@ -41,10 +41,20 @@ export const useFetchCompetitionData = (eid: string, isAdmin: boolean = false) =
 
     useEffect(() => {
         if (adminInscriptions) {
-            console.log(adminInscriptions);
             setAdminInscriptions(adminInscriptions);
         }
     }, [adminInscriptions, setAdminInscriptions]);
+
+    // Clean up
+    useEffect(() => {
+        return () => {
+            console.log('Cleaning up');
+            setCompetition(null);
+            setInscriptions(null);
+            setUserInscriptions(null);
+            setAdminInscriptions(null);
+        };
+    }, [setCompetition, setInscriptions, setUserInscriptions, setAdminInscriptions]);
 
     if (isCompetitionError) throw new Error('Error while fetching competition');
     if (isInscriptionsError) throw new Error('Error while fetching inscriptions');

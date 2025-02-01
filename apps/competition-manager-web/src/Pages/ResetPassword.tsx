@@ -41,7 +41,7 @@ export const ResetPassword = () => {
         // send request to the server
         try {
             // send request to the server
-            const data = await resetPassword(token, password)
+            const data = await resetPassword(password, token)
             console.log(data) // TODO: handle response
         } catch (error) {
             console.error(error)

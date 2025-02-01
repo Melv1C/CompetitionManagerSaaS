@@ -1,0 +1,19 @@
+{
+    "info": {
+        "title": "Account information",
+        "unconfirmedEmail": {
+            "title": "Unconfirmed email",
+            "message": "Your email address has not been confirmed yet. Please check your inbox for a confirmation email.",
+            "resend": "Resend confirmation email"
+        },
+        "isAdmin": "You have an admin account",
+        "isSuperAdmin": "You have a super admin account",
+        "changePassword": {
+            "title": "Change password",
+            "instructions": "Choose a new password for your account",
+            "oldPassword": "Old password",
+            "newPassword": "New password",
+            "confirmNewPassword": "Confirm new password"
+        }
+    }
+}
