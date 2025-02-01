@@ -4,31 +4,9 @@ import { Key, parseRequest, setUserIfExist, AuthenticatedRequest } from '@compet
 import { isAuthorized } from '@competition-manager/utils';
 import { Eid$, Role, Competition$, AdminQuery$ } from '@competition-manager/schemas';
 import { z } from 'zod';
+import { competitionInclude } from '../../utils';
 
 export const router = Router();
-
-const competitionQuery = {
-    include: {
-        events: {
-            include: {
-                categories: true,
-                event: true,
-            },
-        },
-        paymentPlan: {
-            include: {
-                includedOptions: true,
-            },
-        },
-        options: true,
-        admins: {
-            include: {
-                user: true,
-            },
-        },
-        freeClubs: true,
-    },
-};
 
 const Params$ = z.object({
     competitionEid: Eid$,
@@ -55,7 +33,7 @@ router.get(
                         where: {
                             eid: competitionEid,
                         },
-                        ...competitionQuery
+                        include: competitionInclude,
                     });
                     if (!competition) {
                         res.status(404).send('Competition not found');
@@ -75,7 +53,7 @@ router.get(
                         },
                         select: {
                             competition: {
-                                ...competitionQuery
+                                include: competitionInclude,
                             },
                         },
                     });
@@ -94,7 +72,7 @@ router.get(
                     publish: true,
                     isDeleted: false,
                 },
-                ...competitionQuery,
+                include: competitionInclude,
             });
             if (!competition) {
                 res.status(404).send('Competition not found');

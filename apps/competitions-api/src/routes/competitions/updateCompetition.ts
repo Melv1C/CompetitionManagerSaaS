@@ -3,6 +3,7 @@ import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, checkAdminRole, Key } from '@competition-manager/backend-utils';
 import { UpdateCompetition$, Competition$, Access, Role } from '@competition-manager/schemas';
 import { BaseAdmin$ } from '@competition-manager/schemas';
+import { competitionInclude } from '../../utils';
 
 export const router = Router();
 
@@ -48,25 +49,7 @@ router.put(
                             set: freeClubsId.map(id => ({ id }))
                         }
                     },
-                    include: {
-                        paymentPlan: true,
-                        options: true,
-                        admins: {
-                            include: {
-                                user: {
-                                    include: {
-                                        preferences: true
-                                    }
-                                }
-                            }
-                        },
-                        events: {
-                            include: {
-                                categories: true,
-                                event: true
-                            }
-                        }
-                    }
+                    include: competitionInclude
                 });
                 res.send(Competition$.parse(updatedCompetition));
             } catch (e: any) {
