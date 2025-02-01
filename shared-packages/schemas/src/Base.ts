@@ -30,5 +30,8 @@ export type Bib = z.infer<typeof Bib$>;
 export const Email$ = z.string().email('InvalidEmail');
 export type Email = z.infer<typeof Email$>;
 
+export const Password$ = z.string().min(8, 'PasswordTooShort8').max(50, 'PasswordTooLong50');
+export type Password = z.infer<typeof Password$>;
+
 export const Place$ = z.coerce.number().int('PlaceMustBeInteger').positive('PlaceMustBePositive').lte(100, 'PlaceTooHigh');
 export type Place = z.infer<typeof Place$>;

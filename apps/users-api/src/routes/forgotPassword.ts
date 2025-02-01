@@ -9,7 +9,7 @@ export const router = Router();
 
 const sendRestPasswordEmail = (email: Email, token: string) => {
     const url = new URL(env.BASE_URL);
-    url.pathname = `${env.PREFIX}/users/reset-password`;
+    url.pathname = `/reset-password`;
     url.searchParams.set('token', token);
     const emailData = EmailData$.parse({
         to: email,
