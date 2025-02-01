@@ -3,7 +3,7 @@ import { Add, CircleButton, Delete, Edit, MaxWidth } from "../../../../Component
 import { useTranslation } from "react-i18next";
 import { useAtomValue, useSetAtom } from "jotai";
 import { adminInscriptionsAtom, competitionAtom, inscriptionDataAtom } from "../../../../GlobalsStates";
-import { Athlete, Club, Inscription } from "@competition-manager/schemas";
+import { Athlete, Inscription } from "@competition-manager/schemas";
 import { useMemo, useState } from "react";
 import { InscriptionPopup } from "./InscriptionPopup";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -33,31 +33,48 @@ export const Inscriptions = () => {
     const columns: GridColDef[] = [
         { field: 'date', headerName: t('labels:date'), type: 'dateTime' , width: 150 },
         { field: 'bib', headerName: t('glossary:bib'), type: 'number' , width: 75 },
-        { field: 'athlete', headerName: t('glossary:athlete'), valueFormatter: (value: Inscription["athlete"]) => value.firstName + ' ' + value.lastName, width: 150 },
-        { field: 'category', headerName: t('glossary:category'), valueGetter: (_, row: Inscription) => getCategoryAbbr(row.athlete.birthdate, row.athlete.gender, competition.date), width: 100 },
-        { field: 'club', headerName: t('glossary:clubs'), valueFormatter: (value: Club) => value.abbr, width: 75 },
-        { field: 'competitionEvent', headerName: t('glossary:event'), valueFormatter: (value: Inscription["competitionEvent"]) => value.name, width: 150 },
-        { field: 'record', headerName: t('glossary:personalBest'), type: 'number', valueFormatter: (value: Inscription["record"], row: Inscription) => value?.perf ? formatPerf(value.perf, row.competitionEvent.event.type) : '-', width: 100 },
+        { field: 'athlete', headerName: t('glossary:athlete'), width: 150,
+            valueGetter: (value: Inscription["athlete"]) => value.firstName + ' ' + value.lastName
+        },
+        { field: 'category', headerName: t('glossary:category'), width: 100, 
+            valueGetter: (_, row: Inscription) => getCategoryAbbr(row.athlete.birthdate, row.athlete.gender, competition.date)
+        },
+        { field: 'club', headerName: t('glossary:clubs'), width: 75,
+            valueGetter: (value: Inscription["club"]) => value.abbr
+        },
+        { field: 'competitionEvent', headerName: t('glossary:event'), width: 150,
+            valueGetter: (value: Inscription["competitionEvent"]) => value.name
+        },
+        { field: 'record', headerName: t('glossary:personalBest'), type: 'number', width: 100,
+            valueGetter: (value: Inscription["record"]) => value?.perf,
+            valueFormatter: (value: number, row: Inscription) => value ? formatPerf(value, row.competitionEvent.event.type) : '-'
+        },
         { field: 'status', headerName: t('labels:status'), width: 100 },
-        { field: 'paid', headerName: t('labels:paid'), type: 'number', valueFormatter: (value: Inscription["paid"]) => `${value} €`, width: 50 },
-        { field: 'user', headerName: t('labels:email'), valueFormatter: (value: Inscription["user"]) => value.email, width: 200 },
-        { field: 'actions', headerName: t('labels:actions'), renderCell: ({ row }: { row: Inscription }) => (
-            <Box>
-                <CircleButton size="2rem" color="primary" onClick={() => {
-                    setAthlete({ ...row.athlete, club: row.club });
-                    setIsInscriptionPopupVisible(true);
-                }}>
-                    <Edit />
-                </CircleButton>
-                <CircleButton size="2rem" color="error" onClick={() => console.log('delete', row.id)}>
-                    <Delete />
-                </CircleButton>
-            </Box>
-        ), width: 100 },
+        { field: 'paid', headerName: t('labels:paid'), type: 'number', width: 50,
+            valueFormatter: (value: Inscription["paid"]) => `${value} €`
+        },
+        { field: 'user', headerName: t('labels:email'), width: 200,
+            valueGetter: (value: Inscription["user"]) => value.email
+        },
+        { field: 'actions', headerName: t('labels:actions'), width: 100,
+            renderCell: ({ row }: { row: Inscription }) => (
+                <Box>
+                    <CircleButton size="2rem" color="primary" onClick={() => {
+                        setAthlete({ ...row.athlete, club: row.club });
+                        setIsInscriptionPopupVisible(true);
+                    }}>
+                        <Edit />
+                    </CircleButton>
+                    <CircleButton size="2rem" color="error" onClick={() => console.log('delete', row.id)}>
+                        <Delete />
+                    </CircleButton>
+                </Box>
+            )
+        },
     ];
 
     return (
-        <MaxWidth>
+        <MaxWidth maxWidth="1200px">
             <CircleButton 
                 size="4rem"
                 sx={{ 
