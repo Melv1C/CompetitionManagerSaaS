@@ -27,10 +27,10 @@ function extract(path: string): string | null {
 }
 
 export const Competition = () => {
-    const { eid } = useParams();
-    if (!eid) throw new Error('No competition ID provided');
+    const { competitionEid } = useParams();
+    if (!competitionEid) throw new Error('No competition EID provided');
 
-    const { competition, isLoading } = useFetchCompetitionData(eid);
+    const { competition, isLoading } = useFetchCompetitionData(competitionEid);
 
     if (isLoading) return <Loading />;
 
@@ -57,10 +57,16 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({ competition }) =>
     return (
         <>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <Tabs value={activeTab} onChange={(_, v) => {
-                    if (v === "") return navigate(`/competitions/${competition.eid}`);
-                    navigate(`/competitions/${competition.eid}/${v}`);
-                }} variant="scrollable" scrollButtons allowScrollButtonsMobile>
+                <Tabs 
+                    value={activeTab} 
+                    onChange={(_, v) => {
+                        if (v === "") return navigate(`/competitions/${competition.eid}`);
+                        navigate(`/competitions/${competition.eid}/${v}`);
+                    }} 
+                    variant="scrollable" 
+                    scrollButtons 
+                    allowScrollButtonsMobile
+                >
                     <Tab label={t('navigation:overview')} value="" />
                     {isFuture && <Tab label={t('navigation:register')} value="register" />}
                     <Tab label={t('navigation:schedule')} value="schedule" />
