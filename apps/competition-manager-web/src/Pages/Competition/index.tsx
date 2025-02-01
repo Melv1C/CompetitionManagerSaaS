@@ -10,6 +10,7 @@ import { Overview } from "./Overview";
 import { Inscription } from "./Inscription";
 import { Schedule } from "./Schedule";
 import { Inscriptions } from "./Inscriptions";
+import { Event } from "./Event.tsx";
 
 /**
  * Extracts the first part of a path
@@ -83,6 +84,7 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({ competition }) =>
                 {(isFuture || isCurrent) && <Route path="/inscriptions" element={<Inscriptions />} />}
                 {isCurrent && <Route path="/liveResults" element={<Box>{t('glossary:liveResults')}</Box>} />}
                 {isPast && <Route path="/results" element={<Box>{t('glossary:results')}</Box>} />}
+                <Route path="/events/:eventEid" element={<Event />} />
                 <Route path="*" element={<Navigate to={`/competitions/${competition.eid}`} />} />
             </Routes>
         
