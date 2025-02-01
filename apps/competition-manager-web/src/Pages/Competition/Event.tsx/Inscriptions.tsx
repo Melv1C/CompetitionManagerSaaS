@@ -24,7 +24,7 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                 variant="h6"
                 sx={{
                     marginBottom: 2,
-                    marginLeft: 2,
+                    marginLeft: 1,
                 }}
             >
                 {t('glossary:inscriptions')}
@@ -45,7 +45,7 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                             <TableCell width={75} sx={{ minWidth: 75 }}>
                                 {t('glossary:club')}
                             </TableCell>
-                            <TableCell width={75} sx={{ minWidth: 75 }}>
+                            <TableCell width={75} sx={{ minWidth: 75 }} align="right">
                                 {t('glossary:personalBest')}
                             </TableCell>
                         </TableRow>
@@ -72,7 +72,7 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                                     {getCategoryAbbr(inscription.athlete.birthdate, inscription.athlete.gender, competition.date)}
                                 </TableCell>
                                 <TableCell>{inscription.club.abbr}</TableCell>
-                                <TableCell>{inscription.record ? formatPerf(inscription.record.perf, inscription.competitionEvent.event.type) : '-'}</TableCell>
+                                <TableCell align="right">{inscription.record ? formatPerf(inscription.record.perf, inscription.competitionEvent.event.type) : '-'}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
