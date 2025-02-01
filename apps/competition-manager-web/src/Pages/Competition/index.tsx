@@ -10,6 +10,7 @@ import { Overview } from "./Overview";
 import { Inscription } from "./Inscription";
 import { Schedule } from "./Schedule";
 import { Inscriptions } from "./Inscriptions";
+import { Event } from "./Event.tsx";
 
 /**
  * Extracts the first part of a path
@@ -27,10 +28,10 @@ function extract(path: string): string | null {
 }
 
 export const Competition = () => {
-    const { eid } = useParams();
-    if (!eid) throw new Error('No competition ID provided');
+    const { competitionEid } = useParams();
+    if (!competitionEid) throw new Error('No competition EID provided');
 
-    const { competition, isLoading } = useFetchCompetitionData(eid);
+    const { competition, isLoading } = useFetchCompetitionData(competitionEid);
 
     if (isLoading) return <Loading />;
 
@@ -57,10 +58,16 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({ competition }) =>
     return (
         <>
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <Tabs value={activeTab} onChange={(_, v) => {
-                    if (v === "") return navigate(`/competitions/${competition.eid}`);
-                    navigate(`/competitions/${competition.eid}/${v}`);
-                }} variant="scrollable" scrollButtons allowScrollButtonsMobile>
+                <Tabs 
+                    value={activeTab} 
+                    onChange={(_, v) => {
+                        if (v === "") return navigate(`/competitions/${competition.eid}`);
+                        navigate(`/competitions/${competition.eid}/${v}`);
+                    }} 
+                    variant="scrollable" 
+                    scrollButtons 
+                    allowScrollButtonsMobile
+                >
                     <Tab label={t('navigation:overview')} value="" />
                     {isFuture && <Tab label={t('navigation:register')} value="register" />}
                     <Tab label={t('navigation:schedule')} value="schedule" />
@@ -77,6 +84,7 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({ competition }) =>
                 {(isFuture || isCurrent) && <Route path="/inscriptions" element={<Inscriptions />} />}
                 {isCurrent && <Route path="/liveResults" element={<Box>{t('glossary:liveResults')}</Box>} />}
                 {isPast && <Route path="/results" element={<Box>{t('glossary:results')}</Box>} />}
+                <Route path="/events/:eventEid" element={<Event />} />
                 <Route path="*" element={<Navigate to={`/competitions/${competition.eid}`} />} />
             </Routes>
         

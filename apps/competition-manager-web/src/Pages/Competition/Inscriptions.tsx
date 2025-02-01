@@ -1,14 +1,16 @@
-import { Badge, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Badge, IconButton, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { useTranslation } from "react-i18next";
 import { competitionAtom, inscriptionsAtom } from "../../GlobalsStates";
 import { useMemo, useState } from "react";
 import { getCategoryAbbr } from "@competition-manager/utils";
 import { Filter, FilterMenu } from "../../Components";
+import { useNavigate } from "react-router-dom";
 
 export const Inscriptions = () => {
 
     const { t } = useTranslation();
+    const navigate = useNavigate();
     
     const competition = useAtomValue(competitionAtom);
     const inscriptions = useAtomValue(inscriptionsAtom);
@@ -37,7 +39,7 @@ export const Inscriptions = () => {
         <Paper sx={{ width: 'max-content', margin: 'auto', maxWidth: '100%' }}>
             <TableContainer>
                 <Table size="small">
-                    <TableHead>
+                    <TableHead sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
                         <TableRow>
                             <TableCell width={50} align="center">
                                 {t('glossary:bib')}
@@ -104,7 +106,16 @@ export const Inscriptions = () => {
                                     {getCategoryAbbr(inscription.athlete.birthdate, inscription.athlete.gender, competition.date)}
                                 </TableCell>
                                 <TableCell>{inscription.club.abbr}</TableCell>
-                                <TableCell>{inscription.competitionEvent.name}</TableCell>
+                                <TableCell>
+                                    <Link
+                                        color="primary"
+                                        underline="hover"
+                                        onClick={() => navigate(`/competitions/${competition.eid}/events/${inscription.competitionEvent.eid}`)}
+                                        sx={{ cursor: 'pointer' }}
+                                    >
+                                        {inscription.competitionEvent.name}
+                                    </Link>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

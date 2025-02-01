@@ -12,23 +12,23 @@ import { Inscriptions } from "./Inscriptions";
 
 
 export const AdminCompetition = () => {
-    const { eid } = useParams();
-    if (!eid) throw new Error('No competition ID provided');
+    const { competitionEid } = useParams();
+    if (!competitionEid) throw new Error('No competition EID provided');
     
     const { t } = useTranslation();
 
-    const { isLoading } = useFetchCompetitionData(eid, true);
+    const { isLoading } = useFetchCompetitionData(competitionEid, true);
 
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
     const navItems = [
-        { text: t('navigation:info'), icon: faInfo, link: `/admin/competitions/${eid}` },
-        { text: t('navigation:schedule'), icon: faClock, link: `/admin/competitions/${eid}/schedule` },
-        { text: t('glossary:inscriptions'), icon: faUsers, link: `/admin/competitions/${eid}/inscriptions` },
-        { text: t('glossary:results'), icon: faTrophy, link: `/admin/competitions/${eid}/results` },
-        { text: t('navigation:admins'), icon: faUsersGear, link: `/admin/competitions/${eid}/admins` },
-        { text: t('navigation:options'), icon: faBasketShopping, link: `/admin/competitions/${eid}/options` },
-        { text: t('navigation:settings'), icon: faGears, link: `/admin/competitions/${eid}/settings` },
+        { text: t('navigation:info'), icon: faInfo, link: `/admin/competitions/${competitionEid}` },
+        { text: t('navigation:schedule'), icon: faClock, link: `/admin/competitions/${competitionEid}/schedule` },
+        { text: t('glossary:inscriptions'), icon: faUsers, link: `/admin/competitions/${competitionEid}/inscriptions` },
+        { text: t('glossary:results'), icon: faTrophy, link: `/admin/competitions/${competitionEid}/results` },
+        { text: t('navigation:admins'), icon: faUsersGear, link: `/admin/competitions/${competitionEid}/admins` },
+        { text: t('navigation:options'), icon: faBasketShopping, link: `/admin/competitions/${competitionEid}/options` },
+        { text: t('navigation:settings'), icon: faGears, link: `/admin/competitions/${competitionEid}/settings` },
     ];
     
     return (
