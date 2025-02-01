@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions } from '@competition-manager/backend-utils';
 import { prisma } from "@competition-manager/prisma";
 import { z } from 'zod';
-import { Athlete$, CreateInscription, Eid$, Id$, Inscription$, InscriptionStatus, License, License$, NODE_ENV, Record$ } from "@competition-manager/schemas";
+import { Athlete$, CreateInscription, Eid$, Id$, Inscription$, InscriptionStatus, License, License$, NODE_ENV, Record$, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
@@ -28,21 +28,6 @@ const Body$ = z.object({
     }),
 });
 
-enum WebhookType {
-    INSCRIPTIONS = 'inscriptions',
-}
-
-const InscriptionMetadata$ = z.object({
-    competitionEid: Eid$,
-    userId: Id$,
-    inscriptions: z.object({
-        athlete: License$,
-        event: Eid$,
-        record: Record$.nullish()
-    }).array(),
-});
-
-
 app.post(`${env.PREFIX}/stripe/webhook`, 
     parseRequest(Key.Body, Body$),
     async (req, res) => {
@@ -55,7 +40,7 @@ app.post(`${env.PREFIX}/stripe/webhook`,
             });
             if (!user) throw new Error('User not found');
             console.log(user);
-            switch (z.nativeEnum(WebhookType).parse(metadata.type)) {
+            switch (WebhookType$.parse(metadata.type)) {
                 case WebhookType.INSCRIPTIONS:
                     console.log('Payment intent webhook received', metadata);
 
@@ -64,7 +49,7 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                         .sort(([a], [b]) => +a - +b)
                         .map(([_, value]) => JSON.parse(value as string));
 
-                    const inscriptionsData = InscriptionMetadata$.parse({
+                    const inscriptionsData = StripeInscriptionMetadata$.parse({
                         ...metadata,
                         inscriptions,
                     });
