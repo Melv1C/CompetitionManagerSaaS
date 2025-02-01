@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, AuthenticatedRequest, checkRole, Key } from '@competition-manager/backend-utils';
 import { Competition$, Role } from '@competition-manager/schemas';
+import { competitionInclude } from '../../utils';
 
 export const router = Router();
 
@@ -24,25 +25,7 @@ router.put(
                     data: {
                         isDeleted: false
                     },
-                    include: {
-                        paymentPlan: true,
-                        options: true,
-                        admins: {
-                            include: {
-                                user: {
-                                    include: {
-                                        preferences: true
-                                    }
-                                }
-                            }
-                        },
-                        events: {
-                            include: {
-                                categories: true,
-                                event: true
-                            }
-                        }
-                    }
+                    include: competitionInclude
                 });
                 res.send(Competition$.parse(updatedCompetition));
             } catch (e: any) {
