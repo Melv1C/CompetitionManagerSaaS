@@ -82,7 +82,7 @@ function App() {
             }>
                 <Route path="/" element={<h1>{<Home />}</h1>} />
                 <Route path="/competitions" element={<Competitions />} />
-                <Route path="/competitions/:eid/*" element={<Competition />} />
+                <Route path="/competitions/:competitionEid/*" element={<Competition />} />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRole={Role.UNCONFIRMED_USER} redirectPath="/">
                         <Account />
@@ -93,7 +93,7 @@ function App() {
                         <AdminCompetitions />
                     </ProtectedRoute>}
                 />
-                <Route path="/admin/competitions/:eid/*" element={
+                <Route path="/admin/competitions/:competitionEid/*" element={
                     <ProtectedRoute requiredRole={Role.ADMIN} redirectPath="/">
                         <AdminCompetition />
                     </ProtectedRoute>}
