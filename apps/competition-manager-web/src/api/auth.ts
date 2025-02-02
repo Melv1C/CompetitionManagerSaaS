@@ -26,7 +26,7 @@ export const getRefreshToken = async () => {
     return accessToken;
 };
 
-export const resetPassword = async (token: string, newPassword: Password) => {
+export const resetPassword = async (newPassword: Password, token?: string) => {
     const { data } = await api.post('/users/reset-password', { newPassword }, { params: { token } });
     return data;
 }
