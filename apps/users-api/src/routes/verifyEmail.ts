@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, Key, verifyVerificationToken } from '@competition-manager/backend-utils';
+import { parseRequest, Key, verifyVerificationToken, catchError } from '@competition-manager/backend-utils';
 import { EncodeToken$, Role } from '@competition-manager/schemas';
-import { env } from '..';
+import { env, logger } from '..';
 
 export const router = Router();
 
@@ -49,7 +49,11 @@ router.get(
             // Redirect to account page
             res.redirect(`${env.BASE_URL}/account`);
         } catch (error) {
-            console.error(error);
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'GET /verify-email',
+                status: 500
+            });
             res.status(500).json({ message: 'Internal server error' });
         }
     }

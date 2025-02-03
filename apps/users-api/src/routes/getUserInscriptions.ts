@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { Eid$, Role, Inscription$ } from '@competition-manager/schemas';
-import { AuthenticatedRequest, Key, parseRequest, checkRole } from '@competition-manager/backend-utils';
+import { AuthenticatedRequest, Key, parseRequest, checkRole, catchError } from '@competition-manager/backend-utils';
 import { z } from 'zod';
+import { logger } from '..';
 
 export const router = Router();
 
@@ -43,7 +44,12 @@ router.get(
             }
             res.send(Inscription$.array().parse(inscriptions));
         } catch(error) {
-            console.error(error);
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'GET /me/inscriptions',
+                userId: req.user?.id,
+                status: 500
+            });
             res.status(500).send('Internal server error');
         }
     }
