@@ -9,7 +9,7 @@ export const ResultDetails$ = z.object({
     //eid: Eid$, pas utile je pense car on n'aura pas te route pour les détails seulement
     trynum: z.number(),
     isBest: Boolean$.default(false),
-
+isOfficialBest: Boolean$.default(false),
     value: z.number(),
     result: z.string(),
     wind: z.string().nullish(), // or string ?
