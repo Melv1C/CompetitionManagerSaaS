@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { parseRequest, verifyResetPasswordToken, Key, hashPassword } from '@competition-manager/backend-utils';
+import { parseRequest, verifyResetPasswordToken, Key, hashPassword, catchError } from '@competition-manager/backend-utils';
 import { EncodeToken$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
+import { logger } from '..';
 
 export const router = Router();
 
@@ -43,13 +44,21 @@ router.post(
                     res.status(404).send('User not found');
                     return;
                 } else{
-                    console.error(e);
+                    catchError(logger)(e, {
+                        message: 'Internal server error',
+                        path: 'POST /reset-password',
+                        status: 500
+                    });
                     res.status(500).send('Internal server error');
                     return;
                 }
             }
         } catch (error) {
-            console.error(error);
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'POST /reset-password',
+                status: 500
+            });
             res.status(500).send('Internal server error');
         }
     }

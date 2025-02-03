@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword, isNodeEnv } from '@competition-manager/backend-utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
 import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$, Role, NODE_ENV } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
-import { env } from '..';
+import { env, logger } from '..';
 
 export const router = Router();
 
@@ -52,6 +52,13 @@ router.post(
             const accessToken = generateAccessToken(tokenData);
             const refreshToken = generateRefreshToken(tokenData);
             if (!await sendVerificationEmail(userData.email, generateVerificationToken(tokenData))) {
+                logger.warn('Failed to send email', {
+                    path: 'POST /register',
+                    status: 500,
+                    metadata: {
+                        user: userData,
+                    }
+                });
                 res.status(500).send('Failed to send email');
                 return;
             }
@@ -62,7 +69,11 @@ router.post(
                 maxAge: 30 * 24 * 60 * 60 * 1000,
             }).send(accessToken);
         } catch (error) {
-            console.error(error);
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'POST /register',
+                status: 500
+            });
             res.status(500).json({ message: 'Internal server error' });
         }
     }
