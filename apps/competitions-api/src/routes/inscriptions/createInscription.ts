@@ -79,23 +79,58 @@ router.post(
             }
 
             const parsedCompetition = Competition$.parse(competition);
-            
+
             // Check if inscriptions are open for the competition
             if (!isAdmin && (parsedCompetition.startInscriptionDate > new Date() || parsedCompetition.endInscriptionDate < new Date())) {
                 res.status(400).send('Inscriptions are closed');
                 return;
             }
 
-            if (isAdmin) {
-                for (const athInscriptions of inscriptionsData) {
+            for (const athInscriptions of inscriptionsData) {
+                try {
+                    // Check if athlete exists
+                    const athlete = await findAthleteWithLicense(athInscriptions.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                    const cat = getCategoryAbbr(athlete.birthdate, athlete.gender, parsedCompetition.date);
                     for (const inscription of athInscriptions.inscriptions) {
-                        const event = competition.events.find((e) => e.eid === inscription.competitionEventEid);
+                        // Check if event exists
+                        const event = parsedCompetition.events.find((e) => e.eid === inscription.competitionEventEid);
                         if (!event) {
                             res.status(404).send('Event ' + inscription.competitionEventEid + ' not found');
                             return;
                         }
+                        // Check if athlete is in the right category
+                        if (!event.categories.some((c) => c.abbr === cat)) {
+                            res.status(400).send('Athlete ' + athInscriptions.athleteLicense + ' is not in the right category for event ' + inscription.competitionEventEid + ' (' + cat + ')');
+                            return;
+                        }
+                        // Check if inscriptions are open for the event
+                        if (!isAdmin && !event.isInscriptionOpen) {
+                            res.status(400).send('Inscriptions for event ' + inscription.competitionEventEid + ' are closed');
+                            return;
+                        }
+
+                        const nbParticipants = competition.inscriptions.filter((i) => 
+                            i.isDeleted === false 
+                            && i.status === InscriptionStatus.ACCEPTED 
+                            && i.competitionEventId === event.id
+                        ).length;
+                        // Check if event is full
+                        if (!isAdmin && event.place && nbParticipants >= event.place) {
+                            res.status(400).send('Event ' + inscription.competitionEventEid + ' is full');
+                            return;
+                        }
                     }
+                } catch (e) {
+                    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
+                        res.status(404).send('Athlete not found');
+                        return;
+                    }
+                    // Rethrow the error if it's not a known error
+                    throw e;
                 }
+            }
+
+            if (isAdmin) {
                 res.send(
                     saveInscriptions(
                         eid, 
@@ -121,35 +156,6 @@ router.post(
                     )
                 );
                 return;
-            }
-
-            for (const athInscriptions of inscriptionsData) {
-                const athlete = await findAthleteWithLicense(athInscriptions.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
-                const cat = getCategoryAbbr(athlete.birthdate, athlete.gender, competition.date);
-                for (const inscription of athInscriptions.inscriptions) {
-                    const event = competition.events.find((e) => e.eid === inscription.competitionEventEid);
-                    if (!event) {
-                        res.status(404).send('Event ' + inscription.competitionEventEid + ' not found');
-                        return;
-                    }
-                    if (!event.isInscriptionOpen) {
-                        res.status(400).send('Inscriptions for event ' + inscription.competitionEventEid + ' are closed');
-                        return;
-                    }
-                    if (!event.categories.some((c) => c.abbr === cat)) {
-                        for (const cate of event.categories) {
-                            console.log(cate.abbr);
-                        }
-                        res.status(400).send('Athlete ' + athInscriptions.athleteLicense + ' is not in the right category for event ' + inscription.competitionEventEid + ' (' + cat + ')');
-                        return;
-                    }
-                    if (event.place) {
-                        const nbInscr = competition.inscriptions.filter((i) => i.competitionEventId === event.id).length;
-                        if (event.place <= nbInscr) {
-                            res.status(404).send('Event ' + inscription.competitionEventEid + ' is full');
-                        }
-                    }
-                }
             }
 
             const totalCost = inscriptionsData.reduce((acc, { inscriptions }) => acc + inscriptions.reduce((acc, { competitionEventEid }) => acc + competition.events.find((e) => e.eid === competitionEventEid)!.cost || 0, 0), 0);
