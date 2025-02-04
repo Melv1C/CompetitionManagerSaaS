@@ -158,10 +158,17 @@ router.post(
                 return;
             }
 
-            const totalCost = inscriptionsData.reduce((acc, { inscriptions }) => acc + inscriptions.reduce((acc, { competitionEventEid }) => acc + competition.events.find((e) => e.eid === competitionEventEid)!.cost || 0, 0), 0);
-            const alreadyPaid = competition.inscriptions.filter((i) => i.user.id === req.user!.id && inscriptionsData.some(({ athleteLicense }) => athleteLicense === i.athlete.license)).reduce((acc, i) => acc + i.paid, 0);
-            const fees = getFees(totalCost - alreadyPaid);
-            const total = Math.max(0, totalCost - alreadyPaid) + fees;
+            // Get the cumulated costs for all inscriptions
+            const { alreadyPaid, fees, totalToPay } = (await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
+                const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                return getCostsInfo(parsedCompetition, athlete, inscriptions.map((i) => i.competitionEventEid), Inscription$.array().parse(competition.inscriptions).filter((i) => i.user.id === req.user!.id));
+            }))).reduce((acc, { totalCost, alreadyPaid, fees, totalToPay }) => {
+                acc.totalCost += totalCost;
+                acc.alreadyPaid += alreadyPaid;
+                acc.fees += fees;
+                acc.totalToPay += totalToPay;
+                return acc;
+            }, { totalCost: 0, alreadyPaid: 0, fees: 0, totalToPay: 0 });
 
             const nbOfInscriptionsByEvent = inscriptionsData.reduce((acc, { inscriptions }) => {
                 inscriptions.forEach(({ competitionEventEid }) => {
@@ -170,7 +177,7 @@ router.post(
                 return acc;
             }, {} as Record<Eid, number>);
 
-            if (total > 0) {
+            if (totalToPay > 0) {
                 // TODO: Fix the url
                 const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
                 try {
@@ -205,7 +212,7 @@ router.post(
                                 product_data: {
                                     name: `Fees` //TODO: Translate
                                 },
-                                unit_amount: Math.round(fees * 100)
+                                unit_amount: fees * 100
                             },
                             quantity: 1
                         }],
