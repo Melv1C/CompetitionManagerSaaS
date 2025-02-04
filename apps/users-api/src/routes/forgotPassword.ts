@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { parseRequest, sendEmail, generateResetPasswordToken, Key } from '@competition-manager/backend-utils';
+import { parseRequest, sendEmail, generateResetPasswordToken, Key, catchError } from '@competition-manager/backend-utils';
 import { Email, EmailData$, LogInfo, LogInfo$, TokenData$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { env, logger } from '..';
-import { catchError } from '@competition-manager/backend-utils/src/logger';
 
 export const router = Router();
 
