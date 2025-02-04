@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Box, Drawer, IconButton, List, ListItemButton, ListItemIcon, Typography } from "@mui/material"
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../utils/constants";
 import { faChevronLeft, faChevronRight, IconDefinition } from "@fortawesome/free-solid-svg-icons";
@@ -21,8 +21,24 @@ export const SideNav: React.FC<MenuItemProps> = ({ items, isMenuOpen, setIsMenuO
         setIsMenuOpen((prev) => !prev);
     }
 
+    // add left margin to the footer to prevent it from being hidden by the sidenav (id="footer")
+    useEffect(() => {
+        const footer = document.getElementById('footer');
+        if (footer) {
+            footer.style.marginLeft = isMenuOpen ? OPEN_SIDENAV_WIDTH : CLOSED_SIDENAV_WIDTH;
+            footer.style.transition = 'margin-left 0.3s';
+        }
+
+        return () => {
+            if (footer) {
+                footer.style.marginLeft = '0';
+            }
+        }
+    }, [isMenuOpen]);
+
     return (
         <Drawer 
+            id="sidenav-drawer"
             variant="permanent"
             sx={{
                 width: isMenuOpen ? OPEN_SIDENAV_WIDTH : CLOSED_SIDENAV_WIDTH,
