@@ -74,7 +74,7 @@ export const Inscriptions = () => {
     ];
 
     return (
-        <MaxWidth maxWidth="1200px">
+        <MaxWidth maxWidth="lg">
             <CircleButton 
                 size="4rem"
                 sx={{ 

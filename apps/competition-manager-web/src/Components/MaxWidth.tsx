@@ -1,27 +1,25 @@
-import { Box } from "@mui/material"
+import { Breakpoint, Container, SxProps } from "@mui/material"
 import { PropsWithChildren } from "react"
-import { DEFAULT_MAX_WIDTH } from "../utils/constants"
 
 type MaxWidthProps = PropsWithChildren<{
-    maxWidth?: string
+    maxWidth?: Breakpoint,
+    sx?: SxProps
 }>
 
 export const MaxWidth: React.FC<MaxWidthProps> = ({ 
-    maxWidth = DEFAULT_MAX_WIDTH,
-    children 
+    maxWidth = 'md',
+    children,
+    sx = {}
 }) => {
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: `calc(100% - 2rem)`,
-                maxWidth: maxWidth,
-                margin: '0 auto',
-                padding: '1rem'
+        <Container 
+            maxWidth={maxWidth} 
+            sx={{ 
+                my: 4,
+                ...sx
             }}
         >
             {children}
-        </Box>
+        </Container>
     )
 }

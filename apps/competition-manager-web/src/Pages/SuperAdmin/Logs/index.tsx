@@ -44,7 +44,7 @@ export const Logs = () => {
         },
     ]
     return (
-        <MaxWidth maxWidth="1200px">
+        <MaxWidth maxWidth="lg">
 
             <Box
                 component={Paper}
