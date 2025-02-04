@@ -4,7 +4,7 @@ import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, I
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
-import { getFees, isAuthorized } from '@competition-manager/utils';
+import { getCategoryAbbr, getFees, isAuthorized } from '@competition-manager/utils';
 
 export const router = Router();
 
@@ -20,9 +20,6 @@ router.post(
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try {
-            //TODO check place 
-            //TODO check if the event is open
-            //TODO check if the athlete is in the right category
             const { isAdmin } = AdminQuery$.parse(req.query);
             const { eid } = Params$.parse(req.params);
             const inscriptionsData = CreateInscription$.array().parse(req.body);
@@ -87,6 +84,15 @@ router.post(
             }
 
             if (isAdmin) {
+                for (const athInscriptions of inscriptionsData) {
+                    for (const inscription of athInscriptions.inscriptions) {
+                        const event = competition.events.find((e) => e.eid === inscription.competitionEventEid);
+                        if (!event) {
+                            res.status(404).send('Event ' + inscription.competitionEventEid + ' not found');
+                            return;
+                        }
+                    }
+                }
                 res.send(
                     saveInscriptions(
                         eid, 
@@ -114,7 +120,35 @@ router.post(
                 return;
             }
 
-            //TODO all inscriptions check
+            for (const athInscriptions of inscriptionsData) {
+                const athlete = await findAthleteWithLicense(athInscriptions.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                const cat = getCategoryAbbr(athlete.birthdate, athlete.gender, competition.date);
+                for (const inscription of athInscriptions.inscriptions) {
+                    const event = competition.events.find((e) => e.eid === inscription.competitionEventEid);
+                    if (!event) {
+                        res.status(404).send('Event ' + inscription.competitionEventEid + ' not found');
+                        return;
+                    }
+                    if (!event.isInscriptionOpen) {
+                        res.status(400).send('Inscriptions for event ' + inscription.competitionEventEid + ' are closed');
+                        return;
+                    }
+                    if (!event.categories.some((c) => c.abbr === cat)) {
+                        for (const cate of event.categories) {
+                            console.log(cate.abbr);
+                        }
+                        res.status(400).send('Athlete ' + athInscriptions.athleteLicense + ' is not in the right category for event ' + inscription.competitionEventEid + ' (' + cat + ')');
+                        return;
+                    }
+                    if (event.place) {
+                        const nbInscr = competition.inscriptions.filter((i) => i.competitionEventId === event.id).length;
+                        if (event.place <= nbInscr) {
+                            res.status(404).send('Event ' + inscription.competitionEventEid + ' is full');
+                        }
+                    }
+                }
+            }
+
             const totalCost = inscriptionsData.reduce((acc, { inscriptions }) => acc + inscriptions.reduce((acc, { competitionEventEid }) => acc + competition.events.find((e) => e.eid === competitionEventEid)!.cost || 0, 0), 0);
             const alreadyPaid = competition.inscriptions.filter((i) => i.user.id === req.user!.id && inscriptionsData.some(({ athleteLicense }) => athleteLicense === i.athlete.license)).reduce((acc, i) => acc + i.paid, 0);
             const fees = getFees(totalCost - alreadyPaid);
@@ -220,9 +254,15 @@ router.post(
                 )
             );
 
-        } catch (e) {
-            console.error(e);
-            res.status(500).send('Internal server error');
+        } catch (e: any) {
+            if (e.code === 'P2025') {
+                res.status(404).send('Athlete not found');
+                return;
+            } else{
+                console.error(e);
+                res.status(500).send('Internal server error');
+                return;
+            }
         }
     }
 );
