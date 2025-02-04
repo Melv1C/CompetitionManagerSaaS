@@ -162,7 +162,7 @@ router.post(
                                 product_data: {
                                     name: `Fees` //TODO: Translate
                                 },
-                                unit_amount: fees * 100
+                                unit_amount: Math.round(fees * 100)
                             },
                             quantity: 1
                         }],
