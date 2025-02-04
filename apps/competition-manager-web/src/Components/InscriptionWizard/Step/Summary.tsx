@@ -7,7 +7,7 @@ import { formatPerf } from "../../../utils";
 import { useMemo, useState } from "react";
 import { CreateInscription$, PaymentMethod } from "@competition-manager/schemas";
 import { createInscriptions, CreateInscriptionsResponseType } from "../../../api";
-import { getFees, isAthleteInAFreeClub } from "@competition-manager/utils";
+import { getCostsInfo } from "@competition-manager/utils";
 
 type SummaryProps = {
     isAdmin: boolean;
@@ -56,22 +56,7 @@ export const Summary: React.FC<SummaryProps> = ({
         handleNext();
     }
     
-    const totalCost = useMemo(() => {
-        if (isAthleteInAFreeClub(competition, athlete)) return 0;
-        return inscriptionsData.reduce((total, inscriptionData) => total + inscriptionData.competitionEvent.cost, 0);
-    }, [competition, athlete, inscriptionsData]);
-
-    const alreadyPaid = useMemo(() =>
-        userInscriptions
-            .filter((inscription) => inscription.athlete.license === athlete.license)
-            .reduce((total, inscription) => total + inscription.paid, 0)
-    , [athlete, userInscriptions]);
-
-    const remainingCost = Math.max(0, totalCost - alreadyPaid);
-
-    const fees = getFees(remainingCost); //TODO: competition.isFeesAdditionnal ? getFees(remainingCost) : 0;
-
-    const totalToPay = remainingCost + fees;
+    const { totalCost, alreadyPaid, fees, totalToPay } = useMemo(() => getCostsInfo(competition, athlete, inscriptionsData.map((inscriptionData) => inscriptionData.competitionEvent.eid), userInscriptions), [competition, athlete, inscriptionsData, userInscriptions]);
 
     return (
         <Box width={1}>
