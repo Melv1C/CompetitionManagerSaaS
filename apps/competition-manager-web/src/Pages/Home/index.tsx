@@ -12,7 +12,7 @@ export const Home = () => {
 
     return (
         <MaxWidth>
-            <Box sx={{ py: 6 }}>
+            <Box sx={{ py: 8 }}>
                 <Stack direction={isMobile ? "column" : "row"} spacing={isMobile ? 4 : 8} alignItems="center">
                     {/* Texte à gauche */}
                     <Box flex={1} textAlign={isMobile ? "center" : "left"}>
