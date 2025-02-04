@@ -196,7 +196,7 @@ router.post(
 
                     const session = await createCheckoutSession(
                         [...Object.entries(nbOfInscriptionsByEvent).map(([eid, quantity]) => {
-                            const event = competition.events.find((e) => e.eid === eid);
+                            const event = parsedCompetition.events.find((e) => e.eid === eid);
                             if (!event) throw new Error('Event not found');
                             return {
                                 price_data: {
