@@ -55,14 +55,9 @@ router.post(
                 },
                 include: {
                     oneDayAthletes: true,
-                    events: {
-                        include: {
-                            categories: true,
-                            event: true
-                        }
-                    },
                     inscriptions: {
                         include: {
+                            ...competitionInclude,
                             user: true,
                             athlete: true,
                             club: true,
@@ -82,6 +77,9 @@ router.post(
                 res.status(404).send('Competition not found');
                 return;
             }
+
+            const parsedCompetition = Competition$.parse(competition);
+
 
             if (isAdmin) {
                 for (const athInscriptions of inscriptionsData) {
