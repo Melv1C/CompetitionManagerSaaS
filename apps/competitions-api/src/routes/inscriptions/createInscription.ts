@@ -79,7 +79,12 @@ router.post(
             }
 
             const parsedCompetition = Competition$.parse(competition);
-
+            
+            // Check if inscriptions are open for the competition
+            if (!isAdmin && (parsedCompetition.startInscriptionDate > new Date() || parsedCompetition.endInscriptionDate < new Date())) {
+                res.status(400).send('Inscriptions are closed');
+                return;
+            }
 
             if (isAdmin) {
                 for (const athInscriptions of inscriptionsData) {
