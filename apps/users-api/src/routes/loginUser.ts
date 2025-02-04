@@ -4,7 +4,7 @@ import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
 import { NODE_ENV, User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
-import { logger } from '..';
+import { logger } from '../logger';
 
 export const router = Router();
 

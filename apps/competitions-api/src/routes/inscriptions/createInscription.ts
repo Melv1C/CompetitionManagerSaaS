@@ -6,7 +6,7 @@ import { prisma, Prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
 import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
 import { competitionInclude } from '../../utils';
-import { logger } from '../..';
+import { logger } from '../../logger';
 
 export const router = Router();
 
@@ -57,10 +57,10 @@ router.post(
                     eid
                 },
                 include: {
+                    ...competitionInclude,
                     oneDayAthletes: true,
                     inscriptions: {
                         include: {
-                            ...competitionInclude,
                             user: true,
                             athlete: true,
                             club: true,

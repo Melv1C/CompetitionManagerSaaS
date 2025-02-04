@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, Key, checkRole, catchError } from '@competition-manager/backend-utils';
 import { Role, User$, UpdateUser$ } from '@competition-manager/schemas';
-import { logger } from '..';
+import { logger } from '../logger';
 
 export const router = Router();
 

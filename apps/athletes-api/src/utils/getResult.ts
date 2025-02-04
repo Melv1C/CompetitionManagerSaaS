@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Event, Event$, License, Record$ } from '@competition-manager/schemas';
-import { env } from '..';
+import { env } from '../env';
 import { z } from 'zod';
 
 export const BeathleticsResults$ = z.record(Event$.shape.name, z.array(Record$));

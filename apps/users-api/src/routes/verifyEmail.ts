@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, Key, verifyVerificationToken, catchError } from '@competition-manager/backend-utils';
 import { EncodeToken$, Role } from '@competition-manager/schemas';
-import { env, logger } from '..';
+import { env } from '../env';
+import { logger } from '../logger';
 
 export const router = Router();
 

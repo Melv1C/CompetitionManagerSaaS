@@ -1,28 +1,14 @@
 import express from "express";
 import 'dotenv/config';
-
 import { corsMiddleware } from '@competition-manager/backend-utils';
 
 import routes from './routes';
+import { env } from "./env";
 
-import { z } from 'zod';
-import { NODE_ENV } from "@competition-manager/schemas";
-
-const env$ = z.object({
-    NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
-    PORT: z.string().default('3000'),
-    PREFIX: z.string().default('/api'),
-    ALLOW_ORIGIN: z.string().default('*'),
-});
-
-export const env = env$.parse(process.env);
-
-//export const logger = createLogger(SERVICE.CHANGEME);
 const app = express();
 app.use(express.json());
 
 app.use(corsMiddleware);
-
 
 //app.use(`${env.PREFIX}/CHANGEME`, routes);
 

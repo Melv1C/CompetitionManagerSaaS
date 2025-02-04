@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { z } from 'zod';
 import { parseRequest, checkRole, AuthenticatedRequest, Key } from '@competition-manager/backend-utils';
 import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
-import { env } from '..';
+import { env } from '../env';
 
 export const router = Router();
 
