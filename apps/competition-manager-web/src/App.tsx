@@ -29,6 +29,7 @@ import { NODE_ENV, Role } from '@competition-manager/schemas';
 import { Home } from './Pages/Home';
 import { isNodeEnv } from './env';
 import { ResetPassword } from './Pages/ResetPassword';
+import { Footer } from './Components/Footer';
 
 
 // must be extract in an other file
@@ -78,6 +79,7 @@ function App() {
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <Outlet />
                     </ErrorBoundary>
+                    <Footer />
                 </ErrorBoundary>
             }>
                 <Route path="/" element={<h1>{<Home />}</h1>} />
