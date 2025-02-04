@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense } from '@competition-manager/backend-utils';
+import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
 import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType } from '@competition-manager/schemas';
 import { z } from 'zod';
-import { prisma } from '@competition-manager/prisma';
+import { prisma, Prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
-import { getCategoryAbbr, getFees, isAuthorized } from '@competition-manager/utils';
+import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
+import { competitionInclude } from '../../utils';
+import { logger } from '../..';
 
 export const router = Router();
 
