@@ -14,6 +14,7 @@ const Params$ = Competition$.pick({
 
 router.post(
     '/:eid/inscriptions',
+    logRequestMiddleware(logger),
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Body, CreateInscription$.array()),
     parseRequest(Key.Query, AdminQuery$),
@@ -181,7 +182,6 @@ router.post(
                 // TODO: Fix the url
                 const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
                 try {
-
                     const inscriptions = inscriptionsData.map(({ athleteLicense, inscriptions }) => {
                         return inscriptions.map((data) => {
                             return {
@@ -238,9 +238,8 @@ router.post(
                         res.status(404).send('Event not found');
                         return;
                     }
-                    console.error(e);
-                    res.status(500).send('Internal server error');
-                    return;
+                    // Rethrow the error if it's not a known error
+                    throw e;
                 }
             }
 
@@ -269,16 +268,14 @@ router.post(
                     Inscription$.array().parse(competition.inscriptions)
                 )
             );
-
-        } catch (e: any) {
-            if (e.code === 'P2025') {
-                res.status(404).send('Athlete not found');
-                return;
-            } else{
-                console.error(e);
-                res.status(500).send('Internal server error');
-                return;
-            }
+        } catch (e) {
+            catchError(logger)(e, {
+                message: 'Internal server error',
+                path: 'POST /:eid/inscriptions',
+                status: 500,
+                userId: req.user?.id
+            });
+            res.status(500).send('Internal server error');
         }
     }
 );
