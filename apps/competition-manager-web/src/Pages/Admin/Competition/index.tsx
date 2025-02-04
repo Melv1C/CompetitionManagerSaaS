@@ -4,7 +4,7 @@ import { Route, Routes, useParams } from "react-router-dom";
 import { faBasketShopping, faClock, faGears, faInfo, faTrophy, faUsers, faUsersGear } from "@fortawesome/free-solid-svg-icons";
 import { Info } from "./Info";
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from "../../../utils/constants";
-import { Loading, ScrollablePage, SideNav } from "../../../Components";
+import { Loading, SideNav } from "../../../Components";
 import { Schedule } from "./Schedule";
 import { useTranslation } from "react-i18next";
 import { useFetchCompetitionData } from "../../../hooks";
@@ -32,12 +32,13 @@ export const AdminCompetition = () => {
     ];
     
     return (
-        <ScrollablePage>
+        <Box sx={{ display: 'flex' }}>
             <SideNav items={navItems} isMenuOpen={isSideNavOpen} setIsMenuOpen={setIsSideNavOpen} />
             <Box
                 sx={{
                     width: `calc(100% - ${isSideNavOpen ? OPEN_SIDENAV_WIDTH : CLOSED_SIDENAV_WIDTH})`,
                     transition: 'width 0.3s',
+                    py: 2,
                 }}
             >
                 {(isLoading) ? <Loading /> :
@@ -52,6 +53,6 @@ export const AdminCompetition = () => {
                     </Routes>
                 }
             </Box>
-        </ScrollablePage>
+        </Box>
     );
 }
