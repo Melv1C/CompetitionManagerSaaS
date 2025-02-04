@@ -1,9 +1,9 @@
 import express from "express";
 import 'dotenv/config';
-import { corsMiddleware } from '@competition-manager/backend-utils';
+import { corsMiddleware, createLogger } from '@competition-manager/backend-utils';
 import routes from './routes';
 import { z } from 'zod';
-import { NODE_ENV } from "@competition-manager/schemas";
+import { NODE_ENV, SERVICE } from "@competition-manager/schemas";
 
 const env$ = z.object({
     NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
@@ -15,6 +15,8 @@ const env$ = z.object({
 });
 
 export const env = env$.parse(process.env);
+
+export const logger = createLogger(SERVICE.COMPETITIONS);
 
 const app = express();
 app.use(express.json());
