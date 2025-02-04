@@ -20,7 +20,10 @@ export const Inscriptions = () => {
     if (!competition) throw new Error('No competition found');
     if (!adminInscriptions) throw new Error('No inscriptions found');
 
-    const sortInscriptions = useMemo(() => adminInscriptions.sort((a, b) => b.date.getTime() - a.date.getTime()), [adminInscriptions]);
+    const sortInscriptions = useMemo(() => 
+        [...adminInscriptions].sort((a, b) => b.date.getTime() - a.date.getTime()), 
+        [adminInscriptions]
+    );
 
     const setInscriptionData = useSetAtom(inscriptionDataAtom);
     
