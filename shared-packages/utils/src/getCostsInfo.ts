@@ -1,4 +1,4 @@
-import { Athlete, Competition, CompetitionEvent, Eid, Id, Inscription, License, PaymentMethod } from "@competition-manager/schemas";
+import { Athlete, Competition, CompetitionEvent, Eid, Inscription, License, PaymentMethod } from "@competition-manager/schemas";
 import { isAthleteInAFreeClub } from "./checkInscription";
 
 const BASE_FEE = 0.35;
