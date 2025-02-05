@@ -76,10 +76,19 @@ function App() {
             <Route element={
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                     <NavBar items={navItems} />
-                    <ErrorBoundary FallbackComponent={ErrorFallback}>
-                        <Outlet />
-                    </ErrorBoundary>
-                    <Footer />
+                    <Box 
+                        display="flex"
+                        flexDirection="column"
+                        flex={1}
+                        sx={{ overflowY: 'auto' }}
+                    >
+                        <Box flex={1}>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Outlet />
+                            </ErrorBoundary>
+                        </Box>
+                        <Footer />
+                    </Box>
                 </ErrorBoundary>
             }>
                 <Route path="/" element={<h1>{<Home />}</h1>} />
@@ -121,7 +130,7 @@ function App() {
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={lightTheme}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+                            <Box display="flex" flexDirection="column" height="100vh">
                                 <RouterProvider router={router} />
                             </Box>
                         </LocalizationProvider>
