@@ -30,6 +30,7 @@ import { Home } from './Pages/Home';
 import { isNodeEnv } from './env';
 import { ResetPassword } from './Pages/ResetPassword';
 import { Footer } from './Components/Footer';
+import { FAQ } from './Pages/FAQ';
 
 
 // must be extract in an other file
@@ -94,6 +95,7 @@ function App() {
                 <Route path="/" element={<h1>{<Home />}</h1>} />
                 <Route path="/competitions" element={<Competitions />} />
                 <Route path="/competitions/:competitionEid/*" element={<Competition />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRole={Role.UNCONFIRMED_USER} redirectPath="/">
                         <Account />
