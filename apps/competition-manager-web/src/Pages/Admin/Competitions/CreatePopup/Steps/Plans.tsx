@@ -1,6 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, CardHeader, Typography } from "@mui/material"
 import { StepProps } from ".."
-import { StepperButtons as Buttons } from "../../../../../Components";
+import { StepperButtons as Buttons, WysiwygViewer } from "../../../../../Components";
 import { PaymentPlan } from "@competition-manager/schemas"
 import { useTranslation } from "react-i18next";
 
@@ -98,16 +98,13 @@ const Plan: React.FC<PlanProps> = ({
                             alignItems: 'center'
                         }}
                     >
-                        <Box>
-                            <Typography variant="h4" align="center" color={isSelected ? 'primary' : 'secondary'}>
-                                {price}€
-                            </Typography>
-                        </Box>
-                        <Box>
-                            <Typography variant="body1" align="center" color={isSelected ? 'primary' : 'secondary'}>
-                                {description}
-                            </Typography>
-                        </Box>
+                        <Typography variant="h4" align="center" color={isSelected ? 'primary' : 'secondary'}>
+                            {price}€
+                        </Typography>
+                        
+                        <WysiwygViewer
+                            value={description}
+                        />
                     </Box>
                 </CardContent>
             </CardActionArea>
