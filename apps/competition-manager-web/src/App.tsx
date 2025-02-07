@@ -62,7 +62,7 @@ const lightTheme = createTheme({
 const queryClient = new QueryClient()
 
 function App() {
-
+    console.log('App')
     const { t } = useTranslation()
     useAutoLogin()
 

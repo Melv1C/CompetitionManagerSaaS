@@ -12,7 +12,7 @@ import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 type SignUpProps = {
     onToggle: () => void;
@@ -39,6 +39,11 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
         enabled: false,
         retry: false
     });
+
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        queryClient.resetQueries('register');
+    }, []);
 
     useEffect(() => {
         if (data) {
@@ -110,7 +115,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                 </Button>
 
                 {isError && isAxiosError(error) && (
-                    <Alert severity="error">{t(`errors:users-api.${error.response?.data.error}`)}</Alert>
+                    <Alert severity="error">{t(`errors:users-api.${error.response?.data}`)}</Alert>
                 )}
 
                 {errorMsg && (

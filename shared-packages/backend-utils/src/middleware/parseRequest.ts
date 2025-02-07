@@ -9,7 +9,6 @@ export enum Key {
 }
 
 export const parseRequest = (key: Key, schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
-    console.log("efzeg")
     const result = schema.safeParse(req[key]);
     if (result.success) {
         req[key] = result.data;

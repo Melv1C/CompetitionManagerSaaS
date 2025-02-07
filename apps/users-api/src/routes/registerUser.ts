@@ -46,8 +46,6 @@ router.post(
                         user: userData,
                     }
                 });
-                res.status(500).send('failedToSendEmail');
-                return;
             }
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,

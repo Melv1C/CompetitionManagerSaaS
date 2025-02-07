@@ -12,7 +12,7 @@ import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
 import { ForgotPasswordPopup } from "./ForgotPasswordPopup";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 type SignInProps = {
     onToggle: () => void;
@@ -41,6 +41,11 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
         retry: false
     });
 
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        queryClient.resetQueries('login');
+    }, []);
+        
     useEffect(() => {
         if (data) {
             const userToken = decodeToken(data);
@@ -102,7 +107,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
                 </Button>
 
                 {isError && isAxiosError(error) && (
-                    <Alert severity="error">{t(`errors:users-api.${error.response?.data.error}`)}</Alert>
+                    <Alert severity="error">{t(`errors:users-api.${error.response?.data}`)}</Alert>
                 )}
 
                 {errorMsg && (
