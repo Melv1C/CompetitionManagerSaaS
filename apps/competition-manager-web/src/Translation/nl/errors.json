@@ -1,0 +1,9 @@
+{
+    "internalServerError": "Interne serverfout. Probeer het later opnieuw.",
+    "users-api": {
+        "userNotFound": "Gebruiker niet gevonden",
+        "userAlreadyExists": "Gebruiker bestaat al",
+        "invalidPassword": "Ongeldig wachtwoord",
+        "invalidToken": "Ongeldige token"
+    }
+}

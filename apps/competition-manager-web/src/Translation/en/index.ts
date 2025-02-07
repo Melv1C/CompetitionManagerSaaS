@@ -11,6 +11,7 @@ import inscription from './inscription.json';
 import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
+import errors from './errors.json';
 
 import { zodTranslations } from '@competition-manager/schemas';
 
@@ -29,4 +30,5 @@ export default {
     account,
     home,
     footer,
+    errors
 }

@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Button, Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, TextField } from "@mui/material";
 import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next"
-import { logout } from "../../api";
+import { logout, resendVerificationEmail } from "../../api";
 import { userTokenAtom } from "../../GlobalsStates";
 import { isAuthorized } from "@competition-manager/utils";
 import { Role } from "@competition-manager/schemas";
@@ -35,7 +35,9 @@ export const Infos = () => {
                         <AlertTitle>{t('info.unconfirmedEmail.title')}</AlertTitle>
                         {t('info.unconfirmedEmail.message')}
                         {' '}
-                        <Button color='primary'>{t('info.unconfirmedEmail.resend')}</Button>
+                        <Button color='primary' onClick={() => resendVerificationEmail()}>
+                            {t('info.unconfirmedEmail.resend')}
+                        </Button>
                     </Alert>
                 )}
                 {isAuthorized(userToken, Role.ADMIN) && (
