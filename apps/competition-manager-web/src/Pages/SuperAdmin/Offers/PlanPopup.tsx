@@ -5,6 +5,7 @@ import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faEuroSign } from "@fortawesome/free-solid-svg-icons"
 import { createPlan, updatePlan } from "../../../api"
+import { WysiwygEditor } from "../../../Components"
 
 
 type PlanPopupProps = {  
@@ -31,10 +32,9 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
     )
 
     const [isNameValid, setIsNameValid] = useState(true)
-    const [isDescriptionValid, setIsDescriptionValid] = useState(true)
     const [isPriceValid, setIsPriceValid] = useState(true)
 
-    const isFormValid = isNameValid && isDescriptionValid && isPriceValid
+    const isFormValid = isNameValid && isPriceValid
 
     const handleSubmit = () => {
         if (editPlan) {
@@ -96,12 +96,10 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
                     />
                 </Box>
 
-                <TextFieldWith$ 
-                    id="description" 
-                    label={{ value: 'Description' }}
-                    value={{ value: plan.description, onChange: (value) => setPlan({ ...plan, description: value }) }}
-                    validator={{ Schema$: CreatePaymentPlan$.shape.description, isValid: isDescriptionValid, setIsValid: setIsDescriptionValid }}
-                    multiline
+                <WysiwygEditor
+                    value={plan.description}
+                    onChange={(value) => setPlan({ ...plan, description: value })}
+                    placeholder="Description"
                 />
 
                 <FieldIconWith$
