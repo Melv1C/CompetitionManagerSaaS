@@ -4,6 +4,8 @@ import { CloseButton, PasswordFieldWith$ } from "../../Components"
 import { useState } from "react"
 import { Password$ } from "@competition-manager/schemas"
 import { changePassword } from "../../api"
+import { useMutation } from "react-query"
+import { isAxiosError } from "axios"
 
 type ChangePasswordPopupProps = {
     open: boolean
@@ -28,7 +30,13 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
 
     const isFormValid = isOldPasswordValid && isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== '' && oldPassword !== '';
 
-    const handleSubmit = async () => {
+    const mutation = useMutation((data: { oldPassword: string, newPassword: string }) => changePassword(data.oldPassword, data.newPassword), {
+        onSuccess: () => {
+            onClose();
+        }
+    });
+
+    const handleSubmit = () => {
         // check if passwords match
         if (password !== confirmPassword) {
             setErrorMsg(t('auth:error.passwordMismatch'));
@@ -41,17 +49,11 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
             return;
         }
 
-        try {
-            const response = await changePassword(oldPassword, password);
-            console.log(response); // TODO: analyze response
-        } catch (error) {
-            console.error(error);
-            setErrorMsg(t('auth:error.passwordResetFailed'));
-            return;
-        }
-        
-        // close dialog
-        onClose();
+        // call api
+        mutation.mutate({
+            oldPassword,
+            newPassword: password
+        });
     }
 
     return (
@@ -97,6 +99,10 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
                         validator={{ Schema$: Password$, isValid: isConfirmPasswordValid, setIsValid: setIsConfirmPasswordValid }}
                     />
 
+                    {mutation.isError && isAxiosError(mutation.error) && (
+                        <Alert severity='error'>{t('errors:' + mutation.error.response?.data)}</Alert>
+                    )}
+
                     {errorMsg && (
                         <Alert severity='error'>{errorMsg}</Alert>
                     )}
@@ -106,6 +112,7 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
                         color='primary'
                         type="submit"
                         disabled={!isFormValid}
+                        loading={mutation.isLoading}
                     >
                         {t('buttons:submit')}
                     </Button>

@@ -20,11 +20,8 @@ export const logout = async () => {
 };
 
 export const getRefreshToken = async () => {
-    console.log('getRefreshToken');
     const { data } = await apiWithCredentials.get('/users/refresh-token', { withCredentials: true });
-    console.log('getRefreshToken data', data);
     const accessToken = EncodeToken$.parse(data);
-    console.log('getRefreshToken accessToken', accessToken);
     setAccessToken(accessToken);
     return accessToken;
 };

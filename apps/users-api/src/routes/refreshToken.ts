@@ -2,6 +2,9 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key, catchError } from '@competition-manager/backend-utils';
 import { logger } from '../logger';
+import { prisma } from '@competition-manager/prisma';
+import { UserToTokenData } from '../utils';
+import { User$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -20,8 +23,25 @@ router.get(
                 res.status(401).send("invalidRefreshToken");
                 return;
             }
-            const accessToken = generateAccessToken(tokenData);
-            const newRefreshToken = generateRefreshToken(tokenData);
+
+            const user = prisma.user.findUnique({
+                where: {
+                    id: tokenData.id
+                },
+                include: {
+                    preferences: true
+                }
+            });
+
+            if (!user) {
+                res.status(400).send("userNotFound");
+                return;
+            }
+
+            const newTokenData = UserToTokenData(User$.parse(user));
+
+            const accessToken = generateAccessToken(newTokenData);
+            const newRefreshToken = generateRefreshToken(newTokenData);
             res.cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
                 secure: true,

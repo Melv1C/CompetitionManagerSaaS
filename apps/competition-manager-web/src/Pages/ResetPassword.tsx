@@ -7,6 +7,8 @@ import { Alert, Box, Button, FormControl, FormLabel, TextField, Typography } fro
 import { useState } from "react"
 import { TokenData$, Password$ } from "@competition-manager/schemas"
 import { resetPassword } from "../api"
+import { useMutation } from "react-query"
+import { isAxiosError } from "axios"
 
 
 export const ResetPassword = () => {
@@ -30,8 +32,20 @@ export const ResetPassword = () => {
     const isFormValid = isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== ''
     const [errorMsg, setErrorMsg] = useState('')
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const mutation = useMutation((data: { email: string, password: string }) => resetPassword(data.email, data.password), {
+        onSuccess: () => {
+            navigate('/')
+        }
+    })
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        
+        // check if form is valid
+        if (!isFormValid) {
+            setErrorMsg(t('error.invalidForm'))
+            return
+        }
        
         // compare password and confirmPassword
         if (password !== confirmPassword) {
@@ -39,16 +53,12 @@ export const ResetPassword = () => {
             return
         }
 
-        // send request to the server
-        try {
-            // send request to the server
-            const data = await resetPassword(password, token)
-            console.log(data) // TODO: handle response
-            navigate('/')
-        } catch (error) {
-            console.error(error)
-            setErrorMsg(t('error.unknown')) // TODO: better error handling
-        }
+
+        // call api
+        mutation.mutate({
+            email,
+            password
+        })
     }
 
 
@@ -111,20 +121,25 @@ export const ResetPassword = () => {
                             required
                             formControlProps={{ fullWidth: true }}
                         />
-
-                        {errorMsg && (
-                            <Alert severity="error">{errorMsg}</Alert>
-                        )}
-
+                        
                         <Button 
                             variant="contained"
                             color="primary"
                             type="submit"
                             sx={{ width: '100%' }}
                             disabled={!isFormValid}
+                            loading={mutation.isLoading}
                         >
                             {t('buttons:submit')}
                         </Button>
+                        
+                        {mutation.isError && isAxiosError(mutation.error) && (
+                            <Alert severity="error">{t('errors:' + mutation.error.response?.data)}</Alert>
+                        )}
+
+                        {errorMsg && (
+                            <Alert severity="error">{errorMsg}</Alert>
+                        )}
                     </Box>
                 ) : (
                     <Typography variant="body1">
