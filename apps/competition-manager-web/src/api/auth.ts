@@ -26,9 +26,22 @@ export const getRefreshToken = async () => {
     return accessToken;
 };
 
-export const resetPassword = async (newPassword: Password, token?: string) => {
+export const forgotPassword = async (email: Email) => {
+    await api.post('/users/forgot-password', { email });
+}
+
+export const changePassword = async (oldPassword: Password, newPassword: Password) => {
+    const { data } = await api.post('/users/change-password', { oldPassword, newPassword });
+    return data;
+}
+
+export const resetPassword = async (newPassword: Password, token: string) => {
     const { data } = await api.post('/users/reset-password', { newPassword }, { params: { token } });
     return data;
+}
+
+export const resendVerificationEmail = async () => {
+    await api.post('/users/resend-verification-email');
 }
 
 

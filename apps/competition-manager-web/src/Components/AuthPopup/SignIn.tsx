@@ -11,6 +11,7 @@ import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
+import { ForgotPasswordPopup } from "./ForgotPasswordPopup";
 
 type SignInProps = {
     onToggle: () => void;
@@ -30,6 +31,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
     const isFormValid = isEmailValid && isPasswordValid;
     const [errorMsg, setErrorMsg] = useState('');
 
+    const [isForgotPasswordPopupVisible, setIsForgotPasswordPopupVisible] = useState(false);
 
     return (
         <>
@@ -97,8 +99,13 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
                     <Alert severity="error">{errorMsg}</Alert>
                 )}
 
-                <Link href="#" sx={{ textAlign: 'center' }}>{t('forgotPassword')}</Link>
+                <Link sx={{ textAlign: 'center', cursor: 'pointer' }} onClick={() => setIsForgotPasswordPopupVisible(true)}>
+                    {t('forgotPassword')}
+                </Link>
 
+                {isForgotPasswordPopupVisible && (
+                    <ForgotPasswordPopup onClose={() => setIsForgotPasswordPopupVisible(false)} />
+                )}
             </Box>
 
             <Divider>
