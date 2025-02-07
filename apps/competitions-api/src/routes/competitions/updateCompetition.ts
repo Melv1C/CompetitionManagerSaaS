@@ -20,7 +20,7 @@ router.put(
         try {
             //si add option stripe TODO
 
-            const { optionsId, freeClubsId, ...newCompetitionData } = UpdateCompetition$.parse(req.body);
+            const { optionsId, freeClubsId, allowedClubsId, ...newCompetitionData } = UpdateCompetition$.parse(req.body);
             const { eid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {
@@ -47,6 +47,9 @@ router.put(
                         },
                         freeClubs: {
                             set: freeClubsId.map(id => ({ id }))
+                        },
+                        allowedClubs: {
+                            set: allowedClubsId.map(id => ({ id }))
                         }
                     },
                     include: competitionInclude

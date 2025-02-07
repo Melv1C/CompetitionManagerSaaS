@@ -19,7 +19,6 @@ router.post(
     checkRole(Role.USER),
     async (req : AuthentificatedRequest, res) => {
         try {
-            console.log(req.user);
             const { oldPassword, newPassword } = Body$.parse(req.body);
             const user = await prisma.user.findUnique({
                 where: {

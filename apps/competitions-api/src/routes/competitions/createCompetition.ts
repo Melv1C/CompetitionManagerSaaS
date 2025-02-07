@@ -5,7 +5,7 @@ import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } f
 
 export const router = Router();
 
-const getClubIdFromUserId = async (UserId: number) => {
+const getClub = async (UserId: number) => {
     const user = await prisma.user.findUnique({
         where: {
             id: UserId
@@ -13,7 +13,8 @@ const getClubIdFromUserId = async (UserId: number) => {
         include: {
             club: {
                 select: {
-                    id: true
+                    id: true,
+                    address: true,
                 }
             }
         }
@@ -21,7 +22,7 @@ const getClubIdFromUserId = async (UserId: number) => {
     if (!user) {
         throw new Error("user not found");
     }
-    return user.club?.id;
+    return user.club;
 }
 
 router.post(
@@ -37,12 +38,13 @@ router.post(
             defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
             defaultCompetition.endInscriptionDate.setDate(defaultCompetition.endInscriptionDate.getDate() - 1);
             defaultCompetition.endInscriptionDate.setHours(23, 59, 59, 999);
-            const clubId = await getClubIdFromUserId(req.user!.id);
+            const club = await getClub(req.user!.id);
             try {
                 const newCompetition = await prisma.competition.create({
                     data: {
                         ...defaultCompetition,
                         email: req.user!.email,
+                        location: club?.address,
                         paymentPlan: {
                             connect: {
                                 id: paymentPlanId
@@ -61,9 +63,9 @@ router.post(
                                 }
                             }
                         },
-                        club: clubId ? {
+                        club: club ? {
                             connect: {
-                                id: clubId
+                                id: club.id
                             }
                         } : undefined
                     },

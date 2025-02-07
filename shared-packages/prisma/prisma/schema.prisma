@@ -130,12 +130,14 @@ model Competition {
     events               CompetitionEvent[]  
     publish              Boolean
     method               String
-    startInscriptionDate DateTime?           @map("start_inscription_date")
-    endInscriptionDate   DateTime?           @map("end_inscription_date")
+    freeClubs            Club[]              @relation("freeClubsToCompetition")
+    isFeesAdditionnal    Boolean             @map("is_fees_additionnal")
+    startInscriptionDate DateTime            @map("start_inscription_date")
+    endInscriptionDate   DateTime            @map("end_inscription_date")
     admins               Admin[]
     email                String
+    phone                String?
     closeDate            DateTime?           @map("close_date")
-    freeClubs            Club[]              @relation("FreeClubsToCompetition")
     oneDayPermissions    String[]            @map("one_day_permission")        
     oneDayBibStart       Int                 @map("one_day_bib_start")
     oneDayAthletes       Athlete[]
@@ -145,8 +147,11 @@ model Competition {
     inscriptions         Inscription[]
     club                 Club?               @relation(fields: [clubId], references: [id])
     clubId               Int?                @map("club_id")
+    location             String?
     isDeleted            Boolean             @map("is_deleted")
-    
+    maxEventByAthlete    Int?                @map("max_event_by_athlete")
+    allowedClubs         Club[]              @relation("allowedClubsToCompetition")
+
     @@map("competitions")
 }
 
@@ -196,19 +201,21 @@ model PaymentPlan {
 // Club
 ////////////////
 model Club {
-    id               Int           @id @default(autoincrement())
-    name             String
-    abbr             String        @unique
-    address          String?
-    province         String?
-    country          String
-    fedNumber        Int?          @map("fed_number")
-    fedAbbr          String?       @map("fed_abbr")
-    athletes         Athlete[]
-    competitions     Competition[]
-    users            User[]
-    freeCompetitions Competition[] @relation("FreeClubsToCompetition")
-    inscriptions     Inscription[]
+    id                  Int           @id @default(autoincrement())
+    name                String
+    abbr                String        @unique
+    address             String?
+    province            String?
+    country             String
+    fedNumber           Int?          @map("fed_number")
+    fedAbbr             String?       @map("fed_abbr")
+    athletes            Athlete[]
+    competitions        Competition[]
+    users               User[]
+    freeCompetitions    Competition[] @relation("freeClubsToCompetition")
+    allowedCompetitions Competition[] @relation("allowedClubsToCompetition")
+    inscriptions        Inscription[]
+
 
     @@map("clubs")
 }

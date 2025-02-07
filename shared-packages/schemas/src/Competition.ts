@@ -34,16 +34,21 @@ export const Competition$ = z.object({
     options: z.array(Option$).default([]),
     startInscriptionDate: Date$.default(new Date()),
     endInscriptionDate: Date$.default(new Date()),
+    maxEventByAthlete: z.number().positive().nullish(),
+    isFeesAdditionnal: z.boolean().default(false),
 
     // Default settings
     admins: z.array(Admin$),
     email: Email$,
+    phone: z.string().nullish(),
     club: Club$.nullish(),
     isDeleted: z.boolean().default(false),
+    location: z.string().nullish(),
 
     // Advanced settings
     closeDate: Date$.nullish(),
     freeClubs: z.array(Club$).default([]),
+    allowedClubs: z.array(Club$).default([]),
     oneDayPermissions: z.array(z.nativeEnum(OneDayPermission)).default([]),
     oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
         
@@ -67,8 +72,10 @@ export const DefaultCompetition$ = Competition$.omit({
     options: true,
     admins: true,
     email: true,
+    location: true,
     events: true,
     freeClubs: true,
+    allowedClubs: true,
     club: true,
 });
 export type DefaultCompetition = z.infer<typeof DefaultCompetition$>;
@@ -80,12 +87,14 @@ export const UpdateCompetition$ = Competition$.omit({
     options: true,
     admins: true,
     freeClubs: true,
+    allowedClubs: true,
     events: true,
     club: true,
     isDeleted: true,
 }).extend({
     optionsId: z.array(Id$).default([]),
     freeClubsId: z.array(Id$).default([]),
+    allowedClubsId: z.array(Id$).default([]),
 });
 export type UpdateCompetition = z.infer<typeof UpdateCompetition$>;
 
