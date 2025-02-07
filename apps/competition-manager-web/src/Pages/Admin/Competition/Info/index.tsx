@@ -59,6 +59,7 @@ export const Info = () => {
                 ...competitionState,
                 optionsId: competitionState.options.map((option) => option.id),
                 freeClubsId: competitionState.freeClubs.map((club) => club.id),
+                allowedClubsId: competitionState.allowedClubs.map((club) => club.id),
             }
             
             updateCompetition(competitionState.eid, updateCompetiton)
