@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, checkRole, checkAdminRole, AuthenticatedRequest, Key } from '@competition-manager/backend-utils';
+import { parseRequest, checkRole, checkAdminRole, AuthentificatedRequest, Key } from '@competition-manager/backend-utils';
 import { Access, Eid$, Id$, Role } from '@competition-manager/schemas';
 import { BaseAdmin$, UpdateAdmin$ } from '@competition-manager/schemas';
 import { z } from 'zod';
@@ -18,7 +18,7 @@ router.put(
     parseRequest(Key.Body, UpdateAdmin$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
-    async (req: AuthenticatedRequest, res) => {
+    async (req: AuthentificatedRequest, res) => {
         try{
             const { competitionEid, adminId } = Params$.parse(req.params);
             const newAdmin = UpdateAdmin$.parse(req.body);

@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express';
-import { AuthenticatedRequest, Key } from '../middleware';
+import { AuthentificatedRequest, Key } from '../middleware';
 import { Logger } from 'winston';
 
 export type OmitType = {
@@ -7,7 +7,7 @@ export type OmitType = {
     field?: string;
 }[];
 
-export const logRequestMiddleware = (logger: Logger, omits: OmitType = []) => (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+export const logRequestMiddleware = (logger: Logger, omits: OmitType = []) => (req: AuthentificatedRequest, res: Response, next: NextFunction) => {
 
     const metadata: any = {};
 

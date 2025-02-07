@@ -1,5 +1,5 @@
 export * from "./corsMiddleware";
 export * from "./checkRole";
-export * from "./authenticatedRequest";
+export * from "./authentificatedRequest";
 export * from "./parseRequest";
 export * from "./setUserIfExist";

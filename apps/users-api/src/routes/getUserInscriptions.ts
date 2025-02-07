@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { Eid$, Role, Inscription$ } from '@competition-manager/schemas';
-import { AuthenticatedRequest, Key, parseRequest, checkRole, catchError } from '@competition-manager/backend-utils';
+import { AuthentificatedRequest, Key, parseRequest, checkRole, catchError } from '@competition-manager/backend-utils';
 import { z } from 'zod';
 import { logger } from '../logger';
 
@@ -15,7 +15,7 @@ router.get(
     '/me/inscriptions',
     parseRequest(Key.Query, Query$),
     checkRole(Role.USER),
-    async (req: AuthenticatedRequest, res) => {
+    async (req: AuthentificatedRequest, res) => {
         try {
             const { competitionEid } = Query$.parse(req.query);
             const inscriptions = await prisma.inscription.findMany({
