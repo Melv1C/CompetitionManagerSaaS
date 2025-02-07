@@ -30,7 +30,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const { t } = useTranslation('navigation');
       
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const { isTablet } = useDeviceSize();
+    const { isMobile, isTablet } = useDeviceSize();
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
     const userToken = useAtomValue(userTokenAtom);
@@ -44,6 +44,8 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     useEffect(() => {
         setIsAuthPopupVisible(false);
     }, [userToken]);
+
+    const isBurgerVisible = isMobile || isTablet;
     
     return (
         <Box 
@@ -59,7 +61,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         alignItems: 'center' 
                     }}
                 >
-                    {isTablet && (
+                    {isBurgerVisible && (
                         <Box sx={{ marginRight: '1rem' }}>
                             <Button 
                                 color="inherit" 
@@ -75,7 +77,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         <Logo sx={{ height: '3rem' }} />
                     </Link>
                     <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
-                        {!isTablet && (
+                        {!isBurgerVisible && (
                             <>
                                 {items.map((item) => (
                                     <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -94,7 +96,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
 
 
                     {/* add link to language switcher */}
-                    {!isTablet && (
+                    {!isBurgerVisible && (
                         <LanguageSelector />
                     )}
 
@@ -140,7 +142,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                     color="inherit"
                                     sx={{ 
                                         textTransform: 'none', 
-                                        fontSize: isTablet ? '1rem' : '1.2rem',
+                                        fontSize: isBurgerVisible ? '1rem' : '1.2rem',
                                         border: '2px solid white',
                                         padding: '0.2rem 1rem',
                                     }} 
