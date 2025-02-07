@@ -17,7 +17,7 @@ router.get(
             const { refreshToken } = Cookies$.parse(req.cookies);
             const tokenData = verifyRefreshToken(refreshToken);
             if (!tokenData) {
-                res.status(401).json({ message: 'Invalid refresh token' });
+                res.status(401).send("invalidRefreshToken");
                 return;
             }
             const accessToken = generateAccessToken(tokenData);
