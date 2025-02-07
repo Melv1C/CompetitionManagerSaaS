@@ -24,7 +24,7 @@ router.get(
                 return;
             }
 
-            const user = prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: {
                     id: tokenData.id
                 },
