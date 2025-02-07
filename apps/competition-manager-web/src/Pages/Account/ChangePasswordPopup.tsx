@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { CloseButton, PasswordFieldWith$ } from "../../Components"
 import { useState } from "react"
 import { Password$ } from "@competition-manager/schemas"
-import { resetPassword } from "../../api"
+import { changePassword } from "../../api"
 
 type ChangePasswordPopupProps = {
     open: boolean
@@ -17,14 +17,16 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
 
     const { t } = useTranslation('account');
 
+    const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [isOldPasswordValid, setIsOldPasswordValid] = useState(false);
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false);
 
     const [errorMsg, setErrorMsg] = useState('');
 
-    const isFormValid = isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== '';
+    const isFormValid = isOldPasswordValid && isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== '' && oldPassword !== '';
 
     const handleSubmit = async () => {
         // check if passwords match
@@ -40,8 +42,8 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
         }
 
         try {
-            const response = await resetPassword(password);
-            console.log(response);
+            const response = await changePassword(oldPassword, password);
+            console.log(response); // TODO: analyze response
         } catch (error) {
             console.error(error);
             setErrorMsg(t('auth:error.passwordResetFailed'));
@@ -73,6 +75,14 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
                     }}
                 >
                     <Typography>{t('info.changePassword.instructions')}</Typography>
+
+                    <PasswordFieldWith$
+                        id='oldPassword'
+                        label={{ value: t('info.changePassword.oldPassword'), hasExtrenLabel: true }}
+                        value={{ value: oldPassword, onChange: setOldPassword }}
+                        validator={{ Schema$: Password$, isValid: isOldPasswordValid, setIsValid: setIsOldPasswordValid }}
+                    />
+
                     <PasswordFieldWith$
                         id='password'
                         label={{ value: t('info.changePassword.newPassword'), hasExtrenLabel: true }}
