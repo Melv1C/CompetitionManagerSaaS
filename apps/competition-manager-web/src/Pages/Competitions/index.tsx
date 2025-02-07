@@ -3,8 +3,6 @@ import { getCompetitions } from '../../api';
 import { ListCompetitions, Loading } from '../../Components';
 import { MaxWidth } from '../../Components/MaxWidth';
 import { useSearchParams } from "react-router-dom";
-import { Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -12,8 +10,6 @@ const tomorrow = new Date(today);
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 export const Competitions: React.FC = () => {
-
-    const { t } = useTranslation();
 
     const [searchParams] = useSearchParams();
     const isPast = searchParams.get('isPast') === 'true';
@@ -31,9 +27,6 @@ export const Competitions: React.FC = () => {
 
     return (
         <MaxWidth>
-            <Typography variant="h4" align="center" gutterBottom>
-                {isPast ? t('glossary:results') : t('navigation:calendar')}
-            </Typography>
             <ListCompetitions competitions={competitions} isPast={isPast} />
         </MaxWidth>
     );

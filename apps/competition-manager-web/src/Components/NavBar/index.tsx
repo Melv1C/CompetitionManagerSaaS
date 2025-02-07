@@ -72,7 +72,7 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         </Box>
                     )}
                     <Link to="/">
-                        <Logo />
+                        <Logo sx={{ height: '3rem' }} />
                     </Link>
                     <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
                         {!isTablet && (

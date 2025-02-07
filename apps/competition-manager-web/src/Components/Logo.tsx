@@ -1,9 +1,18 @@
-import { Box } from '@mui/material';
+import { Box, SxProps } from '@mui/material';
 import React from 'react';
 
-import logo from '../assets/LogoWhite.png';
+import logoWhite from '../assets/LogoWhite.png';
+import logoBlack from '../assets/LogoBlack.png';
 
-export const Logo: React.FC = () => {
+type LogoProps = {
+    color?: 'white' | 'black';
+    sx?: SxProps;
+}
+
+export const Logo: React.FC<LogoProps> = ({ 
+    color = 'white',
+    sx
+}) => {
     return (
         <Box 
             sx={{ 
@@ -11,11 +20,11 @@ export const Logo: React.FC = () => {
                 justifyContent: 'center', 
                 alignItems: 'center',
                 backgroundColor: 'transparent',
-                width: '4rem',
-                height: '3rem',
+
+                ...sx
             }}
         >
-            <img src={logo} alt="Logo" style={{ width: '100%', height: '100%'}} />
+            <img src={color === 'white' ? logoWhite : logoBlack} alt="Logo" style={{ width: '100%', height: '100%'}} />
         </Box>
     );
 };
