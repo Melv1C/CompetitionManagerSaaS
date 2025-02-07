@@ -7,7 +7,7 @@ import { Role } from '@competition-manager/schemas';
 export const router = Router();
 
 router.post(
-    '/me/resend-verification-email',
+    '/resend-verification-email',
     checkRole(Role.USER),
     async (req : AuthentificatedRequest, res) => {
         try {
