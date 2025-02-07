@@ -87,12 +87,14 @@ export const UpdateCompetition$ = Competition$.omit({
     options: true,
     admins: true,
     freeClubs: true,
+    allowedClubs: true,
     events: true,
     club: true,
     isDeleted: true,
 }).extend({
     optionsId: z.array(Id$).default([]),
     freeClubsId: z.array(Id$).default([]),
+    allowedClubsId: z.array(Id$).default([]),
 });
 export type UpdateCompetition = z.infer<typeof UpdateCompetition$>;
 
