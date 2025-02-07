@@ -34,7 +34,7 @@ router.get(
                 path: 'GET /refresh-token',
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

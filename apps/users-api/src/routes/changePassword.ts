@@ -26,12 +26,12 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(404).json({ message: 'User not found' });
+                res.status(404).json("NoToken");
                 return;
             }
             const valid = await comparePassword(oldPassword, user.password);
             if (!valid) {
-                res.status(400).json({ message: 'Invalid password' });
+                res.status(400).json("wrongPsw");
                 return;
             }
             await prisma.user.update({
@@ -49,7 +49,7 @@ router.post(
                 path: 'POST /change-password',
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

@@ -81,7 +81,7 @@ router.get(
             res.send(Competition$.parse(competition));
         } catch (error) {
             console.error(error);
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

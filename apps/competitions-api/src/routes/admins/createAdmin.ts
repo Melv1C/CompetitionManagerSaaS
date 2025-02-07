@@ -56,13 +56,13 @@ router.post(
                     res.status(404).send('User not found');
                     return;
                 } else{
-                    res.status(500).send('Internal server error');
+                    res.status(500).send('internalServerError');
                     return;
                 }
             }
         } catch (error) {
             console.error(error);
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
     

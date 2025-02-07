@@ -88,13 +88,13 @@ router.post(
                     return;
                 } else{
                     console.error(e);
-                    res.status(500).send('Internal server error');
+                    res.status(500).send('internalServerError');
                     return;
                 }
             }
         } catch (e) {
             console.error(e);
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

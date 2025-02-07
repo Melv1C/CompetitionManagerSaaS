@@ -58,12 +58,12 @@ router.put(
                     return;
                 } else {
                     console.log(e);
-                    res.status(500).send('Internal server error');
+                    res.status(500).send('internalServerError');
                 }
             }
         } catch (error) {
             console.log(error);
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
     
