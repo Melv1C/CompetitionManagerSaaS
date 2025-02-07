@@ -136,7 +136,7 @@ model Competition {
     endInscriptionDate   DateTime            @map("end_inscription_date")
     admins               Admin[]
     email                String
-    telephone            String?
+    phone                String?
     closeDate            DateTime?           @map("close_date")
     oneDayPermissions    String[]            @map("one_day_permission")        
     oneDayBibStart       Int                 @map("one_day_bib_start")
