@@ -17,7 +17,7 @@ router.post(
                     status: 500,
                     userId: req.user!.id
                 });
-                res.status(500).send('Failed to send email');
+                res.status(500).send('failedToSendEmail');
                 return;
             }
             res.send('Email sent');
@@ -27,7 +27,7 @@ router.post(
                 path: 'POST /resend-verification-email',
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

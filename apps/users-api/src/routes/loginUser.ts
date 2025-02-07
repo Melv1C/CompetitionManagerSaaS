@@ -29,12 +29,12 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(400).json({ message: 'Invalid email' });
+                res.status(400).send("userNotFound");
                 return;
             }
             const valid = await comparePassword(password, user.password);
             if (!valid) {
-                res.status(400).json({ message: 'Invalid password' });
+                res.status(400).send("invalidPassword");
                 return;
             }
             const tokenData = UserToTokenData(User$.parse(user));
@@ -52,7 +52,7 @@ router.post(
                 path: 'POST /login',
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

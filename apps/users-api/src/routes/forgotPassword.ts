@@ -39,7 +39,7 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(404).json({ message: 'No account found with this email'});
+                res.status(404).send("userNotFound");
                 return;
             }
             if (!await sendResetPasswordEmail(user.email, generateResetPasswordToken(TokenData$.parse(user)))) {
@@ -50,7 +50,7 @@ router.post(
                         user: user,
                     }
                 });
-                res.status(500).send('Failed to send email');
+                res.status(500).send('failedToSendEmail');
                 return;
             }
             res.send('Email sent');
@@ -60,7 +60,7 @@ router.post(
                 path: 'POST /forgot-password',
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

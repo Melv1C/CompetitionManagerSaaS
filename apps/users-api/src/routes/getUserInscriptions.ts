@@ -39,7 +39,7 @@ router.get(
                 }
             });
             if (!inscriptions) {
-                res.status(404).send('Competition not found');
+                res.status(404).send('competitionNotFound');
                 return;
             }
             res.send(Inscription$.array().parse(inscriptions));
@@ -50,7 +50,7 @@ router.get(
                 userId: req.user?.id,
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

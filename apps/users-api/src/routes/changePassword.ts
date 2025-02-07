@@ -19,6 +19,7 @@ router.post(
     checkRole(Role.USER),
     async (req : AuthentificatedRequest, res) => {
         try {
+            console.log(req.user);
             const { oldPassword, newPassword } = Body$.parse(req.body);
             const user = await prisma.user.findUnique({
                 where: {
@@ -26,12 +27,12 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(404).json({ message: 'User not found' });
+                res.status(404).send("userNotFound");
                 return;
             }
             const valid = await comparePassword(oldPassword, user.password);
             if (!valid) {
-                res.status(400).json({ message: 'Invalid password' });
+                res.status(400).send("invalidPassword");
                 return;
             }
             await prisma.user.update({
@@ -49,7 +50,7 @@ router.post(
                 path: 'POST /change-password',
                 status: 500
             });
-            res.status(500).send('Internal server error');
+            res.status(500).send('internalServerError');
         }
     }
 );

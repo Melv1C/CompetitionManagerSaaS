@@ -19,7 +19,7 @@ router.post(
                 }
             });
             if (user) {
-                res.status(409).json({ message: 'Email already in use' });
+                res.status(409).json("userAlreadyExists");
                 return;
             } 
             newUser.password = await hashPassword(newUser.password);
@@ -46,7 +46,7 @@ router.post(
                         user: userData,
                     }
                 });
-                res.status(500).send('Failed to send email');
+                res.status(500).send('failedToSendEmail');
                 return;
             }
             res.cookie('refreshToken', refreshToken, {
@@ -61,7 +61,7 @@ router.post(
                 path: 'POST /register',
                 status: 500
             });
-            res.status(500).json({ message: 'Internal server error' });
+            res.status(500).send("internalServerError");
         }
     }
 );
