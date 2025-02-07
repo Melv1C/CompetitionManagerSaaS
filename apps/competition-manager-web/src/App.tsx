@@ -29,6 +29,8 @@ import { NODE_ENV, Role } from '@competition-manager/schemas';
 import { Home } from './Pages/Home';
 import { isNodeEnv } from './env';
 import { ResetPassword } from './Pages/ResetPassword';
+import { Footer } from './Components/Footer';
+import { FAQ } from './Pages/FAQ';
 
 
 // must be extract in an other file
@@ -75,14 +77,25 @@ function App() {
             <Route element={
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                     <NavBar items={navItems} />
-                    <ErrorBoundary FallbackComponent={ErrorFallback}>
-                        <Outlet />
-                    </ErrorBoundary>
+                    <Box 
+                        display="flex"
+                        flexDirection="column"
+                        flex={1}
+                        sx={{ overflowY: 'auto' }}
+                    >
+                        <Box flex={1}>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Outlet />
+                            </ErrorBoundary>
+                        </Box>
+                        <Footer />
+                    </Box>
                 </ErrorBoundary>
             }>
                 <Route path="/" element={<h1>{<Home />}</h1>} />
                 <Route path="/competitions" element={<Competitions />} />
                 <Route path="/competitions/:competitionEid/*" element={<Competition />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="/account" element={
                     <ProtectedRoute requiredRole={Role.UNCONFIRMED_USER} redirectPath="/">
                         <Account />
@@ -119,7 +132,7 @@ function App() {
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={lightTheme}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+                            <Box display="flex" flexDirection="column" height="100vh">
                                 <RouterProvider router={router} />
                             </Box>
                         </LocalizationProvider>

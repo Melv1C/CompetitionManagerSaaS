@@ -10,6 +10,7 @@ import eventPopup from './eventPopup.json';
 import inscription from './inscription.json';
 import account from './account.json';
 import home from './home.json';
+import footer from './footer.json';
 
 import { zodTranslations } from '@competition-manager/schemas';
 
@@ -26,5 +27,6 @@ export default {
     eventPopup,
     inscription,
     account,
-    home
+    home,
+    footer
 }
