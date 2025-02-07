@@ -33,7 +33,12 @@ router.get(
                 return;
             }
             if (user.role !== Role.UNCONFIRMED_USER) {
-                res.status(400).send('User already verified');
+                logger.warn( 'User already verified',{
+                    userId: user.id,
+                    path: 'GET /verify-email',
+                    status: 200,
+                });
+                res.redirect(`${env.BASE_URL}/account`);
                 return;
             }
             await prisma.user.update({
