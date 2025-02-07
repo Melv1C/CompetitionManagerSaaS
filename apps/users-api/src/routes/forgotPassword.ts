@@ -8,7 +8,7 @@ import { logger } from '../logger';
 
 export const router = Router();
 
-const sendRestPasswordEmail = (email: Email, token: string) => {
+const sendResetPasswordEmail = (email: Email, token: string) => {
     const url = new URL(env.BASE_URL);
     url.pathname = `/reset-password`;
     url.searchParams.set('token', token);
@@ -42,7 +42,7 @@ router.post(
                 res.status(404).json({ message: 'No account found with this email'});
                 return;
             }
-            if (!await sendRestPasswordEmail(user.email, generateResetPasswordToken(TokenData$.parse(user)))) {
+            if (!await sendResetPasswordEmail(user.email, generateResetPasswordToken(TokenData$.parse(user)))) {
                 logger.warn('Failed to send email', {
                     path: 'POST /forgot-password',
                     status: 500,
