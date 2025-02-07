@@ -7,6 +7,7 @@ import { router as forgotPasswordRouter } from './forgotPassword';
 import { router as resetPasswordRouter } from './resetPassword';
 import { router as createClubUserRouter } from './updateUser';
 import { router as getUserInscriptionsRouter } from './getUserInscriptions';
+import { router as resendVerifEmailRouter } from './resendVerifEmail';
 
 export default [
     registerUserRouter,
@@ -17,5 +18,6 @@ export default [
     forgotPasswordRouter,
     resetPasswordRouter,
     createClubUserRouter,
-    getUserInscriptionsRouter
+    getUserInscriptionsRouter,
+    resendVerifEmailRouter
 ];
