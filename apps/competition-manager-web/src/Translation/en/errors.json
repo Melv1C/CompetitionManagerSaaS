@@ -1,9 +1,7 @@
 {
     "internalServerError": "Internal server error. Please try again later.",
-    "users-api": {
-        "userNotFound": "User not found",
-        "userAlreadyExists": "User already exists",
-        "invalidPassword": "Invalid password",
-        "invalidToken": "Invalid token"
-    }
+    "userNotFound": "User not found",
+    "userAlreadyExists": "User already exists",
+    "invalidPassword": "Invalid password",
+    "invalidToken": "Invalid token"
 }

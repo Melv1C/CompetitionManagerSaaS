@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Email$ } from "@competition-manager/schemas";
 import { useState } from "react";
 import { CloseButton } from "../CloseButton";
+import { useMutation } from "react-query";
 
 
 type ForgotPasswordPopupProps = {
@@ -19,6 +20,12 @@ export const ForgotPasswordPopup: React.FC<ForgotPasswordPopupProps> = ({ onClos
 
     const [email, setEmail] = useState('');
     const [isEmailValid, setIsEmailValid] = useState(true);
+
+    const mutation = useMutation(forgotPassword, {
+        onSuccess: () => {
+            onClose();
+        }
+    });
 
     return (
         <Dialog
@@ -52,10 +59,8 @@ export const ForgotPasswordPopup: React.FC<ForgotPasswordPopupProps> = ({ onClos
                     color="primary"
                     sx={{ marginTop: '1rem' }}
                     disabled={!isEmailValid}
-                    onClick={async () => {
-                        await forgotPassword(email);
-                        onClose();
-                    }}
+                    loading={mutation.isLoading}
+                    onClick={() => mutation.mutate(email)}
                 >
                     {t('buttons:submit')}
                 </Button>

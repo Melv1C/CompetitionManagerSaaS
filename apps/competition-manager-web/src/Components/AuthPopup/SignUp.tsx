@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {isAxiosError} from "axios";
 import { Email$, Password$ } from "@competition-manager/schemas";
 
@@ -12,7 +12,7 @@ import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 
 type SignUpProps = {
     onToggle: () => void;
@@ -33,24 +33,11 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
     const isFormValid = isEmailValid && isPasswordValid && isConfirmPasswordValid;
     const [errorMsg, setErrorMsg] = useState('');
 
-    const { data, isLoading, isError, error, refetch } = useQuery('register', async () => {
-        return await register(email, password);
-    }, {
-        enabled: false,
-        retry: false
-    });
-
-    const queryClient = useQueryClient();
-    useEffect(() => {
-        queryClient.resetQueries('register');
-    }, []);
-
-    useEffect(() => {
-        if (data) {
-            const userToken = decodeToken(data);
-            setUserToken(userToken);
+    const mutation = useMutation((data: { email: string, password: string }) => register(data.email, data.password), {
+        onSuccess: (data) => {
+            setUserToken(decodeToken(data));
         }
-    }, [data, setUserToken]);
+    });
 
     return (
         <>
@@ -66,7 +53,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     gap: '1rem', 
                     margin: '1rem'
                 }}
-                onSubmit={async (e) => {
+                onSubmit={(e) => {
                     e.preventDefault();
                     if (!isFormValid) {
                         setErrorMsg(t('error.invalidForm'));
@@ -78,7 +65,8 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                         return;
                     }   
 
-                    await refetch();
+                    mutation.mutate({ email, password });
+
                 }}
             >
                 <TextFieldWith$ 
@@ -109,13 +97,13 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     variant="contained" 
                     color="primary"
                     type="submit"
-                    loading={isLoading}
+                    loading={mutation.isLoading}
                 >
                     {t('register')}
                 </Button>
 
-                {isError && isAxiosError(error) && (
-                    <Alert severity="error">{t(`errors:users-api.${error.response?.data}`)}</Alert>
+                {mutation.isError && isAxiosError(mutation.error) && (
+                    <Alert severity="error">{t(`errors:${mutation.error.response?.data}`)}</Alert>
                 )}
 
                 {errorMsg && (

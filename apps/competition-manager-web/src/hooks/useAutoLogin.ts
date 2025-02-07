@@ -12,7 +12,6 @@ export const useAutoLogin = () => {
     const [userToken, setUserToken] = useAtom(userTokenAtom);
 
     const fetchUserToken = async () => {
-        console.log('fetchUserToken');
         try {
             if (isNodeEnv(NODE_ENV.LOCAL)) {
                 setAccessToken(env.VITE_LOCAL_ACCESS_TOKEN!);
@@ -26,8 +25,6 @@ export const useAutoLogin = () => {
     };
 
     useEffect(() => {
-        console.log('useAutoLogin');
-        console.log('userToken', userToken);
         if (userToken === null) {
             fetchUserToken();
         }
