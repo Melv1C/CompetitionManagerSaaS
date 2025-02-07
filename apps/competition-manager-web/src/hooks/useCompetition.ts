@@ -5,19 +5,27 @@ export const useCompetition = () => {
 
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition found');
+    
+    const now = new Date();
 
     const startDate = competition.date;
-    const closeDate = competition.closeDate || competition.date;
-    const today = new Date();
-    // Normalize time to 00:00:00
     startDate.setHours(0, 0, 0, 0);
-    closeDate.setHours(0, 0, 0, 0);
+    const endDate = competition.closeDate || competition.date;
+    endDate.setHours(0, 0, 0, 0);
+    const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const isPast = today > closeDate;
+    const isPast = today > endDate;
     const isFuture = today < startDate;
     const isCurrent = !isPast && !isFuture;
 
-    return { isPast, isFuture, isCurrent };
+    const isInscriptionOpen = now >= competition.startInscriptionDate && now <= competition.endInscriptionDate;
+
+    return { 
+        isPast,
+        isFuture,
+        isCurrent,
+        isInscriptionOpen
+    };
 }
     

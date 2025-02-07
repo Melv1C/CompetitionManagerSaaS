@@ -15,7 +15,6 @@ export const Descriptions = () => {
         <Card
             sx={{
                 minWidth: 250,
-                maxWidth: 500,
                 height: 'fit-content',
             }}
         >
