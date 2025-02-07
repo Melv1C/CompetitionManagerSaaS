@@ -3,7 +3,8 @@ import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
 import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$, Role, NODE_ENV } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
-import { env, logger } from '..';
+import { env } from '../env';
+import { logger } from '../logger';
 
 export const router = Router();
 

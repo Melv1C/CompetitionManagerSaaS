@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense } from '@competition-manager/backend-utils';
+import { parseRequest, AuthenticatedRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
 import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType } from '@competition-manager/schemas';
 import { z } from 'zod';
-import { prisma } from '@competition-manager/prisma';
+import { prisma, Prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
-import { getFees, isAuthorized } from '@competition-manager/utils';
+import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
+import { competitionInclude } from '../../utils';
+import { logger } from '../../logger';
 
 export const router = Router();
 
@@ -14,15 +16,13 @@ const Params$ = Competition$.pick({
 
 router.post(
     '/:eid/inscriptions',
+    logRequestMiddleware(logger),
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Body, CreateInscription$.array()),
     parseRequest(Key.Query, AdminQuery$),
     checkRole(Role.USER),
     async (req: AuthenticatedRequest, res) => {
         try {
-            //TODO check place 
-            //TODO check if the event is open
-            //TODO check if the athlete is in the right category
             const { isAdmin } = AdminQuery$.parse(req.query);
             const { eid } = Params$.parse(req.params);
             const inscriptionsData = CreateInscription$.array().parse(req.body);
@@ -57,13 +57,8 @@ router.post(
                     eid
                 },
                 include: {
+                    ...competitionInclude,
                     oneDayAthletes: true,
-                    events: {
-                        include: {
-                            categories: true,
-                            event: true
-                        }
-                    },
                     inscriptions: {
                         include: {
                             user: true,
@@ -84,6 +79,58 @@ router.post(
             if (!competition) {
                 res.status(404).send('Competition not found');
                 return;
+            }
+
+            const parsedCompetition = Competition$.parse(competition);
+
+            // Check if inscriptions are open for the competition
+            if (!isAdmin && (parsedCompetition.startInscriptionDate > new Date() || parsedCompetition.endInscriptionDate < new Date())) {
+                res.status(400).send('Inscriptions are closed');
+                return;
+            }
+
+            for (const athInscriptions of inscriptionsData) {
+                try {
+                    // Check if athlete exists
+                    const athlete = await findAthleteWithLicense(athInscriptions.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                    const cat = getCategoryAbbr(athlete.birthdate, athlete.gender, parsedCompetition.date);
+                    for (const inscription of athInscriptions.inscriptions) {
+                        // Check if event exists
+                        const event = parsedCompetition.events.find((e) => e.eid === inscription.competitionEventEid);
+                        if (!event) {
+                            res.status(404).send('Event ' + inscription.competitionEventEid + ' not found');
+                            return;
+                        }
+                        // Check if athlete is in the right category
+                        if (!event.categories.some((c) => c.abbr === cat)) {
+                            res.status(400).send('Athlete ' + athInscriptions.athleteLicense + ' is not in the right category for event ' + inscription.competitionEventEid + ' (' + cat + ')');
+                            return;
+                        }
+                        // Check if inscriptions are open for the event
+                        if (!isAdmin && !event.isInscriptionOpen) {
+                            res.status(400).send('Inscriptions for event ' + inscription.competitionEventEid + ' are closed');
+                            return;
+                        }
+
+                        const nbParticipants = competition.inscriptions.filter((i) => 
+                            i.isDeleted === false 
+                            && i.status === InscriptionStatus.ACCEPTED 
+                            && i.competitionEventId === event.id
+                        ).length;
+                        // Check if event is full
+                        if (!isAdmin && event.place && nbParticipants >= event.place) {
+                            res.status(400).send('Event ' + inscription.competitionEventEid + ' is full');
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
+                        res.status(404).send('Athlete not found');
+                        return;
+                    }
+                    // Rethrow the error if it's not a known error
+                    throw e;
+                }
             }
 
             if (isAdmin) {
@@ -114,11 +161,17 @@ router.post(
                 return;
             }
 
-            //TODO all inscriptions check
-            const totalCost = inscriptionsData.reduce((acc, { inscriptions }) => acc + inscriptions.reduce((acc, { competitionEventEid }) => acc + competition.events.find((e) => e.eid === competitionEventEid)!.cost || 0, 0), 0);
-            const alreadyPaid = competition.inscriptions.filter((i) => i.user.id === req.user!.id && inscriptionsData.some(({ athleteLicense }) => athleteLicense === i.athlete.license)).reduce((acc, i) => acc + i.paid, 0);
-            const fees = getFees(totalCost - alreadyPaid);
-            const total = Math.max(0, totalCost - alreadyPaid) + fees;
+            // Get the cumulated costs for all inscriptions
+            const { alreadyPaid, fees, totalToPay } = (await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
+                const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                return getCostsInfo(parsedCompetition, athlete, inscriptions.map((i) => i.competitionEventEid), Inscription$.array().parse(competition.inscriptions).filter((i) => i.user.id === req.user!.id));
+            }))).reduce((acc, { totalCost, alreadyPaid, fees, totalToPay }) => {
+                acc.totalCost += totalCost;
+                acc.alreadyPaid += alreadyPaid;
+                acc.fees += fees;
+                acc.totalToPay += totalToPay;
+                return acc;
+            }, { totalCost: 0, alreadyPaid: 0, fees: 0, totalToPay: 0 });
 
             const nbOfInscriptionsByEvent = inscriptionsData.reduce((acc, { inscriptions }) => {
                 inscriptions.forEach(({ competitionEventEid }) => {
@@ -127,11 +180,10 @@ router.post(
                 return acc;
             }, {} as Record<Eid, number>);
 
-            if (total > 0) {
+            if (totalToPay > 0) {
                 // TODO: Fix the url
                 const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
                 try {
-
                     const inscriptions = inscriptionsData.map(({ athleteLicense, inscriptions }) => {
                         return inscriptions.map((data) => {
                             return {
@@ -144,7 +196,7 @@ router.post(
 
                     const session = await createCheckoutSession(
                         [...Object.entries(nbOfInscriptionsByEvent).map(([eid, quantity]) => {
-                            const event = competition.events.find((e) => e.eid === eid);
+                            const event = parsedCompetition.events.find((e) => e.eid === eid);
                             if (!event) throw new Error('Event not found');
                             return {
                                 price_data: {
@@ -188,9 +240,8 @@ router.post(
                         res.status(404).send('Event not found');
                         return;
                     }
-                    console.error(e);
-                    res.status(500).send('Internal server error');
-                    return;
+                    // Rethrow the error if it's not a known error
+                    throw e;
                 }
             }
 
@@ -219,9 +270,13 @@ router.post(
                     Inscription$.array().parse(competition.inscriptions)
                 )
             );
-
         } catch (e) {
-            console.error(e);
+            catchError(logger)(e, {
+                message: 'Internal server error',
+                path: 'POST /:eid/inscriptions',
+                status: 500,
+                userId: req.user?.id
+            });
             res.status(500).send('Internal server error');
         }
     }

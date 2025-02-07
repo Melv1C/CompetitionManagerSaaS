@@ -3,7 +3,7 @@ import { prisma } from '@competition-manager/prisma';
 import { Eid$, Role, Inscription$ } from '@competition-manager/schemas';
 import { AuthenticatedRequest, Key, parseRequest, checkRole, catchError } from '@competition-manager/backend-utils';
 import { z } from 'zod';
-import { logger } from '..';
+import { logger } from '../logger';
 
 export const router = Router();
 

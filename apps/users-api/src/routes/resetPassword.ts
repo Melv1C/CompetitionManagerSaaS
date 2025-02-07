@@ -3,7 +3,7 @@ import { parseRequest, verifyResetPasswordToken, Key, hashPassword, catchError }
 import { EncodeToken$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { logger } from '..';
+import { logger } from '../logger';
 
 export const router = Router();
 

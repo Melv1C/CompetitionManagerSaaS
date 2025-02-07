@@ -6,34 +6,35 @@ export const catchError = (logger: Logger) => (
     error: unknown, 
     logInfo: Omit<LogInfo, 'level'>
 ) => {
+    const { message, ...logInfoWithoutMessage } = logInfo;
     if (error instanceof Error) {
-        logger.error(logInfo.message, {
-            ...logInfo,
+        logger.error(message, {
+            ...logInfoWithoutMessage,
             metadata: {
                 name: error.name,
                 message: error.message,
                 stack: error.stack,
-                ...logInfo.metadata
+                ...logInfoWithoutMessage.metadata
             }
         });
     } else if (error instanceof z.ZodError) {
-        logger.error(logInfo.message, {
-            ...logInfo,
+        logger.error(message, {
+            ...logInfoWithoutMessage,
             metadata: {
                 name: error.name,
                 message: error.message,
                 stack: error.stack,
                 errors: error.errors,
-                ...logInfo.metadata
+                ...logInfoWithoutMessage.metadata
             }
         });
     } else {
-        logger.error(logInfo.message, {
-            ...logInfo,
+        logger.error(message, {
+            ...logInfoWithoutMessage,
             metadata: {
                 name: 'UnknownError',
                 error,
-                ...logInfo.metadata
+                ...logInfoWithoutMessage.metadata
             }
         });
     }

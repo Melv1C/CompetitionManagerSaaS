@@ -3,7 +3,7 @@ import { CreateAthlete$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import devData from './data.json';
 import foreignClubData from './foreignClub.json';
-import { env } from '.';
+import { env } from './env';
 
 const checkValidityOfAthlete = (athlete: any) => {
     if (new Date(athlete.birthdate) < new Date('1900-01-01')) return false;

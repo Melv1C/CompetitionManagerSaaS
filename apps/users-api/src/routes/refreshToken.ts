@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key, catchError } from '@competition-manager/backend-utils';
-import { logger } from '..';
+import { logger } from '../logger';
 
 export const router = Router();
 

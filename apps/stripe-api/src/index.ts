@@ -4,16 +4,8 @@ import 'dotenv/config';
 import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions } from '@competition-manager/backend-utils';
 import { prisma } from "@competition-manager/prisma";
 import { z } from 'zod';
-import { Athlete$, CreateInscription, Eid$, Id$, Inscription$, InscriptionStatus, License, License$, NODE_ENV, Record$, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from "@competition-manager/schemas";
-
-const env$ = z.object({
-    NODE_ENV: z.nativeEnum(NODE_ENV).default(NODE_ENV.STAGING),
-    PORT: z.string().default('3000'),
-    PREFIX: z.string().default('/api'),
-    ALLOW_ORIGIN: z.string().default('*')
-});
-
-export const env = env$.parse(process.env);
+import { Athlete$, CreateInscription, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from "@competition-manager/schemas";
+import { env } from "./env";
 
 const app = express();
 app.use(express.json());
