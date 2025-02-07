@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {isAxiosError} from "axios";
 import { Email$, Password$ } from "@competition-manager/schemas";
 
@@ -12,13 +12,13 @@ import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
 
 type SignUpProps = {
     onToggle: () => void;
 };
 
 export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
-
     const { t } = useTranslation('auth');
 
     const setUserToken = useSetAtom(userTokenAtom);
@@ -32,6 +32,20 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
     const isFormValid = isEmailValid && isPasswordValid && isConfirmPasswordValid;
     const [errorMsg, setErrorMsg] = useState('');
+
+    const { data, isLoading, isError, error, refetch } = useQuery('register', async () => {
+        return await register(email, password);
+    }, {
+        enabled: false,
+        retry: false
+    });
+
+    useEffect(() => {
+        if (data) {
+            const userToken = decodeToken(data);
+            setUserToken(userToken);
+        }
+    }, [data, setUserToken]);
 
     return (
         <>
@@ -57,19 +71,9 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     if (password !== confirmPassword) {
                         setErrorMsg(t('error.passwordMismatch'));
                         return;
-                    }
+                    }   
 
-                    try {
-                        const data = await register(email, password);
-                        setUserToken(decodeToken(data));
-                    } catch (error) {
-                        console.error('Sign up error:', error);
-                        if (isAxiosError(error) && error.response) {
-                            setErrorMsg(error.response.data.message);
-                        } else {
-                            setErrorMsg(t('error.unknown'));
-                        }
-                    }
+                    await refetch();
                 }}
             >
                 <TextFieldWith$ 
@@ -100,9 +104,14 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
                     variant="contained" 
                     color="primary"
                     type="submit"
+                    loading={isLoading}
                 >
                     {t('register')}
                 </Button>
+
+                {isError && isAxiosError(error) && (
+                    <Alert severity="error">{t(`errors:users-api.${error.response?.data.error}`)}</Alert>
+                )}
 
                 {errorMsg && (
                     <Alert severity="error">{errorMsg}</Alert>

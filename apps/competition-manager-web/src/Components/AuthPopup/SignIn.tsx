@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isAxiosError } from "axios";
 import { Email$, Password$ } from "@competition-manager/schemas";
 
@@ -12,6 +12,7 @@ import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
 import { ForgotPasswordPopup } from "./ForgotPasswordPopup";
+import { useQuery } from "react-query";
 
 type SignInProps = {
     onToggle: () => void;
@@ -32,6 +33,20 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
     const [errorMsg, setErrorMsg] = useState('');
 
     const [isForgotPasswordPopupVisible, setIsForgotPasswordPopupVisible] = useState(false);
+
+    const { data, isLoading, isError, error, refetch } = useQuery('login', async () => {
+        return await login(email, password);
+    }, {
+        enabled: false,
+        retry: false
+    });
+
+    useEffect(() => {
+        if (data) {
+            const userToken = decodeToken(data);
+            setUserToken(userToken);
+        }
+    }, [data, setUserToken]);
 
     return (
         <>
@@ -58,17 +73,7 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
                         return;
                     }
 
-                    try {
-                        const data = await login(email, password);
-                        setUserToken(decodeToken(data));
-                    } catch (error) {
-                        console.error('Sign in error:', error);
-                        if (isAxiosError(error) && error.response) {
-                            setErrorMsg(error.response.data.message);
-                        } else {
-                            setErrorMsg(t('error.unknown'));
-                        }
-                    }
+                    refetch();
                 }}
             >
                 <TextFieldWith$ 
@@ -91,9 +96,14 @@ export const SignIn: React.FC<SignInProps> = ({ onToggle }) => {
                     variant="contained" 
                     color="primary"
                     type="submit"
+                    disabled={isLoading}
                 >
                     {t('login')}
                 </Button>
+
+                {isError && isAxiosError(error) && (
+                    <Alert severity="error">{t(`errors:users-api.${error.response?.data.error}`)}</Alert>
+                )}
 
                 {errorMsg && (
                     <Alert severity="error">{errorMsg}</Alert>

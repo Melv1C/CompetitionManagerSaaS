@@ -1,7 +1,7 @@
 
 import { useTranslation } from "react-i18next"
 import { MaxWidth, PasswordFieldWith$ } from "../Components"
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import { Alert, Box, Button, FormControl, FormLabel, TextField, Typography } from "@mui/material"
 import { useState } from "react"
@@ -13,6 +13,7 @@ export const ResetPassword = () => {
 
     const { t } = useTranslation('auth')
     const [searchParams] = useSearchParams()
+    const navigate = useNavigate()
 
     const token = searchParams.get('token')
     if (!token) throw new Error('No token provided')
@@ -43,6 +44,7 @@ export const ResetPassword = () => {
             // send request to the server
             const data = await resetPassword(password, token)
             console.log(data) // TODO: handle response
+            navigate('/')
         } catch (error) {
             console.error(error)
             setErrorMsg(t('error.unknown')) // TODO: better error handling
