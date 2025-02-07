@@ -57,7 +57,7 @@ router.post(
                 path: "POST /:id",
                 status: 500
             });
-            res.status(500).send
+            res.status(500).send("internalServerError");
         }
     }
 );

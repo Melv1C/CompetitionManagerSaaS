@@ -25,7 +25,7 @@ router.post(
             const { newPassword } = Body$.parse(req.body);
             const tokenData = verifyResetPasswordToken(token);
             if (!tokenData) {
-                res.status(401).json({ message: 'Invalid or expired token' });
+                res.status(401).send("invalidToken");
                 return;
             }
             const hashedPassword = await hashPassword(newPassword);
@@ -41,7 +41,7 @@ router.post(
                 res.send('Password updated');
             } catch (e: any) {
                 if (e.code === 'P2025') {
-                    res.status(404).send('User not found');
+                    res.status(404).send('updateUserRouter');
                     return;
                 } else{
                     catchError(logger)(e, {
