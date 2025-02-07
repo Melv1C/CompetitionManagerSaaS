@@ -1,25 +1,11 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, sendEmail, hashPassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
-import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Email, EmailData$, Role, NODE_ENV } from '@competition-manager/schemas';
-import { UserToTokenData } from '../utils';
-import { env } from '../env';
+import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, hashPassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
+import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Role, NODE_ENV } from '@competition-manager/schemas';
+import { UserToTokenData, sendVerificationEmail } from '../utils';
 import { logger } from '../logger';
 
 export const router = Router();
-
-const sendVerificationEmail = (email: Email, verificationToken: string) => {
-    const url = new URL(env.BASE_URL);
-    url.pathname = `${env.PREFIX}/users/verify-email`;
-    url.searchParams.set('token', verificationToken);
-    const emailData = EmailData$.parse({
-        to: email,
-        subject: 'Verify your email',
-        html: `<a href="${url.toString()}">Click here to verify your email</a>`
-    });
-    return sendEmail(emailData);
-}
-
 
 router.post(
     '/register',

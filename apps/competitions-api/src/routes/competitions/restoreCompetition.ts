@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, AuthenticatedRequest, checkRole, Key } from '@competition-manager/backend-utils';
+import { parseRequest, AuthentificatedRequest, checkRole, Key } from '@competition-manager/backend-utils';
 import { Competition$, Role } from '@competition-manager/schemas';
 import { competitionInclude } from '../../utils';
 
@@ -14,7 +14,7 @@ router.put(
     '/restore/:eid',
     parseRequest(Key.Params, Params$),
     checkRole(Role.SUPERADMIN),
-    async (req: AuthenticatedRequest, res) => {
+    async (req: AuthentificatedRequest, res) => {
         try {
             const { eid } = Params$.parse(req.params);
             try {
