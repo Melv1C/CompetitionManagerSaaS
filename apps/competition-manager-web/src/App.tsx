@@ -31,6 +31,7 @@ import { isNodeEnv } from './env';
 import { ResetPassword } from './Pages/ResetPassword';
 import { Footer } from './Components/Footer';
 import { FAQ } from './Pages/FAQ';
+import { NewsPopup } from './Components/NewsPopup';
 
 
 // must be extract in an other file
@@ -88,6 +89,7 @@ function App() {
                             </ErrorBoundary>
                         </Box>
                         <Footer />
+                        <NewsPopup />
                     </Box>
                 </ErrorBoundary>
             }>
