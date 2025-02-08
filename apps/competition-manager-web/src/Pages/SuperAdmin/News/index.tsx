@@ -16,7 +16,7 @@ export const News = () => {
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-    //if (isError) throw new Error('Error fetching news');
+    if (isError) throw new Error('Error fetching news');
 
     return (
         <MaxWidth>
