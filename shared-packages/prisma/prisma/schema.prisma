@@ -59,6 +59,7 @@ model Athlete {
     competition   Competition? @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId Int?         @map("competition_id")
     inscriptions  Inscription[]
+    result        Result[]
 
     @@map("athletes")
 }
@@ -114,6 +115,7 @@ model CompetitionEvent {
     competition       Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId     Int                @map("competition_id")
     inscriptions      Inscription[]
+    results           Result[]
 
     @@map("competition_events")
 }
@@ -145,6 +147,7 @@ model Competition {
     paymentPlanId        Int                 @map("payment_plan_id")
     options              Option[] 
     inscriptions         Inscription[]
+    results              Result[]
     club                 Club?               @relation(fields: [clubId], references: [id])
     clubId               Int?                @map("club_id")
     location             String?
@@ -215,6 +218,7 @@ model Club {
     freeCompetitions    Competition[] @relation("freeClubsToCompetition")
     allowedCompetitions Competition[] @relation("allowedClubsToCompetition")
     inscriptions        Inscription[]
+    results             Result[]
 
 
     @@map("clubs")
@@ -242,6 +246,7 @@ model Inscription {
     record              Record?            
     isDeleted           Boolean            @map("is_deleted")
     date                DateTime
+    result              Result?            
     
     @@map("inscriptions")
 }
@@ -275,4 +280,44 @@ model Log {
     metadata      Json?
 
     @@map("logs")
+}
+
+model ResultDetail {
+    id                      Int               @id @default(autoincrement())
+    tryNumber               Int               @map("try_number")
+    value                   Float
+    attempts                String[]
+    wind                    Float?
+    isBest                  Boolean           @map("is_best")
+    isOfficialBest          Boolean           @map("is_official")
+    resultId                Int               @map("result_id")
+    result                  Result            @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+    @@map("result_details")
+}
+
+model Result {
+    id                      Int               @id @default(autoincrement())
+    eid                     String            @unique @default(uuid())
+    competitionId           Int               @map("competition_id")
+    competition             Competition       @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+    competitionEventId      Int               @map("competition_event_id")
+    competitionEvent        CompetitionEvent  @relation(fields: [competitionEventId], references: [id], onDelete: Cascade)
+    athleteId               Int               @map("athlete_id")
+    athlete                 Athlete           @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+    inscriptionId           Int               @unique @map("inscription_id")
+    inscription             Inscription       @relation(fields: [inscriptionId], references: [id], onDelete: Cascade)
+    bib                     Int
+    clubId                  Int               @map("club_id")
+    club                    Club              @relation(fields: [clubId], references: [id])
+    heat                    Int
+    initalOrder             Int               @map("inital_order")
+    tempOrder               Int               @map("temp_order")
+    finalOrder              Int?              @map("final_order")
+    value                   Float?
+    wind                    Float?
+    points                  Int?
+    resultDetails           ResultDetail[]
+
+    @@map("results")
 }
