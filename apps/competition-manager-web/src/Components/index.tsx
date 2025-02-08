@@ -1,3 +1,5 @@
+export * from './SnackbarProvider';
+
 export * from './NavBar';
 export * from './Tabs';
 

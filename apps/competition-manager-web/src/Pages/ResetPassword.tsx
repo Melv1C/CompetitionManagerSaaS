@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { jwtDecode } from "jwt-decode"
 import { Alert, Box, Button, FormControl, FormLabel, TextField, Typography } from "@mui/material"
 import { useState } from "react"
-import { TokenData$, Password$ } from "@competition-manager/schemas"
+import { TokenData$, Password$, Password } from "@competition-manager/schemas"
 import { resetPassword } from "../api"
 import { useMutation } from "react-query"
 import { isAxiosError } from "axios"
@@ -32,7 +32,7 @@ export const ResetPassword = () => {
     const isFormValid = isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== ''
     const [errorMsg, setErrorMsg] = useState('')
 
-    const mutation = useMutation((data: { email: string, password: string }) => resetPassword(data.email, data.password), {
+    const mutation = useMutation((password: Password) => resetPassword(password, token), {
         onSuccess: () => {
             navigate('/')
         }
@@ -53,12 +53,10 @@ export const ResetPassword = () => {
             return
         }
 
-
         // call api
-        mutation.mutate({
-            email,
+        mutation.mutate(
             password
-        })
+        )
     }
 
 

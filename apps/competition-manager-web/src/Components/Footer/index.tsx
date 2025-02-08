@@ -64,9 +64,10 @@ export const Footer = () => {
                                 <FontAwesomeIcon icon={faEnvelope} />
                                 {CONTACT_EMAIL}
                             </Link>
-                            <Link onClick={() => navigate('/faq')} color="inherit" sx={{ cursor: 'pointer' }}>
+                            {/* TODO: Add FAQ page */}
+                            {/* <Link onClick={() => navigate('/faq')} color="inherit" sx={{ cursor: 'pointer' }}>
                                 {t('faq')}
-                            </Link>
+                            </Link> */}
                         </Stack>
                     </Grid>
 

@@ -15,7 +15,7 @@ import { faHome, faCalendarDays, faTrophy } from '@fortawesome/free-solid-svg-ic
 
 import { useAutoLogin } from './hooks'
 
-import { Loading, NavBar } from './Components'
+import { Loading, NavBar, SnackbarProvider } from './Components'
 
 import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
@@ -31,6 +31,7 @@ import { isNodeEnv } from './env';
 import { ResetPassword } from './Pages/ResetPassword';
 import { Footer } from './Components/Footer';
 import { FAQ } from './Pages/FAQ';
+import { NewsPopup } from './Components/NewsPopup';
 
 
 // must be extract in an other file
@@ -88,6 +89,7 @@ function App() {
                             </ErrorBoundary>
                         </Box>
                         <Footer />
+                        <NewsPopup />
                     </Box>
                 </ErrorBoundary>
             }>
@@ -131,9 +133,11 @@ function App() {
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={lightTheme}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <Box display="flex" flexDirection="column" height="100vh">
-                                <RouterProvider router={router} />
-                            </Box>
+                            <SnackbarProvider>
+                                <Box display="flex" flexDirection="column" height="100vh">
+                                    <RouterProvider router={router} />
+                                </Box>
+                            </SnackbarProvider>
                         </LocalizationProvider>
                     </ThemeProvider>
                 </QueryClientProvider>
