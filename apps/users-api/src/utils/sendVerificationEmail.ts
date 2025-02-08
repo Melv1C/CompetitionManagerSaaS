@@ -11,7 +11,7 @@ export const sendVerificationEmail = async (email: Email, verificationToken: str
         <p>${t("verifEmail.finalizeAccount")}</p>
         <a href="${url.toString()}">${t("verifEmail.verifyEmail")}</a>
         <p>${t("verifEmail.ignoreEmail")}</p>
-        <p>${t("verifEmail.regards")} <br/>${t("verifEmail.team")}</p>
+        <p>${t("mailSignature")}</p>
     `;
     const emailData = EmailData$.parse({
         to: email,
