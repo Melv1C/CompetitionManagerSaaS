@@ -8,16 +8,23 @@ import { logger } from '../logger';
 
 export const router = Router();
 
-const sendResetPasswordEmail = (email: Email, token: string) => {
+const sendResetPasswordEmail = async (email: Email, token: string, t: (key: string) => string) => {
     const url = new URL(env.BASE_URL);
     url.pathname = `/reset-password`;
     url.searchParams.set('token', token);
+    const html = `
+        <h2>${t("resetPassword.title")}</h2>
+        <p>${t("resetPassword.intro")}</p>
+        <a href="${url.toString()}">${t("resetPassword.button")}</a>
+        <p>${t("resetPassword.ignore")}</p>
+        <p>${t("mailSignature")}</p>
+    `;
     const emailData = EmailData$.parse({
         to: email,
-        subject: 'Verify your email',
-        html: `<a href="${url.toString()}">Click here to reset your password</a>`
+        subject: t("resetPassword.title"),
+        html: html
     });
-    return sendEmail(emailData);
+    await sendEmail(emailData);
 }
 
 const Body$ = z.object({
@@ -42,7 +49,9 @@ router.post(
                 res.status(404).send("userNotFound");
                 return;
             }
-            if (!await sendResetPasswordEmail(user.email, generateResetPasswordToken(TokenData$.parse(user)))) {
+            try {
+                await sendResetPasswordEmail(user.email, generateResetPasswordToken(TokenData$.parse(user)), req.t);
+            } catch (error) {
                 logger.warn('Failed to send email', {
                     path: 'POST /forgot-password',
                     status: 500,

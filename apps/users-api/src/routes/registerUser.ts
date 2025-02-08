@@ -38,7 +38,9 @@ router.post(
             const tokenData = UserToTokenData(User$.parse(userData));
             const accessToken = generateAccessToken(tokenData);
             const refreshToken = generateRefreshToken(tokenData);
-            if (!await sendVerificationEmail(userData.email, generateVerificationToken(tokenData))) {
+            try {
+                await sendVerificationEmail(userData.email, generateVerificationToken(tokenData), req.t)
+            } catch (error) {
                 logger.warn('Failed to send email', {
                     path: 'POST /register',
                     status: 500,
