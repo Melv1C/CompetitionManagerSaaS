@@ -53,7 +53,7 @@ const Query$ = z.object({
 router.get(
     '/',
     parseRequest(Key.Query, Query$),
-    //checkRole(Role.SUPERADMIN),
+    checkRole(Role.SUPERADMIN),
     async (req, res) => {
         const services = Log$.shape.service.array().nonempty().parse(req.query.services);
         const levels = Log$.shape.level.array().nonempty().parse(req.query.levels);

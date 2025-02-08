@@ -13,6 +13,7 @@ const env$ = z.object({
     PORT: z.string().default('3000'),
     PREFIX: z.string().default('/api'),
     ALLOW_ORIGIN: z.string().default('*'),
+    ACCESS_TOKEN_SECRET: z.string(),
 });
 
 export const env = env$.parse(process.env);
