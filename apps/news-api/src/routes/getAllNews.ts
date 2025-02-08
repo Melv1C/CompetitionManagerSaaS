@@ -1,8 +1,8 @@
 import { AuthentificatedRequest, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
 import { AdminQuery$, Language, News$, Role } from '@competition-manager/schemas';
+import { isAuthorized } from '@competition-manager/utils';
 import { Router } from 'express';
-import { isAuthorized } from '../../../../shared-packages/utils/src';
 
 export const router = Router();
 

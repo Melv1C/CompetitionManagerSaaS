@@ -2,8 +2,8 @@ import express from "express";
 import 'dotenv/config';
 import { corsMiddleware } from '@competition-manager/backend-utils';
 
-import routes from './routes';
 import { env } from "./env";
+import routes from './routes';
 
 const app = express();
 app.use(express.json());
