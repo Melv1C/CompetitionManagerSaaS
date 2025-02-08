@@ -3,13 +3,13 @@
     "verifEmail": {
         "subject": "Verify your email address",
         "welcome": "Welcome to Competition Manager",
-        "finalizeAccount": "To finalize the creation of your account, please confirm your email address by clicking on the button below.",
+        "finalizeAccount": "To finalize the creation of your account, please confirm your email address by clicking on the link below.",
         "verifyEmail": "Verify my email",
         "ignoreEmail": "If you are not the origin of this request, you can ignore this email."
     },
     "resetPassword": {
         "title": "Reset your password",
-        "intro": "We have received a request to reset your password. If you are the origin of this request, please click on the button below.",
+        "intro": "We have received a request to reset your password. If you are the origin of this request, please click on the link below.",
         "button": "Reset my password",
         "ignore": "If you have not requested this reset, you can safely ignore this email."
     }
