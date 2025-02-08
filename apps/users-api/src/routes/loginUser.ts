@@ -18,7 +18,6 @@ router.post(
     parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
-
             const { email, password } = Body$.parse(req.body);
             const user = await prisma.user.findUnique({
                 where: {
