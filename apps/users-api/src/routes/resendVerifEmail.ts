@@ -16,8 +16,9 @@ router.post(
                 res.status(403).send('forbidden');
                 return;
             }
-
-            if (!await sendVerificationEmail(req.user!.email, generateVerificationToken(req.user!))) {
+            try {
+                await sendVerificationEmail(req.user!.email, generateVerificationToken(req.user!), req.t)
+            } catch (error) {
                 logger.warn('Failed to send email', {
                     path: 'POST /resent-verification-email',
                     status: 500,

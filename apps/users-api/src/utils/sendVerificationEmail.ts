@@ -2,15 +2,21 @@ import { env } from '../env';
 import { Email, EmailData$ } from '@competition-manager/schemas';
 import { sendEmail } from '@competition-manager/backend-utils';
 
-
-export const sendVerificationEmail = (email: Email, verificationToken: string) => {
+export const sendVerificationEmail = async (email: Email, verificationToken: string, t: (key: string) => string) => {
     const url = new URL(env.BASE_URL);
     url.pathname = `${env.PREFIX}/users/verify-email`;
     url.searchParams.set('token', verificationToken);
+    const html = `
+        <h2>${t("verifEmail.welcome")}</h2>
+        <p>${t("verifEmail.finalizeAccount")}</p>
+        <a href="${url.toString()}">${t("verifEmail.verifyEmail")}</a>
+        <p>${t("verifEmail.ignoreEmail")}</p>
+        <p>${t("verifEmail.regards")} <br/>${t("verifEmail.team")}</p>
+    `;
     const emailData = EmailData$.parse({
         to: email,
-        subject: 'Verify your email',
-        html: `<a href="${url.toString()}">Click here to verify your email</a>`
+        subject: t("verifEmail.subject"),
+        html: html
     });
-    return sendEmail(emailData);
+    await sendEmail(emailData);
 }

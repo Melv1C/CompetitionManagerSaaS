@@ -1,0 +1,16 @@
+{
+    "mailSignature": "Met vriendelijke groet, <br/>Het Competition Manager-team",
+    "verifEmail": {
+        "subject": "Verifieer uw e-mailadres",
+        "welcome": "Welkom bij Competition Manager",
+        "finalizeAccount": "Om de creatie van uw account te voltooien, bevestig uw e-mailadres door op de onderstaande knop te klikken.",
+        "verifyEmail": "Mijn e-mail verifiëren",
+        "ignoreEmail": "Als u niet de oorsprong van dit verzoek bent, kunt u deze e-mail negeren."
+    },
+    "resetPassword": {
+        "title": "Reset uw wachtwoord",
+        "intro": "We hebben een verzoek ontvangen om uw wachtwoord te resetten. Als u de oorsprong van dit verzoek bent, klik dan op de onderstaande knop.",
+        "button": "Mijn wachtwoord resetten",
+        "ignore": "Als u deze reset niet heeft aangevraagd, kunt u deze e-mail veilig negeren."
+    }
+}

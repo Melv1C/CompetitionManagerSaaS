@@ -10,6 +10,9 @@ const transporter = createTransport({
         user: process.env.NODEMAILER_USER,
         pass: process.env.NODEMAILER_PASS,
     },
+    tls: {
+        rejectUnauthorized: false //TODO This is a temporary fix for the error: "Error: self signed certificate in certificate chain"
+    }
 });
 
 export const sendEmail = async (email : EmailData) => {
@@ -19,13 +22,7 @@ export const sendEmail = async (email : EmailData) => {
         subject: email.subject,
         html: email.html,
     }
-    try {
-        await transporter.sendMail(options);
-        return true;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
+    await transporter.sendMail(options); 
 }
 
 

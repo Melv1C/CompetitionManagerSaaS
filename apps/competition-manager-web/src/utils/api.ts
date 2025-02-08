@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getRefreshToken } from '../api';
+import i18n from '../i18n';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -26,6 +27,7 @@ api.interceptors.request.use((config) => {
     if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
     }
+    config.headers['Accept-Language'] = i18n.language;
 
     return config;
 });
