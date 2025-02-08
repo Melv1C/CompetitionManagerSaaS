@@ -1,4 +1,5 @@
 {
+    "unexpectedError": "An unexpected error occurred. Please try again later.",
     "internalServerError": "Internal server error. Please try again later.",
     "userNotFound": "User not found",
     "userAlreadyExists": "User already exists",

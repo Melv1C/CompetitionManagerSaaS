@@ -6,13 +6,13 @@ import { Alert, Box, Button, Divider, Link, Typography } from "@mui/material";
 
 import { register } from "../../api";
 
-
 import { decodeToken } from "../../utils/decodeToken";
 import { PasswordFieldWith$, TextFieldWith$ } from "../FieldsWithSchema";
 import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
+import { useSnackbar } from "../../hooks/useSnackbar";
 
 type SignUpProps = {
     onToggle: () => void;
@@ -20,6 +20,7 @@ type SignUpProps = {
 
 export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
     const { t } = useTranslation('auth');
+    const { showSnackbar } = useSnackbar();
 
     const setUserToken = useSetAtom(userTokenAtom);
 
@@ -35,6 +36,7 @@ export const SignUp: React.FC<SignUpProps> = ({ onToggle }) => {
 
     const mutation = useMutation((data: { email: string, password: string }) => register(data.email, data.password), {
         onSuccess: (data) => {
+            showSnackbar(t('sentVerificationEmail'), 'info');
             setUserToken(decodeToken(data));
         }
     });

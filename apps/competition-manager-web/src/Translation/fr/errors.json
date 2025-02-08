@@ -1,4 +1,5 @@
 {
+    "unexpectedError": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
     "internalServerError": "Erreur interne du serveur. Veuillez réessayer plus tard.",
     "userNotFound": "Utilisateur non trouvé",
     "userAlreadyExists": "L'utilisateur existe déjà",
