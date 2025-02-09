@@ -146,7 +146,6 @@ export const saveInscriptions = async (
                     record: true
                 }
             });
-
             returnValue.createdInscriptions.push(Inscription$.parse(createdInscription));
         }
     }

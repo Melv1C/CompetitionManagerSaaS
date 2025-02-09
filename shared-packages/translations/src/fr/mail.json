@@ -12,5 +12,12 @@
         "intro": "Nous avons reçu une demande de réinitialisation de votre mot de passe. Si vous êtes à l'origine de cette demande, veuillez cliquer sur le lien ci-dessous.",
         "button": "Réinitialiser mon mot de passe",
         "ignore": "Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email."
+    },
+    "inscriptionEmail": {
+        "title": "Confirmation de votre inscription",
+        "text": "Bonjour, vous avez bien été inscrit à la compétition {{competitionName}}.",
+        "th":"<th>Heure</th><th>Épreuve</th><th>Performance</th>",
+        "thCost":"<th>Prix</th>",
+        "total": "Total :"
     }
 }

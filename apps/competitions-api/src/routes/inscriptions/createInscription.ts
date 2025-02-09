@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, CustomRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
+import { parseRequest, CustomRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware, sendEmailInscription } from '@competition-manager/backend-utils';
 import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma, Prisma } from '@competition-manager/prisma';
@@ -160,9 +160,8 @@ router.post(
                 );
                 return;
             }
-
             // Get the cumulated costs for all inscriptions
-            const { alreadyPaid, fees, totalToPay } = (await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
+            const { alreadyPaid, fees, totalToPay, totalCost } = (await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
                 const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                 return getCostsInfo(parsedCompetition, athlete, inscriptions.map((i) => i.competitionEventEid), Inscription$.array().parse(competition.inscriptions).filter((i) => i.user.id === req.user!.id));
             }))).reduce((acc, { totalCost, alreadyPaid, fees, totalToPay }) => {
@@ -246,29 +245,31 @@ router.post(
             }
 
             // Save free inscriptions
+            const inscriptions = await saveInscriptions(
+                eid, 
+                await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
+                    const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                    const userId = req.user!.id;
+                    return {
+                        userId,
+                        athlete,
+                        inscriptions: inscriptions.map((data) => {
+                            return {
+                                data,
+                                meta: {
+                                    status: InscriptionStatus.ACCEPTED,
+                                    paid: 0
+                                },
+                                
+                            };
+                        })
+                    };
+                })),
+                Inscription$.array().parse(competition.inscriptions)
+            );
+            sendEmailInscription(inscriptionsData, totalCost, parsedCompetition.events, req.user!.email, competition.name, req.t);
             res.send(
-                saveInscriptions(
-                    eid, 
-                    await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
-                        const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
-                        const userId = req.user!.id;
-                        return {
-                            userId,
-                            athlete,
-                            inscriptions: inscriptions.map((data) => {
-                                return {
-                                    data,
-                                    meta: {
-                                        status: InscriptionStatus.ACCEPTED,
-                                        paid: 0
-                                    },
-                                    
-                                };
-                            })
-                        };
-                    })),
-                    Inscription$.array().parse(competition.inscriptions)
-                )
+                inscriptions
             );
         } catch (e) {
             catchError(logger)(e, {
