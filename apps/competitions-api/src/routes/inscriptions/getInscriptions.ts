@@ -39,7 +39,7 @@ router.get(
                     res.status(404).send('Competition not found');
                     return;
                 }
-                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res)) return;
+                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) return;
             }
 
             const competition = await prisma.competition.findUnique({

@@ -37,7 +37,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(Access.COMPETITIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
+            if (!checkAdminRole(Access.COMPETITIONS, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res, req.t)) {
                 return;
             }
             if (competitionEvent.schedule < competition.date) {

@@ -34,7 +34,7 @@ router.delete(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (req.user!.role != Role.SUPERADMIN && !checkAdminRole(Access.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res)) {
+            if (req.user!.role != Role.SUPERADMIN && !checkAdminRole(Access.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res, req.t)) {
                 return;
             }
             await prisma.competition.update({
