@@ -132,7 +132,7 @@ export const ResetPassword = () => {
                         </Button>
                         
                         {mutation.isError && isAxiosError(mutation.error) && (
-                            <Alert severity="error">{t('errors:' + mutation.error.response?.data)}</Alert>
+                            <Alert severity="error">{mutation.error.response?.data}</Alert>
                         )}
 
                         {errorMsg && (

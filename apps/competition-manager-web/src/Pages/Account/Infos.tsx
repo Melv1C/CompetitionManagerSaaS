@@ -31,7 +31,7 @@ export const Infos = () => {
             if (isAxiosError(error)) {
                 showSnackbar(error.response?.data, 'error');
             } else {
-                showSnackbar(t('errors:unexpectedError'), 'error');
+                showSnackbar(t('glossary:unexpectedError'), 'error');
             }
         }
     });
