@@ -20,6 +20,8 @@ app.use(express.json());
 
 app.use(corsMiddleware);
 
+app.use(middleware.handle(i18next));
+
 //app.use(`${env.PREFIX}/CHANGEME`, routes);
 
 app.listen(env.PORT, () => {
