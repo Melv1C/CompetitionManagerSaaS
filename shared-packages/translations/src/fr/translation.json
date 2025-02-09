@@ -1,8 +1,19 @@
 {
     "success": {
-
+        "passwordChanged": "Mot de passe modifié avec succès",
+        "resetPasswordEmailSent": "Email de réinitialisation du mot de passe envoyé",
+        "logout": "Déconnecté avec succès"
     },
     "errors": {
-
+        "internalServerError": "Erreur interne du serveur",
+        "unauthorized": "Non autorisé",
+        "userNotFound": "Utilisateur non trouvé",
+        "userAlreadyExists": "L'utilisateur existe déjà",
+        "userOrClubNotFound": "Utilisateur ou club non trouvé",
+        "invalidPassword": "Mot de passe invalide",
+        "failedToSendEmail": "Échec de l'envoi de l'email",
+        "competitionNotFound": "Compétition non trouvée",
+        "invalidToken": "Token invalide",
+        "invalidRefreshToken": "Refresh token invalide"
     }
 }
