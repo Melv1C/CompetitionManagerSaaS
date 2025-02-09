@@ -38,6 +38,12 @@ router.get(
                 return;
             }
 
+            // check if the token and the user are the same
+            if (user.email !== tokenData.email) {
+                res.status(401).send("invalidRefreshToken");
+                return;
+            }
+
             const newTokenData = UserToTokenData(User$.parse(user));
 
             const accessToken = generateAccessToken(newTokenData);
