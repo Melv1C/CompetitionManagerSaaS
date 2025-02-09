@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { parseRequest, checkRole, checkAdminRole, AuthentificatedRequest, Key } from '@competition-manager/backend-utils';
+import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { Access, BaseAdmin$, Eid$, Role } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -14,7 +14,7 @@ router.delete(
     '/:competitionEid',
     parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import 'dotenv/config';
 import { z } from 'zod';
-import { parseRequest, checkRole, AuthentificatedRequest, Key } from '@competition-manager/backend-utils';
+import { parseRequest, checkRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
 import { env } from '../env';
 
@@ -27,7 +27,7 @@ router.post(
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Body, CreateOneDayAthlete$),
     checkRole(Role.USER),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
             const { clubAbbr ,...oneDayAthData } = CreateOneDayAthlete$.parse(req.body);

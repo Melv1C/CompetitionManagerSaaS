@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { AuthentificatedRequest, catchError, checkRole, generateVerificationToken } from '@competition-manager/backend-utils';
+import { CustomRequest, catchError, checkRole, generateVerificationToken } from '@competition-manager/backend-utils';
 import { sendVerificationEmail } from '../utils';
 import { logger } from '../logger';
 import { LEVEL, Role } from '@competition-manager/schemas';
@@ -10,7 +10,7 @@ export const router = Router();
 router.post(
     '/resend-verification-email',
     checkRole(Role.UNCONFIRMED_USER),
-    async (req : AuthentificatedRequest, res) => {
+    async (req : CustomRequest, res) => {
         try {
             if (isAuthorized(req.user!, Role.USER)) {
                 res.status(403).send(req.t('errors.unauthorized'));

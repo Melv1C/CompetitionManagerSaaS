@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, AuthentificatedRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
+import { parseRequest, CustomRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
 import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma, Prisma } from '@competition-manager/prisma';
@@ -21,7 +21,7 @@ router.post(
     parseRequest(Key.Body, CreateInscription$.array()),
     parseRequest(Key.Query, AdminQuery$),
     checkRole(Role.USER),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try {
             const { isAdmin } = AdminQuery$.parse(req.query);
             const { eid } = Params$.parse(req.params);

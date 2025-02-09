@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { DisplayCompetition$, Role, Date$, AdminQuery$ } from '@competition-manager/schemas';
-import { AuthentificatedRequest, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
+import { CustomRequest, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
 
 export const router = Router();
@@ -15,7 +15,7 @@ router.get(
     '/',
     parseRequest(Key.Query, Query$),
     setUserIfExist,
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try {
             const { isAdmin, toDate, fromDate } = Query$.parse(req.query);
             if (isAdmin && !req.user) {

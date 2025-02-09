@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { parseRequest, checkRole, checkAdminRole, AuthentificatedRequest, Key } from '@competition-manager/backend-utils';
+import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { BaseAdmin$, Eid$, CreateCompetitionEvent$, Access, Role, CompetitionEvent$ } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -15,7 +15,7 @@ router.post(
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Body, CreateCompetitionEvent$),
     checkRole(Role.ADMIN),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try{
             const { competitionEid } = Params$.parse(req.params);
             const { eventId, categoriesId, parentEid, ...competitionEvent } = CreateCompetitionEvent$.parse(req.body);

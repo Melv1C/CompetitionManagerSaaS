@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, AuthentificatedRequest, checkRole, checkAdminRole, Key } from '@competition-manager/backend-utils';
+import { parseRequest, CustomRequest, checkRole, checkAdminRole, Key } from '@competition-manager/backend-utils';
 import { UpdateCompetition$, Competition$, Access, Role } from '@competition-manager/schemas';
 import { BaseAdmin$ } from '@competition-manager/schemas';
 import { competitionInclude } from '../../utils';
@@ -16,7 +16,7 @@ router.put(
     parseRequest(Key.Body, UpdateCompetition$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.ADMIN),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try {
             //si add option stripe TODO
 
