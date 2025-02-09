@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, sendEmail, generateResetPasswordToken, Key, catchError } from '@competition-manager/backend-utils';
-import { Email, EmailData$, TokenData$ } from '@competition-manager/schemas';
+import { Email, Email$, EmailData$, TokenData$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { env } from '../env';
@@ -13,22 +13,22 @@ const sendResetPasswordEmail = async (email: Email, token: string, t: (key: stri
     url.pathname = `/reset-password`;
     url.searchParams.set('token', token);
     const html = `
-        <h2>${t("resetPassword.title")}</h2>
-        <p>${t("resetPassword.intro")}</p>
-        <a href="${url.toString()}">${t("resetPassword.button")}</a>
-        <p>${t("resetPassword.ignore")}</p>
-        <p>${t("mailSignature")}</p>
+        <h2>${t("mail:resetPassword.title")}</h2>
+        <p>${t("mail:resetPassword.intro")}</p>
+        <a href="${url.toString()}">${t("mail:resetPassword.button")}</a>
+        <p>${t("mail:resetPassword.ignore")}</p>
+        <p>${t("mail:mailSignature")}</p>
     `;
     const emailData = EmailData$.parse({
         to: email,
-        subject: t("resetPassword.title"),
+        subject: t("mail:resetPassword.title"),
         html: html
     });
     await sendEmail(emailData);
 }
 
 const Body$ = z.object({
-    email: z.string().email(),
+    email: Email$
 });
 
 router.post(
@@ -46,7 +46,7 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(404).send("userNotFound");
+                res.status(404).send(req.t('errors.userNotFound'));
                 return;
             }
             try {
@@ -59,17 +59,17 @@ router.post(
                         user: user,
                     }
                 });
-                res.status(500).send('failedToSendEmail');
+                res.status(500).send(req.t('errors.failedToSendEmail'));
                 return;
             }
-            res.send('Email sent');
+            res.send(req.t('success.resetPasswordEmailSent'));
         } catch (error) {
             catchError(logger)(error, {
                 message: 'Internal server error',
                 path: 'POST /forgot-password',
                 status: 500
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );

@@ -7,15 +7,15 @@ export const sendVerificationEmail = async (email: Email, verificationToken: str
     url.pathname = `${env.PREFIX}/users/verify-email`;
     url.searchParams.set('token', verificationToken);
     const html = `
-        <h2>${t("verifEmail.welcome")}</h2>
-        <p>${t("verifEmail.finalizeAccount")}</p>
-        <a href="${url.toString()}">${t("verifEmail.verifyEmail")}</a>
-        <p>${t("verifEmail.ignoreEmail")}</p>
-        <p>${t("mailSignature")}</p>
+        <h2>${t("mail:verifEmail.welcome")}</h2>
+        <p>${t("mail:verifEmail.finalizeAccount")}</p>
+        <a href="${url.toString()}">${t("mail:verifEmail.verifyEmail")}</a>
+        <p>${t("mail:verifEmail.ignoreEmail")}</p>
+        <p>${t("mail:mailSignature")}</p>
     `;
     const emailData = EmailData$.parse({
         to: email,
-        subject: t("verifEmail.subject"),
+        subject: t("mail:verifEmail.subject"),
         html: html
     });
     await sendEmail(emailData);

@@ -19,7 +19,7 @@ router.post(
                 }
             });
             if (user) {
-                res.status(409).json("userAlreadyExists");
+                res.status(409).send(req.t("errors.userAlreadyExists"));
                 return;
             } 
             newUser.password = await hashPassword(newUser.password);
@@ -61,7 +61,7 @@ router.post(
                 path: 'POST /register',
                 status: 500
             });
-            res.status(500).send("internalServerError");
+            res.status(500).send(req.t("errors.internalServerError"));
         }
     }
 );

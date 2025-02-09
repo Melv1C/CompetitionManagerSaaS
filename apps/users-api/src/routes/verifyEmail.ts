@@ -20,7 +20,7 @@ router.get(
             const { token } = Query$.parse(req.query);
             const tokenData = verifyVerificationToken(token);
             if (!tokenData) {
-                res.status(400).send('invalidToken');
+                res.status(400).send(req.t('errors.invalidToken'));
                 return;
             }
             const user = await prisma.user.findUnique({
@@ -29,7 +29,7 @@ router.get(
                 }
             });
             if (!user) {
-                res.status(404).send('userNotFound');
+                res.status(404).send(req.t('errors.userNotFound'));
                 return;
             }
             if (user.role !== Role.UNCONFIRMED_USER) {
@@ -60,7 +60,7 @@ router.get(
                 path: 'GET /verify-email',
                 status: 500
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );

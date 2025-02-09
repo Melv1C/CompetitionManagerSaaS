@@ -21,7 +21,7 @@ router.get(
             const refreshToken = Cookies$.parse(req.cookies)[`refreshToken_${env.NODE_ENV}`];
             const tokenData = verifyRefreshToken(refreshToken);
             if (!tokenData) {
-                res.status(401).send("invalidRefreshToken");
+                res.status(401).send(req.t('errors.invalidRefreshToken'));
                 return;
             }
 
@@ -35,13 +35,13 @@ router.get(
             });
 
             if (!user) {
-                res.status(400).send("userNotFound");
+                res.status(400).send(req.t('errors.userNotFound'));
                 return;
             }
 
             // check if the token and the user are the same
             if (user.email !== tokenData.email) {
-                res.status(401).send("invalidRefreshToken");
+                res.status(401).send(req.t('errors.invalidRefreshToken'));
                 return;
             }
 
@@ -61,7 +61,7 @@ router.get(
                 path: 'GET /refresh-token',
                 status: 500
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );
