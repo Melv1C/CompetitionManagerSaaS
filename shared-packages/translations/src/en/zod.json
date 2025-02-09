@@ -1,0 +1,36 @@
+{
+    "IdMustBePositive": "Id must be positive",
+
+    "NameTooShort3": "Name must be at least 3 characters long",
+    "NameTooLong255": "Name must be at most 255 characters long",
+
+    "FirstNameTooShort1": "First name must be at least 1 character long",
+    "FirstNameTooLong50": "First name must be at most 50 characters long",
+
+    "LastNameTooShort1": "Last name must be at least 1 character long",
+    "LastNameTooLong50": "Last name must be at most 50 characters long",
+    
+    "AbbrTooShort1": "Abbreviation must be at least 1 character long",
+    "AbbrTooLong10": "Abbreviation must be at most 10 characters long",
+
+    "SearchValueTooShort3": "Search value must be at least 3 characters long",
+    "SearchValueTooLong50": "Search value must be at most 50 characters long",
+    
+    "DateTooEarly": "Date must be later than 1900-01-01",
+
+    "PriceMustBeNonNegative": "Price must be non-negative",
+
+    "LicenseTooShort1": "License must be at least 1 character long",
+    "LicenseTooLong20": "License must be at most 20 characters long",
+    
+    "InvalidEmail": "Invalid email",
+
+    "PasswordTooShort8": "Password must be at least 8 characters long",
+    "PasswordTooLong50": "Password must be at most 50 characters long",
+
+    "BibMustBePositive": "Bib must be positive",
+
+    "PlaceMustBeInteger": "Place must be an integer",
+    "PlaceMustBePositive": "Place must be positive",
+    "PlaceTooHigh": "Place must be at most 100"
+}

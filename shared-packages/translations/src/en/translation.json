@@ -1,0 +1,19 @@
+{
+    "success": {
+        "passwordChanged": "Password changed successfully",
+        "resetPasswordEmailSent": "Reset password email sent",
+        "logout": "Logged out successfully"
+    },
+    "errors": {
+        "internalServerError": "Internal server error",
+        "unauthorized": "Unauthorized",
+        "userNotFound": "User not found",
+        "userAlreadyExists": "User already exists",
+        "userOrClubNotFound": "User or club not found",
+        "invalidPassword": "Invalid password",
+        "failedToSendEmail": "Failed to send email",
+        "competitionNotFound": "Competition not found",
+        "invalidToken": "Invalid token",
+        "invalidRefreshToken": "Invalid refresh token"
+    }
+}
