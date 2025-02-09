@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key, catchError } from '@competition-manager/backend-utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, verifyRefreshToken, Key, catchError, isNodeEnv } from '@competition-manager/backend-utils';
 import { logger } from '../logger';
 import { prisma } from '@competition-manager/prisma';
 import { UserToTokenData } from '../utils';
-import { User$ } from '@competition-manager/schemas';
+import { NODE_ENV, User$ } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -50,7 +50,7 @@ router.get(
             const newRefreshToken = generateRefreshToken(newTokenData);
             res.cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
-                secure: true,
+                secure: !isNodeEnv(NODE_ENV.LOCAL),
                 sameSite: 'strict', 
                 maxAge: 30 * 24 * 60 * 60 * 1000,   // 30 days
             }).send(accessToken);
