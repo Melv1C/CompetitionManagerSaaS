@@ -11,12 +11,11 @@ import inscription from './inscription.json';
 import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
-import errors from './errors.json';
 
-import { zodTranslations } from '@competition-manager/schemas';
+import { zodFr } from '@competition-manager/translations';
 
 export default {
-    zod: zodTranslations.fr,
+    zod: zodFr,
     translation,
     buttons,
     labels,
@@ -29,6 +28,5 @@ export default {
     inscription,
     account,
     home,
-    footer,
-    errors
+    footer
 }

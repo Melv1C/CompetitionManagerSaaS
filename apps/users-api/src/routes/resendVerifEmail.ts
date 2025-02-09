@@ -13,7 +13,7 @@ router.post(
     async (req : AuthentificatedRequest, res) => {
         try {
             if (isAuthorized(req.user!, Role.USER)) {
-                res.status(403).send('forbidden');
+                res.status(403).send(req.t('errors.unauthorized'));
                 return;
             }
             try {
@@ -27,7 +27,7 @@ router.post(
                         user: req.user
                     }
                 });
-                res.status(500).send('failedToSendEmail');
+                res.status(500).send(req.t('errors.failedToSendEmail'));
                 return;
             }
             res.send('Email sent');
@@ -35,9 +35,10 @@ router.post(
             catchError(logger)(error, {
                 message: 'Internal server error',
                 path: 'POST /resend-verification-email',
-                status: 500
+                status: 500,
+                userId: req.user?.id
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );

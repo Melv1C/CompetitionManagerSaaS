@@ -33,5 +33,6 @@
     "summary": "Overzicht",
     "personalBest": "Persoonlijk record",
     "total": "Totaal",
-    "all": "Alles"
+    "all": "Alles",
+    "unexpectedError": "Er is een onverwachte fout opgetreden"
 }

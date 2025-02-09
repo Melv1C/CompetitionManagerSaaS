@@ -1,0 +1,19 @@
+{
+    "success": {
+        "passwordChanged": "Wachtwoord succesvol gewijzigd",
+        "resetPasswordEmailSent": "E-mail voor het opnieuw instellen van het wachtwoord verzonden",
+        "logout": "Succesvol uitgelogd"
+    },
+    "errors": {
+        "internalServerError": "Interne serverfout",
+        "unauthorized": "Onbevoegd",
+        "userNotFound": "Gebruiker niet gevonden",
+        "userAlreadyExists": "Gebruiker bestaat al",
+        "userOrClubNotFound": "Gebruiker of club niet gevonden",
+        "invalidPassword": "Ongeldig wachtwoord",
+        "failedToSendEmail": "E-mail verzenden mislukt",
+        "competitionNotFound": "Wedstrijd niet gevonden",
+        "invalidToken": "Ongeldige token",
+        "invalidRefreshToken": "Ongeldige vernieuwingstoken"
+    }
+}

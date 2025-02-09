@@ -33,5 +33,6 @@
     "summary": "Résumé",
     "personalBest": "Meilleure performance",
     "total": "Total",
-    "all": "Tout"
+    "all": "Tout",
+    "unexpectedError": "Une erreur inattendue s'est produite"
 }

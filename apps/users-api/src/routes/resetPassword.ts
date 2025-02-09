@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { parseRequest, verifyResetPasswordToken, Key, hashPassword, catchError } from '@competition-manager/backend-utils';
 import { EncodeToken$ } from '@competition-manager/schemas';
-import { prisma } from '@competition-manager/prisma';
+import { Prisma, prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { logger } from '../logger';
 
@@ -25,7 +25,7 @@ router.post(
             const { newPassword } = Body$.parse(req.body);
             const tokenData = verifyResetPasswordToken(token);
             if (!tokenData) {
-                res.status(401).send("invalidToken");
+                res.status(401).send(req.t('errors.invalidToken'));
                 return;
             }
             const hashedPassword = await hashPassword(newPassword);
@@ -38,20 +38,21 @@ router.post(
                         password: hashedPassword
                     }
                 });
-                res.send('Password updated');
-            } catch (e: any) {
-                if (e.code === 'P2025') {
-                    res.status(404).send('updateUserRouter');
-                    return;
-                } else{
+                res.send(req.t('success.passwordChanged'));
+            } catch (e) {
+                if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
                     catchError(logger)(e, {
-                        message: 'Internal server error',
+                        message: 'User not found',
                         path: 'POST /reset-password',
-                        status: 500
+                        status: 404,
+                        metadata: {
+                            tokenData
+                        }
                     });
-                    res.status(500).send('internalServerError');
+                    res.status(404).send(req.t('errors.userNotFound'));
                     return;
                 }
+                throw e;
             }
         } catch (error) {
             catchError(logger)(error, {
@@ -59,7 +60,7 @@ router.post(
                 path: 'POST /reset-password',
                 status: 500
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );

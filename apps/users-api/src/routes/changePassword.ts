@@ -16,7 +16,7 @@ const Body$ = z.object({
 router.post(
     '/change-password',
     parseRequest(Key.Body, Body$),
-    checkRole(Role.USER),
+    checkRole(Role.UNCONFIRMED_USER),
     async (req : AuthentificatedRequest, res) => {
         try {
             const { oldPassword, newPassword } = Body$.parse(req.body);
@@ -26,12 +26,12 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(404).send("userNotFound");
+                res.status(404).send(req.t('errors.userNotFound'));
                 return;
             }
             const valid = await comparePassword(oldPassword, user.password);
             if (!valid) {
-                res.status(400).send("invalidPassword");
+                res.status(400).send(req.t('errors.invalidPassword'));
                 return;
             }
             await prisma.user.update({
@@ -42,14 +42,14 @@ router.post(
                     password: await hashPassword(newPassword)
                 }
             });
-            res.send('Password changed');
+            res.send(req.t('success.passwordChanged'));
         } catch (error) {
             catchError(logger)(error, {
                 message: 'Internal server error',
                 path: 'POST /change-password',
                 status: 500
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );

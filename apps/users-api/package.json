@@ -16,6 +16,7 @@
     "@competition-manager/prisma": "file:../../shared-packages/prisma",
     "@competition-manager/schemas": "file:../../shared-packages/schemas",
     "@competition-manager/utils": "file:../../shared-packages/utils",
+    "@competition-manager/translations": "file:../../shared-packages/translations",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",

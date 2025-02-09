@@ -33,5 +33,6 @@
     "summary": "Summary",
     "personalBest": "Personal Best",
     "total": "Total",
-    "all": "All"
+    "all": "All",
+    "unexpectedError": "An unexpected error occurred"
 }

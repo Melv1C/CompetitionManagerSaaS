@@ -100,7 +100,7 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
                     />
 
                     {mutation.isError && isAxiosError(mutation.error) && (
-                        <Alert severity='error'>{t('errors:' + mutation.error.response?.data)}</Alert>
+                        <Alert severity='error'>{mutation.error.response?.data}</Alert>
                     )}
 
                     {errorMsg && (
