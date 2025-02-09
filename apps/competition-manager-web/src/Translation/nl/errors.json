@@ -1,8 +1,0 @@
-{
-    "unexpectedError": "Er is een onverwachte fout opgetreden. Probeer het later opnieuw.",
-    "internalServerError": "Interne serverfout. Probeer het later opnieuw.",
-    "userNotFound": "Gebruiker niet gevonden",
-    "userAlreadyExists": "Gebruiker bestaat al",
-    "invalidPassword": "Ongeldig wachtwoord",
-    "invalidToken": "Ongeldige token"
-}
