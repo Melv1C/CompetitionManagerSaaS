@@ -8,11 +8,10 @@ import { env } from "./env";
 import i18next from "i18next";
 import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
+import { backendTranslations } from "@competition-manager/translations";
 
 i18next.use(Backend).use(middleware.LanguageDetector).init({
-    backend: {
-        loadPath: `src/translations/{{lng}}.json`,
-    },
+    resources: backendTranslations,
     fallbackLng: 'en'
 });
 
