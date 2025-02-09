@@ -5,11 +5,12 @@ import { logger } from '../logger';
 import { prisma } from '@competition-manager/prisma';
 import { UserToTokenData } from '../utils';
 import { NODE_ENV, User$ } from '@competition-manager/schemas';
+import { env } from '../env';
 
 export const router = Router();
 
 const Cookies$ = z.object({
-    refreshToken: z.string()
+    [`refreshToken_${env.NODE_ENV}`]: z.string()
 });
 
 router.get(
@@ -17,7 +18,7 @@ router.get(
     parseRequest(Key.Cookies, Cookies$),
     async (req, res) => {
         try {
-            const { refreshToken } = Cookies$.parse(req.cookies);
+            const refreshToken = Cookies$.parse(req.cookies)[`refreshToken_${env.NODE_ENV}`];
             const tokenData = verifyRefreshToken(refreshToken);
             if (!tokenData) {
                 res.status(401).send("invalidRefreshToken");
@@ -48,7 +49,7 @@ router.get(
 
             const accessToken = generateAccessToken(newTokenData);
             const newRefreshToken = generateRefreshToken(newTokenData);
-            res.cookie('refreshToken', newRefreshToken, {
+            res.cookie(`refreshToken_${env.NODE_ENV}`, newRefreshToken, {
                 httpOnly: true,
                 secure: isNodeEnv(NODE_ENV.PROD),
                 sameSite: 'strict', 

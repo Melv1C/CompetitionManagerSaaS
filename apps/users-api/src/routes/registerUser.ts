@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, hashPassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
+import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, hashPassword, isNodeEnv, catchError, env } from '@competition-manager/backend-utils';
 import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Role, NODE_ENV, LEVEL } from '@competition-manager/schemas';
 import { UserToTokenData, sendVerificationEmail } from '../utils';
 import { logger } from '../logger';
@@ -49,7 +49,7 @@ router.post(
                     }
                 });
             }
-            res.cookie('refreshToken', refreshToken, {
+            res.cookie(`refreshToken_${env.NODE_ENV}`, refreshToken, {
                 httpOnly: true,
                 secure: isNodeEnv(NODE_ENV.PROD),
                 sameSite: 'strict',

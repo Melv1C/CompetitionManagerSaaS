@@ -5,6 +5,7 @@ import { parseRequest, generateAccessToken, generateRefreshToken, Key, comparePa
 import { NODE_ENV, User$ } from '@competition-manager/schemas';
 import { UserToTokenData } from '../utils';
 import { logger } from '../logger';
+import { env } from '../env';
 
 export const router = Router();
 
@@ -39,7 +40,7 @@ router.post(
             const tokenData = UserToTokenData(User$.parse(user));
             const accessToken = generateAccessToken(tokenData);
             const refreshToken = generateRefreshToken(tokenData);
-            res.cookie('refreshToken', refreshToken, {
+            res.cookie(`refreshToken_${env.NODE_ENV}`, refreshToken, {
                 httpOnly: true,
                 secure: isNodeEnv(NODE_ENV.PROD),
                 sameSite: 'strict',
