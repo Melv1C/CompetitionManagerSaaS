@@ -8,7 +8,7 @@ import { corsMiddleware } from '@competition-manager/backend-utils';
 import { backendTranslations } from "@competition-manager/translations";
 
 import routes from './routes';
-import { env } from "./env";
+import { env } from './env';
 
 i18next.use(Backend).use(middleware.LanguageDetector).init({
     resources: backendTranslations,

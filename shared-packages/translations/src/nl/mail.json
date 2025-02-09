@@ -12,5 +12,12 @@
         "intro": "We hebben een verzoek ontvangen om uw wachtwoord te resetten. Als u de oorsprong van dit verzoek bent, klik dan op de onderstaande link.",
         "button": "Mijn wachtwoord resetten",
         "ignore": "Als u deze reset niet heeft aangevraagd, kunt u deze e-mail veilig negeren."
+    },
+    "inscriptionEmail": {
+        "title": "Bevestiging van uw inschrijving",
+        "text": "Hallo, u bent succesvol ingeschreven voor de competitie {{competitionName}}.",
+        "th":"<th>Tijd</th><th>Evenement</th><th>Prestatie</th>",
+        "thCost":"<th>Prijs</th>",
+        "total": "Totaal :"
     }
 }

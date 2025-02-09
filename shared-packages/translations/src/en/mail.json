@@ -12,5 +12,12 @@
         "intro": "We have received a request to reset your password. If you are the origin of this request, please click on the link below.",
         "button": "Reset my password",
         "ignore": "If you have not requested this reset, you can safely ignore this email."
+    },
+    "inscriptionEmail": {
+        "title": "Confirmation of your registration",
+        "text": "Hello, you have been successfully registered for the competition {{competitionName}}.",
+        "th":"<th>Time</th><th>Event</th><th>Performance</th>",
+        "thCost":"<th>Price</th>",
+        "total": "Total :"
     }
 }
