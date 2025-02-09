@@ -21,5 +21,3 @@ export * from './Records';
 export * from './NodeEnv';
 export * from './Stripe';
 export * from './News';
-
-export * from './Translations';
