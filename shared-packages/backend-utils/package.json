@@ -36,6 +36,7 @@
     "@competition-manager/utils": "file:../utils",
     "bcrypt": "^5.1.1",
     "express": "^4.21.1",
+    "i18next": "^24.2.2",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.16",
     "stripe": "^17.5.0",

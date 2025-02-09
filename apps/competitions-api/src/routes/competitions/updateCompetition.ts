@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, AuthentificatedRequest, checkRole, checkAdminRole, Key } from '@competition-manager/backend-utils';
+import { parseRequest, CustomRequest, checkRole, checkAdminRole, Key } from '@competition-manager/backend-utils';
 import { UpdateCompetition$, Competition$, Access, Role } from '@competition-manager/schemas';
 import { BaseAdmin$ } from '@competition-manager/schemas';
 import { competitionInclude } from '../../utils';
@@ -16,7 +16,7 @@ router.put(
     parseRequest(Key.Body, UpdateCompetition$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.ADMIN),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try {
             //si add option stripe TODO
 
@@ -34,7 +34,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (req.user!.role !== Role.SUPERADMIN && !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res)) return;
+            if (req.user!.role !== Role.SUPERADMIN && !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) return;
             try {
                 const updatedCompetition = await prisma.competition.update({
                     where: {

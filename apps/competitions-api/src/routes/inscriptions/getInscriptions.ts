@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { Access, AdminQuery$, BaseAdmin$, Competition$, DisplayInscription$, Inscription$, Role } from '@competition-manager/schemas';
-import { AuthentificatedRequest, checkAdminRole, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
+import { CustomRequest, checkAdminRole, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
 
 
@@ -16,7 +16,7 @@ router.get(
     parseRequest(Key.Params, Params$),
     parseRequest(Key.Query, AdminQuery$),
     setUserIfExist,
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try {
             const { eid } = Params$.parse(req.params);
             const { isAdmin } = AdminQuery$.parse(req.query);
@@ -39,7 +39,7 @@ router.get(
                     res.status(404).send('Competition not found');
                     return;
                 }
-                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res)) return;
+                if (!checkAdminRole(Access.INSCRIPTIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) return;
             }
 
             const competition = await prisma.competition.findUnique({

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { parseRequest, Key, catchError, checkRole, AuthentificatedRequest, comparePassword, hashPassword } from '@competition-manager/backend-utils';
+import { parseRequest, Key, catchError, checkRole, CustomRequest, comparePassword, hashPassword } from '@competition-manager/backend-utils';
 import { Password$, Role } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { logger } from '../logger';
@@ -17,7 +17,7 @@ router.post(
     '/change-password',
     parseRequest(Key.Body, Body$),
     checkRole(Role.UNCONFIRMED_USER),
-    async (req : AuthentificatedRequest, res) => {
+    async (req : CustomRequest, res) => {
         try {
             const { oldPassword, newPassword } = Body$.parse(req.body);
             const user = await prisma.user.findUnique({

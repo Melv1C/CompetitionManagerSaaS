@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, checkRole, checkAdminRole, AuthentificatedRequest, Key } from '@competition-manager/backend-utils';
+import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { Access, Eid$, Id$, Role } from '@competition-manager/schemas';
 import { BaseAdmin$, UpdateAdmin$ } from '@competition-manager/schemas';
 import { z } from 'zod';
@@ -18,7 +18,7 @@ router.put(
     parseRequest(Key.Body, UpdateAdmin$),
     parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try{
             const { competitionEid, adminId } = Params$.parse(req.params);
             const newAdmin = UpdateAdmin$.parse(req.body);
@@ -34,7 +34,7 @@ router.put(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(Access.OWNER, req.user!.id, BaseAdmin$.array().parse(competition.admins), res)) {
+            if (!checkAdminRole(Access.OWNER, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) {
                 return;
             }
             try {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, AuthentificatedRequest, checkRole, Key } from '@competition-manager/backend-utils';
+import { parseRequest, CustomRequest, checkRole, Key } from '@competition-manager/backend-utils';
 import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } from '@competition-manager/schemas';
 
 export const router = Router();
@@ -29,7 +29,7 @@ router.post(
     '/',
     parseRequest(Key.Body, CreateCompetition$),
     checkRole(Role.CLUB),
-    async (req: AuthentificatedRequest, res) => {
+    async (req: CustomRequest, res) => {
         try {
             // TODO: stripe
             const { paymentPlanId, optionsId, ...competition } = CreateCompetition$.parse(req.body);
