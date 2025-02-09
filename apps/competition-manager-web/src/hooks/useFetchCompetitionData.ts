@@ -11,7 +11,7 @@ export const useFetchCompetitionData = (eid: string, isAdmin: boolean = false) =
     const [globalUserInscriptions, setUserInscriptions] = useAtom(userInscriptionsAtom);
     const [globalAdminInscriptions, setAdminInscriptions] = useAtom(adminInscriptionsAtom);
 
-    const { data: competition, isLoading: isCompetitionLoading, isError: isCompetitionError } = useQuery(['competition', eid], () => getCompetition(eid));
+    const { data: competition, isLoading: isCompetitionLoading, isError: isCompetitionError } = useQuery(['competition', eid], () => getCompetition(eid, isAdmin));
     const { data: inscriptions, isLoading: isInscriptionsLoading, isError: isInscriptionsError } = useQuery(['inscriptions', eid], () => getInscriptions(eid));
     const { data: userInscriptions, isLoading: isUserInscriptionsLoading, isError: isUserInscriptionsError } = useQuery(['userInscriptions', eid], () => getUsersInscriptions(eid));
     const { data: adminInscriptions, isLoading: isAdminInscriptionsLoading, isError: isAdminInscriptionsError } = useQuery(['adminInscriptions', eid], () => {
