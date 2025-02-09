@@ -50,7 +50,7 @@ router.get(
             const newRefreshToken = generateRefreshToken(newTokenData);
             res.cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
-                secure: !isNodeEnv(NODE_ENV.LOCAL),
+                secure: isNodeEnv(NODE_ENV.PROD),
                 sameSite: 'strict', 
                 maxAge: 30 * 24 * 60 * 60 * 1000,   // 30 days
             }).send(accessToken);
