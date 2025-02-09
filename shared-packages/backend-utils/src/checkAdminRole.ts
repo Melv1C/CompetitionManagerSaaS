@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { Access, BaseAdmin } from '@competition-manager/schemas';
-import { defaultT } from './middleware';
+import { TFunction } from 'i18next';
 
 const isAdminAuthorized = (admin: BaseAdmin, levelRequire: Access) => {
     if (admin.access.includes(Access.OWNER)) {
@@ -14,7 +14,7 @@ export const checkAdminRole = (
     userId: number, 
     admins: BaseAdmin[], 
     res: Response, 
-    t: (key: string) => string = defaultT
+    t: TFunction<"translation", undefined>
 ) => {
     const admin = admins.find(admin => admin.userId === userId);
     if (!admin) {

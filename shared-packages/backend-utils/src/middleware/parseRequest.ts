@@ -1,6 +1,6 @@
 import { ZodSchema } from 'zod';
 import { Response, NextFunction } from 'express';
-import { CustomRequest, defaultT } from './customRequest';
+import { CustomRequest } from './customRequest';
 
 export enum Key {
     Body = 'body',
@@ -10,7 +10,6 @@ export enum Key {
 }
 
 export const parseRequest = (key: Key, schema: ZodSchema) => (req: CustomRequest, res: Response, next: NextFunction) => {
-    req.t = req.t || defaultT;
     const result = schema.safeParse(req[key]);
     if (result.success) {
         req[key] = result.data;

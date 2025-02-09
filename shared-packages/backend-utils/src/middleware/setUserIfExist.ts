@@ -1,10 +1,9 @@
 import { Response, NextFunction } from 'express';
 import { verifyAccessToken } from '../jwtToken';
-import { CustomRequest, defaultT } from './customRequest';
+import { CustomRequest } from './customRequest';
 
 
 export const setUserIfExist = (req: CustomRequest, res: Response, next: NextFunction) => {
-    req.t = req.t || defaultT;
     try {
         const accessToken = req.headers.authorization?.split(' ')[1];
         if (!accessToken) {

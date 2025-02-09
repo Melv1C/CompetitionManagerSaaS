@@ -1,10 +1,8 @@
 import { Request } from 'express';
 import { TokenData } from '@competition-manager/schemas';
+import { TFunction } from "i18next";
 
 export interface CustomRequest extends Request {
+    t: TFunction<"translation", undefined>;
     user?: TokenData;
-    t?: (key: string) => string;
 }
-
-// Default implementation for `t`
-export const defaultT: (key: string) => string = (key) => key;

@@ -1,16 +1,28 @@
-import express from "express";
 import 'dotenv/config';
-
-import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions } from '@competition-manager/backend-utils';
-import { prisma } from "@competition-manager/prisma";
+import express from "express";
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
+import middleware from "i18next-http-middleware";
 import { z } from 'zod';
-import { Athlete$, CreateInscription, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from "@competition-manager/schemas";
+
+import { Athlete$, CreateInscription, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
+import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions } from '@competition-manager/backend-utils';
+import { backendTranslations } from "@competition-manager/translations";
+
 import { env } from "./env";
+import { prisma } from '@competition-manager/prisma';
+
+i18next.use(Backend).use(middleware.LanguageDetector).init({
+    resources: backendTranslations,
+    fallbackLng: 'en'
+});
 
 const app = express();
 app.use(express.json());
 
 app.use(corsMiddleware);
+
+app.use(middleware.handle(i18next));
 
 const Body$ = z.object({
     data: z.object({

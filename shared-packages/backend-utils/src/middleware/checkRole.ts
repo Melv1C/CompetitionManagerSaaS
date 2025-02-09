@@ -1,12 +1,11 @@
 import { Response, NextFunction } from 'express';
-import { CustomRequest, defaultT } from './customRequest';
+import { CustomRequest } from './customRequest';
 import { Role } from '@competition-manager/schemas';
 import { setUserIfExist } from './setUserIfExist';
 import { isAuthorized } from '@competition-manager/utils';
 
 export const checkRole = (levelRequire: Role) => (req: CustomRequest, res: Response, next: NextFunction) => {
     setUserIfExist(req, res, () => {
-        req.t = req.t || defaultT;
         if (!req.user) {
             res.status(401).send(req.t('errors.unauthorized'));
             return;
