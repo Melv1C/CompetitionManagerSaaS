@@ -29,12 +29,12 @@ router.post(
                 }
             });
             if (!user) {
-                res.status(400).send(req.t("errors:userNotFound"));
+                res.status(400).send(req.t("errors.userNotFound"));
                 return;
             }
             const valid = await comparePassword(password, user.password);
             if (!valid) {
-                res.status(400).send(req.t("errors:invalidPassword"));
+                res.status(400).send(req.t("errors.invalidPassword"));
                 return;
             }
             const tokenData = UserToTokenData(User$.parse(user));
@@ -52,7 +52,7 @@ router.post(
                 path: 'POST /login',
                 status: 500
             });
-            res.status(500).send(req.t("errors:internalServerError"));
+            res.status(500).send(req.t("errors.internalServerError"));
         }
     }
 );
