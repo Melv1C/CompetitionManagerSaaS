@@ -1,14 +1,15 @@
-import { LogInfo } from "@competition-manager/schemas";
+import { LEVEL, LogInfo } from "@competition-manager/schemas";
 import { Logger } from "winston";
 import { z } from "zod";
 
-export const catchError = (logger: Logger) => (
+export const catchError = (logger: Logger, severity: LEVEL = LEVEL.error) => (
     error: unknown, 
     logInfo: Omit<LogInfo, 'level'>
 ) => {
     const { message, ...logInfoWithoutMessage } = logInfo;
     if (error instanceof Error) {
-        logger.error(message, {
+        logger.log(message, {
+            level: severity,
             ...logInfoWithoutMessage,
             metadata: {
                 name: error.name,
@@ -18,7 +19,8 @@ export const catchError = (logger: Logger) => (
             }
         });
     } else if (error instanceof z.ZodError) {
-        logger.error(message, {
+        logger.log(message, {
+            level: severity,
             ...logInfoWithoutMessage,
             metadata: {
                 name: error.name,
@@ -29,7 +31,8 @@ export const catchError = (logger: Logger) => (
             }
         });
     } else {
-        logger.error(message, {
+        logger.log(message, {
+            level: severity,
             ...logInfoWithoutMessage,
             metadata: {
                 name: 'UnknownError',

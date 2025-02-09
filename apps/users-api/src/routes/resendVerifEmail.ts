@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { AuthentificatedRequest, catchError, checkRole, generateVerificationToken } from '@competition-manager/backend-utils';
 import { sendVerificationEmail } from '../utils';
 import { logger } from '../logger';
-import { Role } from '@competition-manager/schemas';
+import { LEVEL, Role } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
 
 export const router = Router();
@@ -19,10 +19,13 @@ router.post(
             try {
                 await sendVerificationEmail(req.user!.email, generateVerificationToken(req.user!), req.t)
             } catch (error) {
-                logger.warn('Failed to send email', {
-                    path: 'POST /resent-verification-email',
-                    status: 500,
-                    userId: req.user!.id
+                catchError(logger, LEVEL.warn)(error, {
+                    message: 'Failed to send email',
+                    path: 'POST /resend-verification-email',
+                    userId: req.user!.id,
+                    metadata: {
+                        user: req.user
+                    }
                 });
                 res.status(500).send('failedToSendEmail');
                 return;

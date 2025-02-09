@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { parseRequest, generateAccessToken, generateRefreshToken, generateVerificationToken, Key, hashPassword, isNodeEnv, catchError } from '@competition-manager/backend-utils';
-import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Role, NODE_ENV } from '@competition-manager/schemas';
+import { User$, CreateUser$, USER_PREFERENCES_DEFAULTS, Role, NODE_ENV, LEVEL } from '@competition-manager/schemas';
 import { UserToTokenData, sendVerificationEmail } from '../utils';
 import { logger } from '../logger';
 
@@ -41,11 +41,11 @@ router.post(
             try {
                 await sendVerificationEmail(userData.email, generateVerificationToken(tokenData), req.t)
             } catch (error) {
-                logger.warn('Failed to send email', {
+                catchError(logger, LEVEL.warn)(error, {
+                    message: 'Failed to send email',
                     path: 'POST /register',
-                    status: 500,
                     metadata: {
-                        user: userData,
+                        user: userData
                     }
                 });
             }
