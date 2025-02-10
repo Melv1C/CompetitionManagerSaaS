@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { prisma } from '@competition-manager/prisma';
-import { parseRequest, CustomRequest, checkRole, checkAdminRole, Key } from '@competition-manager/backend-utils';
+import { Prisma, prisma } from '@competition-manager/prisma';
+import { parseRequest, CustomRequest, checkRole, checkAdminRole, Key, catchError } from '@competition-manager/backend-utils';
 import { UpdateCompetition$, Competition$, Access, Role } from '@competition-manager/schemas';
 import { BaseAdmin$ } from '@competition-manager/schemas';
 import { competitionInclude } from '../../utils';
+import { logger } from '../../logger';
 
 export const router = Router();
 
@@ -55,18 +56,27 @@ router.put(
                     include: competitionInclude
                 });
                 res.send(Competition$.parse(updatedCompetition));
-            } catch (e: any) {
-                if (e.code === 'P2025') {
-                    res.status(404).send('Wrong payment plan id or option id or club id');
+            } catch (e) {
+                if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    catchError(logger)(e, {
+                        message: 'Prisma error',
+                        path: 'PUT /:eid',
+                        userId: req.user?.id,
+                        status: 400,
+                    });
+                    res.status(400).send(req.t('errors.badRequest'));
                     return;
-                } else {
-                    console.log(e);
-                    res.status(500).send('internalServerError');
                 }
+                throw e;
             }
         } catch (error) {
-            console.log(error);
-            res.status(500).send('internalServerError');
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'PUT /:eid',
+                userId: req.user?.id,
+                status: 500,
+            });
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
     

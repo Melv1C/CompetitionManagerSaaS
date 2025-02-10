@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { Key, parseRequest, setUserIfExist, CustomRequest } from '@competition-manager/backend-utils';
+import { Key, parseRequest, setUserIfExist, CustomRequest, catchError } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
 import { Eid$, Role, Competition$, AdminQuery$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { competitionInclude } from '../../utils';
+import { logger } from '../../logger';
 
 export const router = Router();
 
@@ -25,7 +26,7 @@ router.get(
             const { competitionEid } = Params$.parse(req.params);
             if (isAdmin) {
                 if (!req.user) {
-                    res.status(401).send('Unauthorized');
+                    res.status(401).send(req.t('errors.unauthorized'));
                     return;
                 }
                 if (req.user.role === Role.SUPERADMIN) {
@@ -36,7 +37,7 @@ router.get(
                         include: competitionInclude,
                     });
                     if (!competition) {
-                        res.status(404).send('Competition not found');
+                        res.status(404).send(req.t('errors.competitionNotFound'));
                         return;
                     }
                     res.send(Competition$.parse(competition));
@@ -58,7 +59,7 @@ router.get(
                         },
                     });
                     if (!admin) {
-                        res.status(404).send('Competition not found');
+                        res.status(404).send(req.t('errors.competitionNotFound'));
                         return;
                     }
                     res.send(Competition$.parse(admin.competition));
@@ -75,13 +76,18 @@ router.get(
                 include: competitionInclude,
             });
             if (!competition) {
-                res.status(404).send('Competition not found');
+                res.status(404).send(req.t('errors.competitionNotFound'));
                 return;
             }
             res.send(Competition$.parse(competition));
         } catch (error) {
-            console.error(error);
-            res.status(500).send('internalServerError');
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'GET /:competitionEid',
+                userId: req.user?.id,
+                status: 500,
+            });
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );
