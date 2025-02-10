@@ -2,11 +2,13 @@
     "success": {
         "passwordChanged": "Password changed successfully",
         "resetPasswordEmailSent": "Reset password email sent",
-        "logout": "Logged out successfully"
+        "logout": "Logged out successfully",
+        "competitionDeleted": "Competition deleted successfully"
     },
     "errors": {
         "internalServerError": "Internal server error",
         "unauthorized": "Unauthorized",
+        "badRequest": "Bad request",
         "userNotFound": "User not found",
         "userAlreadyExists": "User already exists",
         "userOrClubNotFound": "User or club not found",
@@ -14,6 +16,7 @@
         "failedToSendEmail": "Failed to send email",
         "competitionNotFound": "Competition not found",
         "invalidToken": "Invalid token",
-        "invalidRefreshToken": "Invalid refresh token"
+        "invalidRefreshToken": "Invalid refresh token",
+        "competitionCreationError": "Error creating competition"
     }
 }

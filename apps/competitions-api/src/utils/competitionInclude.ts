@@ -18,4 +18,5 @@ export const competitionInclude = {
         },
     },
     freeClubs: true,
+    club: true,
 }

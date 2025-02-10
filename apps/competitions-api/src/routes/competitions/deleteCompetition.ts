@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
-import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
+import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key, catchError } from '@competition-manager/backend-utils';
 import { Access, BaseAdmin$, Eid$, Role } from '@competition-manager/schemas';
+import { logger } from '../../logger';
 
 export const router = Router();
 
@@ -31,7 +32,7 @@ router.delete(
                 }
             });
             if (!competition) {
-                res.status(404).send('Competition not found');
+                res.status(404).send(req.t('errors.competitionNotFound'));
                 return;
             }
             if (req.user!.role != Role.SUPERADMIN && !checkAdminRole(Access.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res, req.t)) {
@@ -45,11 +46,16 @@ router.delete(
                     isDeleted: true
                 }
             });
-            res.send('Competition deleted');
+            res.send(req.t('success.competitionDeleted'));
             
         } catch (e) {
-            console.error(e);
-            res.status(500).send('internalServerError');
+            catchError(logger)(e, {
+                message: 'Internal server error',
+                path: 'DELETE /:competitionEid',
+                userId: req.user?.id,
+                status: 500,
+            });
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );

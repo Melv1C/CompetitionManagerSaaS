@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { prisma } from '@competition-manager/prisma';
-import { parseRequest, CustomRequest, checkRole, Key } from '@competition-manager/backend-utils';
+import { Prisma, prisma } from '@competition-manager/prisma';
+import { parseRequest, CustomRequest, checkRole, Key, catchError } from '@competition-manager/backend-utils';
 import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } from '@competition-manager/schemas';
+import { logger } from '../../logger';
 
 export const router = Router();
 
@@ -84,18 +85,36 @@ router.post(
                         club: true
                     }
                 });
+
+                logger.info(`Competition created`, {
+                    path: 'POST /',
+                    userId: req.user?.id,
+                    status: 201,
+                    metadata: competition
+                });
+
                 res.send(Competition$.parse(newCompetition));
-            } catch (e:any) {
-                if (e.code === 'P2025') {
-                    res.status(400).send('Wrong payment plan id or option id');
+            } catch (e) {
+                if (e instanceof Prisma.PrismaClientKnownRequestError) {
+                    catchError(logger)(e, {
+                        message: 'Error while creating competition',
+                        path: 'POST /',
+                        userId: req.user?.id,
+                        status: 500,
+                    });
+                    res.status(500).send(req.t('errors.competitionCreationError'));
                     return;
                 }
-                console.log(e);
-                res.status(500).send('internalServerError');
+                throw e;
             }
         } catch (error) {
-            console.log(error);
-            res.status(500).send('internalServerError');
+            catchError(logger)(error, {
+                message: 'Internal server error',
+                path: 'POST /',
+                userId: req.user?.id,
+                status: 500,
+            });
+            res.status(500).send(req.t('errors.internalServerError'));
         }
     }
 );
