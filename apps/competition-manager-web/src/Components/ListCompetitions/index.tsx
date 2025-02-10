@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { Box, Card, CardActionArea, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
+import { Alert, Box, Card, CardActionArea, Chip, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
 
 import { DisplayCompetition } from '@competition-manager/schemas'
 import { Date } from './Date'
+import { useTranslation } from 'react-i18next'
 
 type ListProps = {
     isPast: boolean
@@ -11,6 +12,8 @@ type ListProps = {
 }
 
 export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, link = '/competitions' }) => {
+
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
 
@@ -26,23 +29,6 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, li
         ...new Set(sortedCompetitions.map(competition => competition.date.getFullYear()))
     ];
 
-    if (competitions.length === 0) {
-        return (
-            <Box 
-                sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'center', 
-                    alignItems: 'center', 
-                    height: '100vh',
-                }}
-            >
-                <Typography>
-                    No competitions
-                </Typography>
-            </Box>
-        )
-    }
-
     return (
         <Box 
             sx={{ 
@@ -53,6 +39,11 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, li
                 padding: '1rem',
             }}
         >
+            {competitions.length === 0 && (
+                <Alert severity="info">
+                    {t('glossary:noCompetitions')}
+                </Alert>
+            )}
             {years.map(year => (
                 <List 
                     key={year} 
@@ -93,22 +84,12 @@ export const ListCompetitions: React.FC<ListProps> = ({ isPast, competitions, li
                                         </ListItemAvatar>
                                         <ListItemText
                                             primary={<Typography variant="h6">{competition.name}</Typography>}
-                                            // secondary={
-                                            //     <Box 
-                                            //         sx={{ 
-                                            //             display: 'flex', 
-                                            //             flexDirection: 'column', 
-                                            //             gap: '0.5rem' 
-                                            //         }}
-                                            //     >
-                                            //         <Typography variant="body1">
-                                            //             {competition.club}
-                                            //         </Typography>
-                                            //         <Typography variant="body1">
-                                            //             {competition.address}
-                                            //         </Typography>
-                                            //     </Box>
-                                            // }
+                                            secondary={(competition.club || competition.location) && (
+                                                <Box sx={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                                    {competition.club && <Chip label={competition.club.abbr} color="primary" />}
+                                                    {competition.location && <Typography variant="body2">{competition.location}</Typography>}
+                                                </Box>
+                                            )}
                                         />
                                     </ListItem>
                                 </CardActionArea>
