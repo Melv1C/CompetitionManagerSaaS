@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { useRoles } from "../../hooks";
 
 const CONTACT_EMAIL = 'competition.manager.saas@gmail.com';
 
@@ -18,6 +19,8 @@ export const Footer = () => {
     const { t } = useTranslation('footer');
 
     const navigate = useNavigate();
+
+    const { isLogged } = useRoles();
 
     return (
         <Box 
@@ -48,9 +51,11 @@ export const Footer = () => {
                             <Link onClick={() => navigate('/competitions?isPast=true')} color="inherit" sx={{ cursor: 'pointer' }}>
                                 {t('glossary:results')}
                             </Link>
-                            <Link onClick={() => navigate('/account')} color="inherit" sx={{ cursor: 'pointer' }}>
-                                {t('account')}
-                            </Link>
+                            {isLogged && (
+                                <Link onClick={() => navigate('/account')} color="inherit" sx={{ cursor: 'pointer' }}>
+                                    {t('account')}
+                                </Link>
+                            )}
                         </Stack>
                     </Grid>
 
