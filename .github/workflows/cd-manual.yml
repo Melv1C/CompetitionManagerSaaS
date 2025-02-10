@@ -9,11 +9,26 @@ on:
         default: 'staging'
 
 jobs:
+  validate-input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate environment input
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" != "staging" && "${{ github.event.inputs.environment }}" != "prod" ]]; then
+            echo "Invalid environment: ${{ github.event.inputs.environment }}"
+            exit 1
+          fi
+
   build-and-push:
     runs-on: ubuntu-latest
+    needs: validate-input
+    env:
+      BUILD_BRANCH: ${{ github.event.inputs.environment == 'prod' && 'prod' || 'main' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BUILD_BRANCH }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
