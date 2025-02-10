@@ -42,8 +42,8 @@ export const Competition$ = z.object({
     email: Email$,
     phone: z.string().nullish(),
     club: Club$.nullish(),
-    isDeleted: z.boolean().default(false),
     location: z.string().nullish(),
+    isDeleted: z.boolean().default(false),
 
     // Advanced settings
     closeDate: Date$.nullish(),
@@ -102,5 +102,7 @@ export const DisplayCompetition$ = Competition$.pick({
     eid: true,
     name: true,
     date: true,
+    location: true,
+    club: true,
 });
 export type DisplayCompetition = z.infer<typeof DisplayCompetition$>;
