@@ -3,13 +3,12 @@ import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next"
 import { logout, resendVerificationEmail } from "../../api";
 import { userTokenAtom } from "../../GlobalsStates";
-import { isAuthorized } from "@competition-manager/utils";
-import { Role } from "@competition-manager/schemas";
 import { useState } from "react";
 import { ChangePasswordPopup } from "./ChangePasswordPopup";
 import { useMutation } from "react-query";
 import { useSnackbar } from "../../hooks/useSnackbar";
 import { isAxiosError } from "axios";
+import { useRoles } from "../../hooks";
 
 export const Infos = () => {
     const { t } = useTranslation('account');
@@ -17,6 +16,8 @@ export const Infos = () => {
     const [userToken, setUserToken] = useAtom(userTokenAtom);
     if (!userToken) throw new Error('No user token found');
     if (userToken === 'NOT_LOGGED') throw new Error('User not logged');
+
+    const { isUser, isAdmin, isSuperAdmin } = useRoles();
 
     const handleLogout = () => {
         setUserToken('NOT_LOGGED');
@@ -44,7 +45,7 @@ export const Infos = () => {
                     <FormLabel>{t('labels:email')}</FormLabel>
                     <TextField value={userToken.email} slotProps={{ input: { readOnly: true } }} />
                 </FormControl>
-                {userToken.role === Role.UNCONFIRMED_USER && (
+                {!isUser && (
                     <Alert severity='warning'>
                         <AlertTitle>{t('info.unconfirmedEmail.title')}</AlertTitle>
                         {t('info.unconfirmedEmail.message')}
@@ -58,9 +59,9 @@ export const Infos = () => {
                         )}
                     </Alert>
                 )}
-                {isAuthorized(userToken, Role.ADMIN) && (
+                {isAdmin && (
                     <Alert severity='info'>
-                        {userToken.role === Role.ADMIN ? t('info.isAdmin') : t('info.isSuperAdmin')}
+                        {isSuperAdmin ? t('info.isSuperAdmin') : t('info.isAdmin')}
                     </Alert> 
                 )}
             </CardContent>
