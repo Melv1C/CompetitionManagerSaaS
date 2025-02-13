@@ -37,7 +37,7 @@ app.post(`${env.PREFIX}/stripe/webhook`,
     async (req, res) => {
         try {
             const { metadata } = Body$.parse(req.body).data.object;
-            const user = prisma.user.findUnique({
+            const user = await prisma.user.findUnique({
                 where: {
                     id: metadata.userId,
                 },
