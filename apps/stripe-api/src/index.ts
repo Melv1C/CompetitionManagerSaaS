@@ -5,8 +5,8 @@ import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 import { z } from 'zod';
 
-import { Athlete$, CreateInscription, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
-import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions } from '@competition-manager/backend-utils';
+import { Athlete$, CompetitionEvent$, CreateInscription, CreateInscription$, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
+import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions, sendEmailInscription } from '@competition-manager/backend-utils';
 import { backendTranslations } from "@competition-manager/translations";
 
 import { env } from "./env";
@@ -126,6 +126,12 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                         })),
                         Inscription$.array().parse(competition.inscriptions)
                     )
+                    const totalCost = inscriptionsData.inscriptions.reduce((acc, inscription) => {
+                        const event = competition.events.find((e) => e.eid === inscription.event);
+                        if (!event) throw new Error('Event not found');
+                        return acc + event.cost;
+                    }, 0);
+                    sendEmailInscription(CreateInscription$.array().parse(inscriptionsGroupedByAthlete), totalCost, CompetitionEvent$.array().parse(competition.events), user.email, competition.name, req.t);
                     
                     break;
                 default:
