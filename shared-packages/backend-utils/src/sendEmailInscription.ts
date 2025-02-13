@@ -16,7 +16,7 @@ export const sendEmailInscription = async (inscriptionDatas: CreateInscription[]
                     <td>${eventSchedule}</td>
                     <td>${event?.name}</td>
                     <td>${inscription.record?.perf || "-"}</td>
-                    ${totalCost==0 ? "" : `<td>${event?.cost}</td>`}
+                    ${totalCost==0 ? "" : `<td>${event?.cost}€</td>`}
                 </tr>`;
         }
         tables.push(`
@@ -24,7 +24,7 @@ export const sendEmailInscription = async (inscriptionDatas: CreateInscription[]
             <table>
                 <tr>
                     ${t("mail:inscriptionEmail.th")}
-                    ${totalCost==0 ? "" : `<th>${t("mail:inscriptionEmail.cost")}</th>`}
+                    ${totalCost==0 ? "" : `${t("mail:inscriptionEmail.thCost")}`}
                 </tr>
                 ${htmlTableRow}
             </table>
@@ -56,7 +56,7 @@ export const sendEmailInscription = async (inscriptionDatas: CreateInscription[]
             <h1>${t("mail:inscriptionEmail.title")}</h1>
             <p>${t("mail:inscriptionEmail.text", {competitionName: competitionName})}</p>
             ${tables.join("")}
-            ${totalCost==0 ? "": `<p>${t("mail:inscriptionEmail.total")} ${totalCost}</p>`}
+            ${totalCost==0 ? "": `<p>${t("mail:inscriptionEmail.total")} ${totalCost}€</p>`}
             <p>${t("mail:mailSignature")}</p>
         </body>
     `;
