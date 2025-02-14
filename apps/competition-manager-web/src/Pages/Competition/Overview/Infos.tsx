@@ -58,16 +58,18 @@ export const Infos = () => {
                 </ListItem>
 
                 {/* Contact Phone */}
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
-                            <FontAwesomeIcon icon={faPhone} size="sm" color="white" />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={competition.phone}
-                    />
-                </ListItem>
+                {competition.phone && (
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
+                                <FontAwesomeIcon icon={faPhone} size="sm" color="white" />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={competition.phone}
+                        />
+                    </ListItem>
+                )}
             </List>
         </Card>
     )
