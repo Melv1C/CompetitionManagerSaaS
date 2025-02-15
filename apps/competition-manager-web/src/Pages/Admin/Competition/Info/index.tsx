@@ -24,14 +24,19 @@ export const Info = () => {
 
     const [competition, setCompetition] = useAtom(competitionAtom);
     const [competitionState, setCompetitionState] = useState<Competition>();
-    const clubsId = useMemo(() => competitionState?.freeClubs.map((club) => club.id) || [], [competitionState]);
+
+    const allowedClubsId = useMemo(() => competitionState?.allowedClubs.map((club) => club.id) || [], [competitionState]);
+    const freeClubsId = useMemo(() => competitionState?.freeClubs.map((club) => club.id) || [], [competitionState]);
 
     const [isNameValid, setIsNameValid] = useState(true);
     const [isDateValid, setIsDateValid] = useState(true);
     const [isCloseDateValid, setIsCloseDateValid] = useState(true);
+    const [isLocationValid, setIsLocationValid] = useState(true);
     const [isEmailValid, setIsEmailValid] = useState(true);
+    const [isPhoneValid, setIsPhoneValid] = useState(true);
     const [isStartInscriptionDateValid, setIsStartInscriptionDateValid] = useState(true);
     const [isEndInscriptionDateValid, setIsEndInscriptionDateValid] = useState(true);
+    const [isMaxEventByAthleteValid, setIsMaxEventByAthleteValid] = useState(true);
 
 
     const [isMultiDay, setIsMultiDay] = useState(competition?.closeDate !== null);
@@ -41,8 +46,11 @@ export const Info = () => {
     ), [competition, competitionState]);
     
     const isFormValid = useMemo(() => (
-        isNameValid && isDateValid && (isMultiDay ? isCloseDateValid : true) && isEmailValid && isStartInscriptionDateValid && isEndInscriptionDateValid
-    ), [isNameValid, isDateValid, isMultiDay, isCloseDateValid, isEmailValid, isStartInscriptionDateValid, isEndInscriptionDateValid]);
+        isNameValid && isDateValid && (isMultiDay ? isCloseDateValid : true) 
+        && isLocationValid && isEmailValid && isPhoneValid 
+        && isStartInscriptionDateValid && isEndInscriptionDateValid
+        && isMaxEventByAthleteValid
+    ), [isNameValid, isDateValid, isMultiDay, isCloseDateValid, isLocationValid, isEmailValid, isPhoneValid, isStartInscriptionDateValid, isEndInscriptionDateValid, isMaxEventByAthleteValid]);
     
     const isSaveEnabled = useMemo(() => isFormValid && isModified, [isFormValid, isModified]);
 
@@ -66,6 +74,9 @@ export const Info = () => {
                 .then((newCompetition) => {
                     setCompetition(newCompetition);
                     setCompetitionState(newCompetition);
+                })
+                .catch((error) => {
+                    console.error(error);
                 })
         }
     };
@@ -227,6 +238,13 @@ export const Info = () => {
                         placeholder={t('labels:description')}
                     />
 
+                    <TextFieldWith$
+                        id="location"
+                        label={{ value: t('labels:location') }}
+                        value={{ value: competitionState.location, onChange: (value) => setCompetitionState({ ...competitionState, location: value }) }}
+                        validator={{ Schema$: Competition$.shape.location, isValid: isLocationValid, setIsValid: setIsLocationValid }}
+                    />
+
                     <Divider />
 
                     <Typography variant="h6">{t('adminCompetition:contactInformation')}</Typography>
@@ -236,6 +254,13 @@ export const Info = () => {
                         label={{ value: t('labels:contactEmail') }}
                         value={{ value: competitionState.email, onChange: (value) => setCompetitionState({ ...competitionState, email: value }) }}
                         validator={{ Schema$: Competition$.shape.email, isValid: isEmailValid, setIsValid: setIsEmailValid }}
+                    />
+
+                    <TextFieldWith$
+                        id="contactPhone"
+                        label={{ value: t('labels:contactPhone') }}
+                        value={{ value: competitionState.phone, onChange: (value) => setCompetitionState({ ...competitionState, phone: value }) }}
+                        validator={{ Schema$: Competition$.shape.phone, isValid: isPhoneValid, setIsValid: setIsPhoneValid }}
                     />
 
                     <Divider />
@@ -283,6 +308,41 @@ export const Info = () => {
                         />
                     </Box>  
 
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel id="allowedClubsLabel">{t('labels:allowedClubs')}</InputLabel>
+                        <Select
+                            id="allowedClubs"
+                            labelId="allowedClubsLabel"
+                            label={t('labels:allowedClubs')}
+                            multiple
+                            value={allowedClubsId}
+                            onChange={(e) => {
+                                const selectedClubs = e.target.value as Id[];
+                                const allowedClubs = clubs?.filter((club) => selectedClubs.includes(club.id)) || [];
+                                setCompetitionState({ ...competitionState, allowedClubs: allowedClubs })
+                            }}
+                            renderValue={(selected) => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                    {(selected as Id[]).map((id) => {
+                                        const club = clubs?.find((club) => club.id === id);
+                                        return (
+                                            <Chip key={id} label={club?.abbr} onDelete={() => {
+                                                const newAllowedClubs = competitionState.allowedClubs.filter((club) => club.id !== id);
+                                                setCompetitionState({ ...competitionState, allowedClubs: newAllowedClubs })
+                                            }} onMouseDown={(e) => e.stopPropagation()} />
+                                        )
+                                    })}
+                                </Box>
+                            )}
+                        >
+                            {clubs?.sort((a, b) => a.abbr.localeCompare(b.abbr)).map((club) => (
+                                <MenuItem key={club.id} value={club.id}>
+                                    {club.abbr}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
                     <Box
                         sx={{
                             display: 'flex',
@@ -296,7 +356,7 @@ export const Info = () => {
                             <Select
                                 id="method"
                                 labelId="methodLabel"
-                                label="Payment Method"
+                                label={t('labels:paymentMethod')}
                                 value={competitionState.method}
                                 onChange={(e) => setCompetitionState({ ...competitionState, method: e.target.value as PaymentMethod })}
                             >
@@ -307,14 +367,14 @@ export const Info = () => {
                         </FormControl>
 
                         {competitionState.method !== PaymentMethod.FREE &&
-                            <FormControl sx={{ minWidth: 120 }}>
+                            <FormControl sx={{ minWidth: 200 }}>
                                 <InputLabel id="freeClubsLabel">{t('labels:freeClubs')}</InputLabel>
                                 <Select
                                     id="freeClubs"
                                     labelId="freeClubsLabel"
-                                    label="Free Clubs"
+                                    label={t('labels:freeClubs')}
                                     multiple
-                                    value={clubsId}
+                                    value={freeClubsId}
                                     onChange={(e) => {
                                         const selectedClubs = e.target.value as Id[];
                                         const freeClubs = clubs?.filter((club) => selectedClubs.includes(club.id)) || [];
@@ -325,13 +385,16 @@ export const Info = () => {
                                             {(selected as Id[]).map((id) => {
                                                 const club = clubs?.find((club) => club.id === id);
                                                 return (
-                                                    <Chip key={id} label={club?.abbr} />
+                                                    <Chip key={id} label={club?.abbr} onDelete={() => {
+                                                        const newFreeClubs = competitionState.freeClubs.filter((club) => club.id !== id);
+                                                        setCompetitionState({ ...competitionState, freeClubs: newFreeClubs })
+                                                    }} onMouseDown={(e) => e.stopPropagation()} />
                                                 )
                                             })}
                                         </Box>
                                     )}
                                 >
-                                    {clubs?.map((club) => (
+                                    {clubs?.sort((a, b) => a.abbr.localeCompare(b.abbr)).map((club) => (
                                         <MenuItem key={club.id} value={club.id}>
                                             {club.abbr}
                                         </MenuItem>
@@ -339,7 +402,34 @@ export const Info = () => {
                                 </Select>
                             </FormControl>
                         }
+
+                        {competitionState.method === PaymentMethod.ONLINE &&
+                            <FormControl>
+                                <FormLabel sx={{ textAlign: 'center' }}>
+                                    {t('labels:isFeesAdditionnal')}
+                                </FormLabel>
+                                <Switch
+                                    checked={competitionState.isFeesAdditionnal}
+                                    onChange={() => setCompetitionState({ ...competitionState, isFeesAdditionnal: !competitionState.isFeesAdditionnal })}
+                                    sx={{ alignSelf: 'center' }}
+                                />
+                            </FormControl>
+                        }
                     </Box>
+
+                    <TextFieldWith$
+                        id="maxEventByAthlete"
+                        label={{ value: t('labels:maxEventByAthlete') }}
+                        value={{ value: competitionState.maxEventByAthlete, onChange: (value) => {
+                            const {success, data} = Competition$.shape.maxEventByAthlete.safeParse(value);
+                            if (success) {
+                                setCompetitionState({ ...competitionState, maxEventByAthlete: data });
+                            }
+                        }}}
+                        validator={{ Schema$: Competition$.shape.maxEventByAthlete, isValid: isMaxEventByAthleteValid, setIsValid: setIsMaxEventByAthleteValid }}
+                        type="number"
+                        formControlProps={{ sx: { maxWidth: 200 } }}
+                    />
                 </Box>
             </Box>
         </MaxWidth>
