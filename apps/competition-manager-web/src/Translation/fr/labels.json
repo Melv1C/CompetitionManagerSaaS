@@ -13,6 +13,7 @@
     "price": "Prix",
     "publish": "Publier",
     "contactEmail": "Email de contact",
+    "contactPhone": "Téléphone de contact",
     "startInscriptionDate": "Date de début des inscriptions",
     "endInscriptionDate": "Date de fin des inscriptions",
     "paymentMethod": "Moyen de paiement",
@@ -23,5 +24,6 @@
     "placeLimit": "Limite de places",
     "selectAll": "Tout sélectionner",
     "paid": "Payé",
-    "status": "Statut"
+    "status": "Statut",
+    "location": "Lieu"
 }
