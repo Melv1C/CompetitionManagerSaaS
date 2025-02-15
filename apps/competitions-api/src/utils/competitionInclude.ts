@@ -17,6 +17,7 @@ export const competitionInclude = {
             user: true,
         },
     },
-    freeClubs: true,
     club: true,
+    freeClubs: true,
+    allowedClubs: true,
 }
