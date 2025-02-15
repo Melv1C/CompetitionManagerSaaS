@@ -38,12 +38,12 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
             <DialogTitle>{t('selectEvent')}</DialogTitle>
             <Box p={2}>
                 <Tabs value={selectedGroup} onChange={(_, newValue) => setSelectedGroup(newValue)} variant="scrollable">
-                    {groupedEvents.map((group, index) => (
+                    {groupedEvents.sort((a, b) => a.label.localeCompare(b.label)).map((group, index) => (
                         <Tab key={index} label={group.label} />
                     ))}
                 </Tabs>
                 <List sx={{ height: 300, overflow: 'auto' }}>
-                    {filteredEvents?.map((event) => (
+                    {filteredEvents?.sort((a, b) => a.name.localeCompare(b.name)).map((event) => (
                         <ListItemButton
                             key={event.id}
                             onClick={() => {

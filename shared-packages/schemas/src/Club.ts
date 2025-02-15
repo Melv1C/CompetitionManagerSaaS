@@ -7,7 +7,7 @@ export const Club$ = z.object({
     abbr: Abbr$,
     address: z.string().nullish(),
     province: z.string().nullish(),
-    fedNumber: z.number().positive().nullish(),
+    fedNumber: z.coerce.number().positive().nullish(),
     country: z.string(),
     fedAbbr: z.string().nullish(),
 

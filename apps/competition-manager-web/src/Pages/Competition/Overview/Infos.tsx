@@ -26,7 +26,7 @@ export const Infos = () => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={competition.closeDate ? `${competition.date.toLocaleDateString()} - ${competition.closeDate.toLocaleDateString()}` : competition.date.toLocaleDateString()}
+                        primary={competition.closeDate ? `${competition.date.toLocaleDateString('fr')} - ${competition.closeDate.toLocaleDateString('fr')}` : competition.date.toLocaleDateString('fr')}
                     />
                 </ListItem>
 
@@ -58,16 +58,18 @@ export const Infos = () => {
                 </ListItem>
 
                 {/* Contact Phone */}
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
-                            <FontAwesomeIcon icon={faPhone} size="sm" color="white" />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={competition.phone}
-                    />
-                </ListItem>
+                {competition.phone && (
+                    <ListItem>
+                        <ListItemAvatar>
+                            <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
+                                <FontAwesomeIcon icon={faPhone} size="sm" color="white" />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={competition.phone}
+                        />
+                    </ListItem>
+                )}
             </List>
         </Card>
     )

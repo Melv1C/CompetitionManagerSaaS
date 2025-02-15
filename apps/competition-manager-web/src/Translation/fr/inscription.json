@@ -16,5 +16,13 @@
     "noPersonalBest": "Pas de meilleure performance",
     "acceptTerms": "J'accepte l'utilisation de mes données personnelles dans le cadre de cette compétition",
     "athleteAlreadyInscribedNotByYou": "Cet athlète est déjà inscrit à cette compétition par un autre utilisateur. En cas de problème, veuillez contacter l'organisateur.",
-    "success": "Votre inscription a été enregistrée avec succès"
+    "success": "Votre inscription a été enregistrée avec succès",
+    "needToBeConnected": "Vous devez être connecté pour vous inscrire à une compétition",
+    "needToBeVerified": "Vous devez vérifier votre compte pour vous inscrire à une compétition",
+    "goToAccount": "Aller à mon compte",
+    "inscriptionsNotOpen": "Les inscriptions ne sont pas encore ouvertes",
+    "inscriptionsOpenAt": "Les inscriptions ouvriront le {{date}}",
+    "inscriptionsClosed": "Les inscriptions sont fermées",
+    "noEvent": "Cette compétition n'a pas encore d'épreuve",
+    "clubNotAllowed": "Votre club n'est pas autorisé à s'inscrire à cette compétition"
 }

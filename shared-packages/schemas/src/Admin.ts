@@ -18,8 +18,8 @@ export type AdminQuery = z.infer<typeof AdminQuery$>;
 export const Admin$ = z.object({
     id: Id$,
     user: BaseUser$,
-    userId: z.number().positive(),
-    competitionId: z.number().positive(),
+    userId: z.coerce.number().positive(),
+    competitionId: z.coerce.number().positive(),
     access: z.array(z.nativeEnum(Access))
 });
 export type Admin = z.infer<typeof Admin$>;

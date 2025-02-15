@@ -16,5 +16,13 @@
     "noPersonalBest": "No personal best",
     "acceptTerms": "I accept the use of my personal data in the context of this competition",
     "athleteAlreadyInscribedNotByYou": "This athlete is already registered for this competition by another user. In case of doubt, please contact the organizer.",
-    "success": "Your inscription has been successfully saved"
+    "success": "Your inscription has been successfully saved",
+    "needToBeConnected": "You need to be connected to register for a competition",
+    "needToBeVerified": "You need to verify your account to register for a competition",
+    "goToAccount": "Go to my account",
+    "inscriptionsNotOpen": "Inscriptions are not open yet",
+    "inscriptionsOpenAt": "Inscriptions will open on {{date}}",
+    "inscriptionsClosed": "Inscriptions are closed",
+    "noEvent": "This competition has no event yet",
+    "clubNotAllowed": "Your club is not allowed to register for this competition"
 }

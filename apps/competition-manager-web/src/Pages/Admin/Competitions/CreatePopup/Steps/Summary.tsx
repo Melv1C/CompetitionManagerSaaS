@@ -55,8 +55,8 @@ export const Summary: React.FC<SummaryProps> = ({
 
                     <Box>
                         <Box>{t('labels:name')}: {dataForm.name}</Box>
-                        <Box>{t('labels:date')}: {dataForm.date?.toLocaleDateString()}</Box>
-                        {dataForm.closeDate && <Box>{t('labels:end_date')}: {dataForm.closeDate?.toLocaleDateString()}</Box>}
+                        <Box>{t('labels:date')}: {dataForm.date?.toLocaleDateString('fr')}</Box>
+                        {dataForm.closeDate && <Box>{t('labels:end_date')}: {dataForm.closeDate?.toLocaleDateString('fr')}</Box>}
                     </Box>
                 </Box>
             </Box>

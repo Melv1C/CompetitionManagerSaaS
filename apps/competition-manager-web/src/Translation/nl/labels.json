@@ -13,6 +13,7 @@
     "price": "Prijs",
     "publish": "Publiceren",
     "contactEmail": "Contact E-mail",
+    "contactPhone": "Contact telefoon",
     "startInscriptionDate": "Start inschrijfdatum",
     "endInscriptionDate": "Eind inschrijfdatum",
     "paymentMethod": "Betaalmethode",
@@ -23,5 +24,6 @@
     "placeLimit": "Plaatslimiet",
     "selectAll": "Selecteer alles",
     "paid": "Betaald",
-    "status": "Status"
+    "status": "Status",
+    "location": "Locatie"
 }
