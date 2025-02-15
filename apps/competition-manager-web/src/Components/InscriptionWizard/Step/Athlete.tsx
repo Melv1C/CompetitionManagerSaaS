@@ -82,7 +82,7 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
                                 </ListItem>
                                 <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography variant="h6">{t('labels:birthdate')}</Typography>
-                                    <Typography variant="subtitle1">{athlete.birthdate.toLocaleDateString()}</Typography>
+                                    <Typography variant="subtitle1">{athlete.birthdate.toLocaleDateString('fr')}</Typography>
                                 </ListItem>
                             </List>
                         </CardContent>

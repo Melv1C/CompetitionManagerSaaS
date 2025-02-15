@@ -91,7 +91,7 @@ export const Records: React.FC<RecordsProps> = ({
                                             {formatPerf(record.perf, inscriptionData.competitionEvent.event.type)}
                                         </Typography>
                                         {' '}
-                                        ({record.date.toLocaleDateString()})
+                                        ({record.date.toLocaleDateString('fr')})
                                     </>
                                 ) : t('inscription:noPersonalBest')}
                             />

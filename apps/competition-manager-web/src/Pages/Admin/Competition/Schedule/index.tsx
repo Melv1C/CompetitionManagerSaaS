@@ -31,7 +31,7 @@ export const Schedule = () => {
             width: 100, 
             valueFormatter: (value: Date) => {
                 if (competition.closeDate) {
-                    return value.toLocaleDateString() + ' ' + value.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
+                    return value.toLocaleDateString('fr') + ' ' + value.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
                 }
                 return value.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })
             }

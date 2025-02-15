@@ -26,7 +26,7 @@ export const Infos = () => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={competition.closeDate ? `${competition.date.toLocaleDateString()} - ${competition.closeDate.toLocaleDateString()}` : competition.date.toLocaleDateString()}
+                        primary={competition.closeDate ? `${competition.date.toLocaleDateString('fr')} - ${competition.closeDate.toLocaleDateString('fr')}` : competition.date.toLocaleDateString('fr')}
                     />
                 </ListItem>
 
