@@ -43,7 +43,13 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
         return userInscriptions.some(i => i.athlete.license === athlete.license)
     }, [athlete, userInscriptions])
 
-    const isDisabled = isAlreadyInscribed && !isUserInscribed && !isAdmin
+    const isClubAllowed = useMemo(() => {
+        if (!athlete) return false
+        if (competition.allowedClubs.length === 0) return true
+        return competition.allowedClubs.map(c => c.id).includes(athlete.club.id)
+    }, [athlete, competition])
+
+    const isDisabled = !isAdmin && (isAlreadyInscribed && !isUserInscribed) || !isClubAllowed  
 
     return (
         <Box width="100%">
@@ -91,6 +97,12 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
                     {(isAlreadyInscribed && !isUserInscribed) && (
                         <Alert severity={isAdmin ? 'warning' : 'error'}>
                             {t('inscription:athleteAlreadyInscribedNotByYou')}
+                        </Alert>
+                    )}
+
+                    {!isClubAllowed && (
+                        <Alert severity={isAdmin ? 'warning' : 'error'}>
+                            {t('inscription:clubNotAllowed')}
                         </Alert>
                     )}
 
