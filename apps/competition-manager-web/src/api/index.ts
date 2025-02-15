@@ -9,4 +9,3 @@ export * from "./getClubs";
 export * from "./getAthletes";
 export * from "./getRecords";
 export * from "./getLogs";
-export * from "./NewsCRUD";
