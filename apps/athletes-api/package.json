@@ -19,7 +19,7 @@
     "@competition-manager/translations": "file:../../shared-packages/translations",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "i18next": "^24.2.2",
     "i18next-fs-backend": "^2.6.0",
     "i18next-http-middleware": "^3.7.1",
