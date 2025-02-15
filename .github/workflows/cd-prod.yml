@@ -20,7 +20,6 @@ jobs:
       offers-api: ${{ steps.changed-services.outputs.offers-api }}
       stripe-api: ${{ steps.changed-services.outputs.stripe-api }}
       logs-api: ${{ steps.changed-services.outputs.logs-api }}
-      news-api: ${{ steps.changed-services.outputs.news-api }}
 
     steps:
       - name: Checkout code
@@ -68,9 +67,6 @@ jobs:
               - shared-packages/**
             logs-api:
               - apps/logs-api/**
-              - shared-packages/**
-            news-api:
-              - apps/news-api/**
               - shared-packages/**
 
       - name: Build and Push Migrations
@@ -156,14 +152,6 @@ jobs:
         if: steps.changed-services.outputs.logs-api == 'true'
         run: |
           app="logs-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push News API
-        if: steps.changed-services.outputs.news-api == 'true'
-        run: |
-          app="news-api"
           dockerfile="apps/$app/Dockerfile"
           docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
           docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
