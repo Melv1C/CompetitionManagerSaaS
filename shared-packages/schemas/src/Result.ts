@@ -25,10 +25,10 @@ export enum ResultDetailCode {
 
 export const ResultDetails$ = z.object({
     id: Id$,
-    tryNumber: z.number(),
-    value: z.number(),
+    tryNumber: z.coerce.number(),
+    value: z.coerce.number(),
     attempts: z.nativeEnum(AttemptValue).array().max(3).min(1).nullish(),
-    wind: z.number().nullish(),
+    wind: z.coerce.number().nullish(),
     isBest: Boolean$.default(false),
     isOfficialBest: Boolean$.default(false),
 });
@@ -43,14 +43,14 @@ export const Result$ = z.object({
     bib: Bib$,
     club: Club$,
 
-    heat: z.number().default(1),
-    initialOrder: z.number(),
-    tempOrder: z.number(),
-    finalOrder: z.number().nullish(),
+    heat: z.coerce.number().default(1),
+    initialOrder: z.coerce.number(),
+    tempOrder: z.coerce.number(),
+    finalOrder: z.coerce.number().nullish(),
 
-    value: z.number().nullish(),
-    wind: z.number().nullish(),
-    points: z.number().int().nonnegative().nullish(),
+    value: z.coerce.number().nullish(),
+    wind: z.coerce.number().nullish(),
+    points: z.coerce.number().int().nonnegative().nullish(),
 
     details: ResultDetails$.array().default([]),
 });

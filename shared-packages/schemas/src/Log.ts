@@ -29,7 +29,7 @@ export const Log$ = z.object({
     level: z.nativeEnum(LEVEL),
     service: z.nativeEnum(SERVICE),
     path: z.string().nullish(),
-    status: z.number().positive().nullish(),
+    status: z.coerce.number().positive().nullish(),
     userId: Id$.nullish(),
     message: z.string(),
     date: Date$,

@@ -19,7 +19,7 @@ export const USER_PREFERENCES_DEFAULTS = {
 
 export const UserPreferences$ = z.object({
     id: Id$,
-    userId: z.number().positive(),
+    userId: z.coerce.number().positive(),
     theme: z.nativeEnum(Theme),
     language: z.nativeEnum(Language),
 });

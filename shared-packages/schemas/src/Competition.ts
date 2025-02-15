@@ -34,7 +34,10 @@ export const Competition$ = z.object({
     options: z.array(Option$).default([]),
     startInscriptionDate: Date$.default(new Date()),
     endInscriptionDate: Date$.default(new Date()),
-    maxEventByAthlete: z.number().positive().nullish(),
+    maxEventByAthlete: z.coerce.number().nonnegative().transform(value => {
+        if (value === 0) return null;
+        return value;
+    }).nullish(),
     isFeesAdditionnal: z.boolean().default(false),
 
     // Default settings
@@ -50,7 +53,7 @@ export const Competition$ = z.object({
     freeClubs: z.array(Club$).default([]),
     allowedClubs: z.array(Club$).default([]),
     oneDayPermissions: z.array(z.nativeEnum(OneDayPermission)).default([]),
-    oneDayBibStart: z.number().positive().max(9999).min(9900).default(9900),
+    oneDayBibStart: z.coerce.number().positive().max(9999).min(9900).default(9900),
         
 });
 export type Competition = z.infer<typeof Competition$>;

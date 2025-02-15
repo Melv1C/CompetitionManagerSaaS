@@ -3,7 +3,7 @@ import { Event$ } from './Event';
 import { Date$ } from './Base';
 
 export const Record$ = z.object({
-    perf: z.number(),
+    perf: z.coerce.number(),
     date: Date$,
     location: z.string().nullish(),
 });
