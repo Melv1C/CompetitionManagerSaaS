@@ -11,7 +11,6 @@ export enum SERVICE {
     OFFERS = 'offers-api',
     USERS = 'users-api',
     LOGS = 'logs-api',
-    NEWS = 'news-api',
 }
 
 export enum LEVEL {
