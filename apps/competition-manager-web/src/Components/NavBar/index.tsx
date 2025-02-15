@@ -62,16 +62,16 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     }}
                 >
                     {isBurgerVisible && (
-                        <Box sx={{ marginRight: '1rem' }}>
+                        <>
                             <Button 
                                 color="inherit" 
                                 onClick={handleDrawerToggle} 
-                                sx={{ minWidth: 0, padding: 0 }}
+                                sx={{ minWidth: 0 }}
                             >
                                 <FontAwesomeIcon icon={faBars} size="2x" />
                             </Button>
                             <MobileNav items={items} isMobileOpen={isMobileOpen} handleDrawerToggle={handleDrawerToggle} />
-                        </Box>
+                        </>
                     )}
                     <Link to="/">
                         <Logo sx={{ height: '3rem' }} />
@@ -82,9 +82,14 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                 {items.map((item) => (
                                     <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
                                         <Button 
-                                            color="inherit" 
+                                            variant="text"
+                                            color="inherit"
                                             startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} 
-                                            sx={{ textTransform: 'none', fontSize: '1.2rem' }}
+                                            sx={{ 
+                                                textTransform: 'none', 
+                                                fontSize: '1.2rem',
+                                                padding: '0.5rem 1rem',
+                                            }}
                                         >
                                             {item.label}
                                         </Button>
