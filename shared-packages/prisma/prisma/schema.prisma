@@ -326,20 +326,3 @@ model Result {
     @@map("results")
 }
 
-
-////////////////
-// News 
-////////////////
-
-model News {
-    id            Int      @id @default(autoincrement())
-    slug          String   
-    title         String
-    content       String
-    language      String
-    createdAt     DateTime @default(now()) @map("created_at")
-
-    @@map("news")
-}
-
-
