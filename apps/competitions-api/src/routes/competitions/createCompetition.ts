@@ -35,10 +35,11 @@ router.post(
             // TODO: stripe
             const { paymentPlanId, optionsId, ...competition } = CreateCompetition$.parse(req.body);
             const defaultCompetition = DefaultCompetition$.parse(competition);
+            defaultCompetition.startInscriptionDate = new Date();
             // Set endInscriptionDate to the day before the competition by default
             defaultCompetition.endInscriptionDate = new Date(defaultCompetition.date);
-            defaultCompetition.endInscriptionDate.setDate(defaultCompetition.endInscriptionDate.getDate() - 1);
-            defaultCompetition.endInscriptionDate.setHours(23, 59, 59, 999);
+            defaultCompetition.endInscriptionDate.setUTCDate(defaultCompetition.endInscriptionDate.getDate() - 1);
+            defaultCompetition.endInscriptionDate.setUTCHours(23, 59, 59);
             const club = await getClub(req.user!.id);
             try {
                 const newCompetition = await prisma.competition.create({
