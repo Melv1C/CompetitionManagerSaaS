@@ -1,0 +1,8 @@
+{
+    "welcome": {
+        "title": "Welkom bij CompetitionManager!",
+        "intro": "We hebben onze site volledig gemoderniseerd met nieuwe technologieën om een betere ervaring te bieden en nieuwe functies toe te voegen.",
+        "authChange": "Om technische redenen is ons authenticatiesysteem veranderd. U moet uw account opnieuw aanmaken, zelfs als u er al een had op de oude versie van de site.",
+        "thankYou": "Bedankt voor uw begrip. We hopen dat u deze nieuwe versie leuk vindt!"
+    }
+}

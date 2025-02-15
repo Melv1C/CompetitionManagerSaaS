@@ -14,5 +14,6 @@
     "validate": "Validate",
     "confirm": "Confirm",
     "modify": "Modify",
-    "gotIt": "Got it"
+    "gotIt": "Got it",
+    "close": "Close"
 }

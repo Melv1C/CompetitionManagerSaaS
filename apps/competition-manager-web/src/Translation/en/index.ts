@@ -11,6 +11,7 @@ import inscription from './inscription.json';
 import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
+import news from './news.json';
 
 import { zodEn } from '@competition-manager/translations';
 
@@ -28,5 +29,6 @@ export default {
     inscription,
     account,
     home,
-    footer
+    footer,
+    news
 }

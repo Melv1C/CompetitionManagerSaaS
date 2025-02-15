@@ -13,9 +13,9 @@ export const LanguageSelector = () => {
             onChange={(e) => i18n.changeLanguage(e.target.value)}
             variant="standard"
             sx={{ 
-                color: 'white',
+                color: 'inherit',
                 '& .MuiSelect-icon': {
-                    color: 'white',
+                    color: 'inherit',
                 },
                 '&::before': {
                     borderBottom: 'none',
