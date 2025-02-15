@@ -18,5 +18,8 @@
         "invalidToken": "Token invalide",
         "invalidRefreshToken": "Refresh token invalide",
         "competitionCreationError": "Erreur lors de la création de la compétition"
+    },
+    "glossary": {
+        "fees": "Frais"
     }
 }

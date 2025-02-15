@@ -18,5 +18,8 @@
         "invalidToken": "Invalid token",
         "invalidRefreshToken": "Invalid refresh token",
         "competitionCreationError": "Error creating competition"
+    },
+    "glossary": {
+        "fees": "Fees"
     }
 }

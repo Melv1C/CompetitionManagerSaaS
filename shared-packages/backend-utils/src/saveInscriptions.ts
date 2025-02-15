@@ -1,8 +1,8 @@
 import { prisma } from "@competition-manager/prisma";
-import { Athlete, CreateInscription, DefaultInscription$, Eid, Id, Inscription, Inscription$ } from "@competition-manager/schemas";
+import { Athlete, CompetitionEvent, CreateInscription, DefaultInscription$, Eid, Id, Inscription, Inscription$ } from "@competition-manager/schemas";
 import z from "zod";
 
-const Meta$ = DefaultInscription$.pick({status: true, paid: true});
+const Meta$ = DefaultInscription$.pick({status: true});
 type Meta = z.infer<typeof Meta$>;
 
 export const saveInscriptions = async (
@@ -16,6 +16,8 @@ export const saveInscriptions = async (
         }[];
     }[],
     inscriptions: Inscription[],
+    totalPaid: number,
+    competitionEvents: CompetitionEvent[],
 ) => {
 
     const returnValue: { deletedInscriptions: Inscription[], updatedInscriptions: Inscription[], createdInscriptions: Inscription[] } = {
@@ -27,57 +29,28 @@ export const saveInscriptions = async (
     for (const inscriptionData of inscriptionsData) {
         // Get all inscriptions for the athlete
         const existingInscriptions = inscriptions.filter(i => i.athlete.license === inscriptionData.athlete.license);
-        
         const toDeleteInscriptions = existingInscriptions.filter(i => !inscriptionData.inscriptions.some(newI => newI.data.competitionEventEid === i.competitionEvent.eid));
         const toUpdateInscriptions = existingInscriptions.filter(i => inscriptionData.inscriptions.some(newI => newI.data.competitionEventEid === i.competitionEvent.eid));
         const newInscriptions = inscriptionData.inscriptions.filter(newI => !existingInscriptions.some(i => newI.data.competitionEventEid === i.competitionEvent.eid));
 
-
-        // Delete inscriptions (put isDeleted to true)
-        for (const inscription of toDeleteInscriptions) {
-            const deletedInscription = await prisma.inscription.update({
-                where: {
-                    id: inscription.id
-                },
-                data: {
-                    isDeleted: true
-                },
-                include: {
-                    user: true,
-                    athlete: true,
-                    club: true,
-                    competitionEvent: {
-                        include: {
-                            event: true,
-                            categories: true
-                        }
-                    },
-                    record: true
-                }
-            });
-
-            returnValue.deletedInscriptions.push(Inscription$.parse(deletedInscription));
-        }
-
         // Update inscriptions
         for (const inscription of toUpdateInscriptions) {
             const { data, meta } = inscriptionData.inscriptions.find(i => i.data.competitionEventEid === inscription.competitionEvent.eid)!;
-            const defaultInscriptionData = DefaultInscription$.omit({date: true}).parse(Meta$.parse(meta));
             const record = data.record ?? undefined;
+
+            const event = competitionEvents.find(e => e.eid === data.competitionEventEid);
+            if (!event) throw new Error('Event not found');
+            
             const updatedInscription = await prisma.inscription.update({
                 where: {
                     id: inscription.id
                 },
                 data: {
-                    user: {
-                        connect: {
-                            id: inscriptionData.userId
-                        }
-                    },
                     record: {
                         update: record
                     },
-                    ...defaultInscriptionData
+                    paid: Math.min(totalPaid, event.cost),
+                    ...meta
                 },
                 include: {
                     user: true,
@@ -92,6 +65,8 @@ export const saveInscriptions = async (
                     record: true
                 }
             });
+
+            totalPaid -= Math.min(totalPaid, event.cost);
 
             returnValue.updatedInscriptions.push(Inscription$.parse(updatedInscription));
         }
@@ -100,6 +75,12 @@ export const saveInscriptions = async (
         for (const { data, meta } of newInscriptions) {
             const defaultInscriptionData = DefaultInscription$.parse(Meta$.parse(meta));
             const record = data.record ?? undefined;
+
+            const event = competitionEvents.find(e => e.eid === data.competitionEventEid);
+            if (!event) throw new Error('Event not found');
+
+            defaultInscriptionData.paid = Math.min(totalPaid, event.cost);
+
             const createdInscription = await prisma.inscription.create({
                 data: {
                     competition: {
@@ -146,7 +127,45 @@ export const saveInscriptions = async (
                     record: true
                 }
             });
+
+            totalPaid -= Math.min(totalPaid, event.cost);
+
             returnValue.createdInscriptions.push(Inscription$.parse(createdInscription));
+        }
+
+        // Delete inscriptions (put isDeleted to true)
+        for (const inscription of toDeleteInscriptions) {
+
+            const event = competitionEvents.find(e => e.eid === inscription.competitionEvent.eid);
+            if (!event) throw new Error('Event not found');
+
+            const paid = Math.min(totalPaid, event.cost);
+
+            const deletedInscription = await prisma.inscription.update({
+                where: {
+                    id: inscription.id
+                },
+                data: {
+                    isDeleted: true,
+                    paid: paid,
+                },
+                include: {
+                    user: true,
+                    athlete: true,
+                    club: true,
+                    competitionEvent: {
+                        include: {
+                            event: true,
+                            categories: true
+                        }
+                    },
+                    record: true
+                }
+            });
+
+            totalPaid -= paid;
+
+            returnValue.deletedInscriptions.push(Inscription$.parse(deletedInscription));
         }
     }
 

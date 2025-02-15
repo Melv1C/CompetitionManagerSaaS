@@ -133,6 +133,18 @@ router.post(
                 }
             }
 
+            // Get the cumulated costs for all inscriptions
+            const { alreadyPaid, fees, totalToPay, totalCost } = (await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
+                const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                return getCostsInfo(parsedCompetition, athlete, inscriptions.map((i) => i.competitionEventEid), Inscription$.array().parse(competition.inscriptions).filter((i) => i.user.id === req.user!.id));
+            }))).reduce((acc, { totalCost, alreadyPaid, fees, totalToPay }) => {
+                acc.totalCost += totalCost;
+                acc.alreadyPaid += alreadyPaid;
+                acc.fees += fees;
+                acc.totalToPay += totalToPay;
+                return acc;
+            }, { totalCost: 0, alreadyPaid: 0, fees: 0, totalToPay: 0 });
+
             if (isAdmin) {
                 const inscriptions = await saveInscriptions(
                     eid, 
@@ -146,31 +158,20 @@ router.post(
                                 return {
                                     data,
                                     meta: {
-                                        status: InscriptionStatus.ACCEPTED,
-                                        paid: 0
+                                        status: InscriptionStatus.ACCEPTED
                                     },
-                                    
                                 };
                             })
                         };
                     })),
-                    Inscription$.array().parse(competition.inscriptions)
+                    Inscription$.array().parse(competition.inscriptions),
+                    alreadyPaid,
+                    parsedCompetition.events
                 );
                 res.send([...inscriptions.createdInscriptions, ...inscriptions.updatedInscriptions]);
                 return;
             }
-            // Get the cumulated costs for all inscriptions
-            const { alreadyPaid, fees, totalToPay, totalCost } = (await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
-                const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
-                return getCostsInfo(parsedCompetition, athlete, inscriptions.map((i) => i.competitionEventEid), Inscription$.array().parse(competition.inscriptions).filter((i) => i.user.id === req.user!.id));
-            }))).reduce((acc, { totalCost, alreadyPaid, fees, totalToPay }) => {
-                acc.totalCost += totalCost;
-                acc.alreadyPaid += alreadyPaid;
-                acc.fees += fees;
-                acc.totalToPay += totalToPay;
-                return acc;
-            }, { totalCost: 0, alreadyPaid: 0, fees: 0, totalToPay: 0 });
-
+            
             const nbOfInscriptionsByEvent = inscriptionsData.reduce((acc, { inscriptions }) => {
                 inscriptions.forEach(({ competitionEventEid }) => {
                     acc[competitionEventEid] = (acc[competitionEventEid] || 0) + 1;
@@ -210,7 +211,7 @@ router.post(
                             price_data: {
                                 currency: 'eur',
                                 product_data: {
-                                    name: `Fees` //TODO: Translate
+                                    name: req.t('fees')
                                 },
                                 unit_amount: fees * 100
                             },
@@ -257,14 +258,15 @@ router.post(
                                 data,
                                 meta: {
                                     status: InscriptionStatus.ACCEPTED,
-                                    paid: 0
                                 },
                                 
                             };
                         })
                     };
                 })),
-                Inscription$.array().parse(competition.inscriptions)
+                Inscription$.array().parse(competition.inscriptions),
+                alreadyPaid,
+                parsedCompetition.events
             );
             sendEmailInscription(inscriptionsData, totalCost, parsedCompetition.events, req.user!.email, competition.name, req.t);
             res.send([...inscriptions.createdInscriptions, ...inscriptions.updatedInscriptions]);

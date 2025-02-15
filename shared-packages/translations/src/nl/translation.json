@@ -18,5 +18,8 @@
         "invalidToken": "Ongeldige token",
         "invalidRefreshToken": "Ongeldige vernieuwingstoken",
         "competitionCreationError": "Fout bij het maken van de wedstrijd"
+    },
+    "glossary": {
+        "fees": "Kosten"
     }
 }

@@ -5,12 +5,13 @@ import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 import { z } from 'zod';
 
-import { Athlete$, CompetitionEvent$, CreateInscription, CreateInscription$, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
+import { Athlete$, Competition$, CompetitionEvent$, CreateInscription, CreateInscription$, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
 import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions, sendEmailInscription } from '@competition-manager/backend-utils';
 import { backendTranslations } from "@competition-manager/translations";
 
 import { env } from "./env";
 import { prisma } from '@competition-manager/prisma';
+import { getCostsInfo } from '@competition-manager/utils';
 
 i18next.use(Backend).use(middleware.LanguageDetector).init({
     resources: backendTranslations,
@@ -37,13 +38,6 @@ app.post(`${env.PREFIX}/stripe/webhook`,
     async (req, res) => {
         try {
             const { metadata } = Body$.parse(req.body).data.object;
-            const user = await prisma.user.findUnique({
-                where: {
-                    id: metadata.userId,
-                },
-            });
-            if (!user) throw new Error('User not found');
-            console.log(user);
             switch (WebhookType$.parse(metadata.type)) {
                 case WebhookType.INSCRIPTIONS:
                     console.log('Payment intent webhook received', metadata);
@@ -57,6 +51,13 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                         ...metadata,
                         inscriptions,
                     });
+
+                    const user = await prisma.user.findUnique({
+                        where: {
+                            id: inscriptionsData.userId,
+                        },
+                    });
+                    if (!user) throw new Error('User not found');
 
                     const inscriptionsGroupedByAthlete = Object.values(inscriptionsData.inscriptions.reduce((acc, inscription) => {
                         if (!acc[inscription.athlete]) {
@@ -102,6 +103,16 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                     });
                     if (!competition) throw new Error('Competition not found');
 
+                    const { alreadyPaid, totalToPay, totalCost } = (await Promise.all(inscriptionsGroupedByAthlete.map(async ({ athleteLicense, inscriptions }) => {
+                        const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                        return getCostsInfo(Competition$.parse(competition), athlete, inscriptions.map((i) => i.competitionEventEid), Inscription$.array().parse(competition.inscriptions).filter((i) => i.user.id === inscriptionsData.userId));
+                    }))).reduce((acc, { totalCost, alreadyPaid, totalToPay }) => {
+                        acc.totalCost += totalCost;
+                        acc.alreadyPaid += alreadyPaid;
+                        acc.totalToPay += totalToPay;
+                        return acc;
+                    }, { totalCost: 0, alreadyPaid: 0, totalToPay: 0 });
+
                     saveInscriptions(
                         inscriptionsData.competitionEid, 
                         await Promise.all(inscriptionsGroupedByAthlete.map(async ({ athleteLicense, inscriptions }) => {
@@ -117,20 +128,17 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                                         data,
                                         meta: {
                                             status: InscriptionStatus.ACCEPTED,
-                                            paid: event.cost, //TODO: Compute knowing the already paid amount
                                         },
                                         
                                     };
                                 })
                             };
                         })),
-                        Inscription$.array().parse(competition.inscriptions)
+                        Inscription$.array().parse(competition.inscriptions),
+                        alreadyPaid + totalToPay,
+                        CompetitionEvent$.array().parse(competition.events),
                     )
-                    const totalCost = inscriptionsData.inscriptions.reduce((acc, inscription) => {
-                        const event = competition.events.find((e) => e.eid === inscription.event);
-                        if (!event) throw new Error('Event not found');
-                        return acc + event.cost;
-                    }, 0);
+
                     sendEmailInscription(CreateInscription$.array().parse(inscriptionsGroupedByAthlete), totalCost, CompetitionEvent$.array().parse(competition.events), user.email, competition.name, req.t);
                     
                     break;
