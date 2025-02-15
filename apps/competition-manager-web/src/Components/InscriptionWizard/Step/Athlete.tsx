@@ -49,7 +49,7 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
         return competition.allowedClubs.map(c => c.id).includes(athlete.club.id)
     }, [athlete, competition])
 
-    const isDisabled = !isAdmin && (isAlreadyInscribed && !isUserInscribed) || !isClubAllowed  
+    const isDisabled = !isAdmin && ((isAlreadyInscribed && !isUserInscribed) || !isClubAllowed)
 
     return (
         <Box width="100%">

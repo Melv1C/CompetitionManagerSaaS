@@ -134,30 +134,29 @@ router.post(
             }
 
             if (isAdmin) {
-                res.send(
-                    saveInscriptions(
-                        eid, 
-                        await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
-                            const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
-                            const userId = competition.inscriptions.find((i) => i.athlete.license === athlete.license)?.user.id || req.user!.id;
-                            return {
-                                userId,
-                                athlete,
-                                inscriptions: inscriptions.map((data) => {
-                                    return {
-                                        data,
-                                        meta: {
-                                            status: InscriptionStatus.ACCEPTED,
-                                            paid: 0
-                                        },
-                                        
-                                    };
-                                })
-                            };
-                        })),
-                        Inscription$.array().parse(competition.inscriptions)
-                    )
+                const inscriptions = await saveInscriptions(
+                    eid, 
+                    await Promise.all(inscriptionsData.map(async ({ athleteLicense, inscriptions }) => {
+                        const athlete = await findAthleteWithLicense(athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
+                        const userId = competition.inscriptions.find((i) => i.athlete.license === athlete.license)?.user.id || req.user!.id;
+                        return {
+                            userId,
+                            athlete,
+                            inscriptions: inscriptions.map((data) => {
+                                return {
+                                    data,
+                                    meta: {
+                                        status: InscriptionStatus.ACCEPTED,
+                                        paid: 0
+                                    },
+                                    
+                                };
+                            })
+                        };
+                    })),
+                    Inscription$.array().parse(competition.inscriptions)
                 );
+                res.send([...inscriptions.createdInscriptions, ...inscriptions.updatedInscriptions]);
                 return;
             }
             // Get the cumulated costs for all inscriptions
@@ -268,9 +267,7 @@ router.post(
                 Inscription$.array().parse(competition.inscriptions)
             );
             sendEmailInscription(inscriptionsData, totalCost, parsedCompetition.events, req.user!.email, competition.name, req.t);
-            res.send(
-                inscriptions
-            );
+            res.send([...inscriptions.createdInscriptions, ...inscriptions.updatedInscriptions]);
         } catch (e) {
             catchError(logger)(e, {
                 message: 'Internal server error',
