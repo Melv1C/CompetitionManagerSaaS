@@ -3,8 +3,10 @@
 # Navigate to shared-packages directory
 cd shared-packages || exit
 
+LIST_OF_PACKAGES="prisma schemas translations utils backend-utils stripe"
+
 # Loop through each folder and run npm install and npm build
-for dir in */; do
+for dir in $LIST_OF_PACKAGES; do
     if [ -d "$dir" ]; then
         cd "$dir" || continue
         echo "Running npm install and npm build in $dir"
