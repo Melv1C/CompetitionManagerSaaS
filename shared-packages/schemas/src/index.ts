@@ -20,4 +20,3 @@ export * from './Log';
 export * from './Records';
 export * from './NodeEnv';
 export * from './Stripe';
-export * from './News';
