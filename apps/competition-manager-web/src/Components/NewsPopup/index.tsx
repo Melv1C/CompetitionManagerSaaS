@@ -15,12 +15,16 @@ export type NewsProps = {
 }
 
 export const NewsPopup = () => {
-    const [seenNews, setSeenNews] = useLocalStorage<string[]>("seenNewsUpdates", []);
+    const [seenNews, setSeenNews] = useLocalStorage<string[]>("seenNews", []);
     const currentNews = NEWS.find((news) => !seenNews.includes(news.id));
 
     const handleClose = () => {
+        console.log("handleClose");
+        console.log(currentNews?.id);
         if (currentNews) {
+            console.log("setSeenNews", [...seenNews, currentNews.id]);
             setSeenNews([...seenNews, currentNews.id]);
+            console.log("done");
         }
     };
 
