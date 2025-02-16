@@ -6,12 +6,13 @@ import middleware from "i18next-http-middleware";
 import { z } from 'zod';
 
 import { Athlete$, athleteInclude, Competition$, CompetitionEvent$, competitionInclude, CreateInscription, CreateInscription$, Inscription$, inscriptionsInclude, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
-import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions, sendEmailInscription } from '@competition-manager/backend-utils';
+import { catchError, corsMiddleware, findAthleteWithLicense, Key, logRequestMiddleware, parseRequest, saveInscriptions, sendEmailInscription } from '@competition-manager/backend-utils';
 import { backendTranslations } from "@competition-manager/translations";
 
 import { env } from "./env";
 import { prisma } from '@competition-manager/prisma';
 import { getCostsInfo } from '@competition-manager/utils';
+import { logger } from './logger';
 
 i18next.use(Backend).use(middleware.LanguageDetector).init({
     resources: backendTranslations,
@@ -34,13 +35,18 @@ const Body$ = z.object({
 });
 
 app.post(`${env.PREFIX}/stripe/webhook`, 
+    logRequestMiddleware(logger),
     parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
             const { metadata } = Body$.parse(req.body).data.object;
             switch (WebhookType$.parse(metadata.type)) {
                 case WebhookType.INSCRIPTIONS:
-                    console.log('Payment intent webhook received', metadata);
+                    logger.info('Received inscriptions webhook', { 
+                        path: 'POST /stripe/webhook',
+                        userId: metadata.userId,
+                        metadata,
+                    });
 
                     const inscriptions = Object.entries(metadata)
                         .filter(([key]) => !isNaN(+key))
@@ -134,9 +140,16 @@ app.post(`${env.PREFIX}/stripe/webhook`,
 
             res.send('OK');
 
-        } catch (e: any) {
-            console.error(e);
-            res.status(500).send(e.message);
+        } catch (e) {
+            const { success, data } = Body$.safeParse(req.body);
+            catchError(logger)(e, {
+                message: "Error processing webhook",
+                path: 'POST /stripe/webhook',
+                status: 500,
+                userId: success ? data.data.object.metadata.userId : null,
+                metadata: success ? data.data.object.metadata : {'parseError': "Error parsing metadata"},
+            });
+            res.status(500).send("Internal server error");
         }
     }
 );

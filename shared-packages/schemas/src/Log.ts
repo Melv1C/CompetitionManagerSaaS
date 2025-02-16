@@ -11,6 +11,7 @@ export enum SERVICE {
     OFFERS = 'offers-api',
     USERS = 'users-api',
     LOGS = 'logs-api',
+    STRIPE = 'stripe-api',
 }
 
 export enum LEVEL {
