@@ -46,9 +46,7 @@ export const saveInscriptions = async (
                     id: inscription.id
                 },
                 data: {
-                    record: {
-                        update: record
-                    },
+                    record: inscription.record ? { update: record } : { create: record },
                     paid: Math.min(totalPaid, event.cost),
                     ...meta
                 },
