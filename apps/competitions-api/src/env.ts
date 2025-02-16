@@ -7,6 +7,7 @@ const env$ = z.object({
     PREFIX: z.string().default('/api'),
     ALLOW_ORIGIN: z.string().default('*'),
     ACCESS_TOKEN_SECRET: z.string(),
+    BASE_URL: z.string().default('https://competitionmanager.be'),
     ONE_DAY_ATHLETE_TIMEOUT: z.coerce.number().default(24*60*60*1000)
 });
 

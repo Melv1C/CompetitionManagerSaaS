@@ -6,6 +6,7 @@ import { prisma, Prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
 import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
 import { logger } from '../../logger';
+import { env } from '../../env';
 
 export const router = Router();
 
@@ -26,6 +27,12 @@ router.post(
             const { eid } = Params$.parse(req.params);
             const inscriptionsData = CreateInscription$.array().parse(req.body);
             if (inscriptionsData.length === 0) {
+                logger.warn('No inscriptions provided', {
+                    path: 'POST /:eid/inscriptions',
+                    status: 400,
+                    userId: req.user?.id,
+                    metadata: req.body
+                });
                 res.status(400).send('No inscriptions provided');
                 return;
             }
@@ -67,6 +74,14 @@ router.post(
             });
 
             if (!competition) {
+                logger.warn('Competition not found', {
+                    path: 'POST /:eid/inscriptions',
+                    status: 404,
+                    userId: req.user?.id,
+                    metadata: {
+                        competitionEid: eid
+                    }
+                });
                 res.status(404).send('Competition not found');
                 return;
             }
@@ -170,8 +185,6 @@ router.post(
             }, {} as Record<Eid, number>);
 
             if (totalToPay > 0) {
-                // TODO: Fix the url
-                const fullUrl = req.protocol + '://' + req.get("host") + req.originalUrl;
                 try {
                     const inscriptions = inscriptionsData.map(({ athleteLicense, inscriptions }) => {
                         return inscriptions.map((data) => {
@@ -201,15 +214,14 @@ router.post(
                             price_data: {
                                 currency: 'eur',
                                 product_data: {
-                                    name: req.t('fees')
+                                    name: req.t('glossary.fees')
                                 },
                                 unit_amount: fees * 100
                             },
                             quantity: 1
                         }],
-                        fullUrl,
-                        fullUrl,
-
+                        `${env.BASE_URL}/competitions/${eid}/register?isPending`,
+                        `${env.BASE_URL}/competitions/${eid}/register?isCanceled`,
                         req.user!.email,
                         alreadyPaid * 100,
                         {
@@ -226,6 +238,12 @@ router.post(
                     return;
                 } catch (e) {
                     if (e instanceof Error && e.message === 'Event not found') {
+                        catchError(logger)(e, {
+                            message: 'Event not found',
+                            path: 'POST /:eid/inscriptions',
+                            status: 404,
+                            userId: req.user?.id
+                        });
                         res.status(404).send('Event not found');
                         return;
                     }
