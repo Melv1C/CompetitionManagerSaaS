@@ -7,6 +7,7 @@ import { createCheckoutSession } from '@competition-manager/stripe';
 import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
 import { logger } from '../../logger';
 import { env } from '../../env';
+import i18next from 'i18next';
 
 export const router = Router();
 
@@ -228,6 +229,7 @@ router.post(
                             type: WebhookType.INSCRIPTIONS,
                             competitionEid: eid,
                             userId: req.user!.id,
+                            lng: i18next.language,
                             ...inscriptions.reduce((acc, i, index) => {
                                 acc[index.toString()] = JSON.stringify(i);
                                 return acc;

@@ -131,7 +131,14 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                         CompetitionEvent$.array().parse(competition.events),
                     )
 
-                    sendEmailInscription(CreateInscription$.array().parse(inscriptionsGroupedByAthlete), totalCost, CompetitionEvent$.array().parse(competition.events), user.email, competition.name, req.t);
+                    sendEmailInscription(
+                        CreateInscription$.array().parse(inscriptionsGroupedByAthlete), 
+                        totalCost, 
+                        CompetitionEvent$.array().parse(competition.events), 
+                        user.email, 
+                        competition.name, 
+                        i18next.getFixedT(inscriptionsData.lng),
+                    );
                     
                     break;
                 default:
