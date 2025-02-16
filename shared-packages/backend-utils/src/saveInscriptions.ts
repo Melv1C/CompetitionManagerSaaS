@@ -1,5 +1,5 @@
 import { prisma } from "@competition-manager/prisma";
-import { Athlete, CompetitionEvent, CreateInscription, DefaultInscription$, Eid, Id, Inscription, Inscription$ } from "@competition-manager/schemas";
+import { Athlete, CompetitionEvent, CreateInscription, DefaultInscription$, Eid, Id, Inscription, Inscription$, inscriptionsInclude } from "@competition-manager/schemas";
 import z from "zod";
 
 const Meta$ = DefaultInscription$.pick({status: true});
@@ -52,18 +52,7 @@ export const saveInscriptions = async (
                     paid: Math.min(totalPaid, event.cost),
                     ...meta
                 },
-                include: {
-                    user: true,
-                    athlete: true,
-                    club: true,
-                    competitionEvent: {
-                        include: {
-                            event: true,
-                            categories: true
-                        }
-                    },
-                    record: true
-                }
+                include: inscriptionsInclude
             });
 
             totalPaid -= Math.min(totalPaid, event.cost);
@@ -114,18 +103,7 @@ export const saveInscriptions = async (
                     },
                     ...defaultInscriptionData
                 },
-                include: {
-                    user: true,
-                    athlete: true,
-                    club: true,
-                    competitionEvent: {
-                        include: {
-                            event: true,
-                            categories: true
-                        }
-                    },
-                    record: true
-                }
+                include: inscriptionsInclude
             });
 
             totalPaid -= Math.min(totalPaid, event.cost);
@@ -149,18 +127,7 @@ export const saveInscriptions = async (
                     isDeleted: true,
                     paid: paid,
                 },
-                include: {
-                    user: true,
-                    athlete: true,
-                    club: true,
-                    competitionEvent: {
-                        include: {
-                            event: true,
-                            categories: true
-                        }
-                    },
-                    record: true
-                }
+                include: inscriptionsInclude
             });
 
             totalPaid -= paid;

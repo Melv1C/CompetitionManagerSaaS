@@ -5,7 +5,7 @@ import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 import { z } from 'zod';
 
-import { Athlete$, Competition$, CompetitionEvent$, CreateInscription, CreateInscription$, Inscription$, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
+import { Athlete$, athleteInclude, Competition$, CompetitionEvent$, competitionInclude, CreateInscription, CreateInscription$, Inscription$, inscriptionsInclude, InscriptionStatus, License, StripeInscriptionMetadata$, WebhookType, WebhookType$ } from '@competition-manager/schemas';
 import { corsMiddleware, findAthleteWithLicense, Key, parseRequest, saveInscriptions, sendEmailInscription } from '@competition-manager/backend-utils';
 import { backendTranslations } from "@competition-manager/translations";
 
@@ -78,26 +78,12 @@ app.post(`${env.PREFIX}/stripe/webhook`,
                             eid: inscriptionsData.competitionEid,
                         },
                         include: {
-                            oneDayAthletes: true,
-                            events: {
-                                include: {
-                                    categories: true,
-                                    event: true
-                                }
+                            ...competitionInclude,
+                            oneDayAthletes: {
+                                include: athleteInclude,
                             },
                             inscriptions: {
-                                include: {
-                                    user: true,
-                                    athlete: true,
-                                    club: true,
-                                    competitionEvent: {
-                                        include: {
-                                            event: true,
-                                            categories: true
-                                        }
-                                    },
-                                    record: true
-                                }
+                                include: inscriptionsInclude,
                             }
                         }
                     });

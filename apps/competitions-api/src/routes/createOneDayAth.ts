@@ -3,7 +3,7 @@ import { prisma } from '@competition-manager/prisma';
 import 'dotenv/config';
 import { z } from 'zod';
 import { parseRequest, checkRole, CustomRequest, Key } from '@competition-manager/backend-utils';
-import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role } from '@competition-manager/schemas';
+import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role, athleteInclude, Athlete$ } from '@competition-manager/schemas';
 import { env } from '../env';
 
 export const router = Router();
@@ -64,7 +64,8 @@ router.post(
                         },
                         bib : newBib,
                         license : newBib.toString(),
-                    }
+                    },
+                    include: athleteInclude
                 });
                 setTimeout(async () => {
                     //check if ath have inscriptions else delete it
@@ -81,7 +82,7 @@ router.post(
                         });
                     }
                 }, env.ONE_DAY_ATHLETE_TIMEOUT);
-                res.send(newOneDayAth);
+                res.send(Athlete$.parse(newOneDayAth));
             } catch(e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('Wrong club abbr');

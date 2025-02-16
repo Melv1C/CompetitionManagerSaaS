@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import { parseRequest, CustomRequest, checkAdminRole, checkRole, Key, saveInscriptions, findAthleteWithLicense, catchError, logRequestMiddleware, sendEmailInscription } from '@competition-manager/backend-utils';
-import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType } from '@competition-manager/schemas';
+import { Competition$, CreateInscription$, BaseAdmin$, Athlete$, Access, Role, Inscription$, AdminQuery$, InscriptionStatus, Eid, WebhookType, competitionInclude, inscriptionsInclude, athleteInclude } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma, Prisma } from '@competition-manager/prisma';
 import { createCheckoutSession } from '@competition-manager/stripe';
 import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
-import { competitionInclude } from '../../utils';
 import { logger } from '../../logger';
 
 export const router = Router();
@@ -58,20 +57,11 @@ router.post(
                 },
                 include: {
                     ...competitionInclude,
-                    oneDayAthletes: true,
+                    oneDayAthletes: {
+                        include: athleteInclude
+                    },
                     inscriptions: {
-                        include: {
-                            user: true,
-                            athlete: true,
-                            club: true,
-                            competitionEvent: {
-                                include: {
-                                    event: true,
-                                    categories: true
-                                }
-                            },
-                            record: true
-                        }
+                        include: inscriptionsInclude
                     }
                 }
             });

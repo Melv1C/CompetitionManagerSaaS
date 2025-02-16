@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { Access, AdminQuery$, BaseAdmin$, Competition$, DisplayInscription$, Inscription$, Role } from '@competition-manager/schemas';
+import { Access, AdminQuery$, BaseAdmin$, Competition$, DisplayInscription$, Inscription$, inscriptionsInclude, Role } from '@competition-manager/schemas';
 import { CustomRequest, checkAdminRole, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
 
@@ -51,18 +51,7 @@ router.get(
                         where: {
                             ...(isAdmin ? {} : { isDeleted: false })
                         },
-                        include: {
-                            user: true,
-                            athlete: true,
-                            club: true,
-                            competitionEvent: {
-                                include: {
-                                    event: true,
-                                    categories: true
-                                }
-                            },
-                            record: true
-                        }
+                        include: inscriptionsInclude
                     }
                 }
             });

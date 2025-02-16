@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { Prisma, prisma } from '@competition-manager/prisma';
 import { parseRequest, CustomRequest, checkRole, Key, catchError } from '@competition-manager/backend-utils';
-import { Competition$, Role } from '@competition-manager/schemas';
-import { competitionInclude } from '../../utils';
+import { Competition$, competitionInclude, Role } from '@competition-manager/schemas';
 import { logger } from '../../logger';
 
 export const router = Router();

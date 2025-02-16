@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { Prisma, prisma } from '@competition-manager/prisma';
 import { parseRequest, CustomRequest, checkRole, Key, catchError } from '@competition-manager/backend-utils';
-import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role } from '@competition-manager/schemas';
+import { Access, CreateCompetition$, Competition$, DefaultCompetition$, Role, competitionInclude } from '@competition-manager/schemas';
 import { logger } from '../../logger';
 
 export const router = Router();
@@ -71,20 +71,7 @@ router.post(
                             }
                         } : undefined
                     },
-                    include: {
-                        paymentPlan: true,
-                        options: true,
-                        admins: {
-                            include: {
-                                user: {
-                                    include: {
-                                        preferences: true
-                                    }
-                                }
-                            }
-                        },
-                        club: true
-                    }
+                    include: competitionInclude
                 });
 
                 logger.info(`Competition created`, {

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
-import { BaseAdmin$, Eid$, UpdateCompetitionEvent$, Access, Role, CompetitionEvent$ } from '@competition-manager/schemas';
+import { BaseAdmin$, Eid$, UpdateCompetitionEvent$, Access, Role, CompetitionEvent$, competitionEventInclude } from '@competition-manager/schemas';
 
 export const router = Router();
 
@@ -66,10 +66,7 @@ router.put(
                         ...(parentEid && { parentEvent: { connect: { eid: parentEid } } }),
 
                     },
-                    include: {
-                        event: true,
-                        categories: true,
-                    }
+                    include: competitionEventInclude
                 });
                 res.send(CompetitionEvent$.parse(newCompetitionEvent));
             } catch(e: any) {
