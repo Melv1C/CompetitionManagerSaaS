@@ -19,12 +19,10 @@ export const NewsPopup = () => {
     const currentNews = NEWS.find((news) => !seenNews.includes(news.id));
 
     const handleClose = () => {
-        console.log("handleClose");
-        console.log(currentNews?.id);
         if (currentNews) {
-            console.log("setSeenNews", [...seenNews, currentNews.id]);
             setSeenNews([...seenNews, currentNews.id]);
-            console.log("done");
+        } else {
+            throw new Error("No news to close");
         }
     };
 
