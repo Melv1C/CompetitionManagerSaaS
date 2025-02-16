@@ -31,6 +31,10 @@ export const Athlete$ = z.object({
 });
 export type Athlete = z.infer<typeof Athlete$>;
 
+export const athleteInclude = {
+    club: true,
+};
+
 export const AthleteWithoutClub$ = Athlete$.omit({club: true});
 export type AthleteWithoutClub = z.infer<typeof AthleteWithoutClub$>;
 

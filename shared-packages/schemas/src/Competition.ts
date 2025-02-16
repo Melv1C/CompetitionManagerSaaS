@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Id$, Name$, Eid$, Email$, Date$ } from './Base';
-import { CompetitionEvent$ } from './CompetitionEvent';
+import { CompetitionEvent$, competitionEventInclude } from './CompetitionEvent';
 import { PaymentPlan$, Option$ } from './PaymentPlan';
 import { Admin$ } from './Admin';
 import { Club$ } from './Club';
@@ -57,6 +57,26 @@ export const Competition$ = z.object({
         
 });
 export type Competition = z.infer<typeof Competition$>;
+
+export const competitionInclude = {
+    events: {
+        include: competitionEventInclude,
+    },
+    paymentPlan: {
+        include: {
+            includedOptions: true,
+        },
+    },
+    options: true,
+    admins: {
+        include: {
+            user: true,
+        },
+    },
+    club: true,
+    freeClubs: true,
+    allowedClubs: true,
+};
 
 export const CreateCompetition$ = Competition$.pick({
     name: true,

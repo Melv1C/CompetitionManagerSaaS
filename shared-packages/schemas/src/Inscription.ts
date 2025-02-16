@@ -1,7 +1,7 @@
 import z from 'zod';
 import { Id$, Eid$, Price$, License$, Bib$, Date$ } from './Base';
 import { AthleteWithoutClub$ } from './Athlete';
-import { CompetitionEvent$ } from './CompetitionEvent';
+import { CompetitionEvent$, competitionEventInclude } from './CompetitionEvent';
 import { BaseUser$ } from './User';
 import { Club$ } from './Club';
 import { Record$ } from './Records';
@@ -30,6 +30,16 @@ export const Inscription$ = z.object({
     date: Date$.default(() => new Date()),
 });
 export type Inscription = z.infer<typeof Inscription$>;
+
+export const inscriptionsInclude = {
+    athlete: true,
+    competitionEvent: {
+        include: competitionEventInclude
+    },
+    user: true,
+    club: true,
+    record: true,
+};
 
 export const CreateInscription$ = z.object({
     athleteLicense: License$,
