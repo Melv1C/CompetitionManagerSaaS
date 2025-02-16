@@ -9,10 +9,17 @@ export const Welcom: React.FC<NewsProps> = ({ handleClose }) => {
 
     return (
         <>
-            <DialogTitle sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                    {t("welcome.title")}
-                </Typography>
+            <DialogTitle 
+                sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'row', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center',
+                    fontWeight: 'bold',
+                    fontSize: '1.5rem',
+                }}
+            >
+                {t("welcome.title")}
                 <LanguageSelector />
             </DialogTitle>
             <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
