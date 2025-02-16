@@ -1,11 +1,13 @@
-import { Box, Step, StepContent, StepLabel, Stepper, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Step, StepContent, StepLabel, Stepper } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDeviceSize } from "../../hooks";
+import { useDeviceSize, useSnackbar } from "../../hooks";
 import { Athlete } from "./Step/Athlete";
 import { Events } from "./Step/Events";
 import { Records } from "./Step/Records";
 import { Summary } from "./Step/Summary";
+import { useSearchParams } from "react-router-dom";
+import { Success } from "./Step/Success";
 
 type InscriptionWizardProps = {
     isAdmin?: boolean;
@@ -16,6 +18,10 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
     isAdmin = false
 }) => {
     const { t } = useTranslation();
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const { showSnackbar } = useSnackbar();
 
     const { isMobile } = useDeviceSize();
 
@@ -38,6 +44,20 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
         { label: t('glossary:summary'), content: <Summary isAdmin={isAdmin} handleBack={handleBack} handleNext={handleNext} /> }
     ];
 
+    useEffect(() => {
+        const step = searchParams.has('isPending') ? steps.length : null;
+        if (step !== null) setActiveStep(step);
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (searchParams.has('isCanceled')) {
+            setActiveStep(0);
+            showSnackbar(t('inscription:cancel'), 'warning');
+            searchParams.delete('isCanceled');
+            setSearchParams(searchParams);
+        }
+    }, [searchParams]);
+
     return (
         <>
             <Stepper 
@@ -51,11 +71,7 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
                         <StepLabel>{step.label}</StepLabel>
                         {isVertical && (
                             <StepContent>
-                                {activeStep === steps.length ? (
-                                    <SuccessStep />
-                                ) : (
-                                    steps[activeStep].content
-                                )}
+                                {activeStep < steps.length && step.content}
                             </StepContent>
                         )}
                     </Step>
@@ -63,23 +79,20 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
             </Stepper>
 
             {!isVertical && (
-                <Box display="flex" flexDirection="column" alignItems="center" width="80%" mx="auto" maxWidth={400}>
+                <Box display="flex" flexDirection="column" alignItems="center" width="80%" mx="auto" maxWidth={500}>
                     {activeStep === steps.length ? (
-                        <SuccessStep />
+                        <Success handleResart={() => setActiveStep(0)} />
                     ) : (
                         steps[activeStep].content
                     )}
                 </Box>
             )}
+
+            {isVertical && activeStep === steps.length && (
+                <Box display="flex" flexDirection="column" alignItems="center" width="80%" mx="auto" maxWidth={500}>
+                    <Success handleResart={() => setActiveStep(0)} />
+                </Box>
+            )}
         </>
-    )
-}
-
-const SuccessStep = () => {
-
-    const { t } = useTranslation();
-
-    return (
-        <Typography variant="h4">{t('inscription:success')}</Typography>
     )
 }

@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useTranslation } from "react-i18next";
 import { adminInscriptionsAtom, competitionAtom, inscriptionDataAtom, inscriptionsAtom, userInscriptionsAtom } from "../../../GlobalsStates";
-import { Box, Card, CardContent, CardHeader, Checkbox, Divider, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardHeader, Checkbox, Divider, FormControlLabel, Table, TableBody, TableCell, TableContainer, TableRow } from "@mui/material";
 import { Bib, StepperButtons } from "../../../Components";
 import { formatPerf } from "../../../utils";
 import { useMemo, useState } from "react";
@@ -52,18 +52,14 @@ export const Summary: React.FC<SummaryProps> = ({
             setInscriptions((prev) => [...prev!.filter((inscription) => inscription.athlete.license !== athlete.license), ...newInscriptions]);
             setUserInscriptions((prev) => [...prev!.filter((inscription) => inscription.athlete.license !== athlete.license), ...newInscriptions]);
             if (isAdmin) setAdminInscriptions((prev) => [...prev!.filter((inscription) => inscription.athlete.license !== athlete.license), ...newInscriptions]);
+            handleNext();
         }
-        handleNext();
     }
     
     const { totalCost, alreadyPaid, fees, totalToPay } = useMemo(() => getCostsInfo(competition, athlete, inscriptionsData.map((inscriptionData) => inscriptionData.competitionEvent.eid), userInscriptions), [competition, athlete, inscriptionsData, userInscriptions]);
 
     return (
         <Box width={1}>
-            <Typography variant="h4" sx={{ mb: 2 }}>
-                {t('glossary:summary')}
-            </Typography>
-
             <Card
                 sx={{ 
                     width: '100%',
@@ -73,7 +69,11 @@ export const Summary: React.FC<SummaryProps> = ({
                 <CardHeader 
                     avatar={<Bib value={athlete.bib} size="lg" />}
                     title={`${athlete.firstName} ${athlete.lastName}`}
-                    titleTypographyProps={{ variant: 'h5' }}
+                    slotProps={{ 
+                        title: {
+                            variant: 'h5',
+                        }
+                    }}
                     sx={{ 
                         textAlign: 'right',
                     }}

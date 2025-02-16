@@ -102,7 +102,7 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
 
     return (
         <Box width={1}>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <List sx={{ maxWidth: 400, margin: 'auto' }}>
                 {events.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map((event, index) => (
                     <ListItem
                         key={index}

@@ -78,7 +78,7 @@ export const Records: React.FC<RecordsProps> = ({
 
     return (
         <Box width={1}>
-            <List>
+            <List sx={{ maxWidth: 400, margin: 'auto' }}>
                 {inscriptionsData.sort((a, b) => a.competitionEvent.schedule.getTime() - b.competitionEvent.schedule.getTime()).map((inscriptionData) => {
                     const record = inscriptionData.record ?? null;
                     return (

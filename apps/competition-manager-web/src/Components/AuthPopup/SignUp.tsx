@@ -12,7 +12,7 @@ import { useSetAtom } from "jotai";
 import { userTokenAtom } from "../../GlobalsStates";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../../hooks";
 
 type SignUpProps = {
     onToggle: () => void;

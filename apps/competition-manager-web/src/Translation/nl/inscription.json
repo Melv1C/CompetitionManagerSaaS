@@ -16,7 +16,17 @@
     "noPersonalBest": "Geen persoonlijk record",
     "acceptTerms": "Ik accepteer het gebruik van mijn persoonlijke gegevens in het kader van deze wedstrijd",
     "athleteAlreadyInscribedNotByYou": "Deze atleet is al ingeschreven voor deze wedstrijd door een andere gebruiker. In geval van twijfel, neem contact op met de organisator.",
-    "success": "Uw inschrijving is succesvol opgeslagen",
+    "success": {
+        "title": "Uw inschrijving is succesvol opgeslagen",
+        "message": "Een e-mail is naar u verzonden met de details van uw inschrijving.",
+        "newInscription": "Registreer een nieuwe atleet",
+        "goToMyInscriptions": "Ga naar mijn inschrijvingen"
+    },
+    "pending": {
+        "title": "Uw inschrijving wordt verwerkt",
+        "message": "Zodra uw inschrijving is gevalideerd, wordt er een e-mail naar u verzonden."
+    },
+    "cancel": "Er is een fout opgetreden tijdens de betaling",
     "needToBeConnected": "U moet verbonden zijn om u in te schrijven voor een wedstrijd",
     "needToBeVerified": "U moet uw account verifiëren om u in te schrijven voor een wedstrijd",
     "goToAccount": "Ga naar mijn account",

@@ -6,9 +6,8 @@ import { userTokenAtom } from "../../GlobalsStates";
 import { useState } from "react";
 import { ChangePasswordPopup } from "./ChangePasswordPopup";
 import { useMutation } from "react-query";
-import { useSnackbar } from "../../hooks/useSnackbar";
 import { isAxiosError } from "axios";
-import { useRoles } from "../../hooks";
+import { useRoles, useSnackbar } from "../../hooks";
 
 export const Infos = () => {
     const { t } = useTranslation('account');
