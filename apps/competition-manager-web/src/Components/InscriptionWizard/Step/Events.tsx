@@ -112,10 +112,14 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
                                 edge="end"
                                 checked={selectedEvents.some((e) => e.id === event.id)}
                                 onChange={() => toggleEvent(event)}
+                                disabled={!isAdmin && !currentInscriptions.some((inscription) => inscription.competitionEvent.id === event.id) && event.place ? getRemainingPlaces(event, inscriptions) <= 0 : false}
                             />
                         }
                     >
-                        <ListItemButton onClick={() => toggleEvent(event)}>
+                        <ListItemButton 
+                            onClick={() => toggleEvent(event)} 
+                            disabled={!isAdmin && !currentInscriptions.some((inscription) => inscription.competitionEvent.id === event.id) && event.place ? getRemainingPlaces(event, inscriptions) <= 0 : false}
+                        >
                             <ListItemAvatar>
                                 {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
                             </ListItemAvatar>
