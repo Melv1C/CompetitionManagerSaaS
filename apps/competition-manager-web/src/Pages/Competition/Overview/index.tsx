@@ -78,28 +78,4 @@ export const Overview = () => {
             </Grid>
         </MaxWidth>
     )
-
-
-    // return (
-    //     <Stack 
-    //         spacing={2} 
-    //         alignItems="center"
-    //         width="100%"
-    //         // children flex grow to take all the available space
-    //         sx={{ 
-    //             display: 'flex',
-    //             flexDirection: 'column',
-    //             '& > *': { 
-    //                 flexGrow: 1 
-    //             }
-    //         }}
-    //     >
-    //         <Infos />
-    //         <InscriptionsInfos />
-    //         <Descriptions />
-    //         <Events />
-    //         <ClubsPie />
-    //         <CategoriesPie />
-    //     </Stack>
-    // )
 }
