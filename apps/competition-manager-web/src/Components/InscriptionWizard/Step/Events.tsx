@@ -1,5 +1,5 @@
 import { CompetitionEvent } from "@competition-manager/schemas";
-import { Box, Checkbox, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material"
+import { Alert, Box, Checkbox, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material"
 import { useTranslation } from "react-i18next";
 import { StepperButtons } from "../../../Components";
 import { useAtom, useAtomValue } from "jotai";
@@ -28,6 +28,7 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
     if (!athlete) throw new Error('Athlete not found');
 
     const selectedEvents = useMemo(() => inscriptionsData.map((inscription) => inscription.competitionEvent), [inscriptionsData]);
+    const isDisabledDueToMaxEvents = useMemo(() => competition.maxEventByAthlete ? selectedEvents.length >= competition.maxEventByAthlete : false, [competition, selectedEvents]);
 
     const events = useMemo(() => competition.events.filter((event) => !event.parentId).filter((event) => checkCategory(event, athlete, competition.date)) || [], [competition, athlete]);
 
@@ -102,34 +103,47 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
 
     return (
         <Box width={1}>
+            {competition.maxEventByAthlete && 
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    {competition.maxEventByAthlete === 1 ? t('inscription:maxEventByAthlete', { count: competition.maxEventByAthlete }) : t('inscription:maxEventsByAthlete', { count: competition.maxEventByAthlete })}
+                </Alert>
+            }
+
             <List sx={{ maxWidth: 400, margin: 'auto' }}>
-                {events.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map((event, index) => (
-                    <ListItem
-                        key={index}
-                        disablePadding 
-                        secondaryAction={
-                            <Checkbox
-                                edge="end"
-                                checked={selectedEvents.some((e) => e.id === event.id)}
-                                onChange={() => toggleEvent(event)}
-                                disabled={!isAdmin && !currentInscriptions.some((inscription) => inscription.competitionEvent.id === event.id) && event.place ? getRemainingPlaces(event, inscriptions) <= 0 : false}
-                            />
-                        }
-                    >
-                        <ListItemButton 
-                            onClick={() => toggleEvent(event)} 
-                            disabled={!isAdmin && !currentInscriptions.some((inscription) => inscription.competitionEvent.id === event.id) && event.place ? getRemainingPlaces(event, inscriptions) <= 0 : false}
+                {events.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map((event, index) => {
+
+                    const isDisabled = !isAdmin && 
+                        ((!currentInscriptions.some((inscription) => inscription.competitionEvent.id === event.id) && event.place ? getRemainingPlaces(event, inscriptions) <= 0 : false)
+                        || (!selectedEvents.some((e) => e.id === event.id) && isDisabledDueToMaxEvents));
+
+                    return (
+                        <ListItem
+                            key={index}
+                            disablePadding 
+                            secondaryAction={
+                                <Checkbox
+                                    edge="end"
+                                    checked={selectedEvents.some((e) => e.id === event.id)}
+                                    onChange={() => toggleEvent(event)}
+                                    disabled={isDisabled}
+                                />
+                            }
                         >
-                            <ListItemAvatar>
-                                {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={event.name}
-                                secondary={secondaryText(event)}
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
+                            <ListItemButton 
+                                onClick={() => toggleEvent(event)} 
+                                disabled={isDisabled}
+                            >
+                                <ListItemAvatar>
+                                    {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={event.name}
+                                    secondary={secondaryText(event)}
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    )
+                })}
             </List>
 
             <StepperButtons 

@@ -34,5 +34,7 @@
     "inscriptionsOpenAt": "Inschrijvingen openen op {{date}}",
     "inscriptionsClosed": "Inschrijvingen zijn gesloten",
     "noEvent": "Deze wedstrijd heeft nog geen onderdeel",
-    "clubNotAllowed": "Uw club mag zich niet inschrijven voor deze wedstrijd"
+    "clubNotAllowed": "Uw club mag zich niet inschrijven voor deze wedstrijd",
+    "maxEventByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdeel",
+    "maxEventsByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdelen"
 }
