@@ -25,5 +25,8 @@
     "selectAll": "Tout sélectionner",
     "paid": "Payé",
     "status": "Statut",
-    "location": "Lieu"
+    "location": "Lieu",
+    "allowedClubs": "Clubs autorisés",
+    "isFeesAdditionnal": "Les frais sont-ils additionnels",
+    "maxEventByAthlete": "Nombre maximum d'épreuves par athlète"
 }
