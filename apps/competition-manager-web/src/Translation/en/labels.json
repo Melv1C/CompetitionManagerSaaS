@@ -25,5 +25,8 @@
     "selectAll": "Select All",
     "paid": "Paid",
     "status": "Status",
-    "location": "Location"
+    "location": "Location",
+    "allowedClubs": "Allowed Clubs",
+    "isFeesAdditionnal": "Is Fees Additionnal",
+    "maxEventByAthlete": "Max Event By Athlete"
 }

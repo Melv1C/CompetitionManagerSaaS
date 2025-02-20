@@ -25,5 +25,8 @@
     "selectAll": "Selecteer alles",
     "paid": "Betaald",
     "status": "Status",
-    "location": "Locatie"
+    "location": "Locatie",
+    "allowedClubs": "Toegestane clubs",
+    "isFeesAdditionnal": "Zijn de kosten extra",
+    "maxEventByAthlete": "Maximaal onderdeel per atleet"
 }
