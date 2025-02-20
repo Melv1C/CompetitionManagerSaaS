@@ -5,56 +5,77 @@ import { Events } from "./Events";
 import { InscriptionsInfos } from "./InscriptionsInfos";
 import { useDeviceSize } from "../../../hooks";
 import { Stack } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import { useAtomValue } from "jotai";
 import { competitionAtom } from "../../../GlobalsStates";
+import { ClubsPie } from "./ClubsPie";
+import { CategoriesPie } from "./CategoriesPie";
+import { MaxWidth } from "../../../Components";
 
 
 export const Overview = () => {
 
-    const {isTablet, isLaptop, isDesktop} = useDeviceSize();
+    const {isLaptop, isDesktop} = useDeviceSize();
 
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition found');
 
     if (isDesktop || isLaptop) {
         return (
-            <Stack spacing={2} alignItems="center">
-                <Stack spacing={2} direction="row">
-                    <Stack spacing={2} direction={competition.description ? "column" : "row"}>
-                        <Infos />
-                        <InscriptionsInfos />
-                    </Stack>
+            <Grid container spacing={2}>
+                <Grid size={competition.description ? 6 : 12}>
+                    <Grid container spacing={2}>
+                        <Grid size={12}>
+                            <Infos />
+                        </Grid>
+                        <Grid size={12}>
+                            <InscriptionsInfos />
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid size={6}>
                     <Descriptions />
-                </Stack>
-                <Stack spacing={2} direction="row">
-                    <Events />
-                </Stack>
-            </Stack>
+                </Grid>
+                <Grid size={12}>
+                    <Stack spacing={2} direction="row" justifyContent="center">
+                        <Events />
+                    </Stack>
+                </Grid>
+                <Grid size={6}>
+                    <ClubsPie />
+                </Grid>
+                <Grid size={6}>
+                    <CategoriesPie />
+                </Grid>
+            </Grid>
         )
     }
 
-    if (isTablet) {
-        return (
-            <Stack spacing={2} alignItems="center">
-                <Stack spacing={2} direction="row">
-                    <Infos />
-                    <InscriptionsInfos />
-                </Stack>
-                <Descriptions />
-                <Stack spacing={2} direction="row">
-                    <Events />
-                </Stack>
-            </Stack>
-        )
-    }
-
-    // Mobile (default)
+    // Tablet and mobile
     return (
-        <Stack spacing={2} alignItems="center">
-            <Infos />
-            <InscriptionsInfos />
-            <Descriptions />
-            <Events />
-        </Stack>
+        <MaxWidth maxWidth="sm">
+            <Grid container spacing={2}>
+                <Grid size={12}>
+                    <Infos />
+                </Grid>
+                <Grid size={12}>
+                    <InscriptionsInfos />
+                </Grid>
+                <Grid size={12}>
+                    <Descriptions />
+                </Grid>
+                <Grid size={12}>
+                    <Stack spacing={2} direction="column" justifyContent="center">
+                        <Events />
+                    </Stack>
+                </Grid>
+                <Grid size={12}>
+                    <ClubsPie />
+                </Grid>
+                <Grid size={12}>
+                    <CategoriesPie />
+                </Grid>
+            </Grid>
+        </MaxWidth>
     )
 }
