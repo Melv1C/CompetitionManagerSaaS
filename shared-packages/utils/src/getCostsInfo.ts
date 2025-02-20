@@ -59,7 +59,7 @@ export const getCostsInfo = (competition: Competition, athlete: Athlete, competi
 
     const totalCost = getTotalToPay(competition.events, competitionEventEids);
     const alreadyPaid = getAlreadPaid(userInscriptions, athlete.license);
-    const fees = competition.method === PaymentMethod.ONLINE ? getFees(totalCost - alreadyPaid) : 0;
+    const fees = competition.isFeesAdditionnal && competition.method === PaymentMethod.ONLINE ? getFees(totalCost - alreadyPaid) : 0;
     const totalToPay = Math.max(0, totalCost - alreadyPaid + fees);
 
     return {
