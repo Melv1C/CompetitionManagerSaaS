@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@competition-manager/schemas": "file:../../shared-packages/schemas",
-    "@competition-manager/utils": "file:../../shared-packages/utils",
     "@competition-manager/translations": "file:../../shared-packages/translations",
+    "@competition-manager/utils": "file:../../shared-packages/utils",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
@@ -21,6 +21,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/material": "^6.4.3",
+    "@mui/x-charts": "^7.27.0",
     "@mui/x-data-grid": "^7.23.5",
     "@mui/x-date-pickers": "^7.22.2",
     "axios": "^1.7.7",
