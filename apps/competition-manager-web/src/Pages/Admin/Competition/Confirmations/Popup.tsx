@@ -151,8 +151,6 @@ export const Popup: React.FC<PopupProps> = ({
                             </Box>}
                             color="success"
                             variant={inscriptionsState.every(i => i.status === InscriptionStatus.CONFIRMED) ? 'filled' : 'outlined'}
-                            // sx={{ pl: 1 }}
-                            // icon={<FontAwesomeIcon icon={faCheck} />}
                             onClick={() => setInscriptionsState(inscriptionsState.map(i => ({
                                 ...i,
                                 status: i.status === InscriptionStatus.CONFIRMED ? InscriptionStatus.ACCEPTED : InscriptionStatus.CONFIRMED
@@ -169,8 +167,6 @@ export const Popup: React.FC<PopupProps> = ({
                             </Box>}
                             color="error"
                             variant={inscriptionsState.every(i => i.status === InscriptionStatus.REMOVED) ? 'filled' : 'outlined'}
-                            // sx={{ pl: 1 }}
-                            // icon={<FontAwesomeIcon icon={faXmark} />}
                             onClick={() => setInscriptionsState(inscriptionsState.map(i => ({
                                 ...i,
                                 status: i.status === InscriptionStatus.REMOVED ? InscriptionStatus.ACCEPTED : InscriptionStatus.REMOVED
