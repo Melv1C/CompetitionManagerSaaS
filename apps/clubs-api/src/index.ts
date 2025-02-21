@@ -38,7 +38,7 @@ app.get(`${env.PREFIX}/clubs`, (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('internalServerError');
+        res.status(500).send(req.t('error.internalServerError'));
     }
 });
 

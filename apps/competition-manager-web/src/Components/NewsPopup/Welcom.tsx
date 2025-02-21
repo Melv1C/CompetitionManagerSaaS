@@ -2,10 +2,13 @@ import { Alert, Button, DialogActions, DialogContent, DialogTitle, Typography } 
 import { useTranslation } from "react-i18next";
 import { NewsProps } from ".";
 import { LanguageSelector } from "../NavBar/LanguageSelector";
+import { useDeviceSize } from "../../hooks";
 
 export const Welcom: React.FC<NewsProps> = ({ handleClose }) => {
 
     const { t } = useTranslation('news');
+
+    const { isMobile } = useDeviceSize();
 
     return (
         <>
@@ -15,8 +18,9 @@ export const Welcom: React.FC<NewsProps> = ({ handleClose }) => {
                     flexDirection: 'row', 
                     justifyContent: 'space-between', 
                     alignItems: 'center',
+                    gap: '1rem',
                     fontWeight: 'bold',
-                    fontSize: '1.5rem',
+                    fontSize: isMobile ? '1rem' : '1.5rem'
                 }}
             >
                 {t("welcome.title")}

@@ -7,7 +7,6 @@ import { createCheckoutSession } from '@competition-manager/stripe';
 import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
 import { logger } from '../../logger';
 import { env } from '../../env';
-import i18next from 'i18next';
 
 export const router = Router();
 
@@ -100,6 +99,19 @@ router.post(
                     // Check if athlete exists
                     const athlete = await findAthleteWithLicense(athInscriptions.athleteLicense, z.array(Athlete$).parse(competition.oneDayAthletes));
                     const cat = getCategoryAbbr(athlete.birthdate, athlete.gender, parsedCompetition.date);
+
+                    // Check if the athlete club is allowed to inscribe
+                    if (!isAdmin && parsedCompetition.allowedClubs.length > 0 && !parsedCompetition.allowedClubs.map((c) => c.id).includes(athlete.club.id)) {
+                        res.status(400).send('Club ' + athlete.club.abbr + ' is not allowed to inscribe in this competition');
+                        return;
+                    }
+
+                    // Check if athlete isn't inscribed in too many events
+                    if (!isAdmin && parsedCompetition.maxEventByAthlete && athInscriptions.inscriptions.length > parsedCompetition.maxEventByAthlete) {
+                        res.status(400).send('Athlete ' + athInscriptions.athleteLicense + ' is inscribed in too many events');
+                        return;
+                    }
+
                     for (const inscription of athInscriptions.inscriptions) {
                         // Check if event exists
                         const event = parsedCompetition.events.find((e) => e.eid === inscription.competitionEventEid);
@@ -122,6 +134,7 @@ router.post(
                             i.isDeleted === false 
                             && i.status === InscriptionStatus.ACCEPTED 
                             && i.competitionEventId === event.id
+                            && i.athlete.license !== athInscriptions.athleteLicense // Don't count the current athlete
                         ).length;
                         // Check if event is full
                         if (!isAdmin && event.place && nbParticipants >= event.place) {
@@ -197,21 +210,23 @@ router.post(
                         });
                     }).flat();
 
-                    const session = await createCheckoutSession(
-                        [...Object.entries(nbOfInscriptionsByEvent).map(([eid, quantity]) => {
-                            const event = parsedCompetition.events.find((e) => e.eid === eid);
-                            if (!event) throw new Error('Event not found');
-                            return {
-                                price_data: {
-                                    currency: 'eur',
-                                    product_data: {
-                                        name: `${event.name}`
-                                    },
-                                    unit_amount: event.cost * 100
+                    const lineItems = [...Object.entries(nbOfInscriptionsByEvent).map(([eid, quantity]) => {
+                        const event = parsedCompetition.events.find((e) => e.eid === eid);
+                        if (!event) throw new Error('Event not found');
+                        return {
+                            price_data: {
+                                currency: 'eur',
+                                product_data: {
+                                    name: `${event.name}`
                                 },
-                                quantity
-                            };
-                        }), {
+                                unit_amount: event.cost * 100
+                            },
+                            quantity
+                        };
+                    })];
+
+                    if (fees > 0) {
+                        lineItems.push({
                             price_data: {
                                 currency: 'eur',
                                 product_data: {
@@ -220,7 +235,11 @@ router.post(
                                 unit_amount: fees * 100
                             },
                             quantity: 1
-                        }],
+                        });
+                    }
+
+                    const session = await createCheckoutSession(
+                        lineItems,
                         `${env.BASE_URL}/competitions/${eid}/register?isPending`,
                         `${env.BASE_URL}/competitions/${eid}/register?isCanceled`,
                         req.user!.email,
@@ -229,7 +248,7 @@ router.post(
                             type: WebhookType.INSCRIPTIONS,
                             competitionEid: eid,
                             userId: req.user!.id,
-                            lng: i18next.language,
+                            lng: req.language,
                             ...inscriptions.reduce((acc, i, index) => {
                                 acc[index.toString()] = JSON.stringify(i);
                                 return acc;
@@ -287,7 +306,7 @@ router.post(
                 status: 500,
                 userId: req.user?.id
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('error.internalServerError'));
         }
     }
 );

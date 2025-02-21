@@ -34,5 +34,7 @@
     "inscriptionsOpenAt": "Les inscriptions ouvriront le {{date}}",
     "inscriptionsClosed": "Les inscriptions sont fermées",
     "noEvent": "Cette compétition n'a pas encore d'épreuve",
-    "clubNotAllowed": "Votre club n'est pas autorisé à s'inscrire à cette compétition"
+    "clubNotAllowed": "Votre club n'est pas autorisé à s'inscrire à cette compétition",
+    "maxEventByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuve",
+    "maxEventsByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuves"
 }

@@ -65,11 +65,10 @@ router.get(
                 res.send(Inscription$.array().parse(competition.inscriptions));
                 return;
             }
-
             res.send(DisplayInscription$.array().parse(competition.inscriptions));
         } catch(error) {
             console.error(error);
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('error.internalServerError'));
         }
     }
 );

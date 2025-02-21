@@ -27,7 +27,7 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                     marginLeft: 1,
                 }}
             >
-                {t('glossary:inscriptions')}
+                {t('glossary:participants')}
             </Typography>
             <TableContainer>
                 <Table size="small">

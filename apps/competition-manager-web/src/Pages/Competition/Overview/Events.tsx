@@ -43,7 +43,7 @@ export const Events = () => {
                             key={gender}
                             sx={{ 
                                 minWidth: 250,
-                                maxWidth: 300,
+                                maxWidth: 600,
                                 height: 'fit-content',
                             }}
                         >
