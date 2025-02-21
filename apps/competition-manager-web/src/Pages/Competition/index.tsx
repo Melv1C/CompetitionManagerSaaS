@@ -2,7 +2,7 @@ import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Loading, MaxWidth } from "../../Components";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useCompetition, useFetchCompetitionData } from "../../hooks";
 import { Competition as CompetitionType } from "@competition-manager/schemas";
 
@@ -31,7 +31,13 @@ export const Competition = () => {
     const { competitionEid } = useParams();
     if (!competitionEid) throw new Error('No competition EID provided');
 
-    const { competition, isLoading } = useFetchCompetitionData(competitionEid);
+    const { competition, isLoading, reset } = useFetchCompetitionData(competitionEid);
+
+    useEffect(() => {
+        return () => {
+            reset();
+        }
+    }, []);
 
     if (isLoading) return <Loading />;
 
