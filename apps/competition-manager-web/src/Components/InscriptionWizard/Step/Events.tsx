@@ -109,6 +109,12 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
                 </Alert>
             }
 
+            {events.length === 0 && (
+                <Alert severity="warning">
+                    {t('inscription:noEventForCategory')}
+                </Alert>
+            )}
+
             <List sx={{ maxWidth: 400, margin: 'auto' }}>
                 {events.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map((event, index) => {
 
