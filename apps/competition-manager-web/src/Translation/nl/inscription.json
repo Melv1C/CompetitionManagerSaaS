@@ -36,5 +36,6 @@
     "noEvent": "Deze wedstrijd heeft nog geen onderdeel",
     "clubNotAllowed": "Uw club mag zich niet inschrijven voor deze wedstrijd",
     "maxEventByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdeel",
-    "maxEventsByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdelen"
+    "maxEventsByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdelen",
+    "noEventForCategory": "Geen onderdeel voor uw categorie"
 }
