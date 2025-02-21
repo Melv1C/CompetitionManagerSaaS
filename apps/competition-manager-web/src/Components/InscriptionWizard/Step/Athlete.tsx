@@ -1,12 +1,10 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Alert, Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
 import { useMemo, useState } from "react"
 import { getAthletes } from "../../../api"
 import { Athlete as AthleteType, AthleteKey$ } from "@competition-manager/schemas"
 import { useQuery } from "react-query"
 import { useTranslation } from "react-i18next"
-import { Bib, Loading, StepperButtons } from "../../../Components"
+import { Bib, Loading, Search, StepperButtons } from "../../../Components"
 import { competitionAtom, inscriptionDataAtom, inscriptionsAtom, userInscriptionsAtom } from "../../../GlobalsStates"
 import { getCategoryAbbr } from "@competition-manager/utils"
 import { useAtom, useAtomValue } from "jotai"
@@ -165,7 +163,7 @@ const SearchAthlete: React.FC<SearchAthleteProps> = ({ isVisible, onAthleteSelec
                 InputProps={{
                     endAdornment: (
                         <IconButton onClick={handleSearch}>
-                            <FontAwesomeIcon icon={faSearch} />
+                            <Search />
                         </IconButton>
                     )
                 }}
