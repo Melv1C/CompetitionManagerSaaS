@@ -13,10 +13,10 @@ import home from './home.json';
 import footer from './footer.json';
 import news from './news.json';
 
-import { zodFr } from '@competition-manager/translations';
+import { frontendTranslations } from '@competition-manager/translations';
 
 export default {
-    zod: zodFr,
+    ...frontendTranslations.fr,
     translation,
     buttons,
     labels,
