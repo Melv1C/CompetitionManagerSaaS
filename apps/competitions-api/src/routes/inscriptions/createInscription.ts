@@ -255,7 +255,7 @@ router.post(
                             }, {} as { [key: string]: string })
                         },
                         custom_text: {
-                            after_submit: { message: req.t('stipe.only30Minutes') }
+                            after_submit: { message: req.t('stripe.only30Minutes') }
                         }
                     });
                     res.send(session.url);
