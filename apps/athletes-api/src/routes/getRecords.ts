@@ -81,7 +81,7 @@ router.get(
             res.json(Records$.parse(records));
         } catch (e) {
             console.error(e);
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('error.internalServerError'));
         }
     }
 );

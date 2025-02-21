@@ -307,7 +307,7 @@ router.post(
                 status: 500,
                 userId: req.user?.id
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(req.t('error.internalServerError'));
         }
     }
 );
