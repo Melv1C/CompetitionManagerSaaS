@@ -3,7 +3,6 @@ import { prisma } from '@competition-manager/prisma';
 import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { Access, Competition$, Role } from '@competition-manager/schemas';
 import { CreateAdmin$, BaseAdmin$ } from '@competition-manager/schemas';
-import { t } from 'i18next';
 
 export const router = Router();
 
@@ -57,13 +56,13 @@ router.post(
                     res.status(404).send('User not found');
                     return;
                 } else{
-                    res.status(500).send(t('error.internalServerError'));
+                    res.status(500).send(req.t('error.internalServerError'));
                     return;
                 }
             }
         } catch (error) {
             console.error(error);
-            res.status(500).send(t('error.internalServerError'));
+            res.status(500).send(req.t('error.internalServerError'));
         }
     }
     
