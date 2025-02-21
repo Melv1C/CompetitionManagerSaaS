@@ -38,13 +38,13 @@ export const Event = () => {
                 <CardHeader 
                     avatar={
                         <Avatar
-                        sx={{ 
-                            bgcolor: 'primary.main',
-                            color: 'primary.contrastText',
-                            width: 70,
-                            height: 70,
-                            fontWeight: 'bold',
-                        }}
+                            sx={{ 
+                                bgcolor: 'primary.main',
+                                color: 'primary.contrastText',
+                                width: 70,
+                                height: 70,
+                                fontWeight: 'bold',
+                            }}
                         >
                             {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
                         </Avatar>

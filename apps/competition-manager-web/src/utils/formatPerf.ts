@@ -1,6 +1,11 @@
 import { EventType } from "@competition-manager/schemas";
 
-export const formatPerf = (perf: number, eventType: EventType) => {
+export const formatPerf = (perf: number | undefined | null, eventType: EventType) => {
+
+    if (perf === undefined || perf === null) {
+        return '-';
+    }
+
     switch (eventType) {
         case EventType.TIME:
             // the perf is in milliseconds

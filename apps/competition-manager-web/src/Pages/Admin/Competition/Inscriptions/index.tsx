@@ -1,4 +1,4 @@
-import { Box, Divider, FormControl, TextField } from "@mui/material"
+import { Box, Divider, Typography } from "@mui/material"
 import { Add, CircleButton, Delete, Edit, MaxWidth } from "../../../../Components"
 import { useTranslation } from "react-i18next";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -77,7 +77,7 @@ export const Inscriptions = () => {
     ];
 
     return (
-        <MaxWidth maxWidth="lg">
+        <MaxWidth maxWidth="xl">
             <CircleButton 
                 size="4rem"
                 sx={{ 
@@ -103,14 +103,9 @@ export const Inscriptions = () => {
             )}
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <FormControl>
-                    <TextField
-                        label={t('glossary:competition')}
-                        value={competition.name}
-                        slotProps={{ input: { readOnly: true } }}
-
-                    />
-                </FormControl>
+                <Typography variant="h5">
+                    {competition.name}
+                </Typography>
 
                 <Divider />
 

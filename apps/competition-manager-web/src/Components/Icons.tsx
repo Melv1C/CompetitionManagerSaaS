@@ -1,6 +1,6 @@
 
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome'
-import { faEdit, faFilter, faFloppyDisk, faPlus, faTrash, faUsers, IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { faArrowsRotate, faEdit, faFilter, faFloppyDisk, faPlus, faSearch, faTrash, faUsers, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 
 
 type IconProps = Omit<FontAwesomeIconProps, 'icon'>
@@ -48,6 +48,18 @@ export const Users: React.FC<IconProps> = (props) => {
 export const Filter: React.FC<IconProps> = (props) => {
     return (
         <BaseIcon icon={faFilter} {...props} />
+    )
+}
+
+export const Search: React.FC<IconProps> = (props) => {
+    return (
+        <BaseIcon icon={faSearch} {...props} />
+    )
+}
+
+export const Refresh: React.FC<IconProps> = (props) => {
+    return (
+        <BaseIcon icon={faArrowsRotate} {...props} />
     )
 }
 

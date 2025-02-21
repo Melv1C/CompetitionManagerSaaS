@@ -1,0 +1,10 @@
+{
+    "inscriptionStatus": {
+        "registered": "Registered",
+        "rejected": "Rejected",
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "confirmed": "Confirmed",
+        "removed": "Removed"
+    }
+}

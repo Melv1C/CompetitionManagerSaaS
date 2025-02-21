@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { parseRequest, CustomRequest, checkAdminRole, checkRole, Key, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
-import { UpdateInscription$, BaseAdmin$, Access, Role, competitionInclude } from '@competition-manager/schemas';
+import { UpdateInscription$, BaseAdmin$, Access, Role, competitionInclude, inscriptionsInclude, Inscription$ } from '@competition-manager/schemas';
 import { z } from 'zod';
 import { prisma } from '@competition-manager/prisma';
 import { logger } from '../../logger';
@@ -44,8 +44,9 @@ router.put(
                     ...rest,
                     record: record ? { upsert: { update: record, create: record } } : undefined,
                 },
+                include: inscriptionsInclude
             });
-            res.send(inscription);
+            res.send(Inscription$.parse(inscription));
             
         } catch (e) {
             catchError(logger)(e, {

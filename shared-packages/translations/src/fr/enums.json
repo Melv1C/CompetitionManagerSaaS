@@ -1,0 +1,10 @@
+{
+    "inscriptionStatus": {
+        "registered": "Enregistré",
+        "rejected": "Rejeté",
+        "pending": "En attente",
+        "accepted": "Accepté",
+        "confirmed": "Confirmé",
+        "removed": "Retiré"
+    }
+}

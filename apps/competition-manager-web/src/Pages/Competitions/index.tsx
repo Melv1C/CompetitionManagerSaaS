@@ -6,8 +6,9 @@ import { useSearchParams } from "react-router-dom";
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
-const tomorrow = new Date(today);
-tomorrow.setDate(tomorrow.getDate() + 1);
+const tomorrow = new Date();
+tomorrow.setHours(23, 59, 59, 999);
+
 
 export const Competitions: React.FC = () => {
 

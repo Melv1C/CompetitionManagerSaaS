@@ -1,5 +1,8 @@
 {
     "contactInformation": "Contactinformatie",
     "inscriptionInformation": "Inschrijvingsinformatie",
-    "onLeavePopup": "Weet u zeker dat u wilt vertrekken?"
+    "onLeavePopup": "Weet u zeker dat u wilt vertrekken?",
+    "competitionNotCurrent": "Deze competitie is niet aan de gang",
+    "confirmAll": "Bevestig alles",
+    "absent": "Afwezig"
 }

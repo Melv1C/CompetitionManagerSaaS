@@ -1,5 +1,8 @@
 {
     "contactInformation": "Informations de contact",
     "inscriptionInformation": "Informations d'inscription",
-    "onLeavePopup": "Êtes-vous sûr de vouloir partir ?"
+    "onLeavePopup": "Êtes-vous sûr de vouloir partir ?",
+    "competitionNotCurrent": "Cette compétition n'est pas en cours",
+    "confirmAll": "Confirmer tout",
+    "absent": "Absent"
 }
