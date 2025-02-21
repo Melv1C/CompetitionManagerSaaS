@@ -63,6 +63,18 @@ export const DefaultInscription$ = Inscription$.omit({
 });
 export type DefaultInscription = z.infer<typeof DefaultInscription$>;
 
+export const UpdateInscription$ = Inscription$.omit({
+    id: true,
+    eid: true,
+    athlete: true,
+    competitionEvent: true,
+    user: true,
+    club: true,
+    bib: true,
+    date: true,
+});
+
+
 export const DisplayInscription$ = Inscription$.omit({
     user: true,
     paid: true,
