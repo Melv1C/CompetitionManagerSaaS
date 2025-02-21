@@ -1,4 +1,4 @@
-import { Box, Divider, FormControl, TextField } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Add, CircleButton, Delete, Edit, MaxWidth, ShowUsersNumber } from "../../../../Components";
 import { useAtomValue } from "jotai";
@@ -97,14 +97,9 @@ export const Schedule = () => {
             )}
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <FormControl>
-                    <TextField
-                        label={t('glossary:competition')}
-                        value={competition.name}
-                        slotProps={{ input: { readOnly: true } }}
-
-                    />
-                </FormControl>
+                <Typography variant="h5">
+                    {competition.name}
+                </Typography>
 
                 <Divider />
 
