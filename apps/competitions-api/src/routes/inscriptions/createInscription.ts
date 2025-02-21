@@ -238,13 +238,13 @@ router.post(
                         });
                     }
 
-                    const session = await createCheckoutSession(
-                        lineItems,
-                        `${env.BASE_URL}/competitions/${eid}/register?isPending`,
-                        `${env.BASE_URL}/competitions/${eid}/register?isCanceled`,
-                        req.user!.email,
-                        alreadyPaid * 100,
-                        {
+                    const session = await createCheckoutSession({
+                        line_items: lineItems,
+                        success_url: `${env.BASE_URL}/competitions/${eid}/register?isPending`,
+                        cancel_url: `${env.BASE_URL}/competitions/${eid}/register?isCanceled`,
+                        customer_email: req.user!.email,
+                        couponValue: alreadyPaid * 100,
+                        metadata: {
                             type: WebhookType.INSCRIPTIONS,
                             competitionEid: eid,
                             userId: req.user!.id,
@@ -253,8 +253,11 @@ router.post(
                                 acc[index.toString()] = JSON.stringify(i);
                                 return acc;
                             }, {} as { [key: string]: string })
+                        },
+                        custom_text: {
+                            after_submit: { message: req.t('stipe.only30Minutes') }
                         }
-                    );
+                    });
                     res.send(session.url);
                     return;
                 } catch (e) {

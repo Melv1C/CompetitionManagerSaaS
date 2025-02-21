@@ -21,5 +21,8 @@
     },
     "glossary": {
         "fees": "Fees"
+    },
+    "stripe": {
+        "only30Minutes": "You have 30 minutes to complete the payment"
     }
 }

@@ -21,5 +21,8 @@
     },
     "glossary": {
         "fees": "Kosten"
+    },
+    "stripe": {
+        "only30Minutes": "U heeft 30 minuten om de betaling te voltooien"
     }
 }

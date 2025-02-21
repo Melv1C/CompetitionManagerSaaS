@@ -13,6 +13,7 @@ import { env } from "./env";
 import { prisma } from '@competition-manager/prisma';
 import { getCostsInfo } from '@competition-manager/utils';
 import { logger } from './logger';
+import Stripe from 'stripe';
 
 i18next.use(Backend).use(middleware.LanguageDetector).init({
     resources: backendTranslations,
@@ -39,6 +40,25 @@ app.post(`${env.PREFIX}/stripe/webhook`,
     parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
+            try {
+                Stripe.webhooks.constructEvent(
+                    req.body,
+                    req.headers['stripe-signature'] || '',
+                    env.STRIPE_WEBHOOK_SECRET
+                );
+            } catch (err) {
+                if (err instanceof Stripe.errors.StripeSignatureVerificationError) {
+                    catchError(logger)(err, {
+                        message: "Error verifying webhook signature",
+                        path: 'POST /stripe/webhook',
+                        status: 400,
+                    });
+                    res.status(400).send(`Error verifying webhook signature`);
+                    return;
+                }
+                throw err;
+            }
+
             const { metadata } = Body$.parse(req.body).data.object;
             switch (WebhookType$.parse(metadata.type)) {
                 case WebhookType.INSCRIPTIONS:
