@@ -102,7 +102,7 @@ router.post(
                     const cat = getCategoryAbbr(athlete.birthdate, athlete.gender, parsedCompetition.date);
 
                     // Check if the athlete club is allowed to inscribe
-                    if (!isAdmin && !parsedCompetition.allowedClubs.map((c) => c.id).includes(athlete.club.id)) {
+                    if (!isAdmin && parsedCompetition.allowedClubs.length > 0 && !parsedCompetition.allowedClubs.map((c) => c.id).includes(athlete.club.id)) {
                         res.status(400).send('Club ' + athlete.club.abbr + ' is not allowed to inscribe in this competition');
                         return;
                     }
