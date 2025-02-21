@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from "express";
-import i18next from "i18next";
+import i18next, { t } from "i18next";
 import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 import { z } from 'zod';
@@ -38,7 +38,7 @@ app.get(`${env.PREFIX}/clubs`, (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('internalServerError');
+        res.status(500).send(t('error.internalServerError'));
     }
 });
 

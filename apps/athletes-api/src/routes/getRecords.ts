@@ -5,6 +5,7 @@ import { Key, parseRequest } from '@competition-manager/backend-utils';
 import { getResults } from '../utils/getResult';
 import { Date$, Event$, License$, Records, Records$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
+import { t } from 'i18next';
 
 export const router = Router();
 
@@ -81,7 +82,7 @@ router.get(
             res.json(Records$.parse(records));
         } catch (e) {
             console.error(e);
-            res.status(500).send('internalServerError');
+            res.status(500).send(t('error.internalServerError'));
         }
     }
 );

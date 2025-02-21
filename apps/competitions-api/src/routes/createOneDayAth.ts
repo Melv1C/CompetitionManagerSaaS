@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { parseRequest, checkRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { Eid$, CreateOneDayAthlete$, ONE_DAY_BIB, Role, athleteInclude, Athlete$ } from '@competition-manager/schemas';
 import { env } from '../env';
+import { t } from 'i18next';
 
 export const router = Router();
 
@@ -89,13 +90,13 @@ router.post(
                     return;
                 } else{
                     console.error(e);
-                    res.status(500).send('internalServerError');
+                    res.status(500).send(t('error.internalServerError'));
                     return;
                 }
             }
         } catch (e) {
             console.error(e);
-            res.status(500).send('internalServerError');
+            res.status(500).send(t('error.internalServerError'));
         }
     }
 );

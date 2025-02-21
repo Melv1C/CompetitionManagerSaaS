@@ -3,6 +3,7 @@ import { prisma } from '@competition-manager/prisma';
 import { Access, AdminQuery$, BaseAdmin$, Competition$, DisplayInscription$, Inscription$, inscriptionsInclude, Role } from '@competition-manager/schemas';
 import { CustomRequest, checkAdminRole, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
 import { isAuthorized } from '@competition-manager/utils';
+import { t } from 'i18next';
 
 
 export const router = Router();
@@ -68,7 +69,7 @@ router.get(
             res.send(DisplayInscription$.array().parse(competition.inscriptions));
         } catch(error) {
             console.error(error);
-            res.status(500).send('internalServerError');
+            res.status(500).send(t('error.internalServerError'));
         }
     }
 );

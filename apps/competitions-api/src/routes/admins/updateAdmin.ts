@@ -4,6 +4,7 @@ import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@co
 import { Access, Eid$, Id$, Role } from '@competition-manager/schemas';
 import { BaseAdmin$, UpdateAdmin$ } from '@competition-manager/schemas';
 import { z } from 'zod';
+import { t } from 'i18next';
 
 export const router = Router();
 
@@ -50,12 +51,12 @@ router.put(
                     res.status(404).send('Admin not found');
                 } else {
                     console.error(e);
-                    res.status(500).send('internalServerError');
+                    res.status(500).send(t('error.internalServerError'));
                 }
             }
         } catch (error) {
             console.error(error);
-            res.status(500).send('internalServerError');
+            res.status(500).send(t('error.internalServerError'));
         }
     }
     

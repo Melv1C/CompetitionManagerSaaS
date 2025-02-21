@@ -7,7 +7,7 @@ import { createCheckoutSession } from '@competition-manager/stripe';
 import { getCategoryAbbr, getCostsInfo, isAuthorized } from '@competition-manager/utils';
 import { logger } from '../../logger';
 import { env } from '../../env';
-import i18next from 'i18next';
+import i18next, { t } from 'i18next';
 
 export const router = Router();
 
@@ -307,7 +307,7 @@ router.post(
                 status: 500,
                 userId: req.user?.id
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send(t('error.internalServerError'));
         }
     }
 );

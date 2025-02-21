@@ -3,6 +3,7 @@ import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
 import { BaseAdmin$, Eid$, UpdateCompetitionEvent$, Access, Role, CompetitionEvent$, competitionEventInclude } from '@competition-manager/schemas';
+import { t } from 'i18next';
 
 export const router = Router();
 
@@ -75,13 +76,13 @@ router.put(
                     return;
                 } else{
                     console.error(e);
-                    res.status(500).send('internalServerError');
+                    res.status(500).send(t('error.internalServerError'));
                     return;
                 }
             }
         } catch (e) {
             console.error(e);
-            res.status(500).send('internalServerError');
+            res.status(500).send(t('error.internalServerError'));
         }
     }
 );
