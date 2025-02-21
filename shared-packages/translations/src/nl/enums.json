@@ -1,0 +1,10 @@
+{
+    "inscriptionStatus": {
+        "registered": "Geregistreerd",
+        "rejected": "Afgewezen",
+        "pending": "In afwachting",
+        "accepted": "Geaccepteerd",
+        "confirmed": "Bevestigd",
+        "removed": "Verwijderd"
+    }
+}

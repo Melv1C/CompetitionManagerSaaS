@@ -8,6 +8,17 @@ export const backendTranslations = {
     nl,
 };
 
-export const zodEn = en.zod;
-export const zodFr = fr.zod;
-export const zodNl = nl.zod;
+export const frontendTranslations = {
+    en: {
+        zod: en.zod,
+        enums: en.enums,
+    },
+    fr: {
+        zod: fr.zod,
+        enums: fr.enums,
+    },
+    nl: {
+        zod: nl.zod,
+        enums: nl.enums,
+    },
+};
