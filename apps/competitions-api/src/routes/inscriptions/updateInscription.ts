@@ -22,19 +22,18 @@ router.put(
     async (req: CustomRequest, res) => {
         try {
             const { competitionEid, inscriptionEid } = Params$.parse(req.params);
-            const inscriptionData = UpdateInscription$.parse(req.body);
+            const {record, ...rest} = UpdateInscription$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: { eid: competitionEid },
                 include: competitionInclude
             });
             if (!competition) {
-                res.status(404).send('competitionNotFound');
+                res.status(404).send('errors.competitionNotFound');
                 return;
             }
             if (!isAuthorized(req.user!, Role.SUPERADMIN) && !checkAdminRole(Access.INSCRIPTIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) {
                 return;
             }
-            const {record, ...rest} = inscriptionData;
             
             const inscription = await prisma.inscription.update({
                 where: { 
@@ -43,7 +42,7 @@ router.put(
                 },
                 data: {
                     ...rest,
-                    ...(record && { record: { update: record } })
+                    record: record ? { upsert: { update: record, create: record } } : undefined,
                 },
             });
             res.send(inscription);
@@ -55,7 +54,7 @@ router.put(
                 status: 500,
                 userId: req.user?.id
             });
-            res.status(500).send('internalServerError');
+            res.status(500).send('errors.internalServerError');
         }
     }
 );
