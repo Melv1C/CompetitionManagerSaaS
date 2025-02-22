@@ -241,12 +241,12 @@ model Inscription {
     user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId              Int                @map("user_id")
     bib                 Int
-    club                Club               @relation(fields: [clubId], references: [id]) //liaison ou juste abbr
+    club                Club               @relation(fields: [clubId], references: [id])
     clubId              Int                @map("club_id")
     record              Record?            
     isDeleted           Boolean            @map("is_deleted")
     date                DateTime
-    result              Result?            
+    results             Result[]           
     
     @@map("inscriptions")
 }
@@ -310,8 +310,8 @@ model Result {
     competitionEvent        CompetitionEvent  @relation(fields: [competitionEventId], references: [id], onDelete: Cascade)
     athleteId               Int               @map("athlete_id")
     athlete                 Athlete           @relation(fields: [athleteId], references: [id], onDelete: Cascade)
-    inscriptionId           Int               @unique @map("inscription_id")
-    inscription             Inscription       @relation(fields: [inscriptionId], references: [id], onDelete: Cascade)
+    inscriptionId           Int?              @map("inscription_id")
+    inscription             Inscription?      @relation(fields: [inscriptionId], references: [id], onDelete: Cascade)
     bib                     Int
     clubId                  Int               @map("club_id")
     club                    Club              @relation(fields: [clubId], references: [id])
