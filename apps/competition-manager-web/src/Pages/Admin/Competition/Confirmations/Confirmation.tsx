@@ -190,7 +190,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({
                                 primary={`${athlete.firstName} ${athlete.lastName}`} 
                                 secondary={`${getCategoryAbbr(athlete.birthdate, athlete.gender, competitionDate)}`}
                             />
-                            <ListItemAvatar>
+                            <ListItemAvatar sx={{ display: 'flex', gap: 2 }}>
                                 {Object.entries(getStatusCounts(inscriptions.filter(i => i.athlete.id === athlete.id))).sort(([a], [b]) => sortInscriptionStatus(a as InscriptionStatus, b as InscriptionStatus)).map(([status, count]) => {
                                     if (count === 0) return null;
                                     const icon = getStatusIcon(status);

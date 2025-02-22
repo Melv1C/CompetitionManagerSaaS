@@ -54,6 +54,7 @@ export const Infos = () => {
                     </ListItemAvatar>
                     <ListItemText
                         primary={<Link href={`mailto:${competition.email}`}>{competition.email}</Link>}
+                        sx={{ wordBreak: 'break-all' }}
                     />
                 </ListItem>
 
