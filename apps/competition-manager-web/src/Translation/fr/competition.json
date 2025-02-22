@@ -37,5 +37,7 @@
     "clubNotAllowed": "Votre club n'est pas autorisé à s'inscrire à cette compétition",
     "maxEventByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuve",
     "maxEventsByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuves",
-    "noEventForCategory": "Pas d'épreuve pour votre catégorie"
+    "noEventForCategory": "Pas d'épreuve pour votre catégorie",
+    "myInscriptions": "Mes inscriptions",
+    "allInscriptions": "Toutes les inscriptions"
 }
