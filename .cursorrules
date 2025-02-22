@@ -1,0 +1,77 @@
+# Project Overview
+- Competition Management SaaS platform for managing athletics competitions
+- Multi-service architecture with separate APIs for different domains
+- Frontend built with React (Vite) and Material-UI
+- Shared packages for common functionality across services
+
+# Personality
+- Write clean, modular code
+- Focus on simplicity over complexity
+- Think thoroughly before implementing
+- Document extensively
+- Test rigorously
+
+# Tech Stack
+- Database: PostgreSQL with Prisma ORM
+- Schemas: Zod validation
+- Backend: Node.js, Express
+- Frontend: React, TypeScript, Vite, Material-UI
+- State Management: Jotai
+- Internationalization: i18next
+- Containerization: Docker
+- CI/CD: GitHub Actions
+
+# Error Fixing Process
+1. Analyze error messages carefully
+2. Consider multiple possible causes
+3. Make minimal necessary changes
+4. Test thoroughly after fixes
+5. Document the fix and reasoning
+6. Update tests if needed
+
+# Current File Structure
+- /apps - All application services
+  - /competition-manager-web - Frontend app
+  - /users-api - User management
+  - /athletes-api - Athlete data
+  - /competitions-api - Competition management
+  - /[other-apis] - Domain-specific services
+- /shared-packages - Common code
+  - /prisma - Database layer
+  - /schemas - Zod schemas
+  - /translations - global translations (i18n)
+  - /utils - Shared utilities
+  - /backend-utils - Shared backend utilities
+  - /stripe - Stripe utilities
+
+# Github Guidelines
+- Main branch for staging
+- Prod branch for production
+- CI runs on all branches
+- CD runs on main (staging) and prod
+- Docker images tagged with environment
+
+# Important
+- Keep files under 200 lines
+- Use TypeScript strictly
+- Follow naming conventions
+- Document all API endpoints
+- Handle errors gracefully
+- Use environment variables properly
+- Always validate input with Zod
+
+# Other Context
+- Multi-language support (i18n)
+- Role-based access control
+- Environment-specific deployments
+- Shared package dependencies
+- Database migrations handling
+
+# Comments
+- Include explanatory comments
+- Document all changes
+- Keep old comments unless obsolete
+- Use clear language
+- Explain complex logic
+- Document API endpoints
+- Include usage examples

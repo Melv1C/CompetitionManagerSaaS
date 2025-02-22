@@ -38,7 +38,6 @@ export const Result$ = z.object({
     id: Id$,
     eid: Eid$,
     competitionEvent: CompetitionEvent$,
-    //inscription: Inscription$,
     athlete: Athlete$,
     bib: Bib$,
     club: Club$,

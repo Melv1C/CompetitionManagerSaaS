@@ -94,19 +94,19 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
 
                     {(isAlreadyInscribed && !isUserInscribed) && (
                         <Alert severity={isAdmin ? 'warning' : 'error'}>
-                            {t('inscription:athleteAlreadyInscribedNotByYou')}
+                            {t('competition:athleteAlreadyInscribedNotByYou')}
                         </Alert>
                     )}
 
                     {!isClubAllowed && (
                         <Alert severity={isAdmin ? 'warning' : 'error'}>
-                            {t('inscription:clubNotAllowed')}
+                            {t('competition:clubNotAllowed')}
                         </Alert>
                     )}
 
                     <StepperButtons
                         buttons={[
-                            { label: t('inscription:changeAthlete'), onClick: () => setAthlete(undefined), variant: 'outlined' },
+                            { label: t('competition:changeAthlete'), onClick: () => setAthlete(undefined), variant: 'outlined' },
                             { label: t('buttons:next'), onClick: handleNext, disabled: isDisabled }
                         ]}
                     />
@@ -154,7 +154,7 @@ const SearchAthlete: React.FC<SearchAthleteProps> = ({ isVisible, onAthleteSelec
         <Box display="flex" alignItems="center" justifyContent="center" width="100%" flexDirection="column" gap={2}>
             <TextField 
                 id="search"
-                placeholder={t('inscription:searchAthlete.placeholder')}
+                placeholder={t('competition:searchAthlete.placeholder')}
                 fullWidth 
                 value={searchValue} 
                 onChange={(e) => setSearchValue(e.target.value)}
@@ -186,7 +186,7 @@ const SearchAthlete: React.FC<SearchAthleteProps> = ({ isVisible, onAthleteSelec
                 <List disablePadding>
                     {athletes && athletes.length === 0 && (
                         <ListItem>
-                            <ListItemText primary={t('inscription:noAthletesFound')} />
+                            <ListItemText primary={t('competition:noAthletesFound')} />
                         </ListItem>
                     )}
 

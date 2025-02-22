@@ -93,7 +93,7 @@ export const Records: React.FC<RecordsProps> = ({
                                         {' '}
                                         ({record.date.toLocaleDateString('fr')})
                                     </>
-                                ) : t('inscription:noPersonalBest')}
+                                ) : t('competition:noPersonalBest')}
                             />
                             <ListItemIcon>
                                 <CircleButton onClick={() => handleOpenPopup(record, inscriptionData.competitionEvent.event)}>

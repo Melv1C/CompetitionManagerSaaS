@@ -37,5 +37,7 @@
     "clubNotAllowed": "Your club is not allowed to register for this competition",
     "maxEventByAthlete": "You can register for maximum {{count}} event",
     "maxEventsByAthlete": "You can register for maximum {{count}} events",
-    "noEventForCategory": "No event for your category"
+    "noEventForCategory": "No event for your category",
+    "myInscriptions": "My registrations",
+    "allInscriptions": "All registrations"
 }

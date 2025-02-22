@@ -122,13 +122,13 @@ export const Summary: React.FC<SummaryProps> = ({
                                         )}
                                         {alreadyPaid > 0 && (
                                             <TableRow>
-                                                <TableCell>{t('inscription:alreadyPaid')}</TableCell>
+                                                <TableCell>{t('competition:alreadyPaid')}</TableCell>
                                                 <TableCell align="right">{`- ${alreadyPaid} €`}</TableCell>
                                             </TableRow>
                                         )}
                                         {fees > 0 && (
                                             <TableRow>
-                                                <TableCell>{t('inscription:fees')}</TableCell>
+                                                <TableCell>{t('competition:fees')}</TableCell>
                                                 <TableCell align="right">{`${fees} €`}</TableCell>
                                             </TableRow>
                                         )}
@@ -152,7 +152,7 @@ export const Summary: React.FC<SummaryProps> = ({
                                                     },
                                                 }}
                                             >
-                                                <TableCell align="right" colSpan={2}>{t('inscription:toPayOnline')}</TableCell>
+                                                <TableCell align="right" colSpan={2}>{t('competition:toPayOnline')}</TableCell>
                                             </TableRow>
                                         )}
                                         {competition.method === PaymentMethod.ONPLACE && (
@@ -163,7 +163,7 @@ export const Summary: React.FC<SummaryProps> = ({
                                                     },
                                                 }}
                                             >
-                                                <TableCell align="right" colSpan={2}>{t('inscription:toPayOnPlace')}</TableCell>
+                                                <TableCell align="right" colSpan={2}>{t('competition:toPayOnPlace')}</TableCell>
                                             </TableRow>
                                         )}
                                     </TableBody>
@@ -175,7 +175,7 @@ export const Summary: React.FC<SummaryProps> = ({
             </Card>
 
             {!isAdmin && (
-                <FormControlLabel control={<Checkbox checked={isAccepted} onChange={(e) => setIsAccepted(e.target.checked)} />} label={t('inscription:acceptTerms')} />
+                <FormControlLabel control={<Checkbox checked={isAccepted} onChange={(e) => setIsAccepted(e.target.checked)} />} label={t('competition:acceptTerms')} />
             )}
 
             <StepperButtons

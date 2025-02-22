@@ -7,7 +7,7 @@ import auth from './auth.json';
 import createCompetition from './createCompetition.json';
 import adminCompetition from './adminCompetition.json';
 import eventPopup from './eventPopup.json';
-import inscription from './inscription.json';
+import competition from './competition.json';
 import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
@@ -26,7 +26,7 @@ export default {
     createCompetition,
     adminCompetition,
     eventPopup,
-    inscription,
+    competition,
     account,
     home,
     footer,

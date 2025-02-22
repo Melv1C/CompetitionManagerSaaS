@@ -74,27 +74,27 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
                 )}
                 {remainingPlaces <= 15 && remainingPlaces >= 10 && (
                     <Box component="span" color="success.main">
-                        {remainingPlaces} {t('inscription:remainingPlaces')}
+                        {remainingPlaces} {t('competition:remainingPlaces')}
                     </Box>
                 )}
                 {remainingPlaces < 10 && remainingPlaces >= 5 && (
                     <Box component="span" color="warning.main">
-                        {remainingPlaces} {t('inscription:remainingPlaces')}
+                        {remainingPlaces} {t('competition:remainingPlaces')}
                     </Box>
                 )}
                 {remainingPlaces < 5 && remainingPlaces >= 2 && (
                     <Box component="span" color="error.main">
-                        {remainingPlaces} {t('inscription:remainingPlaces')}
+                        {remainingPlaces} {t('competition:remainingPlaces')}
                     </Box>
                 )}
                 {remainingPlaces === 1 && (
                     <Box component="span" color="error.main">
-                        {remainingPlaces} {t('inscription:remainingPlace')}
+                        {remainingPlaces} {t('competition:remainingPlace')}
                     </Box>
                 )}
                 {remainingPlaces <= 0 && (
                     <Box component="span" color="error.main">
-                        {t('inscription:noRemainingPlaces')}
+                        {t('competition:noRemainingPlaces')}
                     </Box>
                 )}
             </>
@@ -105,13 +105,13 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
         <Box width={1}>
             {competition.maxEventByAthlete && 
                 <Alert severity="info" sx={{ mb: 2 }}>
-                    {competition.maxEventByAthlete === 1 ? t('inscription:maxEventByAthlete', { count: competition.maxEventByAthlete }) : t('inscription:maxEventsByAthlete', { count: competition.maxEventByAthlete })}
+                    {competition.maxEventByAthlete === 1 ? t('competition:maxEventByAthlete', { count: competition.maxEventByAthlete }) : t('competition:maxEventsByAthlete', { count: competition.maxEventByAthlete })}
                 </Alert>
             }
 
             {events.length === 0 && (
                 <Alert severity="warning">
-                    {t('inscription:noEventForCategory')}
+                    {t('competition:noEventForCategory')}
                 </Alert>
             )}
 
