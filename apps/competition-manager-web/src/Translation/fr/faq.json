@@ -1,0 +1,66 @@
+{
+    "title": "Questions Fréquemment Posées",
+    "questions": {
+        "multipleCompetitions": "Puis-je gérer plusieurs compétitions simultanément ?",
+        "accountVerification": "Comment vérifier mon compte ?",
+        "inscription": "Comment gérer les inscriptions aux compétitions ?"
+    },
+    "multipleCompetitions": {
+        "answer": "Oui, vous pouvez gérer plusieurs compétitions depuis votre tableau de bord. Chaque compétition peut être configurée et gérée indépendamment."
+    },
+    "accountVerification": {
+        "intro": "La vérification du compte est nécessaire pour assurer la sécurité et l'intégrité de notre système de gestion des compétitions.",
+        "step1": {
+            "title": "Vérifiez Votre Email",
+            "description": "Après l'inscription, vérifiez votre boîte de réception pour le lien de vérification. N'oubliez pas de vérifier votre dossier spam."
+        },
+        "step2": {
+            "title": "Cliquez sur le Lien de Vérification",
+            "description": "Cliquez sur le lien de vérification dans l'email. Cela vous mènera à une page de confirmation."
+        },
+        "step3": {
+            "title": "Complétez la Vérification",
+            "description": "Une fois la vérification terminée, vous serez redirigé vers votre tableau de bord avec un accès complet à toutes les fonctionnalités."
+        },
+        "note": "Si vous n'avez pas reçu l'email de vérification dans les 5 minutes, vous pouvez en demander un nouveau depuis vos paramètres de profil."
+    },
+    "inscription": {
+        "intro": "La gestion des inscriptions aux compétitions est facile via notre plateforme. Voici tout ce que vous devez savoir sur la création, la modification et la suppression des inscriptions.",
+        "create": {
+            "title": "Créer une Nouvelle Inscription",
+            "step1": {
+                "title": "Sélectionner la Compétition",
+                "description": "Accédez à la page de la compétition et cliquez sur le bouton 'S'inscrire'."
+            },
+            "step2": {
+                "title": "Remplir les Détails",
+                "description": "Complétez le formulaire d'inscription avec les informations de l'athlète et sélectionnez les épreuves souhaitées."
+            },
+            "step3": {
+                "title": "Confirmer et Payer",
+                "description": "Vérifiez les détails de votre inscription et effectuez les paiements requis."
+            }
+        },
+        "modify": {
+            "title": "Modifier une Inscription Existante",
+            "step1": {
+                "title": "Trouver Votre Inscription",
+                "description": "Allez dans 'Mes Inscriptions' dans votre tableau de bord et sélectionnez celle que vous souhaitez modifier."
+            },
+            "step2": {
+                "title": "Apporter des Modifications",
+                "description": "Mettez à jour les informations nécessaires et enregistrez vos modifications. Notez que certaines modifications peuvent nécessiter une approbation supplémentaire."
+            }
+        },
+        "delete": {
+            "title": "Annuler une Inscription",
+            "description": "Pour annuler une inscription, allez dans 'Mes Inscriptions', sélectionnez l'inscription et cliquez sur le bouton 'Annuler l'Inscription'. Suivez les instructions pour finaliser l'annulation.",
+            "warning": "Veuillez noter que les politiques d'annulation varient selon la compétition. Certaines compétitions peuvent avoir des délais d'annulation ou des politiques de remboursement spécifiques."
+        }
+    },
+    "cantFindAnswer": {
+        "title": "Vous ne trouvez pas ce que vous cherchez ?",
+        "description": "Notre équipe de support est là pour vous aider ! Envoyez-nous un email et nous vous répondrons dans les plus brefs délais.",
+        "contactSupport": "Contacter le Support"
+    }
+} 

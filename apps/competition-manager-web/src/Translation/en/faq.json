@@ -1,0 +1,66 @@
+{
+    "title": "Frequently Asked Questions",
+    "questions": {
+        "multipleCompetitions": "Can I manage multiple competitions simultaneously?",
+        "accountVerification": "How do I verify my account?",
+        "inscription": "How do I manage competition inscriptions?"
+    },
+    "multipleCompetitions": {
+        "answer": "Yes, you can manage multiple competitions from your dashboard. Each competition can be configured and managed independently."
+    },
+    "accountVerification": {
+        "intro": "Account verification is required to ensure the security and integrity of our competition management system.",
+        "step1": {
+            "title": "Check Your Email",
+            "description": "After registration, check your email inbox for a verification link. Don't forget to check your spam folder."
+        },
+        "step2": {
+            "title": "Click the Verification Link",
+            "description": "Click the verification link in the email. This will take you to a confirmation page."
+        },
+        "step3": {
+            "title": "Complete Verification",
+            "description": "Once the verification is complete, you'll be redirected to your dashboard with full access to all features."
+        },
+        "note": "If you haven't received the verification email within 5 minutes, you can request a new one from your profile settings."
+    },
+    "inscription": {
+        "intro": "Managing competition inscriptions is easy through our platform. Here's everything you need to know about creating, modifying, and deleting inscriptions.",
+        "create": {
+            "title": "Creating a New Inscription",
+            "step1": {
+                "title": "Select Competition",
+                "description": "Navigate to the competition page and click the 'Register' button."
+            },
+            "step2": {
+                "title": "Fill in Details",
+                "description": "Complete the registration form with athlete information and select the desired events."
+            },
+            "step3": {
+                "title": "Confirm and Pay",
+                "description": "Review your inscription details and complete any required payments."
+            }
+        },
+        "modify": {
+            "title": "Modifying an Existing Inscription",
+            "step1": {
+                "title": "Find Your Inscription",
+                "description": "Go to 'My Inscriptions' in your dashboard and select the one you want to modify."
+            },
+            "step2": {
+                "title": "Make Changes",
+                "description": "Update the necessary information and save your changes. Note that some changes may require additional approval."
+            }
+        },
+        "delete": {
+            "title": "Canceling an Inscription",
+            "description": "To cancel an inscription, go to 'My Inscriptions', select the inscription, and click the 'Cancel Registration' button. Follow the prompts to complete the cancellation.",
+            "warning": "Please note that cancellation policies vary by competition. Some competitions may have deadlines for cancellation or specific refund policies."
+        }
+    },
+    "cantFindAnswer": {
+        "title": "Can't find what you're looking for?",
+        "description": "Our support team is here to help! Send us an email and we'll get back to you as soon as possible.",
+        "contactSupport": "Contact Support"
+    }
+} 
