@@ -27,8 +27,8 @@ export const Inscriptions = () => {
             sx={{ 
                 width: 'max-content', 
                 margin: 'auto', 
-                maxWidth: '100%',
-                padding: 2
+                maxWidth: 'calc(100% - 2*min(2rem, 2vw))',
+                padding: 'min(2rem, 2vw)'
             }}
         >
             <Stack spacing={3}>
