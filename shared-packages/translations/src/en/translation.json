@@ -3,7 +3,8 @@
         "passwordChanged": "Password changed successfully",
         "resetPasswordEmailSent": "Reset password email sent",
         "logout": "Logged out successfully",
-        "competitionDeleted": "Competition deleted successfully"
+        "competitionDeleted": "Competition deleted successfully",
+        "inscriptionDeleted": "Inscription deleted successfully"
     },
     "errors": {
         "internalServerError": "Internal server error",
@@ -17,7 +18,9 @@
         "competitionNotFound": "Competition not found",
         "invalidToken": "Invalid token",
         "invalidRefreshToken": "Invalid refresh token",
-        "competitionCreationError": "Error creating competition"
+        "competitionCreationError": "Error creating competition",
+        "inscriptionNotFound": "Inscription not found",
+        "inscriptionNotBelongsToUser": "Inscription does not belong to user"
     },
     "glossary": {
         "fees": "Fees"

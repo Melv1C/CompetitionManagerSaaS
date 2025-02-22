@@ -3,7 +3,8 @@
         "passwordChanged": "Wachtwoord succesvol gewijzigd",
         "resetPasswordEmailSent": "E-mail voor het opnieuw instellen van het wachtwoord verzonden",
         "logout": "Succesvol uitgelogd",
-        "competitionDeleted": "Wedstrijd succesvol verwijderd"
+        "competitionDeleted": "Wedstrijd succesvol verwijderd",
+        "inscriptionDeleted": "Inscription succesvol verwijderd"
     },
     "errors": {
         "internalServerError": "Interne serverfout",
@@ -17,7 +18,9 @@
         "competitionNotFound": "Wedstrijd niet gevonden",
         "invalidToken": "Ongeldige token",
         "invalidRefreshToken": "Ongeldige vernieuwingstoken",
-        "competitionCreationError": "Fout bij het maken van de wedstrijd"
+        "competitionCreationError": "Fout bij het maken van de wedstrijd",
+        "inscriptionNotFound": "Inscription niet gevonden",
+        "inscriptionNotBelongsToUser": "Inscription behoort niet tot de gebruiker"
     },
     "glossary": {
         "fees": "Kosten"

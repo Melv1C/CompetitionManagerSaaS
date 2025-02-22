@@ -12,6 +12,7 @@ import { router as createOneDayAthRouter } from './createOneDayAth';
 import { router as restoreCompetitionRouter } from './competitions/restoreCompetition';
 import { router as getInscriptionsRouter } from './inscriptions/getInscriptions';
 import { router as updateInscriptionRouter } from './inscriptions/updateInscription';
+import { router as deleteInscriptionRouter } from './inscriptions/deleteInscription';
 
 export default [
     getAllBasicInfoRouter,
@@ -27,5 +28,6 @@ export default [
     createOneDayAthRouter,
     restoreCompetitionRouter,
     getInscriptionsRouter,
-    updateInscriptionRouter
+    updateInscriptionRouter,
+    deleteInscriptionRouter
 ];

@@ -3,7 +3,8 @@
         "passwordChanged": "Mot de passe modifié avec succès",
         "resetPasswordEmailSent": "Email de réinitialisation du mot de passe envoyé",
         "logout": "Déconnecté avec succès",
-        "competitionDeleted": "Compétition supprimée avec succès"
+        "competitionDeleted": "Compétition supprimée avec succès",
+        "inscriptionDeleted": "Inscription supprimée avec succès"
     },
     "errors": {
         "internalServerError": "Erreur interne du serveur",
@@ -17,7 +18,9 @@
         "competitionNotFound": "Compétition non trouvée",
         "invalidToken": "Token invalide",
         "invalidRefreshToken": "Refresh token invalide",
-        "competitionCreationError": "Erreur lors de la création de la compétition"
+        "competitionCreationError": "Erreur lors de la création de la compétition",
+        "inscriptionNotFound": "Inscription non trouvée",
+        "inscriptionNotBelongsToUser": "L'inscription ne vous appartient pas"
     },
     "glossary": {
         "fees": "Frais"
