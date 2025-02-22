@@ -52,7 +52,7 @@ export const InscriptionWizard: React.FC<InscriptionWizardProps> = ({
     useEffect(() => {
         if (searchParams.has('isCanceled')) {
             setActiveStep(0);
-            showSnackbar(t('inscription:cancel'), 'warning');
+            showSnackbar(t('competition:cancel'), 'warning');
             searchParams.delete('isCanceled');
             setSearchParams(searchParams);
         }

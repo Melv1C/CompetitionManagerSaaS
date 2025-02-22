@@ -22,7 +22,7 @@ export const Inscription = () => {
         // Need to be connected to make an inscription
         return (
             <Alert severity="info">
-                {t('inscription:needToBeConnected')}
+                {t('competition:needToBeConnected')}
             </Alert>
         )
     }
@@ -31,9 +31,9 @@ export const Inscription = () => {
         // Need to have a verified account to make an inscription
         return (
             <Alert severity="info">
-                <AlertTitle>{t('inscription:needToBeVerified')}</AlertTitle>
+                <AlertTitle>{t('competition:needToBeVerified')}</AlertTitle>
                 <Button onClick={() => naviqate('/account')}>
-                    {t('inscription:goToAccount')}
+                    {t('competition:goToAccount')}
                 </Button>
             </Alert>
         )
@@ -43,8 +43,8 @@ export const Inscription = () => {
         // Inscriptions are not open yet
         return (
             <Alert severity="info">
-                <AlertTitle>{t('inscription:inscriptionsNotOpen')}</AlertTitle>
-                {t('inscription:inscriptionsOpenAt', { date: competition.startInscriptionDate.toLocaleString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' }) })}
+                <AlertTitle>{t('competition:inscriptionsNotOpen')}</AlertTitle>
+                {t('competition:inscriptionsOpenAt', { date: competition.startInscriptionDate.toLocaleString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' }) })}
             </Alert>
         )
     }
@@ -53,7 +53,7 @@ export const Inscription = () => {
         // Inscriptions are closed
         return (
             <Alert severity="info">
-                {t('inscription:inscriptionsClosed')}
+                {t('competition:inscriptionsClosed')}
             </Alert>
         )
     }
@@ -62,7 +62,7 @@ export const Inscription = () => {
         // No event in the competition
         return (
             <Alert severity="info">
-                {t('inscription:noEvent')}
+                {t('competition:noEvent')}
             </Alert>
         )
     }

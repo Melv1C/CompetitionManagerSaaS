@@ -32,7 +32,7 @@ export const Success: React.FC<SuccessProps> = ({
         navigate(location.pathname.replace('register', 'inscriptions'));
     }
 
-    const translationBaseKey = searchParams.has('isPending') ? 'inscription:pending' : 'inscription:success';
+    const translationBaseKey = searchParams.has('isPending') ? 'competition:pending' : 'competition:success';
 
 
     return (
@@ -52,10 +52,10 @@ export const Success: React.FC<SuccessProps> = ({
             </CardContent>
             <CardActions sx={{ justifyContent: 'flex-end' }}>
                 <Button variant="outlined" color="primary" onClick={handleNewInscription} sx={{ textTransform: 'none' }}>
-                    {t('inscription:success.newInscription')}
+                    {t('competition:success.newInscription')}
                 </Button>
                 <Button variant="contained" color="primary" onClick={handleMyInscriptions} sx={{ textTransform: 'none' }}>
-                    {t('inscription:success.goToMyInscriptions')}
+                    {t('competition:success.goToMyInscriptions')}
                 </Button>
             </CardActions>
         </Card>

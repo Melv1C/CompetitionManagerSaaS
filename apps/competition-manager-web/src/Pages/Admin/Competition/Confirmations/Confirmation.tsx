@@ -149,7 +149,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({
             <FormControl>
                 <TextField
                     id="search-confirmation"
-                    placeholder={t('inscription:searchAthlete.placeholder')}
+                    placeholder={t('competition:searchAthlete.placeholder')}
                     fullWidth
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
