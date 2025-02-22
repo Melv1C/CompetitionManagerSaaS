@@ -297,6 +297,7 @@ model ResultDetail {
     resultId                Int               @map("result_id")
     result                  Result            @relation(fields: [resultId], references: [id], onDelete: Cascade)
 
+    @@unique([resultId, tryNumber])
     @@map("result_details")
 }
 
@@ -315,7 +316,7 @@ model Result {
     clubId                  Int               @map("club_id")
     club                    Club              @relation(fields: [clubId], references: [id])
     heat                    Int
-    initalOrder             Int               @map("inital_order")
+    initialOrder            Int               @map("initial_order")
     tempOrder               Int               @map("temp_order")
     finalOrder              Int?              @map("final_order")
     value                   Float?
@@ -323,6 +324,7 @@ model Result {
     points                  Int?
     resultDetails           ResultDetail[]
 
+    @@unique([competitionEventId, athleteId])
     @@map("results")
 }
 
