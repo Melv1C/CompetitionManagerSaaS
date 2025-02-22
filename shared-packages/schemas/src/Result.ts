@@ -1,5 +1,5 @@
 import z from 'zod';
-import { Athlete$, AthleteWithoutClub$ } from './Athlete';
+import { AthleteWithoutClub$ } from './Athlete';
 import { Bib$, Boolean$, Eid$, Id$, License$ } from './Base';
 import { CompetitionEvent$, competitionEventInclude } from './CompetitionEvent';
 import { Club$ } from './Club';
