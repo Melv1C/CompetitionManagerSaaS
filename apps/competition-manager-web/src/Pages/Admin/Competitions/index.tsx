@@ -11,6 +11,11 @@ import { useQuery } from "react-query";
 import { CircleButton } from "../../../Components/CircleButton";
 import { useTranslation } from "react-i18next";
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const tomorrow = new Date();
+tomorrow.setHours(23, 59, 59, 999);
+
 export const AdminCompetitions = () => {
 
 	const { t } = useTranslation();
@@ -47,9 +52,10 @@ export const AdminCompetitions = () => {
 			<ListCompetitions 
 				competitions={
 					competitions.filter(competition => 
-					!activeTab
-					? competition.date.getTime() > Date.now() 
-					: competition.date.getTime() < Date.now())
+						!activeTab
+						? competition.date.getTime() >= today.getTime()
+						: competition.date.getTime() < tomorrow.getTime()
+					)
 				} 
 				isPast={activeTab === 1} 
 				link="/admin/competitions"
