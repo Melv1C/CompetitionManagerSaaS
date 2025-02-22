@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, CardContent, CardHeader } from "@mui/material";
+import { Box, Card, CardContent, CardHeader } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { competitionAtom, inscriptionsAtom } from "../../../GlobalsStates";
@@ -6,6 +6,7 @@ import { useAtomValue } from "jotai";
 import { Inscriptions } from "./Inscriptions";
 import { EventGroup } from "@competition-manager/schemas";
 import { NavBar } from "./NavBar";
+import { Time } from "../../../Components";
 
 export const Event = () => {
 
@@ -36,23 +37,11 @@ export const Event = () => {
         >
             <Card>
                 <CardHeader 
-                    avatar={
-                        <Avatar
-                            sx={{ 
-                                bgcolor: 'primary.main',
-                                color: 'primary.contrastText',
-                                width: 70,
-                                height: 70,
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
-                        </Avatar>
-                    }
+                    avatar={<Time date={event.schedule} size="lg" />}
                     title={event.name} 
-                    titleTypographyProps={{ variant: 'h5' }}
+                    slotProps={{ title: { variant: 'h5' } }}
                     subheader={`${inscriptions.length} ${event.place ? `/ ${event.place}` : ''} ${t('glossary:participants')}`}
-                    />
+                />
                     {isMultiEvents && (
                         <NavBar 
                             baseUrl={`/competitions/${competition.eid}/events`}

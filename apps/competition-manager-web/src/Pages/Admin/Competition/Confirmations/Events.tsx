@@ -3,7 +3,7 @@ import { Accordion, AccordionSummary, AccordionDetails, Table, TableBody, TableC
 import { Inscription, InscriptionStatus } from "@competition-manager/schemas";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faCheck, faQuestion, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { ShowUsersNumber } from '../../../../Components';
+import { ShowUsersNumber, Time } from '../../../../Components';
 import { getCategoryAbbr } from '@competition-manager/utils';
 import { formatPerf } from '../../../../utils';
 
@@ -78,18 +78,7 @@ export const Events: React.FC<EventsProps> = ({
                                 pr: 2,
                             }}
                         >
-                            <Avatar
-                                sx={{ 
-                                    bgcolor: 'primary.main',
-                                    color: 'primary.contrastText',
-                                    width: 40,
-                                    height: 40,
-                                    fontWeight: 'bold',
-                                    fontSize: '0.75rem',
-                                }}
-                            >
-                                {event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}
-                            </Avatar>
+                            <Time date={event.schedule} size="md" />
                         
                             <Typography flexGrow={1} variant="h6">
                                 {event.name}
