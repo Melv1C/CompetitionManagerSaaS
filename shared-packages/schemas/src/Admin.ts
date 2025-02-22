@@ -7,7 +7,7 @@ export enum Access {
     INSCRIPTIONS = 'inscriptions',
     COMPETITIONS = 'competitions',
     CONFIRMATIONS = 'confirmations',
-    LIVERESULTS = 'liveResults',
+    RESULTS = 'results',
 }
 
 export const AdminQuery$ = z.object({
