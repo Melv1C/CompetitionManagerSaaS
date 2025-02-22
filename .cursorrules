@@ -15,7 +15,7 @@
 - Database: PostgreSQL with Prisma ORM
 - Schemas: Zod validation
 - Backend: Node.js, Express
-- Frontend: React, TypeScript, Vite, Material-UI
+- Frontend: React, TypeScript, Vite, Material-UI, FontAwesome (icons)
 - State Management: Jotai
 - Internationalization: i18next
 - Containerization: Docker
