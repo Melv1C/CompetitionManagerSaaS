@@ -5,7 +5,7 @@
 import { Badge, IconButton, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Competition, DisplayInscription } from "@competition-manager/schemas";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getCategoryAbbr } from "@competition-manager/utils";
 import { Filter, FilterMenu } from "../../../Components";
 import { useNavigate } from "react-router-dom";
@@ -48,6 +48,12 @@ export const AllInscriptionsSection: React.FC<AllInscriptionsSectionProps> = ({
     const [categoryFilter, setCategoryFilter] = useState(allCategories);
     const [clubFilter, setClubFilter] = useState(allClubs);
     const [eventFilter, setEventFilter] = useState(allEvents);
+
+    useEffect(() => {
+        setCategoryFilter(allCategories);
+        setClubFilter(allClubs);
+        setEventFilter(allEvents);
+    }, [allCategories, allClubs, allEvents]);
 
     // Filter menu states
     const [isCategoryFilterMenuOpen, setIsCategoryFilterMenuOpen] = useState(false);
