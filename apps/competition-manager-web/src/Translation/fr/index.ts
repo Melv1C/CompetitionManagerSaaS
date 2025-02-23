@@ -12,6 +12,7 @@ import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
 import news from './news.json';
+import faq from './faq.json';
 
 import { frontendTranslations } from '@competition-manager/translations';
 
@@ -30,5 +31,6 @@ export default {
     account,
     home,
     footer,
-    news
+    news,
+    faq
 }
