@@ -87,7 +87,7 @@ export const InscriptionAccordion: React.FC<InscriptionAccordionProps> = ({
                             }}
                         >
                             <IconButton
-                                size={isMobile ? "small" : "medium"}
+                                size="small"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     onEdit?.(athlete, inscriptions);
@@ -97,7 +97,7 @@ export const InscriptionAccordion: React.FC<InscriptionAccordionProps> = ({
                                 <Edit />
                             </IconButton>
                             <IconButton
-                                size={isMobile ? "small" : "medium"}
+                                size="small"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     onDelete?.(athlete, inscriptions);
