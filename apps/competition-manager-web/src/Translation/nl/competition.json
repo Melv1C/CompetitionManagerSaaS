@@ -3,6 +3,27 @@
     "searchAthlete": {
         "placeholder": "Naam en/of startnummer"
     },
+    "oneDayAthlete": {
+        "title": "Registreer als dagatleet",
+        "info": "Als u geen Belgische atletieklicentie heeft, kunt u zich registreren als dagatleet via een van de onderstaande opties.",
+        "foreing": {
+            "label": "Buitenlandse atleet",
+            "title": "Registreer buitenlandse atleet",
+            "description": "Voor niet-Belgische atleten met een licentie in hun land"
+        },
+        "bpm": {
+            "label": "BPM atleet",
+            "title": "Registreer BPM atleet",
+            "description": "Voor jonge atleten in BEN, PUP of MIN categorieën"
+        },
+        "all": {
+            "label": "Dagatleet",
+            "title": "Registreer dagatleet",
+            "description": "Voor elke deelnemer zonder reguliere licentie"
+        },
+        "countryNotListed": "Als uw land niet in de lijst staat, neem dan contact met ons op",
+        "error": "Dagatleet aanmaken mislukt. Probeer het opnieuw."
+    },
     "noAthletesFound": "Geen atleten gevonden",
     "remainingPlaces": "Resterende plaatsen",
     "remainingPlace": "Resterende plaats",
