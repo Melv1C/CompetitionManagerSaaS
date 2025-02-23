@@ -1,13 +1,24 @@
-import { Alert, Box, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
+/**
+ * File: apps/competition-manager-web/src/Components/InscriptionWizard/Step/Athlete.tsx
+ * 
+ * This component handles athlete selection in the inscription wizard.
+ * It provides functionality for:
+ * 1. Searching and selecting existing athletes
+ * 2. Creating one-day athletes through different permission types (FOREIGN, BPM, ALL)
+ */
+
+import { Alert, Box, Button, Card, CardContent, CardHeader, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, TextField, Typography } from "@mui/material"
 import { useMemo, useState } from "react"
-import { getAthletes } from "../../../api"
-import { Athlete as AthleteType, AthleteKey$ } from "@competition-manager/schemas"
-import { useQuery } from "react-query"
+import { getAthletes, createOneDayAthlete } from "../../../api"
+import { Athlete as AthleteType, AthleteKey$, OneDayPermission, CreateOneDayAthlete, CreateOneDayAthlete$ } from "@competition-manager/schemas"
+import { useQuery, useMutation, useQueryClient } from "react-query"
 import { useTranslation } from "react-i18next"
 import { Bib, Loading, Search, StepperButtons } from "../../../Components"
 import { competitionAtom, inscriptionDataAtom, inscriptionsAtom, userInscriptionsAtom } from "../../../GlobalsStates"
 import { getCategoryAbbr } from "@competition-manager/utils"
 import { useAtom, useAtomValue } from "jotai"
+import { OneDayAthleteDialog, FormData } from "./OneDayAthleteDialog"
+import { useSnackbar } from "../../../hooks"
 
 type AthleteProps = {
     isAdmin: boolean;
@@ -15,8 +26,9 @@ type AthleteProps = {
 }
 
 export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
-
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
+    const { showSnackbar } = useSnackbar();
     
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition found');
@@ -26,6 +38,28 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
     if (!userInscriptions) throw new Error('No user inscriptions found');
 
     const [{ athlete }, setInscriptionData] = useAtom(inscriptionDataAtom);
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedPermission, setSelectedPermission] = useState<OneDayPermission | null>(null);
+
+    // Create mutation for one-day athlete
+    const createAthleteMutation = useMutation(
+        (data: CreateOneDayAthlete) => createOneDayAthlete(competition.eid, data),
+        {
+            onSuccess: (newAthlete) => {
+                // Update the athlete in the form
+                setAthlete(newAthlete);
+                // Close the dialog
+                setDialogOpen(false);
+                // Invalidate athletes query to refresh the list if needed
+                queryClient.invalidateQueries('athletes');
+            },
+            onError: (error) => {
+                console.error('Failed to create one-day athlete:', error);
+                showSnackbar(t('competition:oneDayAthlete.error'), 'error');
+            }
+        }
+    );
 
     const setAthlete = (athlete: AthleteType | undefined) => {
         setInscriptionData({ athlete, inscriptionsData: [] });
@@ -49,12 +83,102 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
 
     const isDisabled = !isAdmin && ((isAlreadyInscribed && !isUserInscribed) || !isClubAllowed)
 
+    const handleOneDayAthleteClick = (permission: OneDayPermission) => {
+        setSelectedPermission(permission);
+        setDialogOpen(true);
+    };
+
+    const handleOneDayAthleteSubmit = async (formData: FormData) => {
+        if (!formData.birthdate || !formData.gender) return;
+        
+        const data = {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            birthdate: formData.birthdate,
+            gender: formData.gender,
+            clubAbbr: selectedPermission === OneDayPermission.FOREIGN ? formData.country : "NA",
+            metadata: selectedPermission === OneDayPermission.FOREIGN ? {
+                club: formData.club,
+                license: formData.license
+            } : {}
+        };
+
+        createAthleteMutation.mutate(CreateOneDayAthlete$.parse(data));
+    };
+
     return (
         <Box width="100%">
             <SearchAthlete 
                 isVisible={!athlete} 
                 onAthleteSelect={setAthlete}
             />
+
+            {!athlete && competition.oneDayPermissions.length > 0 && (
+                <Card 
+                    sx={{ 
+                        mt: 2,
+                        width: '100%'
+                    }}
+                >
+                    <CardContent
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 3,
+                        }}
+                    >
+                        <Alert 
+                            severity="info"
+                        >
+                            {t('competition:oneDayAthlete.info')}
+                        </Alert>
+                        <Box 
+                            sx={{ 
+                                display: 'flex',
+                                gap: 2,
+                                justifyContent: 'center',
+                                flexWrap: 'wrap'
+                            }}
+                        >
+                            {competition.oneDayPermissions.includes(OneDayPermission.FOREIGN) && (
+                                <Button 
+                                    variant="outlined"
+                                    onClick={() => handleOneDayAthleteClick(OneDayPermission.FOREIGN)}
+                                >
+                                    {t('competition:oneDayAthlete.foreign.label')}
+                                </Button>
+                            )}
+                            {competition.oneDayPermissions.includes(OneDayPermission.BPM) && (
+                                <Button 
+                                    variant="outlined"
+                                    onClick={() => handleOneDayAthleteClick(OneDayPermission.BPM)}
+                                >
+                                    {t('competition:oneDayAthlete.bpm.label')}
+                                </Button>
+                            )}
+                            {competition.oneDayPermissions.includes(OneDayPermission.ALL) && (
+                                <Button 
+                                    variant="outlined"
+                                    onClick={() => handleOneDayAthleteClick(OneDayPermission.ALL)}
+                                >
+                                    {t('competition:oneDayAthlete.all.label')}
+                                </Button>
+                            )}
+                        </Box>
+                    </CardContent>
+                </Card>
+            )}
+
+            {dialogOpen && (    
+                <OneDayAthleteDialog
+                    open={dialogOpen}
+                    onClose={() => setDialogOpen(false)}
+                    permission={selectedPermission}
+                    onSubmit={handleOneDayAthleteSubmit}
+                    referenceDate={competition.date}
+                    isSubmitting={createAthleteMutation.isLoading}
+                />
+            )}
 
             {athlete && (
                 <>

@@ -3,6 +3,27 @@
     "searchAthlete": {
         "placeholder": "Nom et/ou n° de dossard"
     },
+    "oneDayAthlete": {
+        "title": "S'inscrire comme athlète d'un jour",
+        "info": "Si vous n'avez pas de licence d'athlétisme belge, vous pouvez vous inscrire comme athlète d'un jour en utilisant l'une des options ci-dessous.",
+        "foreign": {
+            "label": "Athlète étranger",
+            "title": "Inscription athlète étranger",
+            "description": "Pour les athlètes non-belges avec une licence dans leur pays"
+        },
+        "bpm": {
+            "label": "Athlète BPM",
+            "title": "Inscription athlète BPM",
+            "description": "Pour les jeunes athlètes des catégories BEN, PUP ou MIN"
+        },
+        "all": {
+            "label": "Athlète d'un jour",
+            "title": "Inscription athlète d'un jour",
+            "description": "Pour tout participant sans licence régulière"
+        },
+        "countryNotListed": "Si votre pays n'est pas listé, veuillez nous contacter",
+        "error": "Échec de la création de l'athlète d'un jour. Veuillez réessayer."
+    },
     "noAthletesFound": "Aucun athlète trouvé",
     "remainingPlaces": "Places restantes",
     "remainingPlace": "Place restante",
