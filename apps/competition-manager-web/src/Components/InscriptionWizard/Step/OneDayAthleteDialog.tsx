@@ -124,7 +124,7 @@ export const OneDayAthleteDialog: React.FC<OneDayAthleteDialogProps> = ({
         const values = watch();
         const hasRequiredFields = values.firstName && values.lastName && values.birthdate && values.gender;
         
-        if (permission === OneDayPermission.FOREING) {
+        if (permission === OneDayPermission.FOREIGN) {
             return hasRequiredFields && values.country && values.license && values.club && !showBpmError;
         }
         
@@ -215,7 +215,7 @@ export const OneDayAthleteDialog: React.FC<OneDayAthleteDialogProps> = ({
                                 <MenuItem value={Gender.F}>{t('labels:female')}</MenuItem>
                             </FormField>
                         </Stack>
-                        {permission === OneDayPermission.FOREING && (
+                        {permission === OneDayPermission.FOREIGN && (
                             <>
                                 <FormField
                                     name="country"

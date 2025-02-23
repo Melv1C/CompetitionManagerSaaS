@@ -6,7 +6,7 @@
     "oneDayAthlete": {
         "title": "Register as One-Day Athlete",
         "info": "If you don't have a Belgian athletics license, you can register as a one-day athlete using one of the options below.",
-        "foreing": {
+        "foreign": {
             "label": "Foreign Athlete",
             "title": "Register Foreign Athlete",
             "description": "For non-Belgian athletes with a license in their country"

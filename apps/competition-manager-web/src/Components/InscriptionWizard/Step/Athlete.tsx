@@ -145,7 +145,7 @@ export const Athlete: React.FC<AthleteProps> = ({ isAdmin, handleNext }) => {
                                     variant="outlined"
                                     onClick={() => handleOneDayAthleteClick(OneDayPermission.FOREIGN)}
                                 >
-                                    {t('competition:oneDayAthlete.foreing.label')}
+                                    {t('competition:oneDayAthlete.foreign.label')}
                                 </Button>
                             )}
                             {competition.oneDayPermissions.includes(OneDayPermission.BPM) && (

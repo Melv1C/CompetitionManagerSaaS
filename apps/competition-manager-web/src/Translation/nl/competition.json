@@ -6,7 +6,7 @@
     "oneDayAthlete": {
         "title": "Registreer als dagatleet",
         "info": "Als u geen Belgische atletieklicentie heeft, kunt u zich registreren als dagatleet via een van de onderstaande opties.",
-        "foreing": {
+        "foreign": {
             "label": "Buitenlandse atleet",
             "title": "Registreer buitenlandse atleet",
             "description": "Voor niet-Belgische atleten met een licentie in hun land"

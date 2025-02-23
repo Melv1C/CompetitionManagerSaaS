@@ -87,7 +87,7 @@ Status 200
         endInscriptionDate: string (date format),
         email: string,
         closeDate: string (date format),
-        oneDayPermission: array of string ['foreing', 'all', 'bpm'],
+        oneDayPermission: array of string ['foreign', 'all', 'bpm'],
         oneDayBibStart: int,
         event : [
             to do

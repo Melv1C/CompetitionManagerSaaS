@@ -6,7 +6,7 @@
     "oneDayAthlete": {
         "title": "S'inscrire comme athlète d'un jour",
         "info": "Si vous n'avez pas de licence d'athlétisme belge, vous pouvez vous inscrire comme athlète d'un jour en utilisant l'une des options ci-dessous.",
-        "foreing": {
+        "foreign": {
             "label": "Athlète étranger",
             "title": "Inscription athlète étranger",
             "description": "Pour les athlètes non-belges avec une licence dans leur pays"
