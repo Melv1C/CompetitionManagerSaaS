@@ -1,0 +1,7 @@
+{
+    "inscriptionDeleteFailed": "Inschrijving verwijderen mislukt",
+    "inscriptionDeleteFailed_plural": "Inschrijvingen verwijderen mislukt",
+    "internalServerError": "Er is een interne fout opgetreden",
+    "inscriptionNotFound": "Inschrijving niet gevonden",
+    "inscriptionNotBelongsToUser": "Deze inschrijving behoort niet tot u"
+} 

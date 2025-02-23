@@ -13,6 +13,7 @@ import home from './home.json';
 import footer from './footer.json';
 import news from './news.json';
 import faq from './faq.json';
+import errors from './errors.json';
 
 import { frontendTranslations } from '@competition-manager/translations';
 
@@ -32,5 +33,6 @@ export default {
     home,
     footer,
     news,
-    faq
+    faq,
+    errors
 }

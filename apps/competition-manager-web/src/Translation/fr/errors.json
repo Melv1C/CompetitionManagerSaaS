@@ -1,0 +1,7 @@
+{
+    "inscriptionDeleteFailed": "Échec de la suppression de l'inscription",
+    "inscriptionDeleteFailed_plural": "Échec de la suppression des inscriptions",
+    "internalServerError": "Une erreur interne est survenue",
+    "inscriptionNotFound": "Inscription non trouvée",
+    "inscriptionNotBelongsToUser": "Cette inscription ne vous appartient pas"
+} 

@@ -1,5 +1,5 @@
 {
-    "changeAthlete": "Wijzig de atleet",
+    "changeAthlete": "Atleet wijzigen",
     "searchAthlete": {
         "placeholder": "Naam en/of startnummer"
     },
@@ -60,5 +60,12 @@
     "maxEventsByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdelen",
     "noEventForCategory": "Geen onderdeel voor uw categorie",
     "myInscriptions": "Mijn inschrijvingen",
-    "allInscriptions": "Alle inschrijvingen"
+    "allInscriptions": "Alle inschrijvingen",
+    "confirmDeleteInscription": "Inschrijving verwijderen",
+    "confirmDeleteInscription_plural": "Inschrijvingen verwijderen",
+    "confirmDeleteInscriptionMessage": "Weet u zeker dat u de inschrijving van {{athlete}} wilt verwijderen?",
+    "confirmDeleteInscriptionMessage_plural": "Weet u zeker dat u alle {{count}} inschrijvingen van {{athlete}} wilt verwijderen?",
+    "inscriptionDeletedSuccess": "Inschrijving succesvol verwijderd",
+    "inscriptionDeletedSuccess_plural": "Inschrijvingen succesvol verwijderd",
+    "refundPolicyWarning": "Let op: terugbetalingen voor betaalde inschrijvingen worden afgehandeld door de organisator en worden niet automatisch via het platform verwerkt. Neem rechtstreeks contact op met de organisator voor terugbetalingsverzoeken."
 }
