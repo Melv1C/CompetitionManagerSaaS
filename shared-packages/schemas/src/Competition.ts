@@ -12,7 +12,7 @@ export enum PaymentMethod {
 }
 
 export enum OneDayPermission {
-    FOREING = 'foreing',
+    FOREIGN = 'foreign',
     ALL = 'all',
     BPM = 'bpm',
 }
