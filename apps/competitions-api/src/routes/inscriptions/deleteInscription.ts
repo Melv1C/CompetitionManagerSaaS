@@ -4,7 +4,7 @@
 
 import { Router } from 'express';
 import { parseRequest, CustomRequest, checkAdminRole, Key, checkRole, catchError } from '@competition-manager/backend-utils';
-import { AdminQuery$, Role, Eid$, Access, BaseAdmin$ } from '@competition-manager/schemas';
+import { AdminQuery$, Role, Eid$, Access, BaseAdmin$, Inscription$ } from '@competition-manager/schemas';
 import { prisma } from '@competition-manager/prisma';
 import { z } from 'zod';
 import { isAuthorized } from '@competition-manager/utils';
@@ -98,7 +98,7 @@ router.delete(
             }
 
             // Soft delete the inscription by setting isDeleted flag
-            await prisma.inscription.update({
+            const deletedInscription = await prisma.inscription.update({
                 where: {
                     eid: inscriptionEid
                 },
@@ -115,7 +115,7 @@ router.delete(
                 metadata: { competitionEid, inscriptionEid }
             });
 
-            res.status(200).send(req.t('inscription.deleted'));
+            res.status(200).send(Inscription$.parse(deletedInscription));
         } catch (error) {
             // Log and handle any errors that occur
             catchError(logger)(error, {

@@ -60,5 +60,12 @@
     "maxEventsByAthlete": "You can register for maximum {{count}} events",
     "noEventForCategory": "No event for your category",
     "myInscriptions": "My registrations",
-    "allInscriptions": "All registrations"
+    "allInscriptions": "All registrations",
+    "confirmDeleteInscription": "Delete Registration",
+    "confirmDeleteInscription_plural": "Delete Registrations",
+    "confirmDeleteInscriptionMessage": "Are you sure you want to delete the registration for {{athlete}}?",
+    "confirmDeleteInscriptionMessage_plural": "Are you sure you want to delete all {{count}} registrations for {{athlete}}?",
+    "inscriptionDeletedSuccess": "Registration deleted successfully",
+    "inscriptionDeletedSuccess_plural": "Registrations deleted successfully",
+    "refundPolicyWarning": "Please note that refunds for paid registrations are handled by the organizer and are not automatically processed through the platform. Contact the organizer directly for refund requests."
 }

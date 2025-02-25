@@ -1,5 +1,5 @@
 {
-    "changeAthlete": "Changer l'athlète",
+    "changeAthlete": "Changer d'athlète",
     "searchAthlete": {
         "placeholder": "Nom et/ou n° de dossard"
     },
@@ -60,5 +60,12 @@
     "maxEventsByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuves",
     "noEventForCategory": "Pas d'épreuve pour votre catégorie",
     "myInscriptions": "Mes inscriptions",
-    "allInscriptions": "Toutes les inscriptions"
+    "allInscriptions": "Toutes les inscriptions",
+    "confirmDeleteInscription": "Supprimer l'inscription",
+    "confirmDeleteInscription_plural": "Supprimer les inscriptions",
+    "confirmDeleteInscriptionMessage": "Êtes-vous sûr de vouloir supprimer l'inscription de {{athlete}} ?",
+    "confirmDeleteInscriptionMessage_plural": "Êtes-vous sûr de vouloir supprimer les {{count}} inscriptions de {{athlete}} ?",
+    "inscriptionDeletedSuccess": "Inscription supprimée avec succès",
+    "inscriptionDeletedSuccess_plural": "Inscriptions supprimées avec succès",
+    "refundPolicyWarning": "Veuillez noter que les remboursements des inscriptions payées sont gérés par l'organisateur et ne sont pas traités automatiquement via la plateforme. Contactez directement l'organisateur pour les demandes de remboursement."
 }

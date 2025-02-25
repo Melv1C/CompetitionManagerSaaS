@@ -16,6 +16,7 @@ import { faHome, faCalendarDays, faTrophy } from '@fortawesome/free-solid-svg-ic
 import { useAutoLogin } from './hooks'
 
 import { Loading, NavBar, SnackbarProvider } from './Components'
+import { ConfirmDialogProvider } from './Components/ConfirmDialog'
 
 import { Account } from './Pages/Account'
 import { AdminCompetitions } from './Pages/Admin/Competitions'
@@ -134,9 +135,11 @@ function App() {
                     <ThemeProvider theme={lightTheme}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <SnackbarProvider>
-                                <Box display="flex" flexDirection="column" height="100vh">
-                                    <RouterProvider router={router} />
-                                </Box>
+                                <ConfirmDialogProvider>
+                                    <Box display="flex" flexDirection="column" height="100vh">
+                                        <RouterProvider router={router} />
+                                    </Box>
+                                </ConfirmDialogProvider>
                             </SnackbarProvider>
                         </LocalizationProvider>
                     </ThemeProvider>
