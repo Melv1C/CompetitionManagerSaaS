@@ -52,7 +52,7 @@ export const Result$ = z.object({
     club: Club$,
 
     heat: z.coerce.number().default(1),
-    initalOrder: z.coerce.number(),
+    initialOrder: z.coerce.number(),
     tempOrder: z.coerce.number(),
     finalOrder: z.coerce.number().nullish(),
 
