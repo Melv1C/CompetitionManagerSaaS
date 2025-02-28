@@ -2,9 +2,9 @@
 // It provides a DELETE endpoint that allows both users and admins to delete inscriptions
 // with appropriate authorization checks and validation
 
-import { CustomRequest, Key, catchError, checkAdminRole, checkRole, parseRequest } from '@competition-manager/backend-utils';
+import { catchError, checkAdminRole, checkRole, CustomRequest, Key, parseRequest } from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
-import { Access, AdminQuery$, BaseAdmin$, Eid$, Inscription$, Role } from '@competition-manager/schemas';
+import { Access, AdminQuery$, BaseAdmin$, Eid$, Inscription$, inscriptionsInclude, Role } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
 import { Router } from 'express';
 import { z } from 'zod';
@@ -104,7 +104,8 @@ router.delete(
                 },
                 data: {
                     isDeleted: true
-                }
+                },
+                include: inscriptionsInclude
             });
 
             // Log successful deletion
