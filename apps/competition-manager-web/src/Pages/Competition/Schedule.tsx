@@ -1,13 +1,19 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import { useAtomValue } from "jotai";
-import { useTranslation } from "react-i18next"
-import { competitionAtom, inscriptionsAtom } from "../../GlobalsStates";
-import { ShowUsersNumber } from "../../Components";
-import { useNavigate } from "react-router-dom";
-
+import { ShowUsersNumber } from '@/Components';
+import { competitionAtom, inscriptionsAtom } from '@/GlobalsStates';
+import {
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from '@mui/material';
+import { useAtomValue } from 'jotai';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 export const Schedule = () => {
-
     const { t } = useTranslation();
     const navigate = useNavigate();
 
@@ -19,7 +25,7 @@ export const Schedule = () => {
     const events = competition.events;
 
     return (
-        <TableContainer 
+        <TableContainer
             component={Paper}
             sx={{
                 width: 'max-content',
@@ -31,32 +37,55 @@ export const Schedule = () => {
                 <TableHead sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
                     <TableRow>
                         <TableCell width={50}>{t('labels:schedule')}</TableCell>
-                        <TableCell>
-                            {t('glossary:event')}
-                        </TableCell>
+                        <TableCell>{t('glossary:event')}</TableCell>
                         <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {events.sort((a, b) => a.schedule.getTime() - b.schedule.getTime()).map(event => (
-                        <TableRow 
-                            key={event.id} 
-                            onClick={() => navigate(`/competitions/${competition.eid}/events/${event.eid}`)}
-                            sx={{ 
-                                cursor: 'pointer',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                                    transition: 'background-color 0.3s ease',
+                    {events
+                        .sort(
+                            (a, b) =>
+                                a.schedule.getTime() - b.schedule.getTime()
+                        )
+                        .map((event) => (
+                            <TableRow
+                                key={event.id}
+                                onClick={() =>
+                                    navigate(
+                                        `/competitions/${competition.eid}/events/${event.eid}`
+                                    )
                                 }
-                            }}
-                        >
-                            <TableCell>{event.schedule.toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' })}</TableCell>
-                            <TableCell>{event.name}</TableCell>
-                            <TableCell align="center"><ShowUsersNumber value={inscriptions.filter(i => i.competitionEvent.id === event.id).length} /></TableCell>
-                        </TableRow>
-                    ))}
+                                sx={{
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                        transition:
+                                            'background-color 0.3s ease',
+                                    },
+                                }}
+                            >
+                                <TableCell>
+                                    {event.schedule.toLocaleTimeString('fr', {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })}
+                                </TableCell>
+                                <TableCell>{event.name}</TableCell>
+                                <TableCell align="center">
+                                    <ShowUsersNumber
+                                        value={
+                                            inscriptions.filter(
+                                                (i) =>
+                                                    i.competitionEvent.id ===
+                                                    event.id
+                                            ).length
+                                        }
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        ))}
                 </TableBody>
             </Table>
         </TableContainer>
-    )
-}
+    );
+};

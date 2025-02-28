@@ -1,21 +1,18 @@
-
-import { Infos } from "./Infos";
-import { Descriptions } from "./Descriptions";
-import { Events } from "./Events";
-import { InscriptionsInfos } from "./InscriptionsInfos";
-import { useDeviceSize } from "../../../hooks";
-import { Stack } from "@mui/material";
+import { MaxWidth } from '@/Components';
+import { competitionAtom } from '@/GlobalsStates';
+import { useDeviceSize } from '@/hooks';
+import { Stack } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { useAtomValue } from "jotai";
-import { competitionAtom } from "../../../GlobalsStates";
-import { ClubsPie } from "./ClubsPie";
-import { CategoriesPie } from "./CategoriesPie";
-import { MaxWidth } from "../../../Components";
-
+import { useAtomValue } from 'jotai';
+import { CategoriesPie } from './CategoriesPie';
+import { ClubsPie } from './ClubsPie';
+import { Descriptions } from './Descriptions';
+import { Events } from './Events';
+import { Infos } from './Infos';
+import { InscriptionsInfos } from './InscriptionsInfos';
 
 export const Overview = () => {
-
-    const {isLaptop, isDesktop} = useDeviceSize();
+    const { isLaptop, isDesktop } = useDeviceSize();
 
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition found');
@@ -48,7 +45,7 @@ export const Overview = () => {
                     <CategoriesPie />
                 </Grid>
             </Grid>
-        )
+        );
     }
 
     // Tablet and mobile
@@ -65,7 +62,11 @@ export const Overview = () => {
                     <Descriptions />
                 </Grid>
                 <Grid size={12}>
-                    <Stack spacing={2} direction="column" justifyContent="center">
+                    <Stack
+                        spacing={2}
+                        direction="column"
+                        justifyContent="center"
+                    >
                         <Events />
                     </Stack>
                 </Grid>
@@ -77,5 +78,5 @@ export const Overview = () => {
                 </Grid>
             </Grid>
         </MaxWidth>
-    )
-}
+    );
+};

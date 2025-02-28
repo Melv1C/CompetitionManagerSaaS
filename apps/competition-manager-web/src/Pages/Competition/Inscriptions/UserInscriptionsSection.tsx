@@ -1,10 +1,10 @@
 /**
  * File: apps/competition-manager-web/src/Pages/Competition/Inscriptions/UserInscriptionsSection.tsx
- * 
+ *
  * This component displays and manages a user's inscriptions for a specific competition.
  * It provides functionality to view, edit, and delete inscriptions, with special handling
  * for paid inscriptions and refund policies.
- * 
+ *
  * Features:
  * - Groups inscriptions by athlete for better organization
  * - Supports editing existing inscriptions
@@ -13,26 +13,29 @@
  * - Supports i18n with plural forms for messages
  */
 
-import { Box, Typography, Alert, DialogContentText } from '@mui/material';
+import { deleteInscriptions } from '@/api';
+import { useConfirmDialog } from '@/Components/ConfirmDialog';
+import { inscriptionDataAtom, userInscriptionsAtom } from '@/GlobalsStates';
+import { useCompetition, useSnackbar } from '@/hooks';
+import {
+    AthleteWithoutClub,
+    Eid,
+    Inscription,
+} from '@competition-manager/schemas';
+import { Alert, Box, DialogContentText, Typography } from '@mui/material';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useTranslation } from 'react-i18next';
-import { inscriptionDataAtom, userInscriptionsAtom } from '../../../GlobalsStates';
 import { useMemo } from 'react';
-import { AthleteWithoutClub, Eid, Inscription } from '@competition-manager/schemas';
-import { useNavigate } from 'react-router-dom';
-import { useCompetition } from '../../../hooks/useCompetition';
-import { InscriptionAccordion } from './InscriptionAccordion';
-import { useConfirmDialog } from '../../../Components/ConfirmDialog';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
-import { deleteInscriptions } from '../../../api/Inscription';
-import { useSnackbar } from '../../../hooks/useSnackbar';
+import { useNavigate } from 'react-router-dom';
+import { InscriptionAccordion } from './InscriptionAccordion';
 
 /**
  * Groups inscriptions by athlete for better organization and display
- * 
+ *
  * @param inscriptions - List of inscriptions to group
  * @returns Record with athlete ID as key and their inscriptions as value
- * 
+ *
  * Example:
  * ```typescript
  * {
@@ -49,12 +52,12 @@ const groupInscriptionsByAthlete = (inscriptions: Inscription[]) => {
         if (!acc[athleteId]) {
             acc[athleteId] = {
                 athlete: inscription.athlete,
-                inscriptions: []
+                inscriptions: [],
             };
         }
         acc[athleteId].inscriptions.push(inscription);
         return acc;
-    }, {} as Record<Eid, { athlete: AthleteWithoutClub, inscriptions: Inscription[] }>);
+    }, {} as Record<Eid, { athlete: AthleteWithoutClub; inscriptions: Inscription[] }>);
 };
 
 interface UserInscriptionsSectionProps {
@@ -67,21 +70,20 @@ interface UserInscriptionsSectionProps {
 /**
  * Section component that displays all inscriptions for the current user.
  * Allows editing and deleting inscriptions if the competition is in the future.
- * 
+ *
  * Features:
  * - Groups inscriptions by athlete
  * - Shows total inscription count
  * - Handles deletion with confirmation and refund policy warning
  * - Supports editing existing inscriptions
  * - Automatically refreshes data after changes
- * 
+ *
  * @param competitionEid - External ID of the competition
  * @param competitionDate - Date of the competition
  */
-export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = ({ 
-    competitionEid,
-    competitionDate 
-}) => {
+export const UserInscriptionsSection: React.FC<
+    UserInscriptionsSectionProps
+> = ({ competitionEid, competitionDate }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const userInscriptions = useAtomValue(userInscriptionsAtom);
@@ -113,33 +115,47 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
             onSuccess: () => {
                 // Invalidate and refetch all related queries to ensure UI consistency
                 queryClient.invalidateQueries(['inscriptions', competitionEid]);
-                queryClient.invalidateQueries(['userInscriptions', competitionEid]);
-                queryClient.invalidateQueries(['adminInscriptions', competitionEid]);
-                showSnackbar(t('competition:inscriptionDeletedSuccess'), 'success');
+                queryClient.invalidateQueries([
+                    'userInscriptions',
+                    competitionEid,
+                ]);
+                queryClient.invalidateQueries([
+                    'adminInscriptions',
+                    competitionEid,
+                ]);
+                showSnackbar(
+                    t('competition:inscriptionDeletedSuccess'),
+                    'success'
+                );
             },
             onError: () => {
                 showSnackbar(t('errors:inscriptionDeleteFailed'), 'error');
-            }
+            },
         }
     );
 
     /**
      * Handles the deletion of inscriptions for an athlete.
      * Shows a confirmation dialog with refund policy warning if any inscriptions are paid.
-     * 
+     *
      * @param athlete - The athlete whose inscriptions are being deleted
      * @param inscriptions - List of inscriptions to delete
      */
-    const handleDelete = async (athlete: AthleteWithoutClub, inscriptions: Inscription[]) => {
-        const hasPaidInscriptions = inscriptions.some(i => i.paid);
-        
+    const handleDelete = async (
+        athlete: AthleteWithoutClub,
+        inscriptions: Inscription[]
+    ) => {
+        const hasPaidInscriptions = inscriptions.some((i) => i.paid);
+
         const confirmed = await confirm({
-            title: t('competition:confirmDeleteInscription', { count: inscriptions.length }),
+            title: t('competition:confirmDeleteInscription', {
+                count: inscriptions.length,
+            }),
             message: (
                 <DialogContentText>
-                    {t('competition:confirmDeleteInscriptionMessage', { 
+                    {t('competition:confirmDeleteInscriptionMessage', {
                         athlete: `${athlete.firstName} ${athlete.lastName}`,
-                        count: inscriptions.length
+                        count: inscriptions.length,
                     })}
                 </DialogContentText>
             ),
@@ -147,13 +163,15 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
                 <Alert severity="warning" sx={{ mt: 2 }}>
                     {t('competition:refundPolicyWarning')}
                 </Alert>
-            ) : undefined
+            ) : undefined,
         });
 
         if (confirmed) {
             // Delete each inscription sequentially
             for (const inscription of inscriptions) {
-                await deleteMutation.mutateAsync({ inscriptionEid: inscription.eid });
+                await deleteMutation.mutateAsync({
+                    inscriptionEid: inscription.eid,
+                });
             }
         }
     };
@@ -161,20 +179,23 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
     /**
      * Handles editing inscriptions for an athlete.
      * Sets up the inscription data and navigates to the registration page.
-     * 
+     *
      * @param athlete - The athlete whose inscriptions are being edited
      * @param inscriptions - List of inscriptions to edit
      */
-    const handleEdit = (athlete: AthleteWithoutClub, inscriptions: Inscription[]) => {
+    const handleEdit = (
+        athlete: AthleteWithoutClub,
+        inscriptions: Inscription[]
+    ) => {
         // Set inscription data and navigate to registration
         setInscriptionData({
             athlete: { ...athlete, club: inscriptions[0].club },
-            inscriptionsData: inscriptions.map(i => ({
+            inscriptionsData: inscriptions.map((i) => ({
                 eid: i.eid,
                 competitionEvent: i.competitionEvent,
                 record: i.record,
-                paid: i.paid
-            }))
+                paid: i.paid,
+            })),
         });
         navigate(`/competitions/${competitionEid}/register`);
     };
@@ -190,7 +211,7 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
                 {t('competition:myInscriptions')} (
                 {notDeletedInscriptions.length})
             </Typography>
-            
+
             {Object.entries(groupedInscriptions).map(([athleteId, group]) => (
                 <InscriptionAccordion
                     key={athleteId}
@@ -205,4 +226,4 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
             ))}
         </Box>
     );
-}; 
+};
