@@ -91,9 +91,13 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
     const { showSnackbar } = useSnackbar();
     const queryClient = useQueryClient();
 
+    // Filter out deleted inscriptions
+    const notDeletedInscriptions =
+        userInscriptions?.filter((i) => !i.isDeleted) || [];
+
     // Group inscriptions by athlete for better organization
-    const groupedInscriptions = useMemo(() => 
-        groupInscriptionsByAthlete(userInscriptions?.filter(i => !i.isDeleted) || []),
+    const groupedInscriptions = useMemo(
+        () => groupInscriptionsByAthlete(notDeletedInscriptions || []),
         [userInscriptions]
     );
 
@@ -176,14 +180,15 @@ export const UserInscriptionsSection: React.FC<UserInscriptionsSectionProps> = (
     };
 
     // Don't render anything if there are no inscriptions
-    if (!userInscriptions?.length) {
+    if (!notDeletedInscriptions?.length) {
         return null;
     }
 
     return (
         <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-                {t('competition:myInscriptions')} ({userInscriptions.length})
+                {t('competition:myInscriptions')} (
+                {notDeletedInscriptions.length})
             </Typography>
             
             {Object.entries(groupedInscriptions).map(([athleteId, group]) => (
