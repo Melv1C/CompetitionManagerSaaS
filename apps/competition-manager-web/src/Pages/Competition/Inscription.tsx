@@ -1,14 +1,13 @@
-import { useAtomValue } from 'jotai';
-import { InscriptionWizard } from '../../Components'
-import { competitionAtom } from '../../GlobalsStates';
-import { useRoles } from '../../hooks';
-import { useTranslation } from 'react-i18next';
+import { InscriptionWizard } from '@/Components';
+import { competitionAtom } from '@/GlobalsStates';
+import { useRoles } from '@/hooks';
+import i18n from '@/i18n';
 import { Alert, AlertTitle, Button } from '@mui/material';
+import { useAtomValue } from 'jotai';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import i18n from '../../i18n';
 
 export const Inscription = () => {
-
     const { t } = useTranslation();
 
     const naviqate = useNavigate();
@@ -21,10 +20,8 @@ export const Inscription = () => {
     if (isNotLogged) {
         // Need to be connected to make an inscription
         return (
-            <Alert severity="info">
-                {t('competition:needToBeConnected')}
-            </Alert>
-        )
+            <Alert severity="info">{t('competition:needToBeConnected')}</Alert>
+        );
     }
 
     if (!isUser) {
@@ -36,7 +33,7 @@ export const Inscription = () => {
                     {t('competition:goToAccount')}
                 </Button>
             </Alert>
-        )
+        );
     }
 
     if (competition.startInscriptionDate > new Date()) {
@@ -44,30 +41,33 @@ export const Inscription = () => {
         return (
             <Alert severity="info">
                 <AlertTitle>{t('competition:inscriptionsNotOpen')}</AlertTitle>
-                {t('competition:inscriptionsOpenAt', { date: competition.startInscriptionDate.toLocaleString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' }) })}
+                {t('competition:inscriptionsOpenAt', {
+                    date: competition.startInscriptionDate.toLocaleString(
+                        i18n.language,
+                        {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                        }
+                    ),
+                })}
             </Alert>
-        )
+        );
     }
 
     if (competition.endInscriptionDate < new Date()) {
         // Inscriptions are closed
         return (
-            <Alert severity="info">
-                {t('competition:inscriptionsClosed')}
-            </Alert>
-        )
+            <Alert severity="info">{t('competition:inscriptionsClosed')}</Alert>
+        );
     }
 
     if (competition.events.length === 0) {
         // No event in the competition
-        return (
-            <Alert severity="info">
-                {t('competition:noEvent')}
-            </Alert>
-        )
+        return <Alert severity="info">{t('competition:noEvent')}</Alert>;
     }
 
-    return (
-        <InscriptionWizard />
-    )
-}
+    return <InscriptionWizard />;
+};

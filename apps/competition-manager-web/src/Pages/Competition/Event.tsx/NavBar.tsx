@@ -1,19 +1,18 @@
-import { CompetitionEvent } from "@competition-manager/schemas"
-import { Tab, Tabs } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { CompetitionEvent } from '@competition-manager/schemas';
+import { Tab, Tabs } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 type NavBarProps = {
     baseUrl: string;
     events: CompetitionEvent[];
     currentEvent: CompetitionEvent;
-}
+};
 
-export const NavBar: React.FC<NavBarProps> = ({ 
+export const NavBar: React.FC<NavBarProps> = ({
     baseUrl,
-    events, 
-    currentEvent 
+    events,
+    currentEvent,
 }) => {
-
     const navigate = useNavigate();
 
     return (
@@ -25,8 +24,8 @@ export const NavBar: React.FC<NavBarProps> = ({
                 padding: '0 1rem',
             }}
         >
-            {events.map(event => (
-                <Tab 
+            {events.map((event) => (
+                <Tab
                     key={event.eid}
                     label={event.event.abbr}
                     value={event.eid}
@@ -38,6 +37,5 @@ export const NavBar: React.FC<NavBarProps> = ({
                 />
             ))}
         </Tabs>
-    )
-
-}
+    );
+};

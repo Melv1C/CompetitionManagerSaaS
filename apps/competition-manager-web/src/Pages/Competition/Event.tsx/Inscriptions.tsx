@@ -1,18 +1,25 @@
-import { DisplayInscription } from '@competition-manager/schemas'
-import { getCategoryAbbr, isBestResult } from '@competition-manager/utils'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { useAtomValue } from 'jotai'
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import { competitionAtom } from '../../../GlobalsStates'
-import { formatPerf } from '../../../utils'
+import { competitionAtom } from '@/GlobalsStates';
+import { formatPerf } from '@/utils';
+import { DisplayInscription } from '@competition-manager/schemas';
+import { getCategoryAbbr, isBestResult } from '@competition-manager/utils';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+} from '@mui/material';
+import { useAtomValue } from 'jotai';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 type InscriptionsProps = {
-    inscriptions: DisplayInscription[]
-}
+    inscriptions: DisplayInscription[];
+};
 
 export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
-
     const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
@@ -20,7 +27,7 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
 
     return (
         <>
-            <Typography 
+            <Typography
                 variant="h6"
                 sx={{
                     marginBottom: 2,
@@ -45,7 +52,11 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                             <TableCell width={75} sx={{ minWidth: 75 }}>
                                 {t('glossary:club')}
                             </TableCell>
-                            <TableCell width={75} sx={{ minWidth: 75 }} align="right">
+                            <TableCell
+                                width={75}
+                                sx={{ minWidth: 75 }}
+                                align="right"
+                            >
                                 {t('glossary:personalBest')}
                             </TableCell>
                         </TableRow>
@@ -53,31 +64,60 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                     <TableBody>
                         {inscriptions.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={5} align="center">{t('glossary:noInscriptions')}</TableCell>
+                                <TableCell colSpan={5} align="center">
+                                    {t('glossary:noInscriptions')}
+                                </TableCell>
                             </TableRow>
                         )}
 
-                        {inscriptions.sort((a, b) => {
-                            if (a.record && b.record) {
-                                return isBestResult(a.record.perf, b.record.perf, a.competitionEvent.event.type) ? -1 : 1;
-                            }
-                            if (a.record) return -1;
-                            if (b.record) return 1;
-                            return 0;
-                        }).map(inscription => (
-                            <TableRow key={inscription.eid}>
-                                <TableCell align="center">{inscription.bib}</TableCell>
-                                <TableCell>{inscription.athlete.firstName} {inscription.athlete.lastName}</TableCell>
-                                <TableCell>
-                                    {getCategoryAbbr(inscription.athlete.birthdate, inscription.athlete.gender, competition.date)}
-                                </TableCell>
-                                <TableCell>{inscription.club.abbr}</TableCell>
-                                <TableCell align="right">{inscription.record ? formatPerf(inscription.record.perf, inscription.competitionEvent.event.type) : '-'}</TableCell>
-                            </TableRow>
-                        ))}
+                        {inscriptions
+                            .sort((a, b) => {
+                                if (a.record && b.record) {
+                                    return isBestResult(
+                                        a.record.perf,
+                                        b.record.perf,
+                                        a.competitionEvent.event.type
+                                    )
+                                        ? -1
+                                        : 1;
+                                }
+                                if (a.record) return -1;
+                                if (b.record) return 1;
+                                return 0;
+                            })
+                            .map((inscription) => (
+                                <TableRow key={inscription.eid}>
+                                    <TableCell align="center">
+                                        {inscription.bib}
+                                    </TableCell>
+                                    <TableCell>
+                                        {inscription.athlete.firstName}{' '}
+                                        {inscription.athlete.lastName}
+                                    </TableCell>
+                                    <TableCell>
+                                        {getCategoryAbbr(
+                                            inscription.athlete.birthdate,
+                                            inscription.athlete.gender,
+                                            competition.date
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {inscription.club.abbr}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        {inscription.record
+                                            ? formatPerf(
+                                                  inscription.record.perf,
+                                                  inscription.competitionEvent
+                                                      .event.type
+                                              )
+                                            : '-'}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>
         </>
-    )
-}
+    );
+};
