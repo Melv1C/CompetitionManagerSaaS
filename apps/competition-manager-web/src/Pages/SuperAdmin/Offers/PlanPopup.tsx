@@ -1,82 +1,115 @@
-import { Box, Button, Chip, Dialog, FormControl, MenuItem, Select, TextField, Typography } from "@mui/material"
-import { CreatePaymentPlan$, Option, PaymentPlan, PaymentPlan$, UpdatePaymentPlan, UpdatePaymentPlan$ } from "@competition-manager/schemas"
-import { FieldIconWith$, TextFieldWith$ } from "../../../Components/FieldsWithSchema"
-import { useState } from "react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faEuroSign } from "@fortawesome/free-solid-svg-icons"
-import { createPlan, updatePlan } from "../../../api"
-import { WysiwygEditor } from "../../../Components"
+import { createPlan, updatePlan } from '@/api';
+import { FieldIconWith$, TextFieldWith$, WysiwygEditor } from '@/Components';
+import {
+    CreatePaymentPlan$,
+    Option,
+    PaymentPlan,
+    PaymentPlan$,
+    UpdatePaymentPlan,
+    UpdatePaymentPlan$,
+} from '@competition-manager/schemas';
+import { faEuroSign } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    Box,
+    Button,
+    Chip,
+    Dialog,
+    FormControl,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+} from '@mui/material';
+import { useState } from 'react';
 
+type PlanPopupProps = {
+    isVisible: boolean;
+    onClose: (plan?: PaymentPlan) => void;
+    options: Option[];
+    editPlan?: PaymentPlan;
+};
 
-type PlanPopupProps = {  
-    isVisible: boolean
-    onClose: (plan?: PaymentPlan) => void
-    options: Option[]
-    editPlan?: PaymentPlan
-}
+export const PlanPopup: React.FC<PlanPopupProps> = ({
+    isVisible,
+    onClose,
+    options,
+    editPlan,
+}) => {
+    const [plan, setPlan] = useState<UpdatePaymentPlan>(
+        editPlan
+            ? {
+                  name: editPlan.name,
+                  description: editPlan.description,
+                  price: editPlan.price,
+                  includedOptionsIds: editPlan.includedOptions.map(
+                      (option) => option.id
+                  ),
+              }
+            : {
+                  name: '',
+                  description: '',
+                  price: 0,
+                  includedOptionsIds: [],
+              }
+    );
 
-export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options, editPlan}) => {
+    const [isNameValid, setIsNameValid] = useState(true);
+    const [isPriceValid, setIsPriceValid] = useState(true);
 
-    const [plan, setPlan] = useState<UpdatePaymentPlan>(editPlan ? 
-        {
-            name: editPlan.name,
-            description: editPlan.description,
-            price: editPlan.price,
-            includedOptionsIds: editPlan.includedOptions.map(option => option.id)
-        } : {
-            name: '',
-            description: '',
-            price: 0,
-            includedOptionsIds: []
-        }
-    )
-
-    const [isNameValid, setIsNameValid] = useState(true)
-    const [isPriceValid, setIsPriceValid] = useState(true)
-
-    const isFormValid = isNameValid && isPriceValid
+    const isFormValid = isNameValid && isPriceValid;
 
     const handleSubmit = () => {
         if (editPlan) {
-            updatePlan(editPlan.id, UpdatePaymentPlan$.parse(plan)).then((plan) => {
-                onClose(PaymentPlan$.parse(plan))
-            })
+            updatePlan(editPlan.id, UpdatePaymentPlan$.parse(plan)).then(
+                (plan) => {
+                    onClose(PaymentPlan$.parse(plan));
+                }
+            );
             return;
-        } 
+        }
 
         createPlan(CreatePaymentPlan$.parse(plan)).then((plan) => {
-            onClose(PaymentPlan$.parse(plan))
-        })
-    }
+            onClose(PaymentPlan$.parse(plan));
+        });
+    };
 
     return (
-        <Dialog open={isVisible} onClose={() => onClose()} maxWidth="sm" fullWidth>
-            <Typography variant="h4" sx={{ padding: '1rem 0', textAlign: 'center' }}>
+        <Dialog
+            open={isVisible}
+            onClose={() => onClose()}
+            maxWidth="sm"
+            fullWidth
+        >
+            <Typography
+                variant="h4"
+                sx={{ padding: '1rem 0', textAlign: 'center' }}
+            >
                 {editPlan ? 'Edit Plan' : 'Create Plan'}
             </Typography>
-            <Box 
+            <Box
                 component="form"
-                sx={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: '1rem', 
-                    padding: '1rem'
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    padding: '1rem',
                 }}
                 onSubmit={(e) => {
                     e.preventDefault();
                     handleSubmit();
                 }}
             >
-                <Box 
-                    sx={{ 
-                        display: 'flex', 
+                <Box
+                    sx={{
+                        display: 'flex',
                         gap: '1rem',
-                        '& :last-child': { 
-                            flexGrow: 1
-                        }
+                        '& :last-child': {
+                            flexGrow: 1,
+                        },
                     }}
                 >
-                    {editPlan && 
+                    {editPlan && (
                         <FormControl>
                             <TextField
                                 label="Id"
@@ -85,20 +118,30 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
                                 sx={{ maxWidth: '100px' }}
                             />
                         </FormControl>
-                    }
+                    )}
 
-                    <TextFieldWith$ 
-                        id="name" 
+                    <TextFieldWith$
+                        id="name"
                         label={{ value: 'Name' }}
-                        value={{ value: plan.name, onChange: (value) => setPlan({ ...plan, name: value }) }}
-                        validator={{ Schema$: CreatePaymentPlan$.shape.name, isValid: isNameValid, setIsValid: setIsNameValid }}
+                        value={{
+                            value: plan.name,
+                            onChange: (value) =>
+                                setPlan({ ...plan, name: value }),
+                        }}
+                        validator={{
+                            Schema$: CreatePaymentPlan$.shape.name,
+                            isValid: isNameValid,
+                            setIsValid: setIsNameValid,
+                        }}
                         required
                     />
                 </Box>
 
                 <WysiwygEditor
                     value={plan.description}
-                    onChange={(value) => setPlan({ ...plan, description: value })}
+                    onChange={(value) =>
+                        setPlan({ ...plan, description: value })
+                    }
                     placeholder="Description"
                 />
 
@@ -106,23 +149,52 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
                     id="price"
                     type="number"
                     label={{ value: 'Price' }}
-                    value={{ value: plan.price, onChange: (value) => setPlan({ ...plan, price: value }) }}
-                    validator={{ Schema$: CreatePaymentPlan$.shape.price, isValid: isPriceValid, setIsValid: setIsPriceValid }}
-                    required icon={<FontAwesomeIcon icon={faEuroSign} />}      
-                    sx={{ maxWidth: '100px' }}    
+                    value={{
+                        value: plan.price.toString(),
+                        onChange: (value) =>
+                            setPlan({ ...plan, price: +value }),
+                    }}
+                    validator={{
+                        Schema$: CreatePaymentPlan$.shape.price,
+                        isValid: isPriceValid,
+                        setIsValid: setIsPriceValid,
+                    }}
+                    required
+                    icon={<FontAwesomeIcon icon={faEuroSign} />}
+                    sx={{ maxWidth: '100px' }}
                 />
 
-                {editPlan &&
+                {editPlan && (
                     <FormControl>
                         <Select
                             id="includedOptions"
                             multiple
                             value={plan.includedOptionsIds}
-                            onChange={(e) => setPlan({ ...plan, includedOptionsIds: e.target.value as number[] })}
+                            onChange={(e) =>
+                                setPlan({
+                                    ...plan,
+                                    includedOptionsIds: e.target
+                                        .value as number[],
+                                })
+                            }
                             renderValue={(selected) => (
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        gap: '0.5rem',
+                                    }}
+                                >
                                     {selected.map((value) => (
-                                        <Chip key={value} label={options.find(option => option.id === value)?.name} />
+                                        <Chip
+                                            key={value}
+                                            label={
+                                                options.find(
+                                                    (option) =>
+                                                        option.id === value
+                                                )?.name
+                                            }
+                                        />
                                     ))}
                                 </Box>
                             )}
@@ -134,7 +206,7 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
                             ))}
                         </Select>
                     </FormControl>
-                }
+                )}
 
                 <Button
                     type="submit"
@@ -145,9 +217,6 @@ export const PlanPopup: React.FC<PlanPopupProps> = ({isVisible, onClose, options
                     {editPlan ? 'Edit' : 'Create'}
                 </Button>
             </Box>
-
         </Dialog>
-    )
-}
-
-    
+    );
+};

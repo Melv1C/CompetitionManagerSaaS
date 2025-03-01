@@ -1,6 +1,6 @@
-import { Athlete$, AthleteKey } from "@competition-manager/schemas";
-import { api } from "../utils/api";
-import axios from "axios";
+import { Athlete$, AthleteKey } from '@competition-manager/schemas';
+import axios from 'axios';
+import { api } from '../utils/api';
 
 export const getAthletes = async (key: AthleteKey) => {
     try {
@@ -13,4 +13,4 @@ export const getAthletes = async (key: AthleteKey) => {
             throw error;
         }
     }
-}
+};

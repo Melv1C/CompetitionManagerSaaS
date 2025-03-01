@@ -1,12 +1,12 @@
-import { userTokenAtom } from "../GlobalsStates";
-import { decodeToken } from "../utils/decodeToken";
+import { userTokenAtom } from '@/GlobalsStates';
+import { decodeToken } from '../utils/decodeToken';
 
-import { env, isNodeEnv } from "../env";
-import { getRefreshToken } from "../api";
-import { setAccessToken } from "../utils/api";
-import { useAtom } from "jotai";
-import { NODE_ENV } from "@competition-manager/schemas";
-import { useEffect } from "react";
+import { getRefreshToken } from '@/api';
+import { NODE_ENV } from '@competition-manager/schemas';
+import { useAtom } from 'jotai';
+import { useEffect } from 'react';
+import { env, isNodeEnv } from '../env';
+import { setAccessToken } from '../utils/api';
 
 export const useAutoLogin = () => {
     const [userToken, setUserToken] = useAtom(userTokenAtom);
@@ -20,6 +20,7 @@ export const useAutoLogin = () => {
             }
             setUserToken(decodeToken(await getRefreshToken()));
         } catch (error) {
+            console.error('Failed to fetch user token', error);
             setUserToken('NOT_LOGGED');
         }
     };
@@ -28,10 +29,10 @@ export const useAutoLogin = () => {
         if (userToken === null) {
             fetchUserToken();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return {
         fetchUserToken,
-    }
+    };
 };
-  

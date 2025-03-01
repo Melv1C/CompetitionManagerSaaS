@@ -2,7 +2,7 @@
  * Component for displaying all inscriptions in a competition with filtering capabilities
  */
 
-import { Filter, FilterMenu } from '@/Components';
+import { FilterMenu, Icons } from '@/Components';
 import { Competition, DisplayInscription } from '@competition-manager/schemas';
 import { getCategoryAbbr } from '@competition-manager/utils';
 import {
@@ -140,7 +140,7 @@ export const AllInscriptionsSection: React.FC<AllInscriptionsSectionProps> = ({
                                         id="category-filter-button"
                                         size="small"
                                     >
-                                        <Filter size="xs" />
+                                        <Icons.Filter size="xs" />
                                     </IconButton>
                                 </Badge>
                                 <FilterMenu
@@ -172,7 +172,7 @@ export const AllInscriptionsSection: React.FC<AllInscriptionsSectionProps> = ({
                                         id="club-filter-button"
                                         size="small"
                                     >
-                                        <Filter size="xs" />
+                                        <Icons.Filter size="xs" />
                                     </IconButton>
                                 </Badge>
                                 <FilterMenu
@@ -204,7 +204,7 @@ export const AllInscriptionsSection: React.FC<AllInscriptionsSectionProps> = ({
                                         id="event-filter-button"
                                         size="small"
                                     >
-                                        <Filter size="xs" />
+                                        <Icons.Filter size="xs" />
                                     </IconButton>
                                 </Badge>
                                 <FilterMenu

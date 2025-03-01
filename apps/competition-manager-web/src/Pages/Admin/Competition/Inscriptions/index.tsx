@@ -1,18 +1,20 @@
-import { Box, Divider, Typography } from "@mui/material"
-import { Add, CircleButton, Delete, Edit, MaxWidth } from "../../../../Components"
-import { useTranslation } from "react-i18next";
-import { useAtomValue, useSetAtom } from "jotai";
-import { adminInscriptionsAtom, competitionAtom, inscriptionDataAtom } from "../../../../GlobalsStates";
-import { Athlete, Inscription } from "@competition-manager/schemas";
-import { useMemo, useState } from "react";
-import { InscriptionPopup } from "./InscriptionPopup";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { getCategoryAbbr } from "@competition-manager/utils";
-import { formatPerf } from "../../../../utils";
-
+import { CircleButton, Icons, MaxWidth } from '@/Components';
+import {
+    adminInscriptionsAtom,
+    competitionAtom,
+    inscriptionDataAtom,
+} from '@/GlobalsStates';
+import { Athlete, Inscription } from '@competition-manager/schemas';
+import { getCategoryAbbr } from '@competition-manager/utils';
+import { Box, Divider, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { formatPerf } from '../../../../utils';
+import { InscriptionPopup } from './InscriptionPopup';
 
 export const Inscriptions = () => {
-
     const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
@@ -20,67 +22,124 @@ export const Inscriptions = () => {
     if (!competition) throw new Error('No competition found');
     if (!adminInscriptions) throw new Error('No inscriptions found');
 
-    const sortInscriptions = useMemo(() => 
-        [...adminInscriptions].sort((a, b) => b.date.getTime() - a.date.getTime()), 
+    const sortInscriptions = useMemo(
+        () =>
+            [...adminInscriptions].sort(
+                (a, b) => b.date.getTime() - a.date.getTime()
+            ),
         [adminInscriptions]
     );
 
     const setInscriptionData = useSetAtom(inscriptionDataAtom);
-    
+
     const setAthlete = (athlete: Athlete | undefined) => {
         setInscriptionData({ athlete, inscriptionsData: [] });
-    }
+    };
 
-    const [isInscriptionPopupVisible, setIsInscriptionPopupVisible] = useState(false);
+    const [isInscriptionPopupVisible, setIsInscriptionPopupVisible] =
+        useState(false);
 
     const columns: GridColDef[] = [
-        { field: 'date', headerName: t('labels:date'), type: 'dateTime' , width: 150 },
-        { field: 'bib', headerName: t('glossary:bib'), type: 'number' , width: 75 },
-        { field: 'athlete', headerName: t('glossary:athlete'), width: 150,
-            valueGetter: (value: Inscription["athlete"]) => value.firstName + ' ' + value.lastName
+        {
+            field: 'date',
+            headerName: t('labels:date'),
+            type: 'dateTime',
+            width: 150,
         },
-        { field: 'category', headerName: t('glossary:category'), width: 100, 
-            valueGetter: (_, row: Inscription) => getCategoryAbbr(row.athlete.birthdate, row.athlete.gender, competition.date)
+        {
+            field: 'bib',
+            headerName: t('glossary:bib'),
+            type: 'number',
+            width: 75,
         },
-        { field: 'club', headerName: t('glossary:clubs'), width: 75,
-            valueGetter: (value: Inscription["club"]) => value.abbr
+        {
+            field: 'athlete',
+            headerName: t('glossary:athlete'),
+            width: 150,
+            valueGetter: (value: Inscription['athlete']) =>
+                value.firstName + ' ' + value.lastName,
         },
-        { field: 'competitionEvent', headerName: t('glossary:event'), width: 150,
-            valueGetter: (value: Inscription["competitionEvent"]) => value.name
+        {
+            field: 'category',
+            headerName: t('glossary:category'),
+            width: 100,
+            valueGetter: (_, row: Inscription) =>
+                getCategoryAbbr(
+                    row.athlete.birthdate,
+                    row.athlete.gender,
+                    competition.date
+                ),
         },
-        { field: 'record', headerName: t('glossary:personalBest'), type: 'number', width: 100,
-            valueGetter: (value: Inscription["record"]) => value?.perf,
-            valueFormatter: (value: number, row: Inscription) => value ? formatPerf(value, row.competitionEvent.event.type) : '-'
+        {
+            field: 'club',
+            headerName: t('glossary:clubs'),
+            width: 75,
+            valueGetter: (value: Inscription['club']) => value.abbr,
+        },
+        {
+            field: 'competitionEvent',
+            headerName: t('glossary:event'),
+            width: 150,
+            valueGetter: (value: Inscription['competitionEvent']) => value.name,
+        },
+        {
+            field: 'record',
+            headerName: t('glossary:personalBest'),
+            type: 'number',
+            width: 100,
+            valueGetter: (value: Inscription['record']) => value?.perf,
+            valueFormatter: (value: number, row: Inscription) =>
+                value
+                    ? formatPerf(value, row.competitionEvent.event.type)
+                    : '-',
         },
         { field: 'status', headerName: t('labels:status'), width: 100 },
-        { field: 'paid', headerName: t('labels:paid'), type: 'number', width: 50,
-            valueFormatter: (value: Inscription["paid"]) => `${value} €`
+        {
+            field: 'paid',
+            headerName: t('labels:paid'),
+            type: 'number',
+            width: 50,
+            valueFormatter: (value: Inscription['paid']) => `${value} €`,
         },
-        { field: 'user', headerName: t('labels:email'), width: 200,
-            valueGetter: (value: Inscription["user"]) => value.email
+        {
+            field: 'user',
+            headerName: t('labels:email'),
+            width: 200,
+            valueGetter: (value: Inscription['user']) => value.email,
         },
-        { field: 'actions', headerName: t('labels:actions'), width: 100,
+        {
+            field: 'actions',
+            headerName: t('labels:actions'),
+            width: 100,
             renderCell: ({ row }: { row: Inscription }) => (
                 <Box>
-                    <CircleButton size="2rem" color="primary" onClick={() => {
-                        setAthlete({ ...row.athlete, club: row.club });
-                        setIsInscriptionPopupVisible(true);
-                    }}>
-                        <Edit />
+                    <CircleButton
+                        size="2rem"
+                        color="primary"
+                        onClick={() => {
+                            setAthlete({ ...row.athlete, club: row.club });
+                            setIsInscriptionPopupVisible(true);
+                        }}
+                    >
+                        <Icons.Edit />
                     </CircleButton>
-                    <CircleButton size="2rem" color="error" onClick={() => console.log('delete', row.id)}>
-                        <Delete />
+                    <CircleButton
+                        size="2rem"
+                        color="error"
+                        onClick={() => console.log('delete', row.id)}
+                    >
+                        <Icons.Delete />
                     </CircleButton>
                 </Box>
-            )
+            ),
         },
     ];
 
     return (
         <MaxWidth maxWidth="xl">
-            <CircleButton 
+            <CircleButton
                 size="4rem"
-                sx={{ 
+                sx={{
                     position: 'fixed',
                     bottom: '1rem',
                     right: '1rem',
@@ -93,35 +152,32 @@ export const Inscriptions = () => {
                     setIsInscriptionPopupVisible(true);
                 }}
             >
-                <Add size="3x" />
+                <Icons.Add size="3x" />
             </CircleButton>
             {isInscriptionPopupVisible && (
-                <InscriptionPopup 
+                <InscriptionPopup
                     isVisible={isInscriptionPopupVisible}
                     onClose={() => setIsInscriptionPopupVisible(false)}
                 />
             )}
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="h5">
-                    {competition.name}
-                </Typography>
+                <Typography variant="h5">{competition.name}</Typography>
 
                 <Divider />
 
                 <DataGrid
                     columns={columns}
                     rows={sortInscriptions}
-                    initialState={{ 
+                    initialState={{
                         columns: {
                             columnVisibilityModel: {
                                 date: false,
                             },
-                        }
+                        },
                     }}
                 />
             </Box>
-
         </MaxWidth>
-    )
-}
+    );
+};

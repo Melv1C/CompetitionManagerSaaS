@@ -1,13 +1,11 @@
-import { Box } from "@mui/material"
-import { MaxWidth } from "../../Components";
-import { Infos } from "./Infos";
-
+import { MaxWidth } from '@/Components';
+import { Box } from '@mui/material';
+import { Infos } from './Infos';
 
 export const Account = () => {
-
     return (
         <MaxWidth>
-            <Box 
+            <Box
                 sx={{
                     display: 'flex',
                     gap: '1rem',
@@ -17,7 +15,6 @@ export const Account = () => {
             >
                 <Infos />
             </Box>
-
         </MaxWidth>
-    )
-}
+    );
+};

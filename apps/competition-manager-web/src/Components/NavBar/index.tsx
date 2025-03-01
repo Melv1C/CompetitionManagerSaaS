@@ -1,19 +1,25 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, IconDefinition, faRightToBracket, faUserGear, faScrewdriverWrench } from "@fortawesome/free-solid-svg-icons";
+import {
+    faBars,
+    faRightToBracket,
+    faScrewdriverWrench,
+    faUserGear,
+    IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AppBar, Box, Button, IconButton, Toolbar } from '@mui/material';
 
-import { MobileNav } from "./MobileNav";
-import { AccountCircle } from "../AccountCircle";
-import { Logo } from "../Logo";
-import { AuthPopup } from "../AuthPopup";
-import { useRoles, useDeviceSize } from "../../hooks";
-import { useAtomValue } from "jotai";
-import { userTokenAtom } from "../../GlobalsStates";
-import { LanguageSelector } from "./LanguageSelector";
-import { useTranslation } from "react-i18next";
+import { userTokenAtom } from '@/GlobalsStates';
+import { useDeviceSize, useRoles } from '@/hooks';
+import { useAtomValue } from 'jotai';
+import { useTranslation } from 'react-i18next';
+import { AccountCircle } from '../AccountCircle';
+import { AuthPopup } from '../AuthPopup';
+import { Logo } from '../Logo';
+import { LanguageSelector } from './LanguageSelector';
+import { MobileNav } from './MobileNav';
 
 type NavItemProps = {
     label: string;
@@ -26,67 +32,89 @@ export type NavBarProps = {
 };
 
 export const NavBar: React.FC<NavBarProps> = ({ items }) => {
-
     const { t } = useTranslation('navigation');
-      
+
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const { isMobile, isTablet } = useDeviceSize();
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
     const userToken = useAtomValue(userTokenAtom);
-    const {isNotLogged, isLogged, isSuperAdmin, isAdmin} = useRoles();
+    const { isNotLogged, isLogged, isSuperAdmin, isAdmin } = useRoles();
 
-    
     const handleDrawerToggle = () => {
         setIsMobileOpen((prev) => !prev);
     };
-    
+
     useEffect(() => {
         setIsAuthPopupVisible(false);
     }, [userToken]);
 
     const isBurgerVisible = isMobile || isTablet;
-    
+
     return (
-        <Box 
-            sx={{ 
+        <Box
+            sx={{
                 display: 'flex',
             }}
         >
             <AppBar component="nav">
-                <Toolbar 
-                    sx={{ 
-                        display: 'flex', 
-                        gap: '1rem', 
-                        alignItems: 'center' 
+                <Toolbar
+                    sx={{
+                        display: 'flex',
+                        gap: '1rem',
+                        alignItems: 'center',
                     }}
                 >
                     {isBurgerVisible && (
                         <>
-                            <Button 
-                                color="inherit" 
-                                onClick={handleDrawerToggle} 
+                            <Button
+                                color="inherit"
+                                onClick={handleDrawerToggle}
                                 sx={{ minWidth: 0 }}
                             >
                                 <FontAwesomeIcon icon={faBars} size="2x" />
                             </Button>
-                            <MobileNav items={items} isMobileOpen={isMobileOpen} handleDrawerToggle={handleDrawerToggle} />
+                            <MobileNav
+                                items={items}
+                                isMobileOpen={isMobileOpen}
+                                handleDrawerToggle={handleDrawerToggle}
+                            />
                         </>
                     )}
                     <Link to="/">
                         <Logo sx={{ height: '3rem' }} />
                     </Link>
-                    <Box sx={{ display: 'flex', gap: '1rem', flexGrow: 1, marginLeft: '1rem' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: '1rem',
+                            flexGrow: 1,
+                            marginLeft: '1rem',
+                        }}
+                    >
                         {!isBurgerVisible && (
                             <>
                                 {items.map((item) => (
-                                    <Link key={item.label} to={item.href} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                        <Button 
+                                    <Link
+                                        key={item.label}
+                                        to={item.href}
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: 'inherit',
+                                        }}
+                                    >
+                                        <Button
                                             variant="text"
                                             color="inherit"
-                                            startIcon={item.icon && <FontAwesomeIcon icon={item.icon} />} 
-                                            sx={{ 
-                                                textTransform: 'none', 
+                                            startIcon={
+                                                item.icon && (
+                                                    <FontAwesomeIcon
+                                                        icon={item.icon}
+                                                    />
+                                                )
+                                            }
+                                            sx={{
+                                                textTransform: 'none',
                                                 fontSize: '1.2rem',
                                                 padding: '0.5rem 1rem',
                                             }}
@@ -96,27 +124,27 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                     </Link>
                                 ))}
                             </>
-                        )}  
+                        )}
                     </Box>
 
-
                     {/* add link to language switcher */}
-                    {!isBurgerVisible && (
-                        <LanguageSelector />
-                    )}
+                    {!isBurgerVisible && <LanguageSelector />}
 
                     {/* add link to super admin dashboard */}
                     {isSuperAdmin && (
                         <Box>
                             <Link to="/superadmin">
-                                <IconButton 
+                                <IconButton
                                     sx={{
                                         width: '2.5rem',
                                         height: '2.5rem',
                                         color: 'white',
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faScrewdriverWrench} style={{ fontSize: '1.25rem' }} />
+                                    <FontAwesomeIcon
+                                        icon={faScrewdriverWrench}
+                                        style={{ fontSize: '1.25rem' }}
+                                    />
                                 </IconButton>
                             </Link>
                         </Box>
@@ -126,14 +154,17 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     {isAdmin && (
                         <Box>
                             <Link to="/admin/competitions">
-                                <IconButton 
+                                <IconButton
                                     sx={{
                                         width: '2.5rem',
                                         height: '2.5rem',
                                         color: 'white',
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faUserGear} style={{ fontSize: '1.25rem' }} />
+                                    <FontAwesomeIcon
+                                        icon={faUserGear}
+                                        style={{ fontSize: '1.25rem' }}
+                                    />
                                 </IconButton>
                             </Link>
                         </Box>
@@ -142,20 +173,29 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                         {isNotLogged && (
                             <>
-                                <Button 
-                                    startIcon={<FontAwesomeIcon icon={faRightToBracket} />}
+                                <Button
+                                    startIcon={
+                                        <FontAwesomeIcon
+                                            icon={faRightToBracket}
+                                        />
+                                    }
                                     color="inherit"
-                                    sx={{ 
-                                        textTransform: 'none', 
-                                        fontSize: isBurgerVisible ? '1rem' : '1.2rem',
+                                    sx={{
+                                        textTransform: 'none',
+                                        fontSize: isBurgerVisible
+                                            ? '1rem'
+                                            : '1.2rem',
                                         border: '2px solid white',
                                         padding: '0.2rem 1rem',
-                                    }} 
+                                    }}
                                     onClick={() => setIsAuthPopupVisible(true)}
                                 >
                                     {t('login')}
                                 </Button>
-                                <AuthPopup isVisible={isAuthPopupVisible} onClose={() => setIsAuthPopupVisible(false)} />
+                                <AuthPopup
+                                    isVisible={isAuthPopupVisible}
+                                    onClose={() => setIsAuthPopupVisible(false)}
+                                />
                             </>
                         )}
 
@@ -173,4 +213,3 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
         </Box>
     );
 };
-

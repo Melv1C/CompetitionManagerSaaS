@@ -7,7 +7,7 @@ export const formatPerf = (perf: number | undefined | null, eventType: EventType
     }
 
     switch (eventType) {
-        case EventType.TIME:
+        case EventType.TIME: {
             // the perf is in milliseconds
             const minutes = Math.floor(perf / 60000);
             const seconds = Math.floor((perf % 60000) / 1000);
@@ -18,6 +18,7 @@ export const formatPerf = (perf: number | undefined | null, eventType: EventType
             } else {
                 return `${seconds}"${centiseconds.toString().padStart(2, '0')}`;
             }
+        }
 
         case EventType.DISTANCE:
         case EventType.HEIGHT:

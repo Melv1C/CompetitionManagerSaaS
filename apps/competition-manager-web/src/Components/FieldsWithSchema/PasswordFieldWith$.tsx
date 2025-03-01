@@ -1,13 +1,11 @@
-import { useState } from "react";
-import { BaseFieldWith$Props } from "./BaseFieldWith$";
-import { FieldIconWith$ } from "./FieldIconWith$";
-import { IconButton } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton } from '@mui/material';
+import { useState } from 'react';
+import { BaseFieldWith$Props } from './BaseFieldWith$';
+import { FieldIconWith$ } from './FieldIconWith$';
 
 export const PasswordFieldWith$: React.FC<BaseFieldWith$Props> = (props) => {
-
     const [IsPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const handleClickShow = () => {
@@ -16,10 +14,10 @@ export const PasswordFieldWith$: React.FC<BaseFieldWith$Props> = (props) => {
 
     const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-    }
+    };
 
     return (
-        <FieldIconWith$ 
+        <FieldIconWith$
             {...props}
             type={IsPasswordVisible ? 'text' : 'password'}
             icon={
@@ -29,7 +27,10 @@ export const PasswordFieldWith$: React.FC<BaseFieldWith$Props> = (props) => {
                     onMouseDown={handleMouseDown}
                     sx={{ color: 'text.secondary' }}
                 >
-                    <FontAwesomeIcon icon={IsPasswordVisible ? faEye : faEyeSlash} size='xs' />
+                    <FontAwesomeIcon
+                        icon={IsPasswordVisible ? faEye : faEyeSlash}
+                        size="xs"
+                    />
                 </IconButton>
             }
         />

@@ -1,10 +1,10 @@
 /**
  * File: apps/competition-manager-web/src/Pages/FAQ/index.tsx
- * 
+ *
  * Main FAQ (Frequently Asked Questions) page component.
  * This component serves as the container for all FAQ items and provides
  * an accordion-style interface for users to easily find answers to common questions.
- * 
+ *
  * Features:
  * - Responsive accordion layout
  * - Internationalization support
@@ -12,13 +12,13 @@
  * - Consistent styling across all FAQ items
  * - Easy to maintain and extend
  * - "Can't find your answer?" section for additional support
- * 
+ *
  * Directory Structure:
  * - /Components
  *   - FAQAnswer.tsx: Base component for answers
  *   - CantFindAnswer.tsx: Support call-to-action component
  *   - Other components: Specialized components for each FAQ item
- * 
+ *
  * Translation Structure:
  * The FAQ content is organized in the translation files (en/fr/nl) under the 'faq' namespace:
  * - title: Main page title
@@ -27,22 +27,22 @@
  * - cantFindAnswer: Translations for the support section
  */
 
-import { 
-    Typography, 
-    Accordion, 
-    AccordionSummary,
+import { MaxWidth } from '@/Components';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    Accordion,
     AccordionDetails,
+    AccordionSummary,
     Paper,
-    Stack
-} from "@mui/material"
-import { MaxWidth } from "../../Components"
-import { useTranslation } from "react-i18next"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons"
+    Stack,
+    Typography,
+} from '@mui/material';
+import { useTranslation } from 'react-i18next';
 //import { FAQAnswer } from "./Components/FAQAnswer"
-import { AccountVerificationAnswer } from "./Components/AccountVerificationAnswer"
-import { CompetitionInscriptionAnswer } from "./Components/CompetitionInscriptionAnswer"
-import { CantFindAnswer } from "./Components/CantFindAnswer"
+import { AccountVerificationAnswer } from './Components/AccountVerificationAnswer';
+import { CantFindAnswer } from './Components/CantFindAnswer';
+import { CompetitionInscriptionAnswer } from './Components/CompetitionInscriptionAnswer';
 
 /**
  * Interface defining the structure of FAQ items
@@ -51,20 +51,20 @@ import { CantFindAnswer } from "./Components/CantFindAnswer"
  * @property {React.ReactNode | string} answer - Component or string for the answer
  */
 interface FAQItem {
-    questionKey: string
+    questionKey: string;
     // Component for complex answers, string key for simple translations
-    answer: React.ReactNode | string
+    answer: React.ReactNode | string;
 }
 
 /**
  * Main FAQ page component that displays all FAQ items in an accordion layout
- * 
+ *
  * @component
  * @returns {ReactNode} The rendered FAQ page
  */
 export const FAQ = () => {
     // Initialize translation hook with 'faq' namespace
-    const { t } = useTranslation('faq')
+    const { t } = useTranslation('faq');
 
     /**
      * Array of FAQ items with their respective answers
@@ -73,14 +73,14 @@ export const FAQ = () => {
      */
     const faqItems: FAQItem[] = [
         {
-            questionKey: "questions.accountVerification",
-            answer: <AccountVerificationAnswer />
+            questionKey: 'questions.accountVerification',
+            answer: <AccountVerificationAnswer />,
         },
         {
-            questionKey: "questions.inscription",
-            answer: <CompetitionInscriptionAnswer />
-        }
-    ]
+            questionKey: 'questions.inscription',
+            answer: <CompetitionInscriptionAnswer />,
+        },
+    ];
 
     return (
         <MaxWidth>
@@ -89,33 +89,39 @@ export const FAQ = () => {
                 <Typography variant="h4" gutterBottom>
                     {t('title')}
                 </Typography>
-                
+
                 {/* FAQ Items Container */}
                 <Paper elevation={2} sx={{ p: 2 }}>
                     {faqItems.map((item, index) => (
                         <Accordion
                             key={index}
                             sx={{
-                                '&:not(:last-child)': { borderBottom: 1, borderColor: 'divider' },
+                                '&:not(:last-child)': {
+                                    borderBottom: 1,
+                                    borderColor: 'divider',
+                                },
                                 '&:before': { display: 'none' },
                                 boxShadow: 'none',
                             }}
                         >
                             {/* Question Header */}
                             <AccordionSummary
-                                expandIcon={<FontAwesomeIcon icon={faChevronDown} />}
-                                sx={{ 
-                                    '&:hover': { bgcolor: 'action.hover' }
+                                expandIcon={
+                                    <FontAwesomeIcon icon={faChevronDown} />
+                                }
+                                sx={{
+                                    '&:hover': { bgcolor: 'action.hover' },
                                 }}
                             >
-                                <Typography variant="subtitle1" fontWeight="medium">
+                                <Typography
+                                    variant="subtitle1"
+                                    fontWeight="medium"
+                                >
                                     {t(item.questionKey)}
                                 </Typography>
                             </AccordionSummary>
                             {/* Answer Content */}
-                            <AccordionDetails>
-                                {item.answer}
-                            </AccordionDetails>
+                            <AccordionDetails>{item.answer}</AccordionDetails>
                         </Accordion>
                     ))}
                 </Paper>
@@ -124,5 +130,5 @@ export const FAQ = () => {
                 <CantFindAnswer />
             </Stack>
         </MaxWidth>
-    )
-}
+    );
+};

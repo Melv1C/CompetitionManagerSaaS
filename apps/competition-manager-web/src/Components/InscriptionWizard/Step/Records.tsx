@@ -1,27 +1,37 @@
-import { Box, List, ListItem, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { CircleButton, Edit, Loading, StepperButtons } from "../../../Components";
-import { useTranslation } from "react-i18next";
-import { useAtom, useAtomValue } from "jotai";
-import { competitionAtom, inscriptionDataAtom, inscriptionsAtom } from "../../../GlobalsStates";
-import { useQuery } from "react-query";
-import { getRecords } from "../../../api";
-import { formatPerf } from "../../../utils";
-import { Event, Record, Records as RecordsType } from "@competition-manager/schemas";
-import { useEffect, useState } from "react";
-import { UpdateRecordPopup } from "./UpdateRecordPopup";
-
+import { getRecords } from '@/api';
+import { CircleButton, Icons, Loading, StepperButtons } from '@/Components';
+import {
+    competitionAtom,
+    inscriptionDataAtom,
+    inscriptionsAtom,
+} from '@/GlobalsStates';
+import {
+    Event,
+    Record,
+    Records as RecordsType,
+} from '@competition-manager/schemas';
+import {
+    Box,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+} from '@mui/material';
+import { useAtom, useAtomValue } from 'jotai';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { formatPerf } from '../../../utils';
+import { UpdateRecordPopup } from './UpdateRecordPopup';
 
 type RecordsProps = {
     isAdmin: boolean;
     handleNext: () => void;
     handleBack: () => void;
-}
+};
 
-export const Records: React.FC<RecordsProps> = ({
-    handleNext,
-    handleBack
-}) => {
-
+export const Records: React.FC<RecordsProps> = ({ handleNext, handleBack }) => {
     const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
@@ -29,17 +39,24 @@ export const Records: React.FC<RecordsProps> = ({
     if (!competition) throw new Error('Competition not found');
     if (!inscriptions) throw new Error('Inscriptions not found');
 
-    const [{ athlete, inscriptionsData }, setInscriptionData] = useAtom(inscriptionDataAtom);
+    const [{ athlete, inscriptionsData }, setInscriptionData] =
+        useAtom(inscriptionDataAtom);
     if (!athlete) throw new Error('Athlete not found');
     if (inscriptionsData.length === 0) throw new Error('No selected events');
 
     const setFetchRecords = (records: RecordsType) => {
         const newInscriptionsData = inscriptionsData.map((inscriptionData) => {
-            const record = inscriptionData.record ?? records[inscriptionData.competitionEvent.event.name] ?? null;
+            const record =
+                inscriptionData.record ??
+                records[inscriptionData.competitionEvent.event.name] ??
+                null;
             return { ...inscriptionData, record };
         });
-        setInscriptionData((prev) => ({ ...prev, inscriptionsData: newInscriptionsData }));
-    }
+        setInscriptionData((prev) => ({
+            ...prev,
+            inscriptionsData: newInscriptionsData,
+        }));
+    };
 
     const setNewRecord = (record: Record, event: Event) => {
         const newInscriptionsData = inscriptionsData.map((inscriptionData) => {
@@ -48,8 +65,11 @@ export const Records: React.FC<RecordsProps> = ({
             }
             return inscriptionData;
         });
-        setInscriptionData((prev) => ({ ...prev, inscriptionsData: newInscriptionsData }));
-    }
+        setInscriptionData((prev) => ({
+            ...prev,
+            inscriptionsData: newInscriptionsData,
+        }));
+    };
 
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [eventInPopup, setEventInPopup] = useState<Event | null>(null);
@@ -59,11 +79,23 @@ export const Records: React.FC<RecordsProps> = ({
         setRecordInPopup(record);
         setEventInPopup(event);
         setIsPopupOpen(true);
-    }
+    };
 
-    const { data: fetchrecords, isLoading, isError } = useQuery(
-        ['records', athlete.license, inscriptionsData.map((i) => i.competitionEvent.event.name)],
-        () => getRecords(athlete.license, inscriptionsData.map((i) => i.competitionEvent.event.name))
+    const {
+        data: fetchrecords,
+        isLoading,
+        isError,
+    } = useQuery(
+        [
+            'records',
+            athlete.license,
+            inscriptionsData.map((i) => i.competitionEvent.event.name),
+        ],
+        () =>
+            getRecords(
+                athlete.license,
+                inscriptionsData.map((i) => i.competitionEvent.event.name)
+            )
     );
 
     if (isError) throw new Error('Error while fetching records');
@@ -72,54 +104,93 @@ export const Records: React.FC<RecordsProps> = ({
         if (fetchrecords) {
             setFetchRecords(fetchrecords);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchrecords]);
 
-    if (isLoading) return <Loading />
+    if (isLoading) return <Loading />;
 
     return (
         <Box width={1}>
             <List sx={{ maxWidth: 400, margin: 'auto' }}>
-                {inscriptionsData.sort((a, b) => a.competitionEvent.schedule.getTime() - b.competitionEvent.schedule.getTime()).map((inscriptionData) => {
-                    const record = inscriptionData.record ?? null;
-                    return (
-                        <ListItem key={inscriptionData.competitionEvent.id}>
-                            <ListItemText
-                                primary={inscriptionData.competitionEvent.name}
-                                secondary={record ? (
-                                    <>
-                                        <Typography component="span" variant="body2" fontWeight="bold">
-                                            {formatPerf(record.perf, inscriptionData.competitionEvent.event.type)}
-                                        </Typography>
-                                        {' '}
-                                        ({record.date.toLocaleDateString('fr')})
-                                    </>
-                                ) : t('competition:noPersonalBest')}
-                            />
-                            <ListItemIcon>
-                                <CircleButton onClick={() => handleOpenPopup(record, inscriptionData.competitionEvent.event)}>
-                                    <Edit size="xl"/>   
-                                </CircleButton>
-                            </ListItemIcon>
-                        </ListItem>
+                {inscriptionsData
+                    .sort(
+                        (a, b) =>
+                            a.competitionEvent.schedule.getTime() -
+                            b.competitionEvent.schedule.getTime()
                     )
-                })}
+                    .map((inscriptionData) => {
+                        const record = inscriptionData.record ?? null;
+                        return (
+                            <ListItem key={inscriptionData.competitionEvent.id}>
+                                <ListItemText
+                                    primary={
+                                        inscriptionData.competitionEvent.name
+                                    }
+                                    secondary={
+                                        record ? (
+                                            <>
+                                                <Typography
+                                                    component="span"
+                                                    variant="body2"
+                                                    fontWeight="bold"
+                                                >
+                                                    {formatPerf(
+                                                        record.perf,
+                                                        inscriptionData
+                                                            .competitionEvent
+                                                            .event.type
+                                                    )}
+                                                </Typography>{' '}
+                                                (
+                                                {record.date.toLocaleDateString(
+                                                    'fr'
+                                                )}
+                                                )
+                                            </>
+                                        ) : (
+                                            t('competition:noPersonalBest')
+                                        )
+                                    }
+                                />
+                                <ListItemIcon>
+                                    <CircleButton
+                                        onClick={() =>
+                                            handleOpenPopup(
+                                                record,
+                                                inscriptionData.competitionEvent
+                                                    .event
+                                            )
+                                        }
+                                    >
+                                        <Icons.Edit size="xl" />
+                                    </CircleButton>
+                                </ListItemIcon>
+                            </ListItem>
+                        );
+                    })}
             </List>
 
-            {isPopupOpen && 
-                <UpdateRecordPopup 
-                    onClose={() => setIsPopupOpen(false)} 
-                    event={eventInPopup!} 
-                    record={recordInPopup!} 
-                    onRecordUpdated={(record) => setNewRecord(record, eventInPopup!)}
+            {isPopupOpen && (
+                <UpdateRecordPopup
+                    onClose={() => setIsPopupOpen(false)}
+                    event={eventInPopup!}
+                    record={recordInPopup!}
+                    onRecordUpdated={(record) =>
+                        setNewRecord(record, eventInPopup!)
+                    }
                 />
-            }
+            )}
 
-            <StepperButtons 
+            <StepperButtons
                 buttons={[
-                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
-                    { label: t('buttons:next'), onClick: handleNext }
+                    {
+                        label: t('buttons:previous'),
+                        onClick: handleBack,
+                        variant: 'outlined',
+                    },
+                    { label: t('buttons:next'), onClick: handleNext },
                 ]}
             />
         </Box>
-    )
-}
+    );
+};

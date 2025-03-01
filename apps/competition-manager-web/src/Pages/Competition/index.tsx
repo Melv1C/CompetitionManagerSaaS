@@ -45,6 +45,7 @@ export const Competition = () => {
         return () => {
             reset();
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (isLoading) return <Loading />;
@@ -79,7 +80,7 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({
                     ''
                 )
             ) || '',
-        [location.pathname]
+        [location.pathname, competition.eid]
     );
 
     return (

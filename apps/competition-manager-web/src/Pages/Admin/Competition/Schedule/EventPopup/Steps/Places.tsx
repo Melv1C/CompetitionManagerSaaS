@@ -1,49 +1,47 @@
-import { Box, FormControlLabel, Switch } from "@mui/material";
-import { BaseFieldWith$, StepperButtons } from "../../../../../../Components";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { CompetitionEvent, Place$ } from "@competition-manager/schemas";
-import { useAtom } from "jotai";
-import { competitionEventDataAtom } from "../../../../../../GlobalsStates";
+import { BaseFieldWith$, StepperButtons } from '@/Components';
+import { competitionEventDataAtom } from '@/GlobalsStates';
+import { CompetitionEvent, Place$ } from '@competition-manager/schemas';
+import { Box, FormControlLabel, Switch } from '@mui/material';
+import { useAtom } from 'jotai';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type PlacesProps = {
     handleNext: () => void;
     handleBack: () => void;
 };
 
-export const Places: React.FC<PlacesProps> = ({ 
-    handleNext, 
-    handleBack,
-}) => {
+export const Places: React.FC<PlacesProps> = ({ handleNext, handleBack }) => {
+    const { t } = useTranslation();
 
-    const { t } = useTranslation()
+    const [{ place }, setCompetitionEventData] = useAtom(
+        competitionEventDataAtom
+    );
 
-    const [{place}, setCompetitionEventData] = useAtom(competitionEventDataAtom);
-
-    const setPlace = (place: CompetitionEvent["place"]) => {
+    const setPlace = (place: CompetitionEvent['place']) => {
         setCompetitionEventData((prev) => ({
             ...prev,
             place,
-        }))
-    }
+        }));
+    };
 
+    const [hasLimit, setHasLimit] = useState(
+        place !== undefined && place !== null
+    );
 
-    const [hasLimit, setHasLimit] = useState(place !== undefined && place !== null)
-    
-    const [isValid, setIsValid] = useState(true)
-    
-    const isDisabled = !isValid || (hasLimit && !place)
-    
+    const [isValid, setIsValid] = useState(true);
+
+    const isDisabled = !isValid || (hasLimit && !place);
+
     const toggleLimit = () => {
-        setHasLimit(!hasLimit)
-        setPlace(undefined)
-        setIsValid(true)
-    }
+        setHasLimit(!hasLimit);
+        setPlace(undefined);
+        setIsValid(true);
+    };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-
-            <FormControlLabel 
+            <FormControlLabel
                 control={<Switch checked={hasLimit} onChange={toggleLimit} />}
                 label={t('eventPopup:hasPlaceLimit')}
                 sx={{ width: 'fit-content' }}
@@ -54,7 +52,10 @@ export const Places: React.FC<PlacesProps> = ({
                     id="placeLimit"
                     type="number"
                     label={{ value: t('labels:placeLimit') }}
-                    value={{ value: place, onChange: setPlace }}
+                    value={{
+                        value: place?.toString() || '',
+                        onChange: (e) => setPlace(+e),
+                    }}
                     validator={{ Schema$: Place$, isValid, setIsValid }}
                     formControlProps={{ fullWidth: true }}
                 />
@@ -62,10 +63,18 @@ export const Places: React.FC<PlacesProps> = ({
 
             <StepperButtons
                 buttons={[
-                    { label: t('buttons:previous'), onClick: handleBack, variant: 'outlined' },
-                    { label: t('buttons:next'), onClick: handleNext, disabled: isDisabled }
+                    {
+                        label: t('buttons:previous'),
+                        onClick: handleBack,
+                        variant: 'outlined',
+                    },
+                    {
+                        label: t('buttons:next'),
+                        onClick: handleNext,
+                        disabled: isDisabled,
+                    },
                 ]}
             />
         </Box>
     );
-}
+};

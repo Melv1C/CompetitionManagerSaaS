@@ -1,68 +1,77 @@
-
-import { useTranslation } from "react-i18next"
-import { MaxWidth, PasswordFieldWith$ } from "../Components"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import { jwtDecode } from "jwt-decode"
-import { Alert, Box, Button, FormControl, FormLabel, TextField, Typography } from "@mui/material"
-import { useState } from "react"
-import { TokenData$, Password$, Password } from "@competition-manager/schemas"
-import { resetPassword } from "../api"
-import { useMutation } from "react-query"
-import { isAxiosError } from "axios"
-
+import { resetPassword } from '@/api';
+import { MaxWidth, PasswordFieldWith$ } from '@/Components';
+import { Password, Password$, TokenData$ } from '@competition-manager/schemas';
+import {
+    Alert,
+    Box,
+    Button,
+    FormControl,
+    FormLabel,
+    TextField,
+    Typography,
+} from '@mui/material';
+import { isAxiosError } from 'axios';
+import { jwtDecode } from 'jwt-decode';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export const ResetPassword = () => {
+    const { t } = useTranslation('auth');
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
-    const { t } = useTranslation('auth')
-    const [searchParams] = useSearchParams()
-    const navigate = useNavigate()
+    const token = searchParams.get('token');
+    if (!token) throw new Error('No token provided');
+    const decoedToken = jwtDecode(token);
+    if (!decoedToken) throw new Error('Invalid token');
+    const isTokenValid = decoedToken.exp! * 1000 > Date.now();
 
-    const token = searchParams.get('token')
-    if (!token) throw new Error('No token provided')
-    const decoedToken = jwtDecode(token)
-    if (!decoedToken) throw new Error('Invalid token')
-    const isTokenValid = decoedToken.exp! * 1000 > Date.now()
+    const email = TokenData$.parse(decoedToken).email;
+    const [password, setPassword] = useState('');
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
 
-    const email = TokenData$.parse(decoedToken).email
-    const [password, setPassword] = useState('')
-    const [isPasswordValid, setIsPasswordValid] = useState(true)
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true)
+    const isFormValid =
+        isPasswordValid &&
+        isConfirmPasswordValid &&
+        password !== '' &&
+        confirmPassword !== '';
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const isFormValid = isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== ''
-    const [errorMsg, setErrorMsg] = useState('')
-
-    const mutation = useMutation((password: Password) => resetPassword(password, token), {
-        onSuccess: () => {
-            navigate('/')
+    const mutation = useMutation(
+        (password: Password) => resetPassword(password, token),
+        {
+            onSuccess: () => {
+                navigate('/');
+            },
         }
-    })
+    );
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        
+        e.preventDefault();
+
         // check if form is valid
         if (!isFormValid) {
-            setErrorMsg(t('error.invalidForm'))
-            return
+            setErrorMsg(t('error.invalidForm'));
+            return;
         }
-       
+
         // compare password and confirmPassword
         if (password !== confirmPassword) {
-            setErrorMsg(t('error.passwordMismatch'))
-            return
+            setErrorMsg(t('error.passwordMismatch'));
+            return;
         }
 
         // call api
-        mutation.mutate(
-            password
-        )
-    }
-
+        mutation.mutate(password);
+    };
 
     return (
         <MaxWidth>
-            <Box 
+            <Box
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -71,14 +80,12 @@ export const ResetPassword = () => {
                     gap: '1rem',
                 }}
             >
-                <Typography variant="h4">
-                    {t('resetPassword.title')}
-                </Typography>
-                
+                <Typography variant="h4">{t('resetPassword.title')}</Typography>
+
                 {isTokenValid ? (
-                    <Box 
+                    <Box
                         component="form"
-                        sx={{ 
+                        sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '1rem',
@@ -93,34 +100,51 @@ export const ResetPassword = () => {
 
                         <FormControl fullWidth>
                             <FormLabel htmlFor="email">{t('email')}</FormLabel>
-                            <TextField 
+                            <TextField
                                 id="email"
                                 value={email}
-                                slotProps={{ 
-                                    input: { readOnly: true }
+                                slotProps={{
+                                    input: { readOnly: true },
                                 }}
                             />
                         </FormControl>
 
-                        <PasswordFieldWith$ 
-                            id="password" 
-                            label={{ value: t('password'), hasExtrenLabel: true }}
-                            value={{ value: password, onChange: setPassword }} 
-                            validator={{ Schema$: Password$, isValid: isPasswordValid, setIsValid: setIsPasswordValid }}
+                        <PasswordFieldWith$
+                            id="password"
+                            label={{
+                                value: t('password'),
+                                hasExtrenLabel: true,
+                            }}
+                            value={{ value: password, onChange: setPassword }}
+                            validator={{
+                                Schema$: Password$,
+                                isValid: isPasswordValid,
+                                setIsValid: setIsPasswordValid,
+                            }}
                             required
                             formControlProps={{ fullWidth: true }}
                         />
 
                         <PasswordFieldWith$
                             id="confirmPassword"
-                            label={{ value: t('confirmPassword'), hasExtrenLabel: true }}
-                            value={{ value: confirmPassword, onChange: setConfirmPassword }}
-                            validator={{ Schema$: Password$, isValid: isConfirmPasswordValid, setIsValid: setIsConfirmPasswordValid }}
+                            label={{
+                                value: t('confirmPassword'),
+                                hasExtrenLabel: true,
+                            }}
+                            value={{
+                                value: confirmPassword,
+                                onChange: setConfirmPassword,
+                            }}
+                            validator={{
+                                Schema$: Password$,
+                                isValid: isConfirmPasswordValid,
+                                setIsValid: setIsConfirmPasswordValid,
+                            }}
                             required
                             formControlProps={{ fullWidth: true }}
                         />
-                        
-                        <Button 
+
+                        <Button
                             variant="contained"
                             color="primary"
                             type="submit"
@@ -130,22 +154,21 @@ export const ResetPassword = () => {
                         >
                             {t('buttons:submit')}
                         </Button>
-                        
+
                         {mutation.isError && isAxiosError(mutation.error) && (
-                            <Alert severity="error">{mutation.error.response?.data}</Alert>
+                            <Alert severity="error">
+                                {mutation.error.response?.data}
+                            </Alert>
                         )}
 
-                        {errorMsg && (
-                            <Alert severity="error">{errorMsg}</Alert>
-                        )}
+                        {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
                     </Box>
                 ) : (
                     <Typography variant="body1">
                         {t('resetPassword.expiredToken')}
                     </Typography>
                 )}
-
             </Box>
         </MaxWidth>
-    )
-}
+    );
+};

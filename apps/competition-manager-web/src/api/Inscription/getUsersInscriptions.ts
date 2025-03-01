@@ -1,7 +1,6 @@
-import { Eid, Inscription$, NODE_ENV } from "@competition-manager/schemas";
-import { api } from "../../utils/api";
-import { isNodeEnv } from "../../env";
-
+import { Eid, Inscription$, NODE_ENV } from '@competition-manager/schemas';
+import { isNodeEnv } from '../../env';
+import { api } from '../../utils/api';
 
 export const getUsersInscriptions = async (competitionEid?: Eid) => {
     try {
@@ -10,12 +9,12 @@ export const getUsersInscriptions = async (competitionEid?: Eid) => {
         }
         const { data } = await api.get('/users/me/inscriptions', {
             params: {
-                competitionEid
-            }
+                competitionEid,
+            },
         });
         return Inscription$.array().parse(data);
     } catch (error) {
         console.error(error);
         return [];
     }
-}
+};

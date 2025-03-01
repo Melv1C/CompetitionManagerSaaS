@@ -1,14 +1,18 @@
-import { InputAdornment } from "@mui/material";
-import { BaseFieldWith$, BaseFieldWith$Props } from "./BaseFieldWith$";
+import { InputAdornment } from '@mui/material';
+import { BaseFieldWith$, BaseFieldWith$Props } from './BaseFieldWith$';
 
 type FieldIconWith$Props = BaseFieldWith$Props & {
     icon: React.ReactNode;
     iconPosition?: 'start' | 'end';
 };
 
-export const FieldIconWith$: React.FC<FieldIconWith$Props> = ({ icon, iconPosition = 'end', ...props }) => {
+export const FieldIconWith$: React.FC<FieldIconWith$Props> = ({
+    icon,
+    iconPosition = 'end',
+    ...props
+}) => {
     return (
-        <BaseFieldWith$ 
+        <BaseFieldWith$
             {...props}
             slotProps={{
                 input: {
@@ -16,10 +20,9 @@ export const FieldIconWith$: React.FC<FieldIconWith$Props> = ({ icon, iconPositi
                         <InputAdornment position={iconPosition}>
                             {icon}
                         </InputAdornment>
-                    )
-                }
+                    ),
+                },
             }}
         />
     );
 };
-

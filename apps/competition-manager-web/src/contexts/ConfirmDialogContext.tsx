@@ -1,10 +1,10 @@
 /**
- * File: apps/competition-manager-web/src/Components/ConfirmDialog/ConfirmDialogContext.tsx
- * 
+ * File: apps/competition-manager-web/src/contexts/ConfirmDialogContext.tsx
+ *
  * This file implements a reusable confirmation dialog system using React Context.
  * It provides a flexible way to show confirmation dialogs that can contain both simple text
  * and complex React components.
- * 
+ *
  * Features:
  * - Support for both simple text and complex React components in dialog content
  * - Additional content section for supplementary information (e.g., warnings)
@@ -13,8 +13,16 @@
  * - Fully typed with TypeScript
  */
 
-import React, { createContext, useState, useCallback, ReactNode } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from '@mui/material';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from '@mui/material';
+import React, { createContext, ReactNode, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -27,7 +35,7 @@ interface ConfirmDialogContextType {
 
 /**
  * Configuration options for the confirmation dialog.
- * 
+ *
  * @property title - The dialog title (always a string for consistent styling)
  * @property message - The main dialog message (can be text or a React component)
  * @property additionalContent - Optional secondary content (e.g., warnings or additional info)
@@ -43,11 +51,14 @@ interface ConfirmDialogOptions {
 }
 
 // Create the context with undefined as initial value
-export const ConfirmDialogContext = createContext<ConfirmDialogContextType | undefined>(undefined);
+// eslint-disable-next-line react-refresh/only-export-components
+export const ConfirmDialogContext = createContext<
+    ConfirmDialogContextType | undefined
+>(undefined);
 
 /**
  * Provider component that manages the confirmation dialog state and rendering.
- * 
+ *
  * Usage:
  * ```tsx
  * <ConfirmDialogProvider>
@@ -55,9 +66,11 @@ export const ConfirmDialogContext = createContext<ConfirmDialogContextType | und
  * </ConfirmDialogProvider>
  * ```
  */
-export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({
+    children,
+}) => {
     const { t } = useTranslation();
-    
+
     // State to track the current dialog configuration and resolve function
     const [dialog, setDialog] = useState<{
         isOpen: boolean;
@@ -67,31 +80,37 @@ export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({
 
     /**
      * Shows a confirmation dialog and returns a Promise that resolves when the user makes a choice.
-     * 
+     *
      * @param options - Configuration options for the dialog
      * @returns Promise<boolean> - Resolves to true if confirmed, false if cancelled
      */
-    const confirm = useCallback((options: ConfirmDialogOptions): Promise<boolean> => {
-        return new Promise((resolve) => {
-            setDialog({
-                isOpen: true,
-                options,
-                resolve,
+    const confirm = useCallback(
+        (options: ConfirmDialogOptions): Promise<boolean> => {
+            return new Promise((resolve) => {
+                setDialog({
+                    isOpen: true,
+                    options,
+                    resolve,
+                });
             });
-        });
-    }, []);
+        },
+        []
+    );
 
     /**
      * Handles dialog closure, resolving the Promise with the user's choice.
-     * 
+     *
      * @param confirmed - Whether the user confirmed or cancelled
      */
-    const handleClose = useCallback((confirmed: boolean) => {
-        if (dialog) {
-            dialog.resolve(confirmed);
-            setDialog(null);
-        }
-    }, [dialog]);
+    const handleClose = useCallback(
+        (confirmed: boolean) => {
+            if (dialog) {
+                dialog.resolve(confirmed);
+                setDialog(null);
+            }
+        },
+        [dialog]
+    );
 
     return (
         <ConfirmDialogContext.Provider value={{ confirm }}>
@@ -123,10 +142,17 @@ export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({
                         )}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => handleClose(false)} color="primary">
+                        <Button
+                            onClick={() => handleClose(false)}
+                            color="primary"
+                        >
                             {dialog.options.cancelText || t('common:cancel')}
                         </Button>
-                        <Button onClick={() => handleClose(true)} color="primary" variant="contained">
+                        <Button
+                            onClick={() => handleClose(true)}
+                            color="primary"
+                            variant="contained"
+                        >
                             {dialog.options.confirmText || t('common:confirm')}
                         </Button>
                     </DialogActions>
@@ -134,4 +160,4 @@ export const ConfirmDialogProvider: React.FC<{ children: React.ReactNode }> = ({
             )}
         </ConfirmDialogContext.Provider>
     );
-}; 
+};

@@ -1,20 +1,20 @@
 /**
  * File: apps/competition-manager-web/src/Pages/FAQ/Components/FAQAnswer.tsx
- * 
+ *
  * Base component for rendering FAQ answers. This component provides a consistent
  * layout and styling for all FAQ answers, supporting both simple text content
  * and complex content with images.
- * 
+ *
  * Features:
  * - Supports both simple text and complex React components as content
  * - Optional image support with responsive sizing
  * - Consistent styling and spacing
- * 
+ *
  * Usage example:
  * ```tsx
  * // Simple text answer
  * <FAQAnswer content="This is a simple text answer" />
- * 
+ *
  * // Complex content with image
  * <FAQAnswer
  *   content={<>
@@ -29,8 +29,8 @@
  * ```
  */
 
-import { ReactNode } from 'react'
-import { Typography, Box } from '@mui/material'
+import { Box, Typography } from '@mui/material';
+import { ReactNode } from 'react';
 
 /**
  * Props for the FAQAnswer component
@@ -42,17 +42,17 @@ import { Typography, Box } from '@mui/material'
  */
 interface FAQAnswerProps {
     // Allow either simple text or complex content
-    content: string | ReactNode
+    content: string | ReactNode;
     // Optional image props
     image?: {
-        src: string
-        alt: string
-    }
+        src: string;
+        alt: string;
+    };
 }
 
 /**
  * A reusable component for displaying FAQ answers with consistent styling
- * 
+ *
  * @component
  * @param {FAQAnswerProps} props - The component props
  * @returns {ReactNode} The rendered FAQ answer
@@ -66,10 +66,10 @@ export const FAQAnswer = ({ content, image }: FAQAnswerProps) => {
             ) : (
                 content
             )}
-            
+
             {/* Render image if provided */}
             {image && (
-                <Box 
+                <Box
                     component="img"
                     src={image.src}
                     alt={image.alt}
@@ -82,5 +82,5 @@ export const FAQAnswer = ({ content, image }: FAQAnswerProps) => {
                 />
             )}
         </Box>
-    )
-} 
+    );
+};

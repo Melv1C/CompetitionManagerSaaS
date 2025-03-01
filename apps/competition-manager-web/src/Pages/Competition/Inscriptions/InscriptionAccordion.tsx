@@ -2,7 +2,7 @@
  * Component for displaying an athlete's inscriptions in an accordion format
  */
 
-import { Bib, Delete, Edit, Time } from '@/Components';
+import { Bib, Icons, Time } from '@/Components';
 import { useDeviceSize } from '@/hooks';
 import { formatPerf } from '@/utils';
 import {
@@ -113,7 +113,7 @@ export const InscriptionAccordion: React.FC<InscriptionAccordionProps> = ({
                                 }}
                                 color="primary"
                             >
-                                <Edit />
+                                <Icons.Edit />
                             </IconButton>
                             <IconButton
                                 size="small"
@@ -123,7 +123,7 @@ export const InscriptionAccordion: React.FC<InscriptionAccordionProps> = ({
                                 }}
                                 color="error"
                             >
-                                <Delete />
+                                <Icons.Delete />
                             </IconButton>
                         </Stack>
                     )}

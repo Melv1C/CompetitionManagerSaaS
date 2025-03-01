@@ -14,9 +14,8 @@
  */
 
 import { deleteInscriptions } from '@/api';
-import { useConfirmDialog } from '@/Components/ConfirmDialog';
 import { inscriptionDataAtom, userInscriptionsAtom } from '@/GlobalsStates';
-import { useCompetition, useSnackbar } from '@/hooks';
+import { useCompetition, useConfirmDialog, useSnackbar } from '@/hooks';
 import {
     AthleteWithoutClub,
     Eid,
@@ -94,13 +93,15 @@ export const UserInscriptionsSection: React.FC<
     const queryClient = useQueryClient();
 
     // Filter out deleted inscriptions
-    const notDeletedInscriptions =
-        userInscriptions?.filter((i) => !i.isDeleted) || [];
+    const notDeletedInscriptions = useMemo(
+        () => userInscriptions?.filter((i) => !i.isDeleted) || [],
+        [userInscriptions]
+    );
 
     // Group inscriptions by athlete for better organization
     const groupedInscriptions = useMemo(
         () => groupInscriptionsByAthlete(notDeletedInscriptions || []),
-        [userInscriptions]
+        [notDeletedInscriptions]
     );
 
     /**

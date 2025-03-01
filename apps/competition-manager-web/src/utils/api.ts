@@ -1,5 +1,5 @@
+import { getRefreshToken } from '@/api';
 import axios from 'axios';
-import { getRefreshToken } from '../api';
 import i18n from '../i18n';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -12,7 +12,7 @@ export const setAccessToken = (token: string) => {
 
 // Create an Axios instance
 export const api = axios.create({
-    baseURL: BASE_URL
+    baseURL: BASE_URL,
 });
 
 export const apiWithCredentials = axios.create({
@@ -22,7 +22,6 @@ export const apiWithCredentials = axios.create({
 
 // Add a request interceptor to add the access token to each request
 api.interceptors.request.use((config) => {
-
     // If the access token is not null, add it to the Authorization header
     if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -34,23 +33,25 @@ api.interceptors.request.use((config) => {
 
 // Add a response interceptor to handle errors
 api.interceptors.response.use(
-    response => response,
+    (response) => response,
     async (error) => {
         const originalRequest = error.config;
-    
+
         // Check if error status is 401 (Unauthorized) and retry hasn't happened yet
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true; // Prevents infinite loop
-    
+
             try {
                 // Call refresh token endpoint to get a new access token
                 const token = await getRefreshToken();
-                
+
                 // Update the access token in memory
                 accessToken = token;
-        
+
                 // Retry the original request with the new access token
-                originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+                originalRequest.headers[
+                    'Authorization'
+                ] = `Bearer ${accessToken}`;
                 return api(originalRequest);
             } catch (refreshError) {
                 console.error('Token refresh failed:', refreshError);
@@ -61,6 +62,3 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
-
-

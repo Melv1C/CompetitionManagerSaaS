@@ -1,11 +1,10 @@
-import { useAtomValue } from "jotai";
-import { competitionAtom } from "../GlobalsStates";
+import { competitionAtom } from '@/GlobalsStates';
+import { useAtomValue } from 'jotai';
 
 export const useCompetition = () => {
-
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition found');
-    
+
     const now = new Date();
 
     const startDate = competition.date;
@@ -19,13 +18,14 @@ export const useCompetition = () => {
     const isFuture = today < startDate;
     const isCurrent = !isPast && !isFuture;
 
-    const isInscriptionOpen = now >= competition.startInscriptionDate && now <= competition.endInscriptionDate;
+    const isInscriptionOpen =
+        now >= competition.startInscriptionDate &&
+        now <= competition.endInscriptionDate;
 
-    return { 
+    return {
         isPast,
         isFuture,
         isCurrent,
-        isInscriptionOpen
+        isInscriptionOpen,
     };
-}
-    
+};

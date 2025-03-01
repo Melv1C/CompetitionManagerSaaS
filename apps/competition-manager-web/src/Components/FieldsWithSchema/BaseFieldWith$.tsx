@@ -1,20 +1,27 @@
-import { FormControl, FormControlProps, FormLabel, FormLabelProps, TextField, TextFieldProps } from '@mui/material';
+import {
+    FormControl,
+    FormControlProps,
+    FormLabel,
+    FormLabelProps,
+    TextField,
+    TextFieldProps,
+} from '@mui/material';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ZodSchema } from 'zod';
 
-export type FieldValueProps<T = any> = {
-    value: T;
-    onChange: (value: T) => void;
+type FieldValueProps = {
+    value: string;
+    onChange: (value: string) => void;
 };
 
-export type Validator = {
+type Validator = {
     Schema$: ZodSchema;
     isValid: boolean;
     setIsValid: (value: boolean) => void;
 };
 
-export type LabelProps = {
+type LabelProps = {
     value: string;
     hasExtrenLabel?: boolean;
 };
@@ -28,7 +35,7 @@ export type BaseFieldWith$Props = Omit<TextFieldProps, 'label' | 'value'> & {
     formLabelProps?: FormLabelProps;
 };
 
-export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({ 
+export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
     id,
     label,
     value,
@@ -37,7 +44,6 @@ export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
     formLabelProps,
     ...props
 }) => {
-
     const { t } = useTranslation('zod');
 
     const [hasBlurred, setHasBlurred] = useState(false);
@@ -45,7 +51,11 @@ export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
 
     return (
         <FormControl {...formControlProps}>
-            {label.hasExtrenLabel && <FormLabel htmlFor={id} {...formLabelProps}>{label.value}</FormLabel>}
+            {label.hasExtrenLabel && (
+                <FormLabel htmlFor={id} {...formLabelProps}>
+                    {label.value}
+                </FormLabel>
+            )}
             <TextField
                 label={!label.hasExtrenLabel ? label.value : ''}
                 value={value.value}
@@ -58,12 +68,18 @@ export const BaseFieldWith$: React.FC<BaseFieldWith$Props> = ({
                     if (!hasBlurred) {
                         setHasBlurred(true);
                     }
-                    const { success, error} = validator.Schema$.safeParse(e.target.value);
+                    const { success, error } = validator.Schema$.safeParse(
+                        e.target.value
+                    );
                     validator.setIsValid(success);
-                    setErrorMsg(error?.errors?.map(e => t(e.message)).join(', ') ?? '');
+                    setErrorMsg(
+                        error?.errors?.map((e) => t(e.message)).join(', ') ?? ''
+                    );
                 }}
                 {...props}
             />
         </FormControl>
     );
 };
+
+export default BaseFieldWith$;
