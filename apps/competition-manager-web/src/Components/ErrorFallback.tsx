@@ -1,11 +1,11 @@
+import { isNodeEnv } from '@/env';
+import { NODE_ENV } from '@competition-manager/schemas';
 import { faEnvelope, faRotate } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { FallbackProps } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { MaxWidth } from './MaxWidth';
-import { isNodeEnv } from '@/env';
-import { NODE_ENV } from '@competition-manager/schemas';
 
 export const ErrorFallback: React.FC<FallbackProps> = ({
     error,
@@ -27,7 +27,7 @@ export const ErrorFallback: React.FC<FallbackProps> = ({
                     {t('errorFallback.title')}
                 </Typography>
 
-                <Typography variant="body1" component='p' gutterBottom>
+                <Typography variant="body1" component="p" gutterBottom>
                     {t('errorFallback.description')}
                 </Typography>
 
