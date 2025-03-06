@@ -32,8 +32,8 @@
 
 import { Router } from 'express';
 import { prisma } from '@competition-manager/prisma';
-import { Result$, CreateResult$, resultInclude, Role, Access, Admin$, Athlete$, EventType, competitionEventInclude } from '@competition-manager/schemas';
-import { catchError, checkAdminRole, checkRole, CustomRequest, findAthleteWithLicense, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
+import { Result$, CreateResult$, resultInclude, Role, Access, Admin$, Athlete$, EventType, competitionEventInclude, CreateResult } from '@competition-manager/schemas';
+import { catchError, checkAdminRole, checkRole, CustomRequest, findAthleteWithLicense, Key, parseRequest } from '@competition-manager/backend-utils';
 import { logger } from '../logger';
 import { isAuthorized, isBestResult } from '@competition-manager/utils';
 
@@ -41,132 +41,126 @@ export const router = Router();
 
 router.post(
     '/',
-    parseRequest(Key.Body, CreateResult$),
+    parseRequest(Key.Body, CreateResult$.array()),
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
         try {
-            // Extract validated fields from request body
-            const { competitionEid, competitionEventEid, athleteLicense, details, ...rest } = CreateResult$.parse(req.body);
+            const results = CreateResult$.array().parse(req.body);
+            const upsertedResults = [];
 
-            // Fetch competition with related admins and events
-            const competition = await prisma.competition.findUnique({
-                where: { eid: competitionEid },
-                include: {
-                    admins: true,
-                    events: { include: competitionEventInclude },
-                    oneDayAthletes: true
+            for (const resultInfo of results) {
+                const { competitionEid, competitionEventEid, athleteLicense, details, ...rest } = resultInfo;
+
+
+                const competition = await prisma.competition.findUnique({
+                    where: { eid: competitionEid },
+                    include: {
+                        admins: true,
+                        events: { include: competitionEventInclude },
+                        oneDayAthletes: true
+                    }
+                });
+
+                if (!competition) {
+                    res.status(404).send(req.t('errors.competitionNotFound'));
+                    return;
                 }
-            });
 
-            // Return 404 if competition not found
-            if (!competition) {
-                res.status(404).send(req.t('errors.competitionNotFound'));
-                return;
-            }
+                const competitionEvent = competition.events.find(event => event.eid === competitionEventEid);
 
-            // Find matching competition event
-            const competitionEvent = competition.events.find(event => event.eid === competitionEventEid);
-
-            // Return 404 if event not found
-            if (!competitionEvent) {
-                res.status(404).send(req.t('errors.competitionEventNotFound'));
-                return;
-            }
-
-            const athlete = await findAthleteWithLicense(athleteLicense, Athlete$.array().parse(competition.oneDayAthletes));
-
-            // Return 404 if athlete not found
-            if (!athlete) {
-                res.status(404).send(req.t('errors.athleteNotFound'));
-                return;
-            }
-
-            // Check if user has required permissions
-            if (!isAuthorized(req.user!, Role.SUPERADMIN) && !checkAdminRole(Access.RESULTS, req.user!.id, Admin$.array().parse(competition.admins), res, req.t)) {
-                return;
-            }
-
-            // Find the inscription for this athlete and event
-            const inscription = await prisma.inscription.findFirst({
-                where: {
-                    athleteId: athlete.id,
-                    competitionEventId: competitionEvent.id,
-                    competitionId: competition.id
+                if (!competitionEvent) {
+                    res.status(404).send(req.t('errors.competitionEventNotFound'));
+                    return;
                 }
-            });
 
-            // Process details to compute best performances
-            const processedDetails = details.map((detail, idx, arr) => {
-                const isBestPerf = arr.every(d => 
-                    d === detail || isBestResult(detail.value, d.value, competitionEvent.event.type as EventType)
-                );
-                return {
-                    tryNumber: detail.tryNumber,
-                    value: detail.value,
-                    attempts: detail.attempts?.map(a => a.toString()) || [],
-                    wind: detail.wind,
-                    isBest: isBestPerf,
-                    isOfficialBest: isBestPerf // For now, assuming official best is same as best (TODO)
-                };
-            });
+                const athlete = await findAthleteWithLicense(athleteLicense, Athlete$.array().parse(competition.oneDayAthletes));
 
-            // Find best performance for result-level values
-            const bestDetail = processedDetails.find(d => d.isBest);
+                if (!athlete) {
+                    res.status(404).send(req.t('errors.athleteNotFound'));
+                    return;
+                }
 
-            // Prepare base result data
-            const resultData = {
-                ...rest,
-                value: bestDetail?.value,
-                wind: bestDetail?.wind,
-                competitionEventId: competitionEvent.id,
-                athleteId: athlete.id,
-                clubId: athlete.club.id,
-                competitionId: competition.id,
-                inscriptionId: inscription?.id || null,
-                initialOrder: rest.tempOrder // Using tempOrder as initial order if not provided (TODO)
-            };
+                if (!isAuthorized(req.user!, Role.SUPERADMIN) && !checkAdminRole(Access.RESULTS, req.user!.id, Admin$.array().parse(competition.admins), res, req.t)) {
+                    return;
+                }
 
-            // Upsert result
-            const result = await prisma.result.upsert({
-                where: {
-                    competitionEventId_athleteId: {
+                const inscription = await prisma.inscription.findFirst({
+                    where: {
+                        athleteId: athlete.id,
                         competitionEventId: competitionEvent.id,
-                        athleteId: athlete.id
+                        competitionId: competition.id
                     }
-                },
-                create: {
-                    ...resultData,
-                    resultDetails: {
-                        create: processedDetails
-                    }
-                },
-                update: {
-                    ...resultData,
-                    resultDetails: {
-                        deleteMany: {},
-                        create: processedDetails
-                    }
-                },
-                include: resultInclude
-            });
+                });
 
-            // Emit appropriate event
-            req.app.get('io').to(`competition:${competitionEid}`)
-                .emit('result:new', Result$.parse(result));
-            
-            // Return response with appropriate status code
-            res.status(201).json(Result$.parse(result));
+                const processedDetails = details.map((detail, idx, arr) => {
+                    const isBestPerf = arr.every(d => 
+                        d === detail || isBestResult(detail.value, d.value, competitionEvent.event.type as EventType)
+                    );
+                    return {
+                        tryNumber: detail.tryNumber,
+                        value: detail.value,
+                        attempts: detail.attempts?.map(a => a.toString()) || [],
+                        wind: detail.wind,
+                        isBest: isBestPerf,
+                        isOfficialBest: isBestPerf
+                    };
+                });
+
+                const bestDetail = processedDetails.find(d => d.isBest);
+
+                const resultData = {
+                    ...rest,
+                    value: bestDetail?.value,
+                    wind: bestDetail?.wind,
+                    competitionEventId: competitionEvent.id,
+                    athleteId: athlete.id,
+                    clubId: athlete.club.id,
+                    competitionId: competition.id,
+                    inscriptionId: inscription?.id || null,
+                    initialOrder: rest.tempOrder
+                };
+
+                const result = await prisma.result.upsert({
+                    where: {
+                        competitionEventId_athleteId: {
+                            competitionEventId: competitionEvent.id,
+                            athleteId: athlete.id
+                        }
+                    },
+                    create: {
+                        ...resultData,
+                        resultDetails: {
+                            create: processedDetails
+                        }
+                    },
+                    update: {
+                        ...resultData,
+                        resultDetails: {
+                            deleteMany: {},
+                            create: processedDetails
+                        }
+                    },
+                    include: resultInclude
+                });
+
+                req.app.get('io').to(`competition:${competitionEid}`)
+                    .emit('result:new', Result$.parse(result));
+
+                upsertedResults.push(Result$.parse(result));
+            }
+
+            res.status(201).json(upsertedResults);
             return;
         } catch (error) {
-            // Log error and return 500 response
             catchError(logger)(error, {
                 message: 'Internal server error',
                 path: 'POST /',
                 status: 500,
-                userId: req.user!.id,
+                //userId: req.user!.id,
+                userId: 1,
             });
             res.status(500).send(req.t('errors.internalServerError'));
             return;
         }
     }
-); 
+);
