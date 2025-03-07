@@ -14,6 +14,7 @@ import footer from './footer.json';
 import news from './news.json';
 import faq from './faq.json';
 import errors from './errors.json';
+import result from './result.json';
 
 import { frontendTranslations } from '@competition-manager/translations';
 
@@ -34,5 +35,6 @@ export default {
     footer,
     news,
     faq,
-    errors
+    errors,
+    result
 }
