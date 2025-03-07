@@ -6,6 +6,9 @@
     "initialOrder": "Initiële volgorde",
     "heat": "Serie",
     "license": "Licentie",
-    "upload": "Resultaten uploaden",
-    "uploading": "Uploaden..."
+    "upload": "uploaden",
+    "selectFile": "Bestand selecteren",
+    "selectedFile": "Geselecteerd bestand: {{name}}",
+    "autoDetect": "Automatisch detecteren",
+    "noFileSelected": "Geen bestand geselecteerd"
 }

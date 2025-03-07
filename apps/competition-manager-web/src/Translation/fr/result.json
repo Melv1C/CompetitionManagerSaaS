@@ -6,6 +6,9 @@
     "initialOrder": "Ordre initial",
     "heat": "Série",
     "license": "License",
-    "upload": "Envoyer resultats",
-    "uploading": "Envoie en cours..."
+    "upload": "Envoyer",
+    "selectFile": "Sélectionner un fichier",
+    "selectedFile": "Fichier sélectionné: {{name}}",
+    "autoDetect": "Détection automatique",
+    "noFileSelected": "Aucun fichier sélectionné"
 }

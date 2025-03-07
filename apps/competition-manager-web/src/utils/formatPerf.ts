@@ -1,9 +1,23 @@
-import { EventType } from "@competition-manager/schemas";
+import { EventType, ResultDetailCode } from "@competition-manager/schemas";
 
 export const formatPerf = (perf: number | undefined | null, eventType: EventType) => {
 
     if (perf === undefined || perf === null) {
         return '-';
+    }
+
+    if (perf < 0) {
+        // Handle special result codes
+        switch (perf) {
+            case ResultDetailCode.X:
+                return 'X';
+            case ResultDetailCode.PASS:
+                return '-';
+            case ResultDetailCode.R:
+                return 'r';
+            default:
+                return perf;
+        }
     }
 
     switch (eventType) {

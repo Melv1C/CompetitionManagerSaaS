@@ -6,6 +6,9 @@
     "initialOrder": "Initial Order",
     "heat": "Heat",
     "license": "License",
-    "upload": "Upload Results",
-    "uploading" : "Uploading..."
+    "upload": "Upload",
+    "selectFile": "Select File",
+    "selectedFile": "Selected file: {{name}}",
+    "autoDetect": "Auto detect",
+    "noFileSelected": "No file selected"
 }
