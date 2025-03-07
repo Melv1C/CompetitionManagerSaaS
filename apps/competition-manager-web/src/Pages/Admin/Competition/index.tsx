@@ -21,6 +21,7 @@ import {
 import { Confirmations } from './Confirmations';
 import { Info } from './Info';
 import { Inscriptions } from './Inscriptions';
+import { Results } from './Results';
 import { Schedule } from './Schedule';
 
 export const AdminCompetition = () => {
@@ -80,7 +81,7 @@ export const AdminCompetition = () => {
         return () => {
             reset();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -115,7 +116,7 @@ export const AdminCompetition = () => {
                             path="/confirmations"
                             element={<Confirmations />}
                         />
-                        <Route path="/results" element={<Box>results</Box>} />
+                        <Route path="/results" element={<Results />} />
                         <Route path="/admins" element={<Box>admins</Box>} />
                         <Route path="/options" element={<Box>options</Box>} />
                         <Route path="/settings" element={<Box>settings</Box>} />
