@@ -138,7 +138,9 @@ export const useFileProcessing = (competition: Competition) => {
             }
 
             // Sort results by order for better presentation
-            processedResults.sort((a, b) => a.finalOrder - b.finalOrder);
+            processedResults.sort((a, b) => 
+                (a.finalOrder || 0) - (b.finalOrder || 0)
+            );
 
             setResults(processedResults);
             setIsTableVisible(true);
