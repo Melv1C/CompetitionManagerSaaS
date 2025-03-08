@@ -1,3 +1,4 @@
+import { api } from '@/utils/api';
 import {
     CreateOption,
     CreatePaymentPlan,
@@ -9,7 +10,6 @@ import {
     UpdateOption,
     UpdatePaymentPlan,
 } from '@competition-manager/schemas';
-import { api } from '../utils/api';
 
 export const getPlans = async (): Promise<PaymentPlan[]> => {
     const { data } = await api.get('/offers/plans');

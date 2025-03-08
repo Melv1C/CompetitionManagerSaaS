@@ -1,6 +1,6 @@
+import { api } from '@/utils/api';
 import { Eid, Inscription$, NODE_ENV } from '@competition-manager/schemas';
 import { isNodeEnv } from '../../env';
-import { api } from '../../utils/api';
 
 export const getUsersInscriptions = async (competitionEid?: Eid) => {
     try {

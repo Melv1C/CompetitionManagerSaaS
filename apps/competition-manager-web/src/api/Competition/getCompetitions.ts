@@ -1,8 +1,8 @@
+import { api } from '@/utils/api';
 import {
     DisplayCompetition,
     DisplayCompetition$,
 } from '@competition-manager/schemas';
-import { api } from '../../utils/api';
 
 type GetCompetitionsParams = {
     from?: Date;

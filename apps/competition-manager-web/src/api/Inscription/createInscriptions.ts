@@ -1,6 +1,6 @@
 import { CreateInscription, Inscription$ } from '@competition-manager/schemas';
 import { z } from 'zod';
-import { api } from '../../utils/api';
+import { api } from '@/utils/api';
 
 export enum CreateInscriptionsResponseType {
     URL,
