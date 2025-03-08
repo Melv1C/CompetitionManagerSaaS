@@ -7,11 +7,14 @@
 
 import { MaxWidth } from '@/Components';
 import { competitionAtom } from '@/GlobalsStates';
-import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
+import {
+    faArrowUpFromBracket
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Box, Divider, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Paper, Tooltip, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FilePopup } from './FilePopup';
 
 /**
@@ -20,6 +23,8 @@ import { FilePopup } from './FilePopup';
  * @returns React component displaying the competition results interface
  */
 export const Results = () => {
+    const { t } = useTranslation();
+
     // Get competition data from global state
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
@@ -35,32 +40,41 @@ export const Results = () => {
                 gap: 2,
             }}
         >
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}
-            >
-                {/* Competition name heading */}
-                <Typography variant="h5">{competition.name}</Typography>
-
-                {/* Upload button to trigger file popup */}
-                <IconButton
-                    onClick={() => setFilePopupVisible(true)}
-                    color="primary"
+            {/* Header section with competition info */}
+            <Paper elevation={1} sx={{ p: 2, mb: 2 }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
                 >
-                    <FontAwesomeIcon icon={faArrowUpFromBracket} />
-                </IconButton>
-                {filePopupVisible && (
-                    <FilePopup
-                        open={filePopupVisible}
-                        onClose={() => setFilePopupVisible(false)}
-                    />
-                )}
-            </Box>
+                    <Box>
+                        <Typography variant="h5">{competition.name}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {t('result:resultsManagement')}
+                        </Typography>
+                    </Box>
 
-            <Divider />
+                    {/* Upload button with tooltip */}
+                    <Tooltip title={t('result:uploadResults')}>
+                        <IconButton
+                            onClick={() => setFilePopupVisible(true)}
+                            color="primary"
+                            size="large"
+                        >
+                            <FontAwesomeIcon icon={faArrowUpFromBracket} />
+                        </IconButton>
+                    </Tooltip>
+                    {/* File upload popup */}
+                    {filePopupVisible && (
+                        <FilePopup
+                            open={filePopupVisible}
+                            onClose={() => setFilePopupVisible(false)}
+                        />
+                    )}
+                </Box>
+            </Paper>
         </MaxWidth>
     );
 };

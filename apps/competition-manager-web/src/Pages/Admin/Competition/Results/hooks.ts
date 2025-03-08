@@ -5,69 +5,111 @@
  * Provides functionality for file content processing and API communication.
  */
 
-import { api } from '@/utils';
-import { CreateResult, EventType } from '@competition-manager/schemas';
-import { useState } from 'react';
+import { Competition, CompetitionEvent } from '@competition-manager/schemas';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DisplayResult, XmlData, XmlData$ } from './types';
 import { handleHeats, parseXmlFile } from './utils';
-
-/**
- * Interface for competition data structure
- */
-export interface CompetitionData {
-    eid: string;
-    events: {
-        eid: string;
-        name: string;
-        event: {
-            type: EventType;
-        };
-    }[];
-}
 
 /**
  * Custom hook for processing uploaded result files
  *
- * @param eventEid - ID of the selected event or 'autoDetect'
  * @param competition - Competition data containing events information
  * @returns Object with state and functions for file processing
  */
-export const useFileProcessing = (
-    eventEid: string,
-    competition: CompetitionData
-) => {
-    const [results, setResults] = useState<CreateResult[]>([]);
+export const useFileProcessing = (competition: Competition) => {
+    // Using DisplayResult type to store enhanced result information
+    const [results, setResults] = useState<DisplayResult[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isTableVisible, setIsTableVisible] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    // States for handling event selection
+    const [needsEventSelection, setNeedsEventSelection] = useState(false);
+    const [pendingXmlData, setPendingXmlData] = useState<XmlData | null>(null);
+
+    // Memoize available events to prevent unnecessary re-renders
+    const availableEvents = useMemo(
+        () => competition.events,
+        [competition.events]
+    );
+
+    const { t } = useTranslation();
 
     /**
      * Processes the content of an XML file into structured result data
+     * Extracts both required backend fields and additional display information
      *
      * @param fileContent - String content of the XML file
      * @returns Promise that resolves when processing is complete
      */
     const processFileContent = async (fileContent: string): Promise<void> => {
         setError(null);
+        setIsProcessing(true);
 
         try {
             // Parse the XML data
-            const parsedData = parseXmlFile(fileContent);
-            const eventData = parsedData.event;
-            const eventName = eventData.name;
-            const rounds = eventData.rounds.round;
+            const parsedData = XmlData$.parse(parseXmlFile(fileContent));
+            const eventName = parsedData.event.name;
 
-            // Find the matching event in competition data
-            const event =
-                eventEid === 'autoDetect'
-                    ? competition.events.find(
-                          (event) => event.name === eventName
-                      )
-                    : competition.events.find(
-                          (event) => event.eid === eventEid
-                      );
+            // Find the matching event in competition data - try exact match first
+            let event = competition.events.find(
+                (event) => event.name.toLowerCase() === eventName.toLowerCase()
+            );
 
-            if (!event) throw new Error('Event not found in competition data');
+            // If no exact match, try to find a similar event
+            if (!event) {
+                event = competition.events.find(
+                    (event) =>
+                        event.name
+                            .toLowerCase()
+                            .includes(eventName.toLowerCase()) ||
+                        eventName
+                            .toLowerCase()
+                            .includes(event.name.toLowerCase())
+                );
+            }
 
-            let processedResults: CreateResult[] = [];
+            if (!event) {
+                // Instead of throwing error, store data and prompt for selection
+                setPendingXmlData(parsedData);
+                setNeedsEventSelection(true);
+                return;
+            }
+
+            // Process data with the found event
+            await processWithEvent(parsedData, event);
+        } catch (error) {
+            console.error('Error processing XML:', error);
+            setError(
+                t('result:failedToReadFile') +
+                    `: ${
+                        error instanceof Error
+                            ? error.message
+                            : t('result:unknownError')
+                    }`
+            );
+            setIsTableVisible(false);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    /**
+     * Processes the XML data using a specific event
+     * Called either automatically when event is found or after user selection
+     *
+     * @param parsedData - The parsed XML data
+     * @param event - The selected event from competition data
+     */
+    const processWithEvent = async (
+        parsedData: XmlData,
+        event: CompetitionEvent
+    ): Promise<void> => {
+        try {
+            const rounds = parsedData.event.rounds.round;
+
+            // Array to hold all processed results with display information
+            let processedResults: DisplayResult[] = [];
 
             // Process single round case
             if (!Array.isArray(rounds)) {
@@ -82,7 +124,7 @@ export const useFileProcessing = (
             // Process multiple rounds case
             else {
                 for (const round of rounds) {
-                    if (round['@_combinedTotal'] === 'false') {
+                    if (round['@_combinedTotal'] === false) {
                         const heats = round.heats.heat;
                         const roundResults = handleHeats(
                             heats,
@@ -95,20 +137,58 @@ export const useFileProcessing = (
                 }
             }
 
+            // Sort results by order for better presentation
+            processedResults.sort((a, b) => a.finalOrder - b.finalOrder);
+
             setResults(processedResults);
             setIsTableVisible(true);
+            // Reset selection state
+            setPendingXmlData(null);
+            setNeedsEventSelection(false);
         } catch (error) {
-            if (
-                error instanceof Error &&
-                error.message === 'Event not found in competition data'
-            ) {
-                setError(error.message);
-            } else {
-                console.error('Error processing XML:', error);
-                setError('Failed to process XML data');
-            }
+            console.error('Error processing with selected event:', error);
+            setError(
+                t('result:eventProcessingFailed') +
+                    `: ${
+                        error instanceof Error
+                            ? error.message
+                            : t('result:unknownError')
+                    }`
+            );
             setIsTableVisible(false);
         }
+    };
+
+    /**
+     * Handles user event selection from the popup
+     *
+     * @param selectedEventEid - The ID of the event selected by the user
+     */
+    const handleEventSelection = (selectedEventEid: string): void => {
+        if (!pendingXmlData) {
+            setError(t('result:noPendingData'));
+            return;
+        }
+
+        const selectedEvent = competition.events.find(
+            (event) => event.eid === selectedEventEid
+        );
+
+        if (!selectedEvent) {
+            setError(t('result:eventNotFound'));
+            return;
+        }
+
+        processWithEvent(pendingXmlData, selectedEvent);
+    };
+
+    /**
+     * Cancels the event selection process
+     */
+    const cancelEventSelection = (): void => {
+        setPendingXmlData(null);
+        setNeedsEventSelection(false);
+        setError(t('result:selectionCanceled'));
     };
 
     return {
@@ -118,46 +198,11 @@ export const useFileProcessing = (
         setError,
         isTableVisible,
         setIsTableVisible,
+        isProcessing,
         processFileContent,
-    };
-};
-
-/**
- * Custom hook for uploading results to the API
- *
- * @returns Object with state and functions for result uploading
- */
-export const useResultsUpload = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    /**
-     * Uploads result data to the server API
-     *
-     * @param results - Array of result objects to upload
-     * @returns Promise that resolves to true when upload succeeds
-     * @throws Error when upload fails
-     */
-    const uploadResults = async (results: CreateResult[]): Promise<boolean> => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            await api.post('/results', results);
-            setLoading(false);
-            return true;
-        } catch (error) {
-            console.error(error);
-            setError('Failed to upload results');
-            setLoading(false);
-            throw error;
-        }
-    };
-
-    return {
-        uploadResults,
-        loading,
-        error,
-        setError,
+        needsEventSelection,
+        handleEventSelection,
+        cancelEventSelection,
+        availableEvents,
     };
 };

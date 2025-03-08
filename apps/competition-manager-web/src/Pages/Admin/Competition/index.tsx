@@ -17,7 +17,7 @@ import { Route, Routes, useParams } from 'react-router-dom';
 import {
     CLOSED_SIDENAV_WIDTH,
     OPEN_SIDENAV_WIDTH,
-} from '../../../utils/constants';
+} from '@/utils/constants';
 import { Confirmations } from './Confirmations';
 import { Info } from './Info';
 import { Inscriptions } from './Inscriptions';
