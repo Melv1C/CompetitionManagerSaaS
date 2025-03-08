@@ -1,5 +1,5 @@
+import { api } from '@/utils/api';
 import { Eid, Inscription$ } from '@competition-manager/schemas';
-import { api } from '../../utils/api';
 
 export const getAdminInscriptions = async (competitionEid: Eid) => {
     const { data } = await api.get(

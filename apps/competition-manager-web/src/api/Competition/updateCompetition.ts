@@ -1,10 +1,10 @@
+import { api } from '@/utils/api';
 import {
     Competition$,
     Eid,
     UpdateCompetition,
     UpdateCompetition$,
 } from '@competition-manager/schemas';
-import { api } from '../../utils/api';
 
 export const updateCompetition = async (
     competitionEid: Eid,

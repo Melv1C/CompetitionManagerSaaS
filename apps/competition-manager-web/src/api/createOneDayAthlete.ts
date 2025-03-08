@@ -5,12 +5,12 @@
  * It sends the athlete data to the server and returns the created athlete.
  */
 
+import { api } from '@/utils/api';
 import {
     Athlete$,
     CreateOneDayAthlete,
     Eid,
 } from '@competition-manager/schemas';
-import { api } from '../utils/api';
 
 export const createOneDayAthlete = async (
     competitionEid: Eid,

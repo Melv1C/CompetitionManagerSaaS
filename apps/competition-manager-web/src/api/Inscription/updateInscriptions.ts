@@ -1,9 +1,9 @@
+import { api } from '@/utils/api';
 import {
     Inscription,
     Inscription$,
     UpdateInscription$,
 } from '@competition-manager/schemas';
-import { api } from '../../utils/api';
 
 export const updateInscriptions = async (
     eid: string,

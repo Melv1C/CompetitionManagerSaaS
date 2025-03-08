@@ -21,7 +21,7 @@ export type Date = z.infer<typeof Date$>;
 export const Price$ = z.coerce.number().nonnegative('PriceMustBeNonNegative');
 export type Price = z.infer<typeof Price$>;
 
-export const License$ = z.string().min(1, "LicenseTooShort1").max(20, "LicenseTooLong20");
+export const License$ = z.coerce.string().min(1, "LicenseTooShort1").max(20, "LicenseTooLong20");
 export type License = z.infer<typeof License$>;
 
 export const Bib$ = z.coerce.number().positive('BibMustBePositive');

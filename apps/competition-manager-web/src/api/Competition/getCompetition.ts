@@ -1,5 +1,5 @@
+import { api } from '@/utils/api';
 import { Competition, Competition$, Eid } from '@competition-manager/schemas';
-import { api } from '../../utils/api';
 
 export const getCompetition = async (
     eid: Eid,

@@ -10,3 +10,4 @@ export * from './getLogs';
 export * from './getRecords';
 export * from './Inscription';
 export * from './OffersCRUD';
+export * from './Result';

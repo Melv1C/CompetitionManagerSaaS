@@ -6,8 +6,8 @@
  * and type safety.
  */
 
+import { api } from '@/utils/api';
 import { Eid } from '@competition-manager/schemas';
-import { api } from '../../utils/api';
 
 /**
  * Deletes a specific inscription from a competition.

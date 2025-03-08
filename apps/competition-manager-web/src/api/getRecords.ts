@@ -1,5 +1,5 @@
+import { api } from '@/utils/api';
 import { Event, Records$ } from '@competition-manager/schemas';
-import { api } from '../utils/api';
 
 export const getRecords = async (
     license: string,
