@@ -43,6 +43,7 @@
     "react-query": "^3.39.3",
     "react-quill": "^2.0.0",
     "react-router-dom": "^7.1.1",
+    "react-simple-keyboard": "^3.8.55",
     "usehooks-ts": "^3.1.0",
     "zod": "^3.24.1"
   },
