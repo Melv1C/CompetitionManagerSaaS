@@ -1,16 +1,27 @@
 import { Time } from '@/Components';
 import { competitionAtom, inscriptionsAtom } from '@/GlobalsStates';
 import { EventGroup } from '@competition-manager/schemas';
-import { Box, Card, CardContent, CardHeader } from '@mui/material';
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Divider,
+    Tab,
+    Tabs,
+} from '@mui/material';
 import { useAtomValue } from 'jotai';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Inscriptions } from './Inscriptions';
 import { NavBar } from './NavBar';
+import { Results } from './Results';
 
 export const Event = () => {
     const { eventEid } = useParams();
     const { t } = useTranslation();
+    const [tab, setTab] = useState<'inscriptions' | 'results'>('inscriptions');
 
     const competition = useAtomValue(competitionAtom);
     const allInscriptions = useAtomValue(inscriptionsAtom);
@@ -28,6 +39,10 @@ export const Event = () => {
     const inscriptions = allInscriptions.filter(
         (i) => i.competitionEvent.id === event.id
     );
+
+    const handleTabChange = (_: React.SyntheticEvent, newValue: 'inscriptions' | 'results') => {
+        setTab(newValue);
+    };
 
     return (
         <Box
@@ -61,8 +76,23 @@ export const Event = () => {
                         currentEvent={event}
                     />
                 )}
+
+                <Tabs value={tab} onChange={handleTabChange} centered>
+                    <Tab label={t('Inscriptions')} value="inscriptions" />
+                    <Tab label={t('Results')} value="results" />
+                </Tabs>
+
+                <Divider />
+
                 <CardContent>
-                    <Inscriptions inscriptions={inscriptions} />
+                    {tab === 'inscriptions' ? (
+                        <Inscriptions inscriptions={inscriptions} />
+                    ) : (
+                        <Results
+                            eventId={event.eid}
+                            eventType={event.event.type}
+                        />
+                    )}
                 </CardContent>
             </Card>
         </Box>
