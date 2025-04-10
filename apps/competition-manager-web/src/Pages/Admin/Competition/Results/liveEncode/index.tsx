@@ -1,32 +1,21 @@
-import { Paper, TextField, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Paper, Box } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { useTranslation } from "react-i18next";
 import { adminInscriptionsAtom, competitionAtom } from '@/GlobalsStates'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { CompetitionEvent } from "@competition-manager/schemas";
 import { useState, KeyboardEvent, useEffect } from "react";
-import { DistanceKeyboard } from "./DistanceKeyboard";
+import { DistanceKeyboard } from "../DistanceKeyboard";
+import { EncodeProps, ResultData } from "./type";
+import { LiveOptions } from "./liveOptions";
+import { InputResult } from "./InputResult";
 
-type TableLiveProps = {
-    event: CompetitionEvent
-};
 
-type ResultData = {
-    [key: string]: { // inscription id or some unique identifier
-        tries: (string | null)[],
-        wind?: (string | null)[]  // Add wind data array
-    }
-};
-
-export const TableLive: React.FC<TableLiveProps> = ({ event }) => {
+export const Encode: React.FC<EncodeProps> = ({ event }) => {
     const { t } = useTranslation();
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
 
     const [nbTry, setNbTry] = useState(6);
-    const [trySelector, setTrySelector] = useState<string>("6");
-    const [nbTryTemp, setNbTryTemp] = useState(6);
-    const [isCustomTry, setIsCustomTry] = useState(false);
     const [showVirtualKeyboard, setShowVirtualKeyboard] = useState(false);
     const [currentInputId, setCurrentInputId] = useState<string | null>(null);
     const [currentInputValue, setCurrentInputValue] = useState<string>('');
@@ -38,34 +27,6 @@ export const TableLive: React.FC<TableLiveProps> = ({ event }) => {
 
     // State to hold all results
     const [results, setResults] = useState<ResultData>({});
-    
-    // Handle try count selection change
-    const handleTrySelectorChange = (event: SelectChangeEvent<string>) => {
-        const value = event.target.value;
-        setTrySelector(value);
-        
-        if (value === "custom") {
-            setIsCustomTry(true);
-            // Don't update nbTry yet, wait for custom input
-        } else {
-            setIsCustomTry(false);
-            const tryCount = parseInt(value);
-            setNbTry(tryCount);
-            // Update results when changing try count, preserving existing data
-            updateResultsForNewTryCount(tryCount);
-        }
-    };
-
-    // Handle custom try count input
-    const handleCustomTryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNbTryTemp(parseInt(event.target.value));
-        const tryCount = parseInt(event.target.value);
-        if (!isNaN(tryCount) && tryCount > 0 && tryCount <= 20) {
-            setNbTry(tryCount);
-            // Update results with new try count, preserving existing data
-            updateResultsForNewTryCount(tryCount);
-        }
-    };
 
     // Update results with new try count while preserving existing data
     const updateResultsForNewTryCount = (tryCount: number) => {
@@ -104,41 +65,9 @@ export const TableLive: React.FC<TableLiveProps> = ({ event }) => {
         console.log("Results:", results);
     }, [inscriptions, results]);
 
-    // Handle result input change
-    const handleResultChange = (inscriptionId: string, tryIndex: number, value: string) => {
-        setResults(prev => ({
-            ...prev,
-            [inscriptionId]: {
-                ...prev[inscriptionId],
-                tries: prev[inscriptionId]?.tries.map((try_, index) => 
-                    index === tryIndex ? value : try_
-                ) || []
-            }
-        }));
-        
-        // Update current input value for virtual keyboard
-        if (currentInputId === `result-${inscriptionId}-${tryIndex}`) {
-            setCurrentInputValue(value);
-        }
-    };
+    
 
-    // Handle wind input change
-    const handleWindChange = (inscriptionId: string, tryIndex: number, value: string) => {
-        setResults(prev => ({
-            ...prev,
-            [inscriptionId]: {
-                ...prev[inscriptionId],
-                wind: prev[inscriptionId]?.wind?.map((wind, index) => 
-                    index === tryIndex ? value : wind
-                ) || []
-            }
-        }));
-        
-        // Update current input value for virtual keyboard
-        if (currentInputId === `wind-${inscriptionId}-${tryIndex}`) {
-            setCurrentInputValue(value);
-        }
-    };
+    
 
     // Handle key press to move to next cell
     const handleKeyPress = (
@@ -266,6 +195,42 @@ export const TableLive: React.FC<TableLiveProps> = ({ event }) => {
         setCurrentInputId(inputId);
         setCurrentInputValue(e.target.value);
     };
+
+    // Handle result input change
+    const handleResultChange = (inscriptionId: string, tryIndex: number, value: string) => {
+        setResults(prev => ({
+            ...prev,
+            [inscriptionId]: {
+                ...prev[inscriptionId],
+                tries: prev[inscriptionId]?.tries.map((try_, index) => 
+                    index === tryIndex ? value : try_
+                ) || []
+            }
+        }));
+        
+        // Update current input value for virtual keyboard
+        if (currentInputId === `result-${inscriptionId}-${tryIndex}`) {
+            setCurrentInputValue(value);
+        }
+    };
+
+    // Handle wind input change
+    const handleWindChange = (inscriptionId: string, tryIndex: number, value: string) => {
+        setResults(prev => ({
+            ...prev,
+            [inscriptionId]: {
+                ...prev[inscriptionId],
+                wind: prev[inscriptionId]?.wind?.map((wind, index) => 
+                    index === tryIndex ? value : wind
+                ) || []
+            }
+        }));
+        
+        // Update current input value for virtual keyboard
+        if (currentInputId === `wind-${inscriptionId}-${tryIndex}`) {
+            setCurrentInputValue(value);
+        }
+    };
     
     // Handle virtual keyboard input
     const handleVirtualKeyboardInput = (value: string) => {
@@ -290,55 +255,12 @@ export const TableLive: React.FC<TableLiveProps> = ({ event }) => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {/* Try count selector, Wind switch, and Virtual Keyboard switch */}
-            <Box sx={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: 2 }}>
-                <FormControl variant="outlined" size="small" sx={{ width: '150px' }}>
-                    <InputLabel id="try-count-select-label">{t('Number of Tries')}</InputLabel>
-                    <Select
-                        labelId="try-count-select-label"
-                        id="try-count-select"
-                        value={trySelector}
-                        onChange={handleTrySelectorChange}
-                        label={t('Number of Tries')}
-                    >
-                        <MenuItem value="3">3</MenuItem>
-                        <MenuItem value="6">6</MenuItem>
-                        <MenuItem value="custom">{t('Custom')}</MenuItem>
-                    </Select>
-                </FormControl>
-                
-                {isCustomTry && (
-                    <TextField
-                        type="number"
-                        slotProps={{
-                            htmlInput: { 
-                                max: 100, 
-                                min: 1 
-                            },
-                        }}
-                        label={t('Custom tries')}
-                        value={nbTryTemp}
-                        onChange={handleCustomTryChange}
-                        variant="outlined"
-                        size="small"
-                    />
-                )}
-                
-                <FormControl variant="outlined" size="small" sx={{ width: '200px' }}>
-                    <InputLabel id="input-mode-select-label">{t('Input Mode')}</InputLabel>
-                    <Select
-                        labelId="input-mode-select-label"
-                        id="input-mode-select"
-                        value={inputMode}
-                        onChange={(e) => setInputMode(e.target.value as 'perf' | 'wind' | 'both')}
-                        label={t('Input Mode')}
-                    >
-                        <MenuItem value="perf">{t('Only Performance')}</MenuItem>
-                        <MenuItem value="wind">{t('Only Wind')}</MenuItem>
-                        <MenuItem value="both">{t('Both')}</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
+            <LiveOptions 
+                setNbTry={setNbTry} 
+                updateResultsForNewTryCount={updateResultsForNewTryCount} 
+                inputMode={inputMode} 
+                setInputMode={setInputMode}
+            />
 
             <Box sx={{ 
                 display: 'flex', 
@@ -425,46 +347,18 @@ export const TableLive: React.FC<TableLiveProps> = ({ event }) => {
                                             padding: inputMode == 'both' ? '6px 16px 0 16px' : '6px 16px', // Adjust padding when wind input is shown
                                             height: getRowHeight()
                                         }}>
-                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                                                <TextField
-                                                    id={`result-${inscription.id}-${tryIndex}`}
-                                                    variant="outlined"
-                                                    size="small"
-                                                    value={results[inscription.id]?.tries[tryIndex] || ''}
-                                                    onChange={(e) => handleResultChange(inscription.id.toString(), tryIndex, e.target.value)}
-                                                    onKeyDown={(e) => handleKeyPress(e as KeyboardEvent<HTMLInputElement>, tryIndex, rowIndex, inscription.id.toString())}
-                                                    onFocus={(e) => handleInputFocus(e, `result-${inscription.id}-${tryIndex}`)}
-                                                    inputProps={{ 
-                                                        style: { textAlign: 'center' },
-                                                        'aria-label': `Try ${tryIndex + 1} for ${inscription.athlete.firstName} ${inscription.athlete.lastName}`
-                                                    }}
-                                                    sx={{ 
-                                                        width: '80px',
-                                                        display: inputMode === 'wind' ? 'none' : 'block', // Hide if only wind is selected
-                                                        '& .MuiInputBase-root': { height: '36px' }
-                                                    }}
-                                                />
-                                                {inputMode != 'perf' && (
-                                                    <TextField
-                                                        id={`wind-${inscription.id}-${tryIndex}`}
-                                                        variant="outlined"
-                                                        size="small"
-                                                        placeholder={t('Wind')}
-                                                        value={results[inscription.id]?.wind?.[tryIndex] || ''}
-                                                        onChange={(e) => handleWindChange(inscription.id.toString(), tryIndex, e.target.value)}
-                                                        onKeyDown={(e) => handleWindKeyPress(e as KeyboardEvent<HTMLInputElement>, tryIndex, rowIndex)}
-                                                        onFocus={(e) => handleInputFocus(e, `wind-${inscription.id}-${tryIndex}`)}
-                                                        inputProps={{ 
-                                                            style: { textAlign: 'center' },
-                                                            'aria-label': `Wind for try ${tryIndex + 1} for ${inscription.athlete.firstName} ${inscription.athlete.lastName}`
-                                                        }}
-                                                        sx={{ 
-                                                            width: '80px',
-                                                            '& .MuiInputBase-root': { height: '28px' }
-                                                        }}
-                                                    />
-                                                )}
-                                            </Box>
+                                            <InputResult
+                                                inscription={inscription} 
+                                                tryIndex={tryIndex} 
+                                                rowIndex={rowIndex} 
+                                                results={results}
+                                                handleKeyPress={handleKeyPress} 
+                                                handleInputFocus={handleInputFocus} 
+                                                inputMode={inputMode} 
+                                                handleWindKeyPress={handleWindKeyPress}
+                                                handleResultChange={handleResultChange}
+                                                handleWindChange={handleWindChange}
+                                            />
                                         </TableCell>
                                     ))}
                                     {/* Best Performance Column */}

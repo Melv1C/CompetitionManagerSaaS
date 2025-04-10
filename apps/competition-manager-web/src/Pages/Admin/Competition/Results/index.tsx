@@ -16,8 +16,8 @@ import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FilePopup } from './FilePopup';
-import { TableLive } from './TableLive';
 import { CompetitionEvent } from '@competition-manager/schemas';
+import { Encode } from './liveEncode';
 
 /**
  * Results page component for managing competition results
@@ -109,7 +109,7 @@ export const Results = () => {
                     </Select>
                 </FormControl>
             </Box>
-            {selectedEvent ? <TableLive event={selectedEvent}/> : null}
+            {selectedEvent ? <Encode event={selectedEvent}/> : null}
         </Box>
     );
 };
