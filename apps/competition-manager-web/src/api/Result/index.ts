@@ -1,2 +1,2 @@
-export * from './upsertResults';
 export * from './getResults';
+export * from './upsertResults';
