@@ -139,6 +139,7 @@ export const useFetchCompetitionData = (
         refetchCompetition();
         refetchInscriptions();
         refetchUserInscriptions();
+        refetchResults();
         if (isAdmin) {
             refetchAdminInscriptions();
         }
