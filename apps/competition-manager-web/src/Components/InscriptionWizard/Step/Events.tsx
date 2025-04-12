@@ -69,29 +69,53 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
     );
 
     const toggleEvent = (event: CompetitionEvent) => {
+        // Find any child events (events where parentId === event.id)
+        const childEvents = competition.events.filter(e => e.parentId === event.id);
+        
         if (selectedEvents.some((e) => e.id === event.id)) {
+            // Remove the main event and its child events
             setInscriptionData((prev) => ({
                 ...prev,
                 inscriptionsData: prev.inscriptionsData.filter(
-                    (inscription) =>
-                        inscription.competitionEvent.id !== event.id
+                    (inscription) => 
+                        inscription.competitionEvent.id !== event.id && 
+                        !childEvents.some(child => child.id === inscription.competitionEvent.id)
                 ),
             }));
             return;
         }
+        
+        // Handling when we're adding the event
         const currentInscription = currentInscriptions.find(
             (inscription) => inscription.competitionEvent.id === event.id
         );
+        
+        // Get child inscriptions if they exist
+        const childInscriptions = childEvents.map(childEvent => {
+            const existingInscription = currentInscriptions.find(
+                inscription => inscription.competitionEvent.id === childEvent.id
+            );
+            
+            return existingInscription || {
+                eid: '',
+                competitionEvent: childEvent,
+                record: undefined,
+                paid: 0,
+            };
+        });
+        
         if (currentInscription) {
             setInscriptionData((prev) => ({
                 ...prev,
                 inscriptionsData: [
                     ...prev.inscriptionsData,
                     currentInscription,
+                    ...childInscriptions
                 ],
             }));
             return;
         }
+        
         setInscriptionData((prev) => ({
             ...prev,
             inscriptionsData: [
@@ -102,6 +126,7 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
                     record: undefined,
                     paid: 0,
                 },
+                ...childInscriptions
             ],
         }));
     };
