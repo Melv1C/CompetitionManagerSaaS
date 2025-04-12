@@ -2,14 +2,20 @@ import { Abbr, AbbrBaseCategory, Gender } from "@competition-manager/schemas";
 
 
 export const getCategoryAbbr = (birthdate: Date, gender: Gender, referenceDate: Date = new Date()): Abbr => {
+    console.log("Calculating category abbreviation...");
+    
     const age = getAge(birthdate, referenceDate);
+
+    console.log("Age:", age);
     
     if (age >= 35) {
         const masterAge = Math.floor(age / 5) * 5;
         return `${gender === Gender.M ? 'M' : 'W'}${masterAge}`;
     }
 
-    const year = referenceDate.getFullYear() - birthdate.getFullYear() + (referenceDate.getMonth() >= birthdate.getMonth() ? 1 : 0);
+    const year = referenceDate.getFullYear() - birthdate.getFullYear() + (referenceDate.getMonth() >= 9 ? 1 : 0);
+
+    console.log("Year:", year);
 
     switch (year) {
         case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
