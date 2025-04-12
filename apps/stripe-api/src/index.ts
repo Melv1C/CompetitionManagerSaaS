@@ -48,51 +48,50 @@ i18next.use(Backend).use(middleware.LanguageDetector).init({
 });
 
 const app = express();
-app.use(express.json());
+
+const Object$ = z.object({
+    metadata: z.any(),
+});
 
 app.use(corsMiddleware);
 
 app.use(middleware.handle(i18next));
 
-const Body$ = z.object({
-    data: z.object({
-        object: z.object({
-            metadata: z.any(),
-        }),
-    }),
-});
-
 app.post(
     `${env.PREFIX}/stripe/webhook`,
     bodyParser.raw({ type: 'application/json' }),
-    logRequestMiddleware(logger),
-    parseRequest(Key.Body, Body$),
+    //logRequestMiddleware(logger),
     async (req, res) => {
         try {
-            // const sig = req.headers['stripe-signature'];
-            // try {
-            //     stripe.webhooks.constructEvent(
-            //         req.body,
-            //         sig || '',
-            //         env.STRIPE_WEBHOOK_SECRET
-            //     );
-            // } catch (err) {
-            //     if (
-            //         err instanceof
-            //         Stripe.errors.StripeSignatureVerificationError
-            //     ) {
-            //         catchError(logger)(err, {
-            //             message: 'Error verifying webhook signature',
-            //             path: 'POST /stripe/webhook',
-            //             status: 400,
-            //         });
-            //         res.status(400).send(`Error verifying webhook signature`);
-            //         return;
-            //     }
-            //     throw err;
-            // }
+            const sig = req.headers['stripe-signature'];
+            if (!sig || !env.STRIPE_WEBHOOK_SECRET) {
+                res.status(400).send('Stripe webhook secret not set');
+                return;
+            }
+            let event: Stripe.Event;
+            try {
+                event = stripe.webhooks.constructEvent(
+                    req.body,
+                    sig || '',
+                    env.STRIPE_WEBHOOK_SECRET
+                );
+            } catch (err) {
+                if (err instanceof Stripe.errors.StripeSignatureVerificationError) {
+                    catchError(logger)(err, {
+                        message: 'Error verifying webhook signature',
+                        path: 'POST /stripe/webhook',
+                        status: 400,
+                    });
+                    res.status(400).send(`Error verifying webhook signature`);
+                    return;
+                }
+                throw err;
+            }
 
-            const { metadata } = Body$.parse(req.body).data.object;
+            const metadata = Object$.parse(event.data.object).metadata;
+
+            console.log('Received webhook', metadata);
+
             switch (WebhookType$.parse(metadata.type)) {
                 case WebhookType.INSCRIPTIONS:
                     logger.info('Received inscriptions webhook', {
@@ -199,7 +198,7 @@ app.post(
                         { totalCost: 0, alreadyPaid: 0, totalToPay: 0 }
                     );
 
-                    saveInscriptions(
+                    await saveInscriptions(
                         inscriptionsData.competitionEid,
                         await Promise.all(
                             inscriptionsGroupedByAthlete.map(
@@ -246,7 +245,7 @@ app.post(
                         CompetitionEvent$.array().parse(competition.events)
                     );
 
-                    sendEmailInscription(
+                    await sendEmailInscription(
                         CreateInscription$.array().parse(
                             inscriptionsGroupedByAthlete
                         ),
@@ -268,15 +267,10 @@ app.post(
 
             res.send('OK');
         } catch (e) {
-            const { success, data } = Body$.safeParse(req.body);
             catchError(logger)(e, {
                 message: 'Error processing webhook',
                 path: 'POST /stripe/webhook',
-                status: 500,
-                userId: success ? data.data.object.metadata.userId : null,
-                metadata: success
-                    ? data.data.object.metadata
-                    : { parseError: 'Error parsing metadata' },
+                status: 500
             });
             res.status(500).send('Internal server error');
         }

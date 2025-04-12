@@ -460,7 +460,8 @@ router.post(
                 alreadyPaid,
                 parsedCompetition.events
             );
-            sendEmailInscription(
+            
+            await sendEmailInscription(
                 inscriptionsData,
                 totalCost,
                 parsedCompetition.events,
