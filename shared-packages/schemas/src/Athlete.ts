@@ -3,7 +3,10 @@ import { Bib$, Date$, Id$, License$ } from './Base';
 import { Gender$ } from './Gender';
 import { Club$ } from './Club';
 
-export const AthleteKey$ = z.string().min(3, {message: 'SearchValueTooShort3'}).max(50, {message: 'SearchValueTooLong50'});
+export const AthleteKey$ = z.union([
+    z.string().regex(/^\d{1,2}$/, { message: 'SearchValueTooShort3' }),
+    z.string().min(3, { message: 'SearchValueTooShort3' }).max(50, { message: 'SearchValueTooLong50' }),
+]);
 export type AthleteKey = z.infer<typeof AthleteKey$>;
 
 export enum ONE_DAY_BIB {

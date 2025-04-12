@@ -9,7 +9,7 @@ export const getCategoryAbbr = (birthdate: Date, gender: Gender, referenceDate: 
         return `${gender === Gender.M ? 'M' : 'W'}${masterAge}`;
     }
 
-    const year = referenceDate.getFullYear() - birthdate.getFullYear() + (referenceDate.getMonth() >= birthdate.getMonth() ? 1 : 0);
+    const year = referenceDate.getFullYear() - birthdate.getFullYear() + (referenceDate.getMonth() >= 9 ? 1 : 0);
 
     switch (year) {
         case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
