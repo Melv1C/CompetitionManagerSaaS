@@ -9,9 +9,6 @@ import {
     catchError,
     corsMiddleware,
     findAthleteWithLicense,
-    Key,
-    logRequestMiddleware,
-    parseRequest,
     saveInscriptions,
     sendEmailInscription,
 } from '@competition-manager/backend-utils';
@@ -60,7 +57,6 @@ app.use(middleware.handle(i18next));
 app.post(
     `${env.PREFIX}/stripe/webhook`,
     bodyParser.raw({ type: 'application/json' }),
-    //logRequestMiddleware(logger),
     async (req, res) => {
         try {
             const sig = req.headers['stripe-signature'];
@@ -76,7 +72,10 @@ app.post(
                     env.STRIPE_WEBHOOK_SECRET
                 );
             } catch (err) {
-                if (err instanceof Stripe.errors.StripeSignatureVerificationError) {
+                if (
+                    err instanceof
+                    Stripe.errors.StripeSignatureVerificationError
+                ) {
                     catchError(logger)(err, {
                         message: 'Error verifying webhook signature',
                         path: 'POST /stripe/webhook',
@@ -89,8 +88,6 @@ app.post(
             }
 
             const metadata = Object$.parse(event.data.object).metadata;
-
-            console.log('Received webhook', metadata);
 
             switch (WebhookType$.parse(metadata.type)) {
                 case WebhookType.INSCRIPTIONS:
@@ -253,11 +250,8 @@ app.post(
                         CompetitionEvent$.array().parse(competition.events),
                         user.email,
                         competition.name,
-                        z
-                            .array(Athlete$)
-                            .parse(competition.oneDayAthletes),
+                        z.array(Athlete$).parse(competition.oneDayAthletes),
                         i18next.getFixedT(inscriptionsData.lng)
-
                     );
 
                     break;
@@ -270,7 +264,7 @@ app.post(
             catchError(logger)(e, {
                 message: 'Error processing webhook',
                 path: 'POST /stripe/webhook',
-                status: 500
+                status: 500,
             });
             res.status(500).send('Internal server error');
         }
