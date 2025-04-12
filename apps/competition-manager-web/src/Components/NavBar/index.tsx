@@ -5,15 +5,29 @@ import {
     faBars,
     faRightToBracket,
     faScrewdriverWrench,
+    faSignOutAlt,
+    faUser,
     faUserGear,
     IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AppBar, Box, Button, IconButton, Toolbar } from '@mui/material';
+import {
+    AppBar,
+    Box,
+    Button,
+    Divider,
+    IconButton,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 
+import { logout } from '@/api';
 import { userTokenAtom } from '@/GlobalsStates';
 import { useDeviceSize, useRoles } from '@/hooks';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useTranslation } from 'react-i18next';
 import { AccountCircle } from '../AccountCircle';
 import { AuthPopup } from '../AuthPopup';
@@ -38,11 +52,29 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
     const { isMobile, isTablet } = useDeviceSize();
     const [isAuthPopupVisible, setIsAuthPopupVisible] = useState(false);
 
-    const userToken = useAtomValue(userTokenAtom);
+    // User account menu state
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const openMenu = Boolean(anchorEl);
+
+    const [userToken, setUserToken] = useAtom(userTokenAtom);
     const { isNotLogged, isLogged, isSuperAdmin, isAdmin } = useRoles();
 
     const handleDrawerToggle = () => {
         setIsMobileOpen((prev) => !prev);
+    };
+
+    const handleAccountMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleAccountMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        setUserToken('NOT_LOGGED');
+        logout();
+        handleAccountMenuClose();
     };
 
     useEffect(() => {
@@ -51,29 +83,41 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
 
     const isBurgerVisible = isMobile || isTablet;
 
+    // Extract email from userToken if available
+    const userEmail = typeof userToken === 'object' ? userToken?.email : '';
+
     return (
         <Box
             sx={{
                 display: 'flex',
             }}
         >
-            <AppBar component="nav">
+            <AppBar
+                component="nav"
+                elevation={3}
+                sx={{
+                    backdropFilter: 'blur(8px)',
+                }}
+            >
                 <Toolbar
                     sx={{
                         display: 'flex',
                         gap: '1rem',
                         alignItems: 'center',
+                        padding: { xs: '0.5rem', md: '0.5rem 1.5rem' },
                     }}
                 >
                     {isBurgerVisible && (
                         <>
-                            <Button
-                                color="inherit"
-                                onClick={handleDrawerToggle}
-                                sx={{ minWidth: 0 }}
-                            >
-                                <FontAwesomeIcon icon={faBars} size="2x" />
-                            </Button>
+                            <Tooltip title={t('menu')}>
+                                <Button
+                                    color="inherit"
+                                    onClick={handleDrawerToggle}
+                                    sx={{ minWidth: 0 }}
+                                >
+                                    <FontAwesomeIcon icon={faBars} size="2x" />
+                                </Button>
+                            </Tooltip>
                             <MobileNav
                                 items={items}
                                 isMobileOpen={isMobileOpen}
@@ -117,6 +161,11 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                                 textTransform: 'none',
                                                 fontSize: '1.2rem',
                                                 padding: '0.5rem 1rem',
+                                                borderRadius: '8px',
+                                                '&:hover': {
+                                                    backgroundColor:
+                                                        'rgba(255, 255, 255, 0.1)',
+                                                },
                                             }}
                                         >
                                             {item.label}
@@ -127,46 +176,50 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         )}
                     </Box>
 
-                    {/* add link to language switcher */}
+                    {/* Language Selector */}
                     {!isBurgerVisible && <LanguageSelector />}
 
-                    {/* add link to super admin dashboard */}
+                    {/* Super Admin Dashboard Link */}
                     {isSuperAdmin && (
                         <Box>
-                            <Link to="/superadmin">
-                                <IconButton
-                                    sx={{
-                                        width: '2.5rem',
-                                        height: '2.5rem',
-                                        color: 'white',
-                                    }}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faScrewdriverWrench}
-                                        style={{ fontSize: '1.25rem' }}
-                                    />
-                                </IconButton>
-                            </Link>
+                            <Tooltip title={t('superAdminDashboard')}>
+                                <Link to="/superadmin">
+                                    <IconButton
+                                        sx={{
+                                            width: '2.5rem',
+                                            height: '2.5rem',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faScrewdriverWrench}
+                                            style={{ fontSize: '1.25rem' }}
+                                        />
+                                    </IconButton>
+                                </Link>
+                            </Tooltip>
                         </Box>
                     )}
 
-                    {/* add link to admin dashboard */}
+                    {/* Admin Dashboard Link */}
                     {isAdmin && (
                         <Box>
-                            <Link to="/admin/competitions">
-                                <IconButton
-                                    sx={{
-                                        width: '2.5rem',
-                                        height: '2.5rem',
-                                        color: 'white',
-                                    }}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faUserGear}
-                                        style={{ fontSize: '1.25rem' }}
-                                    />
-                                </IconButton>
-                            </Link>
+                            <Tooltip title={t('adminDashboard')}>
+                                <Link to="/admin/competitions">
+                                    <IconButton
+                                        sx={{
+                                            width: '2.5rem',
+                                            height: '2.5rem',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faUserGear}
+                                            style={{ fontSize: '1.25rem' }}
+                                        />
+                                    </IconButton>
+                                </Link>
+                            </Tooltip>
                         </Box>
                     )}
 
@@ -186,7 +239,12 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                                             ? '1rem'
                                             : '1.2rem',
                                         border: '2px solid white',
+                                        borderRadius: '8px',
                                         padding: '0.2rem 1rem',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                'rgba(255, 255, 255, 0.1)',
+                                        },
                                     }}
                                     onClick={() => setIsAuthPopupVisible(true)}
                                 >
@@ -200,11 +258,83 @@ export const NavBar: React.FC<NavBarProps> = ({ items }) => {
                         )}
 
                         {isLogged && (
-                            <Link to="/account">
-                                <IconButton>
-                                    <AccountCircle />
-                                </IconButton>
-                            </Link>
+                            <>
+                                <Tooltip title={t('account')}>
+                                    <IconButton
+                                        onClick={handleAccountMenuOpen}
+                                        aria-controls={
+                                            openMenu
+                                                ? 'account-menu'
+                                                : undefined
+                                        }
+                                        aria-haspopup="true"
+                                        aria-expanded={
+                                            openMenu ? 'true' : undefined
+                                        }
+                                    >
+                                        <AccountCircle />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    id="account-menu"
+                                    anchorEl={anchorEl}
+                                    open={openMenu}
+                                    onClose={handleAccountMenuClose}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'account-button',
+                                    }}
+                                    transformOrigin={{
+                                        horizontal: 'right',
+                                        vertical: 'top',
+                                    }}
+                                    anchorOrigin={{
+                                        horizontal: 'right',
+                                        vertical: 'bottom',
+                                    }}
+                                    PaperProps={{
+                                        elevation: 3,
+                                        sx: {
+                                            minWidth: 220,
+                                            mt: 0.5,
+                                            '& .MuiMenuItem-root': {
+                                                px: 2,
+                                                py: 1,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <Box sx={{ px: 2, py: 1.5 }}>
+                                        <Typography variant="body2">
+                                            {userEmail}
+                                        </Typography>
+                                    </Box>
+                                    <Divider />
+                                    <MenuItem
+                                        component={Link}
+                                        to="/account"
+                                        onClick={handleAccountMenuClose}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faUser}
+                                            style={{
+                                                marginRight: '10px',
+                                                fontSize: '0.9rem',
+                                            }}
+                                        />
+                                        {t('profile')}
+                                    </MenuItem>
+                                    <MenuItem onClick={handleLogout}>
+                                        <FontAwesomeIcon
+                                            icon={faSignOutAlt}
+                                            style={{
+                                                marginRight: '10px',
+                                                fontSize: '0.9rem',
+                                            }}
+                                        />
+                                        {t('logout')}
+                                    </MenuItem>
+                                </Menu>
+                            </>
                         )}
                     </Box>
                 </Toolbar>

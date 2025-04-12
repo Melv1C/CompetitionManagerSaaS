@@ -8,5 +8,11 @@
     "admins": "Admins",
     "options": "Options",
     "settings": "Paramètres",
-    "overview": "Aperçu"
+    "overview": "Aperçu",
+    "menu": "Menu",
+    "superAdminDashboard": "Tableau de Bord Super Admin",
+    "adminDashboard": "Tableau de Bord Admin",
+    "account": "Compte",
+    "profile": "Mon Profil",
+    "logout": "Déconnexion"
 }

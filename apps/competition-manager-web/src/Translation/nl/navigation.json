@@ -8,5 +8,11 @@
     "admins": "Beheerders",
     "options": "Opties",
     "settings": "Parameters",
-    "overview": "Overzicht"
+    "overview": "Overzicht",
+    "menu": "Menu",
+    "superAdminDashboard": "Super Beheerder Dashboard",
+    "adminDashboard": "Beheerder Dashboard",
+    "account": "Account",
+    "profile": "Mijn Profiel",
+    "logout": "Uitloggen"
 }
