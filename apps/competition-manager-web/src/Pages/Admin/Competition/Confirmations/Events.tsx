@@ -1,5 +1,5 @@
 import { Inscription } from '@competition-manager/schemas';
-import { getCategoryAbbr } from '@competition-manager/utils';
+import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { ShowUsersNumber } from '../../../../Components';
-import { formatPerf } from '../../../../utils';
 
 type EventsProps = {
     inscriptions: Inscription[];

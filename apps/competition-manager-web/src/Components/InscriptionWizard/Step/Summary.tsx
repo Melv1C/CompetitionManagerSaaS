@@ -11,7 +11,7 @@ import {
     CreateInscription$,
     PaymentMethod,
 } from '@competition-manager/schemas';
-import { getCostsInfo } from '@competition-manager/utils';
+import { formatPerf, getCostsInfo } from '@competition-manager/utils';
 import {
     Box,
     Card,
@@ -29,7 +29,6 @@ import {
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatPerf } from '../../../utils';
 
 type SummaryProps = {
     isAdmin: boolean;

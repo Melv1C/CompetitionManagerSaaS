@@ -5,13 +5,12 @@ import {
     inscriptionDataAtom,
 } from '@/GlobalsStates';
 import { Athlete, Inscription } from '@competition-manager/schemas';
-import { getCategoryAbbr } from '@competition-manager/utils';
+import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
 import { Box, Divider, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { formatPerf } from '../../../../utils';
 import { InscriptionPopup } from './InscriptionPopup';
 
 export const Inscriptions = () => {

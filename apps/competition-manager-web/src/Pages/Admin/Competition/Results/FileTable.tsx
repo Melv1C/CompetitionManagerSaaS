@@ -5,8 +5,8 @@
  * Allows viewing detailed information for each result entry.
  */
 import { competitionAtom } from '@/GlobalsStates';
-import { formatPerf } from '@/utils';
 import { EventType } from '@competition-manager/schemas';
+import { formatPerf } from '@competition-manager/utils';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
