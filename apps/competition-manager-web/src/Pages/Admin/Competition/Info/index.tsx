@@ -7,6 +7,7 @@ import {
     Competition,
     Competition$,
     Id,
+    OneDayPermission,
     PaymentMethod,
     UpdateCompetition,
 } from '@competition-manager/schemas';
@@ -653,11 +654,74 @@ export const Info = () => {
                         )}
                     </Box>
 
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel id="oneDayPermissionsLabel">
+                            {t('labels:oneDayPermission')}
+                        </InputLabel>
+
+                        <Select
+                            id="oneDayPermissions"
+                            labelId="oneDayPermissionsLabel"
+                            label={t('labels:oneDayPermission')}
+                            multiple
+                            value={competitionState.oneDayPermissions}
+                            onChange={(e) => {
+                                const selectedPermissions = e.target.value as OneDayPermission[];
+                                setCompetitionState({
+                                    ...competitionState,
+                                    oneDayPermissions: selectedPermissions,
+                                });
+                            }}
+                            renderValue={(selected) => (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        gap: '0.5rem',
+                                    }}
+                                >
+                                    {(selected as OneDayPermission[]).map((permission) => (
+                                        <Chip
+                                            key={permission}
+                                            label={t(
+                                                `labels:${permission}`
+                                            )}
+                                            onDelete={() => {
+                                                const newPermissions =
+                                                    competitionState.oneDayPermissions.filter(
+                                                        (perm) =>
+                                                            perm !==
+                                                            permission
+                                                    );
+                                                setCompetitionState({
+                                                    ...competitionState,
+                                                    oneDayPermissions:
+                                                        newPermissions,
+                                                });
+                                            }}
+                                            onMouseDown={(e) =>
+                                                e.stopPropagation()
+                                            }
+                                        />
+                                    ))}
+                                </Box>
+                            )}
+                        >
+                            {Object.values(OneDayPermission).map((permission) => (
+                                <MenuItem key={permission} value={permission}>
+                                    {t(`labels:${permission}`)}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
                     <TextFieldWith$
                         id="maxEventByAthlete"
                         label={{ value: t('labels:maxEventByAthlete') }}
                         value={{
-                            value: competitionState.maxEventByAthlete?.toString() || '',
+                            value:
+                                competitionState.maxEventByAthlete?.toString() ||
+                                '',
                             onChange: (value) => {
                                 const { success, data } =
                                     Competition$.shape.maxEventByAthlete.safeParse(

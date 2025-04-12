@@ -45,7 +45,6 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
                     variant="scrollable"
                 >
                     {groupedEvents
-                        .sort((a, b) => a.label.localeCompare(b.label))
                         .map((group, index) => (
                             <Tab key={index} label={group.label} />
                         ))}

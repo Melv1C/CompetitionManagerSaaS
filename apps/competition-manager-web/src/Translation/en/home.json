@@ -1,6 +1,35 @@
 {
-    "title": "Manage & Track Athletic Competitions with Ease!",
-    "description": "Register, compete, and view results in one place. Simplifying competition management for athletes, organizers, and spectators.",
+    "title": "Manage and Track Athletic Competitions with Ease!",
+    "description": "Register, compete, and view results all in one place. Simplifying competition management for athletes, organizers, and spectators.",
     "viewCalendar": "View Calendar",
-    "viewResults": "View Results"
+    "viewResults": "View Results",
+    "features": {
+        "title": "Powerful Competition Management",
+        "calendar": {
+            "title": "Schedule Competitions",
+            "description": "Easily manage and view upcoming athletic events and competitions."
+        },
+        "registration": {
+            "title": "Simple Registration",
+            "description": "A streamlined process for athletes to register for events."
+        },
+        "results": {
+            "title": "Live Results",
+            "description": "Real-time competition results available to participants and spectators."
+        },
+        "analytics": {
+            "title": "Performance Analytics",
+            "description": "Comprehensive statistics and performance tracking for athletes and teams."
+        }
+    },
+    "testimonial": {
+        "quote": "This platform has revolutionized how we organize athletic events. Everything from registration to results is seamless.",
+        "author": "Thomas Laurent",
+        "position": "Competition Director, LBFA"
+    },
+    "cta": {
+        "title": "Ready to get started?",
+        "description": "Join thousands of athletes and organizers on our platform today.",
+        "button": "Explore Competitions"
+    }
 }

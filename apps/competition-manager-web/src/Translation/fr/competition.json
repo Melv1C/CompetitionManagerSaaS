@@ -12,9 +12,9 @@
             "description": "Pour les athlètes non-belges avec une licence dans leur pays"
         },
         "bpm": {
-            "label": "Athlète BPM",
+            "label": "Athlète BPM (moins de 13 ans)",
             "title": "Inscription athlète BPM",
-            "description": "Pour les jeunes athlètes des catégories BEN, PUP ou MIN"
+            "description": "Pour les jeunes athlètes moins de 13 ans des catégories BEN, PUP ou MIN"
         },
         "all": {
             "label": "Athlète d'un jour",
