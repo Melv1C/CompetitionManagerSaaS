@@ -12,9 +12,9 @@
             "description": "For non-Belgian athletes with a license in their country"
         },
         "bpm": {
-            "label": "BPM Athlete",
+            "label": "BPM Athlete (under 13 years)",
             "title": "Register BPM Athlete",
-            "description": "For young athletes in BEN, PUP, or MIN categories"
+            "description": "For young athletes under 13 years old in BEN, PUP, or MIN categories"
         },
         "all": {
             "label": "One-Day Athlete",
@@ -47,7 +47,7 @@
         "title": "Your registration is being processed",
         "message": "An email will be sent to you as soon as your registration is validated."
     },
-    "cancel": "An error occurred during payment", 
+    "cancel": "An error occurred during payment",
     "needToBeConnected": "You need to be connected to register for a competition",
     "needToBeVerified": "You need to verify your account to register for a competition",
     "goToAccount": "Go to my account",

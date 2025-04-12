@@ -12,9 +12,9 @@
             "description": "Voor niet-Belgische atleten met een licentie in hun land"
         },
         "bpm": {
-            "label": "BPM atleet",
+            "label": "BPM atleet (onder 13 jaar)",
             "title": "Registreer BPM atleet",
-            "description": "Voor jonge atleten in BEN, PUP of MIN categorieën"
+            "description": "Voor jonge atleten onder 13 jaar in BEN, PUP of MIN categorieën"
         },
         "all": {
             "label": "Dagatleet",
