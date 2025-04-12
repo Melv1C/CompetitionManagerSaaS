@@ -10,6 +10,7 @@ import {
     Record,
     Records as RecordsType,
 } from '@competition-manager/schemas';
+import { formatPerf } from '@competition-manager/utils';
 import {
     Box,
     List,
@@ -22,7 +23,6 @@ import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { formatPerf } from '../../../utils';
 import { UpdateRecordPopup } from './UpdateRecordPopup';
 
 type RecordsProps = {

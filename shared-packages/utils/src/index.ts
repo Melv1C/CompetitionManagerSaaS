@@ -5,3 +5,4 @@ export * from "./getRemaningPlaces";
 export * from "./getCostsInfo";
 
 export * from "./checkInscription";
+export * from "./formatPerf";

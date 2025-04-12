@@ -254,7 +254,11 @@ app.post(
                         CompetitionEvent$.array().parse(competition.events),
                         user.email,
                         competition.name,
+                        z
+                            .array(Athlete$)
+                            .parse(competition.oneDayAthletes),
                         i18next.getFixedT(inscriptionsData.lng)
+
                     );
 
                     break;

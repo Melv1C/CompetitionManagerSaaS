@@ -1,7 +1,10 @@
 import { competitionAtom } from '@/GlobalsStates';
-import { formatPerf } from '@/utils';
 import { DisplayInscription } from '@competition-manager/schemas';
-import { getCategoryAbbr, isBestResult } from '@competition-manager/utils';
+import {
+    formatPerf,
+    getCategoryAbbr,
+    isBestResult,
+} from '@competition-manager/utils';
 import {
     Table,
     TableBody,

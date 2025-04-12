@@ -4,13 +4,12 @@
 
 import { Bib, Icons, Time } from '@/Components';
 import { useDeviceSize } from '@/hooks';
-import { formatPerf } from '@/utils';
 import {
     AthleteWithoutClub,
     Inscription,
     InscriptionStatus,
 } from '@competition-manager/schemas';
-import { getCategoryAbbr } from '@competition-manager/utils';
+import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
