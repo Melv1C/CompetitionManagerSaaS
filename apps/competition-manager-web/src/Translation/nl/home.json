@@ -2,5 +2,34 @@
     "title": "Beheer en volg atletiekwedstrijden met gemak!",
     "description": "Registreer, doe mee en bekijk resultaten op één plek. Vereenvoudigt wedstrijdbeheer voor atleten, organisatoren en toeschouwers.",
     "viewCalendar": "Bekijk de kalender",
-    "viewResults": "Bekijk de resultaten"
+    "viewResults": "Bekijk de resultaten",
+    "features": {
+        "title": "Krachtig wedstrijdbeheer",
+        "calendar": {
+            "title": "Plan wedstrijden",
+            "description": "Beheer en bekijk eenvoudig aankomende atletiekevenementen en -wedstrijden."
+        },
+        "registration": {
+            "title": "Eenvoudige registratie",
+            "description": "Gestroomlijnd proces voor atleten om zich in te schrijven voor evenementen."
+        },
+        "results": {
+            "title": "Live resultaten",
+            "description": "Real-time wedstrijdresultaten beschikbaar voor deelnemers en toeschouwers."
+        },
+        "analytics": {
+            "title": "Prestatieanalyse",
+            "description": "Uitgebreide statistieken en prestatiebewaking voor atleten en teams."
+        }
+    },
+    "testimonial": {
+        "quote": "Dit platform heeft onze manier van het organiseren van atletiekevenementen revolutionair veranderd. Alles, van registratie tot resultaten, verloopt naadloos.",
+        "author": "Thomas Laurent",
+        "position": "Wedstrijddirecteur, LBFA"
+    },
+    "cta": {
+        "title": "Klaar om te beginnen?",
+        "description": "Sluit je vandaag nog aan bij duizenden atleten en organisatoren op ons platform.",
+        "button": "Ontdek wedstrijden"
+    }
 }
