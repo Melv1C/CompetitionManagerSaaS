@@ -6,6 +6,7 @@ const env$ = z.object({
     PORT: z.string().default('3000'),
     PREFIX: z.string().default('/api'),
     ALLOW_ORIGIN: z.string().default('*'),
+    STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
 });
 
