@@ -69,28 +69,28 @@ app.post(
     parseRequest(Key.Body, Body$),
     async (req, res) => {
         try {
-            const sig = req.headers['stripe-signature'];
-            try {
-                stripe.webhooks.constructEvent(
-                    req.body,
-                    sig || '',
-                    env.STRIPE_WEBHOOK_SECRET
-                );
-            } catch (err) {
-                if (
-                    err instanceof
-                    Stripe.errors.StripeSignatureVerificationError
-                ) {
-                    catchError(logger)(err, {
-                        message: 'Error verifying webhook signature',
-                        path: 'POST /stripe/webhook',
-                        status: 400,
-                    });
-                    res.status(400).send(`Error verifying webhook signature`);
-                    return;
-                }
-                throw err;
-            }
+            // const sig = req.headers['stripe-signature'];
+            // try {
+            //     stripe.webhooks.constructEvent(
+            //         req.body,
+            //         sig || '',
+            //         env.STRIPE_WEBHOOK_SECRET
+            //     );
+            // } catch (err) {
+            //     if (
+            //         err instanceof
+            //         Stripe.errors.StripeSignatureVerificationError
+            //     ) {
+            //         catchError(logger)(err, {
+            //             message: 'Error verifying webhook signature',
+            //             path: 'POST /stripe/webhook',
+            //             status: 400,
+            //         });
+            //         res.status(400).send(`Error verifying webhook signature`);
+            //         return;
+            //     }
+            //     throw err;
+            // }
 
             const { metadata } = Body$.parse(req.body).data.object;
             switch (WebhookType$.parse(metadata.type)) {
