@@ -123,6 +123,17 @@ export const EventPopup: React.FC<EventPopupProps> = ({
                     schedule: child.schedule,
                 })),
             });
+        } else {
+            setCompetitionEventData({
+                eid: undefined,
+                event: undefined,
+                categories: [],
+                name: '',
+                schedule: undefined,
+                place: undefined,
+                cost: 0,
+                children: [],
+            });
         }
     }, [initialChildren, initialEvent, setCompetitionEventData]);
 
