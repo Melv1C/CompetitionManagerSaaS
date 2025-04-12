@@ -8,5 +8,11 @@
     "admins": "Admins",
     "options": "Options",
     "settings": "Settings",
-    "overview": "Overview"
+    "overview": "Overview",
+    "menu": "Menu",
+    "superAdminDashboard": "Super Admin Dashboard",
+    "adminDashboard": "Admin Dashboard",
+    "account": "Account",
+    "profile": "My Profile",
+    "logout": "Logout"
 }
