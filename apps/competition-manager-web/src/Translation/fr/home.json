@@ -4,14 +4,14 @@
     "viewCalendar": "Voir le calendrier",
     "viewResults": "Voir les résultats",
     "features": {
-        "title": "Gestion de compétitions puissante",
+        "title": "Gestion puissante des compétitions",
         "calendar": {
-            "title": "Programmer des compétitions",
+            "title": "Planifiez des compétitions",
             "description": "Gérez et consultez facilement les événements et compétitions d'athlétisme à venir."
         },
         "registration": {
-            "title": "Inscription simple",
-            "description": "Processus simplifié permettant aux athlètes de s'inscrire aux événements."
+            "title": "Inscription simplifiée",
+            "description": "Un processus simplifié permettant aux athlètes de s'inscrire aux événements."
         },
         "results": {
             "title": "Résultats en direct",

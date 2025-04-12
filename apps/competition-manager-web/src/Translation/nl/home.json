@@ -1,17 +1,17 @@
 {
     "title": "Beheer en volg atletiekwedstrijden met gemak!",
-    "description": "Registreer, doe mee en bekijk resultaten op één plek. Vereenvoudigt wedstrijdbeheer voor atleten, organisatoren en toeschouwers.",
+    "description": "Registreer, doe mee en bekijk resultaten op één plek. Vereenvoudig het wedstrijdbeheer voor atleten, organisatoren en toeschouwers.",
     "viewCalendar": "Bekijk de kalender",
     "viewResults": "Bekijk de resultaten",
     "features": {
         "title": "Krachtig wedstrijdbeheer",
         "calendar": {
             "title": "Plan wedstrijden",
-            "description": "Beheer en bekijk eenvoudig aankomende atletiekevenementen en -wedstrijden."
+            "description": "Beheer en bekijk eenvoudig aankomende atletiekevenementen en wedstrijden."
         },
         "registration": {
             "title": "Eenvoudige registratie",
-            "description": "Gestroomlijnd proces voor atleten om zich in te schrijven voor evenementen."
+            "description": "Een gestroomlijnd proces voor atleten om zich in te schrijven voor evenementen."
         },
         "results": {
             "title": "Live resultaten",

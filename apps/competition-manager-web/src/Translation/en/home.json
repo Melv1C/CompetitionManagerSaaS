@@ -1,6 +1,6 @@
 {
-    "title": "Manage & Track Athletic Competitions with Ease!",
-    "description": "Register, compete, and view results in one place. Simplifying competition management for athletes, organizers, and spectators.",
+    "title": "Manage and Track Athletic Competitions with Ease!",
+    "description": "Register, compete, and view results all in one place. Simplifying competition management for athletes, organizers, and spectators.",
     "viewCalendar": "View Calendar",
     "viewResults": "View Results",
     "features": {
@@ -11,7 +11,7 @@
         },
         "registration": {
             "title": "Simple Registration",
-            "description": "Streamlined process for athletes to register for events."
+            "description": "A streamlined process for athletes to register for events."
         },
         "results": {
             "title": "Live Results",
