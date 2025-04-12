@@ -11,7 +11,7 @@ import {
     CreateInscription$,
     PaymentMethod,
 } from '@competition-manager/schemas';
-import { formatPerf, getCostsInfo } from '@competition-manager/utils';
+import { formatPerf, getCostsInfo, isAthleteInAFreeClub } from '@competition-manager/utils';
 import {
     Box,
     Card,
@@ -197,7 +197,12 @@ export const Summary: React.FC<SummaryProps> = ({
                                                     width={50}
                                                     align="right"
                                                 >
-                                                    {event.cost} €
+                                                    {event.cost > 0 && !isAthleteInAFreeClub(
+                                                        competition,
+                                                        athlete
+                                                    )
+                                                        ? `${event.cost} €`
+                                                        : ''}
                                                 </TableCell>
                                             </TableRow>
                                         );
