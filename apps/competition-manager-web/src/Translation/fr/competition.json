@@ -44,7 +44,7 @@
         "goToMyInscriptions": "Voir mes inscriptions"
     },
     "pending": {
-        "title": "Votre inscription en cours de traitement",
+        "title": "Votre inscription est en cours de traitement",
         "message": "Un email vous sera envoyé dès que votre inscription sera validée."
     },
     "cancel": "Une erreur est survenue lors du paiement",
