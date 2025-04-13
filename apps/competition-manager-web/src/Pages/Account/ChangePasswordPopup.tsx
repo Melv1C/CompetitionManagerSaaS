@@ -1,22 +1,29 @@
-import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
-import { useTranslation } from "react-i18next"
-import { CloseButton, PasswordFieldWith$ } from "../../Components"
-import { useState } from "react"
-import { Password$ } from "@competition-manager/schemas"
-import { changePassword } from "../../api"
-import { useMutation } from "react-query"
-import { isAxiosError } from "axios"
+import { changePassword } from '@/api';
+import { CloseButton, PasswordFieldWith$ } from '@/Components';
+import { Password$ } from '@competition-manager/schemas';
+import {
+    Alert,
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Typography,
+} from '@mui/material';
+import { isAxiosError } from 'axios';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
 
 type ChangePasswordPopupProps = {
-    open: boolean
-    onClose: () => void
-}
+    open: boolean;
+    onClose: () => void;
+};
 
-export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({ 
-    open, 
-    onClose 
+export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
+    open,
+    onClose,
 }) => {
-
     const { t } = useTranslation('account');
 
     const [oldPassword, setOldPassword] = useState('');
@@ -28,13 +35,23 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
 
     const [errorMsg, setErrorMsg] = useState('');
 
-    const isFormValid = isOldPasswordValid && isPasswordValid && isConfirmPasswordValid && password !== '' && confirmPassword !== '' && oldPassword !== '';
+    const isFormValid =
+        isOldPasswordValid &&
+        isPasswordValid &&
+        isConfirmPasswordValid &&
+        password !== '' &&
+        confirmPassword !== '' &&
+        oldPassword !== '';
 
-    const mutation = useMutation((data: { oldPassword: string, newPassword: string }) => changePassword(data.oldPassword, data.newPassword), {
-        onSuccess: () => {
-            onClose();
+    const mutation = useMutation(
+        (data: { oldPassword: string; newPassword: string }) =>
+            changePassword(data.oldPassword, data.newPassword),
+        {
+            onSuccess: () => {
+                onClose();
+            },
         }
-    });
+    );
 
     const handleSubmit = () => {
         // check if passwords match
@@ -52,64 +69,89 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
         // call api
         mutation.mutate({
             oldPassword,
-            newPassword: password
+            newPassword: password,
         });
-    }
+    };
 
     return (
-        <Dialog 
-            open={open} 
-            onClose={() => null}
-            fullWidth
-            maxWidth='xs'
-        >
+        <Dialog open={open} onClose={() => null} fullWidth maxWidth="xs">
             <DialogTitle>
                 {t('info.changePassword.title')}
                 <CloseButton onClose={onClose} />
             </DialogTitle>
             <DialogContent>
-                <Box 
-                    component='form' 
-                    sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+                <Box
+                    component="form"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                    }}
                     onSubmit={(e) => {
                         e.preventDefault();
                         handleSubmit();
                     }}
                 >
-                    <Typography>{t('info.changePassword.instructions')}</Typography>
+                    <Typography>
+                        {t('info.changePassword.instructions')}
+                    </Typography>
 
                     <PasswordFieldWith$
-                        id='oldPassword'
-                        label={{ value: t('info.changePassword.oldPassword'), hasExtrenLabel: true }}
+                        id="oldPassword"
+                        label={{
+                            value: t('info.changePassword.oldPassword'),
+                            hasExtrenLabel: true,
+                        }}
                         value={{ value: oldPassword, onChange: setOldPassword }}
-                        validator={{ Schema$: Password$, isValid: isOldPasswordValid, setIsValid: setIsOldPasswordValid }}
+                        validator={{
+                            Schema$: Password$,
+                            isValid: isOldPasswordValid,
+                            setIsValid: setIsOldPasswordValid,
+                        }}
                     />
 
                     <PasswordFieldWith$
-                        id='password'
-                        label={{ value: t('info.changePassword.newPassword'), hasExtrenLabel: true }}
+                        id="password"
+                        label={{
+                            value: t('info.changePassword.newPassword'),
+                            hasExtrenLabel: true,
+                        }}
                         value={{ value: password, onChange: setPassword }}
-                        validator={{ Schema$: Password$, isValid: isPasswordValid, setIsValid: setIsPasswordValid }}
+                        validator={{
+                            Schema$: Password$,
+                            isValid: isPasswordValid,
+                            setIsValid: setIsPasswordValid,
+                        }}
                     />
 
                     <PasswordFieldWith$
-                        id='confirmPassword'
-                        label={{ value: t('info.changePassword.confirmNewPassword'), hasExtrenLabel: true }}
-                        value={{ value: confirmPassword, onChange: setConfirmPassword }}
-                        validator={{ Schema$: Password$, isValid: isConfirmPasswordValid, setIsValid: setIsConfirmPasswordValid }}
+                        id="confirmPassword"
+                        label={{
+                            value: t('info.changePassword.confirmNewPassword'),
+                            hasExtrenLabel: true,
+                        }}
+                        value={{
+                            value: confirmPassword,
+                            onChange: setConfirmPassword,
+                        }}
+                        validator={{
+                            Schema$: Password$,
+                            isValid: isConfirmPasswordValid,
+                            setIsValid: setIsConfirmPasswordValid,
+                        }}
                     />
 
                     {mutation.isError && isAxiosError(mutation.error) && (
-                        <Alert severity='error'>{mutation.error.response?.data}</Alert>
+                        <Alert severity="error">
+                            {mutation.error.response?.data}
+                        </Alert>
                     )}
 
-                    {errorMsg && (
-                        <Alert severity='error'>{errorMsg}</Alert>
-                    )}
+                    {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
                     <Button
-                        variant='contained'
-                        color='primary'
+                        variant="contained"
+                        color="primary"
                         type="submit"
                         disabled={!isFormValid}
                         loading={mutation.isLoading}
@@ -117,9 +159,7 @@ export const ChangePasswordPopup: React.FC<ChangePasswordPopupProps> = ({
                         {t('buttons:submit')}
                     </Button>
                 </Box>
-
             </DialogContent>
-
         </Dialog>
-    )
-}
+    );
+};

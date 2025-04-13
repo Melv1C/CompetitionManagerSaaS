@@ -8,22 +8,11 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    outputs:
-      migrations: ${{ steps.changed-services.outputs.migrations }}
-      competition-manager-web: ${{ steps.changed-services.outputs.competition-manager-web }}
-      users-api: ${{ steps.changed-services.outputs.users-api }}
-      athletes-api: ${{ steps.changed-services.outputs.athletes-api }}
-      events-api: ${{ steps.changed-services.outputs.events-api }}
-      categories-api: ${{ steps.changed-services.outputs.categories-api }}
-      clubs-api: ${{ steps.changed-services.outputs.clubs-api }}
-      competitions-api: ${{ steps.changed-services.outputs.competitions-api }}
-      offers-api: ${{ steps.changed-services.outputs.offers-api }}
-      stripe-api: ${{ steps.changed-services.outputs.stripe-api }}
-      logs-api: ${{ steps.changed-services.outputs.logs-api }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BUILD_BRANCH }}
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -31,130 +20,27 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Identify Changed Services
-        id: changed-services
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            migrations:
-              - shared-packages/prisma/**
-            competition-manager-web: 
-              - apps/competition-manager-web/**
-              - shared-packages/schemas/**
-            users-api:
-              - apps/users-api/**
-              - shared-packages/**
-            athletes-api:
-              - apps/athletes-api/**
-              - shared-packages/**
-            events-api:
-              - apps/events-api/**
-              - shared-packages/**
-            categories-api:
-              - apps/categories-api/**
-              - shared-packages/**
-            clubs-api:
-              - apps/clubs-api/**
-              - shared-packages/**
-            competitions-api:
-              - apps/competitions-api/**
-              - shared-packages/**
-            offers-api:
-              - apps/offers-api/**
-              - shared-packages/**
-            stripe-api:
-              - apps/stripe-api/**
-              - shared-packages/**
-            logs-api:
-              - apps/logs-api/**
-              - shared-packages/**
-
-      - name: Build and Push Migrations
-        if: steps.changed-services.outputs.migrations == 'true'
+      - name: Build and Push Migrate DB
         run: |
           cd shared-packages/prisma
           docker build -t ${{ secrets.DOCKER_USERNAME }}/migrate-db:prod .
           docker push ${{ secrets.DOCKER_USERNAME }}/migrate-db:prod
-          
-      - name: Build and Push Competition Manager Web
-        if: steps.changed-services.outputs.competition-manager-web == 'true'
-        run: |
-          app="competition-manager-web"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
 
-      - name: Build and Push Users API
-        if: steps.changed-services.outputs.users-api == 'true'
+      - name: Build and Push All Apps
         run: |
-          app="users-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Athletes API
-        if: steps.changed-services.outputs.athletes-api == 'true'
-        run: |
-          app="athletes-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Events API
-        if: steps.changed-services.outputs.events-api == 'true'
-        run: |
-          app="events-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Categories API
-        if: steps.changed-services.outputs.categories-api == 'true'
-        run: |
-          app="categories-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Clubs API
-        if: steps.changed-services.outputs.clubs-api == 'true'
-        run: |
-          app="clubs-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Competitions API
-        if: steps.changed-services.outputs.competitions-api == 'true'
-        run: |
-          app="competitions-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Offers API
-        if: steps.changed-services.outputs.offers-api == 'true'
-        run: |
-          app="offers-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-          
-      - name: Build and Push Stripe API
-        if: steps.changed-services.outputs.stripe-api == 'true'
-        run: |
-          app="stripe-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
-
-      - name: Build and Push Logs API
-        if: steps.changed-services.outputs.logs-api == 'true'
-        run: |
-          app="logs-api"
-          dockerfile="apps/$app/Dockerfile"
-          docker build -f $dockerfile -t ${{ secrets.DOCKER_USERNAME }}/$app:prod .
-          docker push ${{ secrets.DOCKER_USERNAME }}/$app:prod
+          for app in apps/*; do
+            if [ -d "$app" ]; then
+              app_name=$(basename "$app")
+              dockerfile="$app/Dockerfile"
+              if [ ! -f "$dockerfile" ]; then
+                echo "Dockerfile not found for $app_name, skipping..."
+                continue
+              fi
+              echo "Building and pushing Docker image for $app_name"
+              docker build -f "$dockerfile" -t ${{ secrets.DOCKER_USERNAME }}/${app_name}:prod .
+              docker push ${{ secrets.DOCKER_USERNAME }}/${app_name}:prod
+            fi
+          done
 
   deploy-to-prod:
     runs-on: ubuntu-latest

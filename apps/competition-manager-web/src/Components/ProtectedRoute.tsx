@@ -1,20 +1,20 @@
-import { useAtomValue } from "jotai";
-import { PropsWithChildren } from "react"
-import { userTokenAtom } from "../GlobalsStates";
-import { Role } from "@competition-manager/schemas";
-import { isAuthorized } from "@competition-manager/utils";
-import { Navigate } from "react-router-dom";
-import { Loading } from "./Loading";
+import { userTokenAtom } from '@/GlobalsStates';
+import { Role } from '@competition-manager/schemas';
+import { isAuthorized } from '@competition-manager/utils';
+import { useAtomValue } from 'jotai';
+import { PropsWithChildren } from 'react';
+import { Navigate } from 'react-router-dom';
+import { Loading } from './Loading';
 
 type ProtectedRouteProps = PropsWithChildren<{
     requiredRole: Role;
     redirectPath: string;
 }>;
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     requiredRole,
     redirectPath,
-    children 
+    children,
 }) => {
     const userToken = useAtomValue(userTokenAtom);
 
@@ -25,7 +25,4 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
 
     return <>{children}</>;
-
-}
-
-
+};

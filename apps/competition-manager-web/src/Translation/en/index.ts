@@ -7,16 +7,19 @@ import auth from './auth.json';
 import createCompetition from './createCompetition.json';
 import adminCompetition from './adminCompetition.json';
 import eventPopup from './eventPopup.json';
-import inscription from './inscription.json';
+import competition from './competition.json';
 import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
 import news from './news.json';
+import faq from './faq.json';
+import errors from './errors.json';
+import result from './result.json'
 
-import { zodEn } from '@competition-manager/translations';
+import { frontendTranslations } from '@competition-manager/translations';
 
 export default {
-    zod: zodEn,
+    ...frontendTranslations.en,
     translation,
     buttons,
     labels,
@@ -26,9 +29,12 @@ export default {
     createCompetition,
     adminCompetition,
     eventPopup,
-    inscription,
+    competition,
     account,
     home,
     footer,
-    news
+    news,
+    faq,
+    errors,
+    result
 }

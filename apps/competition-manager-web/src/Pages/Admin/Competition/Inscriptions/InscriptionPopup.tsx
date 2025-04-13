@@ -1,19 +1,22 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { CloseButton, InscriptionWizard, MaxWidth } from "../../../../Components";
+import { CloseButton, InscriptionWizard, MaxWidth } from '@/Components';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 type InscriptionPopupProps = {
     isVisible: boolean;
     onClose: () => void;
-}
+};
 
-export const InscriptionPopup: React.FC<InscriptionPopupProps> = ({ isVisible, onClose }) => {
+export const InscriptionPopup: React.FC<InscriptionPopupProps> = ({
+    isVisible,
+    onClose,
+}) => {
     return (
         <Dialog
             open={isVisible}
-            onClose={onClose} 
+            onClose={onClose}
             maxWidth="md"
-            fullWidth 
-            fullScreen 
+            fullWidth
+            fullScreen
         >
             <MaxWidth>
                 <DialogTitle>
@@ -24,5 +27,5 @@ export const InscriptionPopup: React.FC<InscriptionPopupProps> = ({ isVisible, o
                 </DialogContent>
             </MaxWidth>
         </Dialog>
-    )
-}
+    );
+};

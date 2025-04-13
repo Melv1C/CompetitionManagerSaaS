@@ -1,0 +1,14 @@
+{
+    "inscriptionDeleteFailed": "Échec de la suppression de l'inscription",
+    "inscriptionDeleteFailed_plural": "Échec de la suppression des inscriptions",
+    "internalServerError": "Une erreur interne est survenue",
+    "inscriptionNotFound": "Inscription non trouvée",
+    "inscriptionNotBelongsToUser": "Cette inscription ne vous appartient pas",
+    "errorFallback": {
+        "title": "Une erreur est survenue",
+        "description": "Une erreur inattendue est survenue. Veuillez réessayer plus tard.",
+        "reload": "Recharger la page",
+        "contact": "Contacter le support",
+        "persistentError": "Si le problème persiste, veuillez contacter le support."
+    }
+} 

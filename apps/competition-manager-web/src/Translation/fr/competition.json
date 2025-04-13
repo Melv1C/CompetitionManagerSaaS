@@ -1,0 +1,71 @@
+{
+    "changeAthlete": "Changer d'athlète",
+    "searchAthlete": {
+        "placeholder": "Nom et/ou n° de dossard"
+    },
+    "oneDayAthlete": {
+        "title": "S'inscrire comme athlète d'un jour",
+        "info": "Si vous n'avez pas de licence d'athlétisme belge, vous pouvez vous inscrire comme athlète d'un jour en utilisant l'une des options ci-dessous.",
+        "foreign": {
+            "label": "Athlète étranger",
+            "title": "Inscription athlète étranger",
+            "description": "Pour les athlètes non-belges avec une licence dans leur pays"
+        },
+        "bpm": {
+            "label": "Athlète BPM (moins de 13 ans)",
+            "title": "Inscription athlète BPM",
+            "description": "Pour les jeunes athlètes moins de 13 ans des catégories BEN, PUP ou MIN"
+        },
+        "all": {
+            "label": "Athlète d'un jour",
+            "title": "Inscription athlète d'un jour",
+            "description": "Pour tout participant sans licence régulière"
+        },
+        "countryNotListed": "Si votre pays n'est pas listé, veuillez nous contacter",
+        "error": "Échec de la création de l'athlète d'un jour. Veuillez réessayer."
+    },
+    "noAthletesFound": "Aucun athlète trouvé",
+    "remainingPlaces": "Places restantes",
+    "remainingPlace": "Place restante",
+    "noRemainingPlaces": "Plus de places disponibles",
+    "alreadyPaid": "Déjà payé",
+    "fees": "Frais",
+    "remainingToPay": "Reste à payer",
+    "toPayOnline": "À payer en ligne",
+    "toPayOnPlace": "À payer sur place",
+    "updatePersonalBest": "Mettre à jour la meilleure performance",
+    "noPersonalBest": "Pas de meilleure performance",
+    "acceptTerms": "J'accepte l'utilisation de mes données personnelles dans le cadre de cette compétition",
+    "athleteAlreadyInscribedNotByYou": "Cet athlète est déjà inscrit à cette compétition par un autre utilisateur. En cas de problème, veuillez contacter l'organisateur.",
+    "success": {
+        "title": "Votre inscription a bien été enregistrée",
+        "message": "Un email vous a été envoyé avec les détails de votre inscription.",
+        "newInscription": "Inscrire un nouvel athlète",
+        "goToMyInscriptions": "Voir mes inscriptions"
+    },
+    "pending": {
+        "title": "Votre inscription est en cours de traitement",
+        "message": "Un email vous sera envoyé dès que votre inscription sera validée."
+    },
+    "cancel": "Une erreur est survenue lors du paiement",
+    "needToBeConnected": "Vous devez être connecté pour vous inscrire à une compétition",
+    "needToBeVerified": "Vous devez vérifier votre compte pour vous inscrire à une compétition",
+    "goToAccount": "Aller à mon compte",
+    "inscriptionsNotOpen": "Les inscriptions ne sont pas encore ouvertes",
+    "inscriptionsOpenAt": "Les inscriptions ouvriront le {{date}}",
+    "inscriptionsClosed": "Les inscriptions sont fermées",
+    "noEvent": "Cette compétition n'a pas encore d'épreuve",
+    "clubNotAllowed": "Votre club n'est pas autorisé à s'inscrire à cette compétition",
+    "maxEventByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuve",
+    "maxEventsByAthlete": "Vous pouvez vous inscrire à maximum {{count}} épreuves",
+    "noEventForCategory": "Pas d'épreuve pour votre catégorie",
+    "myInscriptions": "Mes inscriptions",
+    "allInscriptions": "Toutes les inscriptions",
+    "confirmDeleteInscription": "Supprimer l'inscription",
+    "confirmDeleteInscription_plural": "Supprimer les inscriptions",
+    "confirmDeleteInscriptionMessage": "Êtes-vous sûr de vouloir supprimer l'inscription de {{athlete}} ?",
+    "confirmDeleteInscriptionMessage_plural": "Êtes-vous sûr de vouloir supprimer les {{count}} inscriptions de {{athlete}} ?",
+    "inscriptionDeletedSuccess": "Inscription supprimée avec succès",
+    "inscriptionDeletedSuccess_plural": "Inscriptions supprimées avec succès",
+    "refundPolicyWarning": "Veuillez noter que les remboursements des inscriptions payées sont gérés par l'organisateur et ne sont pas traités automatiquement via la plateforme. Contactez directement l'organisateur pour les demandes de remboursement."
+}

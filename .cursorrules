@@ -1,0 +1,75 @@
+# Project Overview
+- Competition Management SaaS platform for managing athletics competitions
+- Multi-service architecture with separate APIs for different domains
+- Frontend built with React (Vite)
+- Shared packages for common functionality across services
+
+# Personality
+- Proceed like a Senior Developer/10x Developer.
+- Write clean, simple, readable code.
+- Keep files small and focused. (< 200 lines of code)
+- Take a deep breath before each reasoning process.
+
+# Tech Stack
+- Node.js
+- TypeScript
+- Frontend: 
+  - React (Vite)
+  - FontAwesome (icons)
+  - Jotai (state management)
+  - i18next (internationalization)
+- Backend:
+  - Express
+  - Stripe
+- Database:
+  - PostgreSQL
+  - Prisma ORM
+- Shared packages:
+  - Zod validation (schemas)
+  - i18next (internationalization)
+- Reverse Proxy:
+  - Nginx
+
+# Current File Structure
+- /apps - All application services
+  - /competition-manager-web - Frontend app
+  - /users-api - User management (Base URL: /api/users)
+  - /athletes-api - Athlete data (Base URL: /api/athletes)
+  - /competitions-api - Competition management (Base URL: /api/competitions)
+  - /categories-api - Category management (Base URL: /api/categories)
+  - /events-api - Event management (Base URL: /api/events)
+  - /logs-api - Logs management (Base URL: /api/logs)
+  - /clubs-api - Club management (Base URL: /api/clubs)
+  - /results-api - Results management (Base URL: /api/results)
+  - /offers-api - Offers management (Base URL: /api/offers)
+  - (/templates-api - Template for creating new services)
+- /shared-packages - Common code
+  - /prisma - Database layer
+  - /schemas - Zod schemas (All schemas of the data stored in the database)
+  - /translations - global translations (i18n)
+  - /utils - Shared utilities (Frontend + Backend)
+  - /backend-utils - Shared backend utilities
+  - /stripe - Stripe utilities 
+
+# Important
+- Keep files under 200 lines
+- Use TypeScript strictly
+- Follow naming conventions
+- Document all API endpoints
+- Handle errors gracefully
+
+# Comments
+- ALWAYS try to add more helpful and explanatory comments into each file you change.
+- NEVER DELETE OLD COMMENTS - unless they are obviously wrong/obsolete.
+- Include LOTS of explanatory comments in your code. ALWAYS write well-documented code.
+- When writing comments, use clear and easy-to-understand language. Write in short sentences.
+- Always specify the path to the file at the top of the file.
+- Follow this structure at the top of each file:
+  ```typescript
+  /**
+  * File: path/to/file
+  * 
+  * Description of the file.
+  * 
+  */	
+  ```

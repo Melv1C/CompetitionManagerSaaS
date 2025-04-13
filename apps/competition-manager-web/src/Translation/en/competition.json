@@ -1,0 +1,71 @@
+{
+    "changeAthlete": "Change athlete",
+    "searchAthlete": {
+        "placeholder": "Name and/or bib number"
+    },
+    "oneDayAthlete": {
+        "title": "Register as One-Day Athlete",
+        "info": "If you don't have a Belgian athletics license, you can register as a one-day athlete using one of the options below.",
+        "foreign": {
+            "label": "Foreign Athlete",
+            "title": "Register Foreign Athlete",
+            "description": "For non-Belgian athletes with a license in their country"
+        },
+        "bpm": {
+            "label": "BPM Athlete (under 13 years)",
+            "title": "Register BPM Athlete",
+            "description": "For young athletes under 13 years old in BEN, PUP, or MIN categories"
+        },
+        "all": {
+            "label": "One-Day Athlete",
+            "title": "Register One-Day Athlete",
+            "description": "For any participant without a regular license"
+        },
+        "countryNotListed": "If your country is not listed, please contact us",
+        "error": "Failed to create one-day athlete. Please try again."
+    },
+    "noAthletesFound": "No athletes found",
+    "remainingPlaces": "Remaining places",
+    "remainingPlace": "Remaining place",
+    "noRemainingPlaces": "No remaining places",
+    "alreadyPaid": "Already paid",
+    "fees": "Fees",
+    "remainingToPay": "Remaining to pay",
+    "toPayOnline": "To pay online",
+    "toPayOnPlace": "To pay on place",
+    "updatePersonalBest": "Update personal best",
+    "noPersonalBest": "No personal best",
+    "acceptTerms": "I accept the use of my personal data in the context of this competition",
+    "athleteAlreadyInscribedNotByYou": "This athlete is already registered for this competition by another user. In case of doubt, please contact the organizer.",
+    "success": {
+        "title": "Your registration has been successfully saved",
+        "message": "An email has been sent to you with the details of your inscription.",
+        "newInscription": "Register a new athlete",
+        "goToMyInscriptions": "Go to my registrations"
+    },
+    "pending": {
+        "title": "Your registration is being processed",
+        "message": "An email will be sent to you as soon as your registration is validated."
+    },
+    "cancel": "An error occurred during payment",
+    "needToBeConnected": "You need to be connected to register for a competition",
+    "needToBeVerified": "You need to verify your account to register for a competition",
+    "goToAccount": "Go to my account",
+    "inscriptionsNotOpen": "Registrations are not open yet",
+    "inscriptionsOpenAt": "Registrations will open on {{date}}",
+    "inscriptionsClosed": "Registrations are closed",
+    "noEvent": "This competition has no event yet",
+    "clubNotAllowed": "Your club is not allowed to register for this competition",
+    "maxEventByAthlete": "You can register for maximum {{count}} event",
+    "maxEventsByAthlete": "You can register for maximum {{count}} events",
+    "noEventForCategory": "No event for your category",
+    "myInscriptions": "My registrations",
+    "allInscriptions": "All registrations",
+    "confirmDeleteInscription": "Delete Registration",
+    "confirmDeleteInscription_plural": "Delete Registrations",
+    "confirmDeleteInscriptionMessage": "Are you sure you want to delete the registration for {{athlete}}?",
+    "confirmDeleteInscriptionMessage_plural": "Are you sure you want to delete all {{count}} registrations for {{athlete}}?",
+    "inscriptionDeletedSuccess": "Registration deleted successfully",
+    "inscriptionDeletedSuccess_plural": "Registrations deleted successfully",
+    "refundPolicyWarning": "Please note that refunds for paid registrations are handled by the organizer and are not automatically processed through the platform. Contact the organizer directly for refund requests."
+}

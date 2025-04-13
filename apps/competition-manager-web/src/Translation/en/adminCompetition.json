@@ -1,5 +1,8 @@
 {
     "contactInformation": "Contact Information",
     "inscriptionInformation": "Registration Information",
-    "onLeavePopup": "Are you sure you want to leave?"
+    "onLeavePopup": "Are you sure you want to leave?",
+    "competitionNotCurrent": "This competition is not in progress",
+    "confirmAll": "Confirm All",
+    "absent": "Absent"
 }

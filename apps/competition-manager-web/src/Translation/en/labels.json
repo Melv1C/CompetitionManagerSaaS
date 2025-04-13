@@ -28,5 +28,11 @@
     "location": "Location",
     "allowedClubs": "Allowed Clubs",
     "isFeesAdditionnal": "Is Fees Additionnal",
-    "maxEventByAthlete": "Max Event By Athlete"
+    "maxEventByAthlete": "Max Event By Athlete",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "license": "License",
+    "club": "Club",
+    "country": "Country"
 }

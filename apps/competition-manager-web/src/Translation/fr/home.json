@@ -2,5 +2,34 @@
     "title": "Gérez et suivez les compétitions d'athlétisme facilement !",
     "description": "Inscrivez-vous, participez et consultez les résultats en un seul endroit. Simplifiez la gestion des compétitions pour les athlètes, les organisateurs et les spectateurs.",
     "viewCalendar": "Voir le calendrier",
-    "viewResults": "Voir les résultats"
+    "viewResults": "Voir les résultats",
+    "features": {
+        "title": "Gestion puissante des compétitions",
+        "calendar": {
+            "title": "Planifiez des compétitions",
+            "description": "Gérez et consultez facilement les événements et compétitions d'athlétisme à venir."
+        },
+        "registration": {
+            "title": "Inscription simplifiée",
+            "description": "Un processus simplifié permettant aux athlètes de s'inscrire aux événements."
+        },
+        "results": {
+            "title": "Résultats en direct",
+            "description": "Résultats de compétition en temps réel disponibles pour les participants et les spectateurs."
+        },
+        "analytics": {
+            "title": "Analyses de performance",
+            "description": "Statistiques complètes et suivi des performances pour les athlètes et les équipes."
+        }
+    },
+    "testimonial": {
+        "quote": "Cette plateforme a révolutionné notre façon d'organiser des événements sportifs. Tout, de l'inscription aux résultats, est fluide.",
+        "author": "Thomas Laurent",
+        "position": "Directeur de compétition, LBFA"
+    },
+    "cta": {
+        "title": "Prêt à commencer ?",
+        "description": "Rejoignez des milliers d'athlètes et d'organisateurs sur notre plateforme dès aujourd'hui.",
+        "button": "Explorer les compétitions"
+    }
 }

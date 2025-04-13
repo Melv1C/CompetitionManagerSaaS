@@ -30,3 +30,6 @@ dist/
 
 # React cache buster meta file
 apps/competition-manager-web/public/meta.json
+
+# RepoMix output
+repomix-output.xml

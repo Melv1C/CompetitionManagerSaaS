@@ -1,6 +1,14 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, Tabs, Tab, List, Box, ListItemButton } from '@mui/material';
 import { Event } from '@competition-manager/schemas';
+import {
+    Box,
+    Dialog,
+    DialogTitle,
+    List,
+    ListItemButton,
+    Tab,
+    Tabs,
+} from '@mui/material';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface GroupedEvents {
@@ -21,7 +29,6 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
     onClose,
     onSelect,
 }) => {
-
     const { t } = useTranslation('eventPopup');
 
     const [selectedGroup, setSelectedGroup] = useState(0);
@@ -29,31 +36,33 @@ export const EventSelectorDialog: React.FC<EventSelectorDialogProps> = ({
     const filteredEvents = groupedEvents[selectedGroup]?.items;
 
     return (
-        <Dialog 
-            open={open} 
-            onClose={onClose} 
-            fullWidth 
-            maxWidth="sm"
-        >
+        <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
             <DialogTitle>{t('selectEvent')}</DialogTitle>
             <Box p={2}>
-                <Tabs value={selectedGroup} onChange={(_, newValue) => setSelectedGroup(newValue)} variant="scrollable">
-                    {groupedEvents.sort((a, b) => a.label.localeCompare(b.label)).map((group, index) => (
-                        <Tab key={index} label={group.label} />
-                    ))}
+                <Tabs
+                    value={selectedGroup}
+                    onChange={(_, newValue) => setSelectedGroup(newValue)}
+                    variant="scrollable"
+                >
+                    {groupedEvents
+                        .map((group, index) => (
+                            <Tab key={index} label={group.label} />
+                        ))}
                 </Tabs>
                 <List sx={{ height: 300, overflow: 'auto' }}>
-                    {filteredEvents?.sort((a, b) => a.name.localeCompare(b.name)).map((event) => (
-                        <ListItemButton
-                            key={event.id}
-                            onClick={() => {
-                                onSelect(event); // Appelle la fonction onSelect avec l'épreuve sélectionnée
-                                onClose(); // Ferme le Dialog
-                            }}
-                        >
-                            {event.name}
-                        </ListItemButton>
-                    ))}
+                    {filteredEvents
+                        ?.sort((a, b) => a.name.localeCompare(b.name))
+                        .map((event) => (
+                            <ListItemButton
+                                key={event.id}
+                                onClick={() => {
+                                    onSelect(event); // Appelle la fonction onSelect avec l'épreuve sélectionnée
+                                    onClose(); // Ferme le Dialog
+                                }}
+                            >
+                                {event.name}
+                            </ListItemButton>
+                        ))}
                 </List>
             </Box>
         </Dialog>

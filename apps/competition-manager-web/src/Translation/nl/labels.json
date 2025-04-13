@@ -28,5 +28,11 @@
     "location": "Locatie",
     "allowedClubs": "Toegestane clubs",
     "isFeesAdditionnal": "Zijn de kosten extra",
-    "maxEventByAthlete": "Maximaal onderdeel per atleet"
+    "maxEventByAthlete": "Maximaal onderdeel per atleet",
+    "gender": "Geslacht",
+    "male": "Man",
+    "female": "Vrouw",
+    "license": "Licentie",
+    "club": "Club",
+    "country": "Land"
 }

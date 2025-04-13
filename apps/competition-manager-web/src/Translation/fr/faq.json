@@ -1,0 +1,65 @@
+{
+    "title": "Questions Fréquemment Posées",
+    "questions": {
+        "accountVerification": "Comment vérifier mon compte ?",
+        "accountCreation": "Comment se connecter et créer un compte ?",
+        "modifyRegistration": "Comment modifier une inscription existante ?"
+    },
+    "accountVerification": {
+        "intro": "La vérification du compte est nécessaire pour assurer la sécurité et l'intégrité de notre système de gestion des compétitions. Vous devez vérifier votre compte pour vous inscrire à une compétition.",
+        "step1": {
+            "title": "Vérifiez Votre Email",
+            "description": "Après l'inscription, recherchez le mail 'Vérifier votre adresse e-mail' dans la boîte de réception de vos mails. N'oubliez pas de vérifier votre dossier spam ou Courrier indésirable."
+        },
+        "step2": {
+            "title": "Cliquez sur le Lien de Vérification",
+            "description": "Cliquez sur le lien 'Vérifier mon email' dans l'email."
+        },
+        "step3": {
+            "title": "Commencez à utiliser la plateforme",
+            "description": "Votre compte ou profil est alors vérifié. Vous êtes alors dirigé sur le site d'inscription où en cliquant sur calendrier et en choisissant la compétition, vous pouvez alors vous inscrire."
+        },
+        "note": "Si vous n'avez pas reçu l'email de vérification dans les 5 minutes, vous pouvez en demander un nouveau depuis vos paramètres de profil."
+    },
+    "accountCreation": {
+        "intro": "Pour accéder à toutes les fonctionnalités de notre plateforme, vous devez créer un compte et vous connecter.",
+        "step1": {
+            "title": "Cliquez sur le bouton « Connexion »",
+            "description": "Cliquez sur le bouton « Connexion » en haut à droite de l'écran. Un pop-up s'ouvre « Se connecter »."
+        },
+        "step2": {
+            "title": "Créez un compte",
+            "description": "Si c'est la première fois que vous vous connectez sur ce site, vous n'avez pas de compte, cliquez en bas du pop-up « S'inscrire ». Un pop-up « S'inscrire » s'ouvre et est à remplir."
+        },
+        "step3": {
+            "title": "Vérifiez votre compte",
+            "description": "Pour terminer votre inscription, il faut que votre compte soit vérifié. Voir la section sur la vérification de compte."
+        },
+        "note": "Après la création de votre compte, vous recevrez un email de vérification. Vous devez vérifier votre compte avant de pouvoir vous inscrire à des compétitions."
+    },
+    "modifyRegistration": {
+        "intro": "Vous pouvez facilement modifier vos inscriptions existantes via la section « Mes inscriptions ».",
+        "step1": {
+            "title": "Sélectionnez l'inscription à modifier",
+            "description": "Dans « Mes inscriptions », sélectionnez celle que vous souhaitez modifier. Cliquez sur le bouton modifier pour accéder au processus de modification."
+        },
+        "step2": {
+            "title": "Athlète",
+            "description": "Vérifiez les informations de l'athlète puis cliquez sur suivant."
+        },
+        "step3": {
+            "title": "Épreuves",
+            "description": "Vous pouvez changer d'épreuve, rajouter une épreuve ou supprimer une épreuve, puis cliquez sur suivant."
+        },
+        "step4": {
+            "title": "Meilleure performance et résumé",
+            "description": "Adaptez votre meilleure performance si nécessaire, puis cliquez sur suivant. Sur la page de résumé, le prix à payer tiendra compte de ce que vous avez déjà payé. Cliquez sur confirmer ou payer pour finaliser."
+        },
+        "note": "Les modifications apportées à vos inscriptions peuvent entraîner des frais supplémentaires ou des remboursements, selon les règles de la compétition."
+    },
+    "cantFindAnswer": {
+        "title": "Vous ne trouvez pas ce que vous cherchez ?",
+        "description": "Notre équipe de support est là pour vous aider ! Envoyez-nous un email et nous vous répondrons dans les plus brefs délais.",
+        "contactSupport": "Contacter le Support"
+    }
+}

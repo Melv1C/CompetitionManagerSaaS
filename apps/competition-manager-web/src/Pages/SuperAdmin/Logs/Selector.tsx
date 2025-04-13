@@ -1,14 +1,14 @@
-import { Box, Chip, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { Box, Chip, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 type SelectorProps = {
     label: string;
     items: string[];
     selectedItems: string[];
     setSelectedItems: (items: string[]) => void;
-}
+};
 
-export const Selector: React.FC<SelectorProps> = ({ 
+export const Selector: React.FC<SelectorProps> = ({
     label,
     items,
     selectedItems,
@@ -17,14 +17,14 @@ export const Selector: React.FC<SelectorProps> = ({
     const { t } = useTranslation();
 
     return (
-        <Box 
+        <Box
             sx={{
                 display: 'flex',
                 gap: 1,
                 flexWrap: 'wrap',
             }}
         >
-            <Typography 
+            <Typography
                 variant="h6"
                 sx={{
                     minWidth: 100,
@@ -33,9 +33,13 @@ export const Selector: React.FC<SelectorProps> = ({
                 {label}
             </Typography>
 
-            <Chip 
+            <Chip
                 label={t('glossary:all')}
-                variant={selectedItems.length === items.length ? 'filled' : 'outlined'}
+                variant={
+                    selectedItems.length === items.length
+                        ? 'filled'
+                        : 'outlined'
+                }
                 color="primary"
                 onClick={() => {
                     if (selectedItems.length === items.length) {
@@ -49,11 +53,15 @@ export const Selector: React.FC<SelectorProps> = ({
                 <Chip
                     key={index}
                     label={item}
-                    variant={selectedItems.includes(item) ? 'filled' : 'outlined'}
+                    variant={
+                        selectedItems.includes(item) ? 'filled' : 'outlined'
+                    }
                     color="primary"
                     onClick={() => {
                         if (selectedItems.includes(item)) {
-                            setSelectedItems(selectedItems.filter(i => i !== item));
+                            setSelectedItems(
+                                selectedItems.filter((i) => i !== item)
+                            );
                         } else {
                             setSelectedItems([...selectedItems, item]);
                         }
@@ -61,5 +69,5 @@ export const Selector: React.FC<SelectorProps> = ({
                 />
             ))}
         </Box>
-    )
-}
+    );
+};

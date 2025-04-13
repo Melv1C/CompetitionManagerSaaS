@@ -1,0 +1,14 @@
+{
+    "inscriptionDeleteFailed": "Inschrijving verwijderen mislukt",
+    "inscriptionDeleteFailed_plural": "Inschrijvingen verwijderen mislukt",
+    "internalServerError": "Er is een interne fout opgetreden",
+    "inscriptionNotFound": "Inschrijving niet gevonden",
+    "inscriptionNotBelongsToUser": "Deze inschrijving behoort niet tot u",
+    "errorFallback": {
+        "title": "Er is een fout opgetreden",
+        "description": "Er is een onverwachte fout opgetreden. Probeer het later opnieuw.",
+        "reload": "De pagina herladen",
+        "contact": "Neem contact op met de ondersteuning",
+        "persistentError": "Als het probleem aanhoudt, neem dan contact op met de ondersteuning."
+    }
+} 

@@ -20,7 +20,9 @@ export const logout = async () => {
 };
 
 export const getRefreshToken = async () => {
-    const { data } = await apiWithCredentials.get('/users/refresh-token', { withCredentials: true });
+    const { data } = await apiWithCredentials.get('/users/refresh-token', {
+        withCredentials: true,
+    });
     const accessToken = EncodeToken$.parse(data);
     setAccessToken(accessToken);
     return accessToken;
@@ -28,20 +30,28 @@ export const getRefreshToken = async () => {
 
 export const forgotPassword = async (email: Email) => {
     await api.post('/users/forgot-password', { email });
-}
+};
 
-export const changePassword = async (oldPassword: Password, newPassword: Password) => {
-    const { data } = await api.post('/users/change-password', { oldPassword, newPassword });
+export const changePassword = async (
+    oldPassword: Password,
+    newPassword: Password
+) => {
+    const { data } = await api.post('/users/change-password', {
+        oldPassword,
+        newPassword,
+    });
     return data;
-}
+};
 
 export const resetPassword = async (newPassword: Password, token: string) => {
-    const { data } = await api.post('/users/reset-password', { newPassword }, { params: { token } });
+    const { data } = await api.post(
+        '/users/reset-password',
+        { newPassword },
+        { params: { token } }
+    );
     return data;
-}
+};
 
 export const resendVerificationEmail = async () => {
     await api.post('/users/resend-verification-email');
-}
-
-
+};

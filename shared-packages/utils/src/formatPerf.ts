@@ -1,8 +1,27 @@
-import { EventType } from "@competition-manager/schemas";
+import { EventType, ResultDetailCode } from "@competition-manager/schemas";
 
-export const formatPerf = (perf: number, eventType: EventType) => {
+export const formatPerf = (perf: number | undefined | null, eventType: EventType) => {
+
+    if (perf === undefined || perf === null) {
+        return '-';
+    }
+
+    if (perf < 0) {
+        // Handle special result codes
+        switch (perf) {
+            case ResultDetailCode.X:
+                return 'X';
+            case ResultDetailCode.PASS:
+                return '-';
+            case ResultDetailCode.R:
+                return 'r';
+            default:
+                return perf;
+        }
+    }
+
     switch (eventType) {
-        case EventType.TIME:
+        case EventType.TIME: {
             // the perf is in milliseconds
             const minutes = Math.floor(perf / 60000);
             const seconds = Math.floor((perf % 60000) / 1000);
@@ -13,6 +32,7 @@ export const formatPerf = (perf: number, eventType: EventType) => {
             } else {
                 return `${seconds}"${centiseconds.toString().padStart(2, '0')}`;
             }
+        }
 
         case EventType.DISTANCE:
         case EventType.HEIGHT:

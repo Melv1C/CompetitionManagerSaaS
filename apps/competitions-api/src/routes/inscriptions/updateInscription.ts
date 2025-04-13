@@ -1,17 +1,33 @@
-import { Router } from 'express';
-import { parseRequest, CustomRequest, checkAdminRole, checkRole, Key, catchError, logRequestMiddleware } from '@competition-manager/backend-utils';
-import { UpdateInscription$, BaseAdmin$, Access, Role, competitionInclude } from '@competition-manager/schemas';
-import { z } from 'zod';
+import {
+    CustomRequest,
+    Key,
+    catchError,
+    checkAdminRole,
+    checkRole,
+    logRequestMiddleware,
+    parseRequest,
+} from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
-import { logger } from '../../logger';
+import {
+    Access,
+    BaseAdmin$,
+    Inscription$,
+    Role,
+    UpdateInscription$,
+    competitionInclude,
+    inscriptionsInclude,
+} from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
+import { Router } from 'express';
+import { z } from 'zod';
+import { logger } from '../../logger';
 
 export const router = Router();
 
 const Params$ = z.object({
     competitionEid: z.string(),
-    inscriptionEid: z.string()
-})
+    inscriptionEid: z.string(),
+});
 
 router.put(
     '/:competitionEid/inscriptions/:inscriptionEid',
@@ -21,38 +37,51 @@ router.put(
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
         try {
-            const { competitionEid, inscriptionEid } = Params$.parse(req.params);
-            const {record, ...rest} = UpdateInscription$.parse(req.body);
+            const { competitionEid, inscriptionEid } = Params$.parse(
+                req.params
+            );
+            const { record, ...rest } = UpdateInscription$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: { eid: competitionEid },
-                include: competitionInclude
+                include: competitionInclude,
             });
             if (!competition) {
                 res.status(404).send('errors.competitionNotFound');
                 return;
             }
-            if (!isAuthorized(req.user!, Role.SUPERADMIN) && !checkAdminRole(Access.INSCRIPTIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) {
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.INSCRIPTIONS,
+                    req.user!.id,
+                    BaseAdmin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
                 return;
             }
-            
+
             const inscription = await prisma.inscription.update({
-                where: { 
+                where: {
                     eid: inscriptionEid,
-                    competitionId: competition.id
+                    competitionId: competition.id,
                 },
                 data: {
                     ...rest,
-                    record: record ? { upsert: { update: record, create: record } } : undefined,
+                    record: record
+                        ? { upsert: { update: record, create: record } }
+                        : undefined,
                 },
+                include: inscriptionsInclude,
             });
-            res.send(inscription);
-            
+            res.send(Inscription$.parse(inscription));
         } catch (e) {
             catchError(logger)(e, {
                 message: 'Internal server error',
                 path: 'POST /:competitionEid/inscriptions/:inscriptionEid',
                 status: 500,
-                userId: req.user?.id
+                userId: req.user?.id,
             });
             res.status(500).send('errors.internalServerError');
         }

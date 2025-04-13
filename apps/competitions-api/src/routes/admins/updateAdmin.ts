@@ -1,17 +1,29 @@
-import { Router } from 'express';
+import {
+    checkAdminRole,
+    checkRole,
+    CustomRequest,
+    Key,
+    parseRequest,
+} from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
-import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key } from '@competition-manager/backend-utils';
-import { Access, Eid$, Id$, Role } from '@competition-manager/schemas';
-import { BaseAdmin$, UpdateAdmin$ } from '@competition-manager/schemas';
+import {
+    Access,
+    BaseAdmin$,
+    Eid$,
+    Id$,
+    Role,
+    UpdateAdmin$,
+} from '@competition-manager/schemas';
+import { isAuthorized } from '@competition-manager/utils';
+import { Router } from 'express';
 import { z } from 'zod';
 
 export const router = Router();
 
 const Params$ = z.object({
     competitionEid: Eid$,
-    adminId: Id$
+    adminId: Id$,
 });
-
 
 router.put(
     '/:competitionEid/admins/:adminId',
@@ -19,30 +31,39 @@ router.put(
     parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
     async (req: CustomRequest, res) => {
-        try{
+        try {
             const { competitionEid, adminId } = Params$.parse(req.params);
             const newAdmin = UpdateAdmin$.parse(req.body);
             const competition = await prisma.competition.findUnique({
                 where: {
-                    eid: competitionEid
+                    eid: competitionEid,
                 },
                 include: {
-                    admins: true
-                }
+                    admins: true,
+                },
             });
             if (!competition) {
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(Access.OWNER, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) {
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.OWNER,
+                    req.user!.id,
+                    BaseAdmin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
                 return;
             }
             try {
                 const admin = await prisma.admin.update({
                     where: {
-                        id: adminId
+                        id: adminId,
                     },
-                    data: newAdmin
+                    data: newAdmin,
                 });
                 res.send(admin);
             } catch (e: any) {
@@ -58,5 +79,4 @@ router.put(
             res.status(500).send(req.t('error.internalServerError'));
         }
     }
-    
 );

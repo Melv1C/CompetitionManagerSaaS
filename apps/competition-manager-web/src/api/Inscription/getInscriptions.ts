@@ -1,8 +1,9 @@
-
-import { DisplayInscription$, Eid } from "@competition-manager/schemas";
-import { api } from "../../utils/api";
+import { api } from '@/utils/api';
+import { DisplayInscription$, Eid } from '@competition-manager/schemas';
 
 export const getInscriptions = async (competitionEid: Eid) => {
-    const { data } = await api.get(`/competitions/${competitionEid}/inscriptions`);
+    const { data } = await api.get(
+        `/competitions/${competitionEid}/inscriptions`
+    );
     return DisplayInscription$.array().parse(data);
-}
+};

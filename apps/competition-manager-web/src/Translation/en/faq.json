@@ -1,0 +1,65 @@
+{
+    "title": "Frequently Asked Questions",
+    "questions": {
+        "accountVerification": "How do I verify my account?",
+        "accountCreation": "How to log in and create an account?",
+        "modifyRegistration": "How to modify an existing registration?"
+    },
+    "accountVerification": {
+        "intro": "Account verification is required to ensure the security and integrity of our competition management system. You must verify your account before you can register for competitions.",
+        "step1": {
+            "title": "Check Your Email",
+            "description": "After registration, look for an email with the subject 'Verify your email address' in your inbox. Don't forget to check your spam folder."
+        },
+        "step2": {
+            "title": "Click the Verification Link",
+            "description": "Click the 'Verify my email' link in the email. This will confirm your account."
+        },
+        "step3": {
+            "title": "Start Using the Platform",
+            "description": "Once verified, you'll be directed to the site where you can register for competitions by clicking on the calendar and selecting a competition."
+        },
+        "note": "If you haven't received the verification email within 5 minutes, you can request a new one from your profile settings."
+    },
+    "accountCreation": {
+        "intro": "To access all features of our platform, you need to create an account and log in.",
+        "step1": {
+            "title": "Click the \"Login\" Button",
+            "description": "Click the \"Login\" button in the top right corner. A \"Login\" pop-up will appear."
+        },
+        "step2": {
+            "title": "Create an Account",
+            "description": "If this is your first time using this site, you don't have an account yet. Click \"Register\" at the bottom of the pop-up. A \"Register\" pop-up will appear for you to fill out."
+        },
+        "step3": {
+            "title": "Verify Your Account",
+            "description": "To complete your registration, you must verify your account. See the account verification section for details."
+        },
+        "note": "After creating your account, you will receive a verification email. You must verify your account before you can register for competitions."
+    },
+    "modifyRegistration": {
+        "intro": "You can easily modify your existing registrations through the \"My Registrations\" section.",
+        "step1": {
+            "title": "Select the Registration to Modify",
+            "description": "In \"My Registrations\", select the registration you wish to modify. Click the modify button to access the modification process."
+        },
+        "step2": {
+            "title": "Athlete",
+            "description": "Verify the athlete information and click next."
+        },
+        "step3": {
+            "title": "Events",
+            "description": "You can change events, add new events, or remove events, then click next."
+        },
+        "step4": {
+            "title": "Best Performance and Summary",
+            "description": "Adjust your best performance if needed, then click next. On the summary page, the price to pay will take into account what you've already paid. Click confirm or pay to finalize."
+        },
+        "note": "Modifications to your registrations may incur additional fees or refunds, depending on the competition rules."
+    },
+    "cantFindAnswer": {
+        "title": "Can't find what you're looking for?",
+        "description": "Our support team is here to help! Send us an email and we'll get back to you as soon as possible.",
+        "contactSupport": "Contact Support"
+    }
+}

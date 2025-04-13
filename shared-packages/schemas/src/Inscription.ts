@@ -8,11 +8,11 @@ import { Record$ } from './Records';
 
 export enum InscriptionStatus {
     REGISTERED = 'registered',
-    REJECTED = 'rejected',
+    REFUSED = 'refused',
     PENDING = 'pending',
     ACCEPTED = 'accepted',
     CONFIRMED = 'confirmed',
-    ABSENT = 'absent'
+    REMOVED = 'removed'
 }
 
 export const Inscription$ = z.object({
@@ -73,6 +73,7 @@ export const UpdateInscription$ = Inscription$.omit({
     bib: true,
     date: true,
 });
+export type UpdateInscription = z.infer<typeof UpdateInscription$>;
 
 
 export const DisplayInscription$ = Inscription$.omit({

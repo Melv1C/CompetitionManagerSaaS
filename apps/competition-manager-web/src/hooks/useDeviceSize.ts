@@ -1,4 +1,4 @@
-import { useMediaQuery } from "@mui/material";
+import { useMediaQuery } from '@mui/material';
 
 export const useDeviceSize = () => {
     return {
@@ -6,5 +6,5 @@ export const useDeviceSize = () => {
         isTablet: useMediaQuery('(min-width: 601px) and (max-width: 900px)'),
         isLaptop: useMediaQuery('(min-width: 901px) and (max-width: 1200px)'),
         isDesktop: useMediaQuery('(min-width: 1201px)'),
-    }
-}
+    };
+};

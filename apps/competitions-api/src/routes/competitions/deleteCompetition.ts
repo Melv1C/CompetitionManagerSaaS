@@ -1,14 +1,22 @@
-import { Router } from 'express';
+import {
+    catchError,
+    checkAdminRole,
+    checkRole,
+    CustomRequest,
+    Key,
+    parseRequest,
+} from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
-import { z } from 'zod';
-import { parseRequest, checkRole, checkAdminRole, CustomRequest, Key, catchError } from '@competition-manager/backend-utils';
 import { Access, BaseAdmin$, Eid$, Role } from '@competition-manager/schemas';
+import { isAuthorized } from '@competition-manager/utils';
+import { Router } from 'express';
+import { z } from 'zod';
 import { logger } from '../../logger';
 
 export const router = Router();
 
 const Params$ = z.object({
-    competitionEid: Eid$
+    competitionEid: Eid$,
 });
 
 router.delete(
@@ -16,38 +24,46 @@ router.delete(
     parseRequest(Key.Params, Params$),
     checkRole(Role.CLUB),
     async (req: CustomRequest, res) => {
-        try{
+        try {
             const { competitionEid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {
-                    eid: competitionEid
+                    eid: competitionEid,
                 },
                 include: {
                     admins: {
                         select: {
                             access: true,
-                            userId: true
-                        }
+                            userId: true,
+                        },
                     },
-                }
+                },
             });
             if (!competition) {
                 res.status(404).send(req.t('errors.competitionNotFound'));
                 return;
             }
-            if (req.user!.role != Role.SUPERADMIN && !checkAdminRole(Access.OWNER, req.user!.id, z.array(BaseAdmin$).parse(competition.admins), res, req.t)) {
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.OWNER,
+                    req.user!.id,
+                    z.array(BaseAdmin$).parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
                 return;
             }
             await prisma.competition.update({
                 where: {
-                    eid: competitionEid
+                    eid: competitionEid,
                 },
                 data: {
-                    isDeleted: true
-                }
+                    isDeleted: true,
+                },
             });
             res.send(req.t('success.competitionDeleted'));
-            
         } catch (e) {
             catchError(logger)(e, {
                 message: 'Internal server error',

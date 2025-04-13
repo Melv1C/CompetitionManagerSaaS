@@ -1,0 +1,71 @@
+{
+    "changeAthlete": "Atleet wijzigen",
+    "searchAthlete": {
+        "placeholder": "Naam en/of startnummer"
+    },
+    "oneDayAthlete": {
+        "title": "Registreer als dagatleet",
+        "info": "Als u geen Belgische atletieklicentie heeft, kunt u zich registreren als dagatleet via een van de onderstaande opties.",
+        "foreign": {
+            "label": "Buitenlandse atleet",
+            "title": "Registreer buitenlandse atleet",
+            "description": "Voor niet-Belgische atleten met een licentie in hun land"
+        },
+        "bpm": {
+            "label": "BPM atleet (onder 13 jaar)",
+            "title": "Registreer BPM atleet",
+            "description": "Voor jonge atleten onder 13 jaar in BEN, PUP of MIN categorieën"
+        },
+        "all": {
+            "label": "Dagatleet",
+            "title": "Registreer dagatleet",
+            "description": "Voor elke deelnemer zonder reguliere licentie"
+        },
+        "countryNotListed": "Als uw land niet in de lijst staat, neem dan contact met ons op",
+        "error": "Dagatleet aanmaken mislukt. Probeer het opnieuw."
+    },
+    "noAthletesFound": "Geen atleten gevonden",
+    "remainingPlaces": "Resterende plaatsen",
+    "remainingPlace": "Resterende plaats",
+    "noRemainingPlaces": "Geen plaatsen meer beschikbaar",
+    "alreadyPaid": "Al betaald",
+    "fees": "Kosten",
+    "remainingToPay": "Nog te betalen",
+    "toPayOnline": "Online te betalen",
+    "toPayOnPlace": "Ter plaatse te betalen",
+    "updatePersonalBest": "Update persoonlijk record",
+    "noPersonalBest": "Geen persoonlijk record",
+    "acceptTerms": "Ik accepteer het gebruik van mijn persoonlijke gegevens in het kader van deze wedstrijd",
+    "athleteAlreadyInscribedNotByYou": "Deze atleet is al ingeschreven voor deze wedstrijd door een andere gebruiker. In geval van twijfel, neem contact op met de organisator.",
+    "success": {
+        "title": "Uw inschrijving is succesvol opgeslagen",
+        "message": "Een e-mail is naar u verzonden met de details van uw inschrijving.",
+        "newInscription": "Registreer een nieuwe atleet",
+        "goToMyInscriptions": "Ga naar mijn inschrijvingen"
+    },
+    "pending": {
+        "title": "Uw inschrijving wordt verwerkt",
+        "message": "Zodra uw inschrijving is gevalideerd, wordt er een e-mail naar u verzonden."
+    },
+    "cancel": "Er is een fout opgetreden tijdens de betaling",
+    "needToBeConnected": "U moet verbonden zijn om u in te schrijven voor een wedstrijd",
+    "needToBeVerified": "U moet uw account verifiëren om u in te schrijven voor een wedstrijd",
+    "goToAccount": "Ga naar mijn account",
+    "inscriptionsNotOpen": "Inschrijvingen zijn nog niet geopend",
+    "inscriptionsOpenAt": "Inschrijvingen openen op {{date}}",
+    "inscriptionsClosed": "Inschrijvingen zijn gesloten",
+    "noEvent": "Deze wedstrijd heeft nog geen onderdeel",
+    "clubNotAllowed": "Uw club mag zich niet inschrijven voor deze wedstrijd",
+    "maxEventByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdeel",
+    "maxEventsByAthlete": "U kunt zich inschrijven voor maximaal {{count}} onderdelen",
+    "noEventForCategory": "Geen onderdeel voor uw categorie",
+    "myInscriptions": "Mijn inschrijvingen",
+    "allInscriptions": "Alle inschrijvingen",
+    "confirmDeleteInscription": "Inschrijving verwijderen",
+    "confirmDeleteInscription_plural": "Inschrijvingen verwijderen",
+    "confirmDeleteInscriptionMessage": "Weet u zeker dat u de inschrijving van {{athlete}} wilt verwijderen?",
+    "confirmDeleteInscriptionMessage_plural": "Weet u zeker dat u alle {{count}} inschrijvingen van {{athlete}} wilt verwijderen?",
+    "inscriptionDeletedSuccess": "Inschrijving succesvol verwijderd",
+    "inscriptionDeletedSuccess_plural": "Inschrijvingen succesvol verwijderd",
+    "refundPolicyWarning": "Let op: terugbetalingen voor betaalde inschrijvingen worden afgehandeld door de organisator en worden niet automatisch via het platform verwerkt. Neem rechtstreeks contact op met de organisator voor terugbetalingsverzoeken."
+}

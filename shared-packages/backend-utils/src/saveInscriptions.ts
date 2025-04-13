@@ -48,6 +48,7 @@ export const saveInscriptions = async (
                 data: {
                     record: inscription.record ? { update: record } : { create: record },
                     paid: Math.min(totalPaid, event.cost),
+                    isDeleted: false,
                     ...meta
                 },
                 include: inscriptionsInclude

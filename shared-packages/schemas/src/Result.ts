@@ -1,7 +1,7 @@
 import z from 'zod';
-import { Athlete$ } from './Athlete';
-import { Bib$, Boolean$, Eid$, Id$ } from './Base';
-import { CompetitionEvent$ } from './CompetitionEvent';
+import { AthleteWithoutClub$ } from './Athlete';
+import { Bib$, Boolean$, Eid$, Id$, License$ } from './Base';
+import { CompetitionEvent$, competitionEventInclude } from './CompetitionEvent';
 import { Club$ } from './Club';
 
 export enum AttemptValue {
@@ -34,12 +34,20 @@ export const ResultDetails$ = z.object({
 });
 export type ResultDetails = z.infer<typeof ResultDetails$>;
 
+// Schema for creating a new result detail
+export const CreateResultDetails$ = ResultDetails$.omit({
+    id: true,
+    // Fields that will be auto-generated
+    isBest: true,
+    isOfficialBest: true,
+});
+export type CreateResultDetails = z.infer<typeof CreateResultDetails$>;
+
 export const Result$ = z.object({
     id: Id$,
     eid: Eid$,
     competitionEvent: CompetitionEvent$,
-    //inscription: Inscription$,
-    athlete: Athlete$,
+    athlete: AthleteWithoutClub$,
     bib: Bib$,
     club: Club$,
 
@@ -55,3 +63,33 @@ export const Result$ = z.object({
     details: ResultDetails$.array().default([]),
 });
 export type Result = z.infer<typeof Result$>;
+
+export const resultInclude = {
+    competitionEvent: {
+        include: competitionEventInclude
+    },
+    athlete: true,
+    club: true,
+    resultDetails: true
+};
+
+// Schema for creating a new result
+export const CreateResult$ = Result$.omit({ 
+    id: true, 
+    eid: true,
+    competitionEvent: true,
+    athlete: true,
+    club: true,
+    details: true,
+    // Fields that will be auto-generated
+    value: true,
+    wind: true,
+    points: true,
+}).extend({
+    competitionEid: Eid$,
+    competitionEventEid: Eid$,
+    athleteLicense: License$,
+    details: CreateResultDetails$.array().default([]),
+});
+export type CreateResult = z.infer<typeof CreateResult$>;
+

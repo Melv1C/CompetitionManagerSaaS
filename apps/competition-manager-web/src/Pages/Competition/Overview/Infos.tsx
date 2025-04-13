@@ -1,32 +1,61 @@
-import { useAtomValue } from "jotai";
-import { competitionAtom } from "../../../GlobalsStates";
-import {Avatar, Card, Link, List, ListItem, ListItemAvatar, ListItemText } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons";
-
+import { competitionAtom } from '@/GlobalsStates';
+import {
+    faCalendar,
+    faEnvelope,
+    faLocationDot,
+    faPhone,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    Avatar,
+    Card,
+    Link,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+} from '@mui/material';
+import { useAtomValue } from 'jotai';
 
 export const Infos = () => {
-        
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition found');
 
     return (
-        <Card 
-            sx={{ 
+        <Card
+            sx={{
                 minWidth: 250,
-                height: 'fit-content'
+                height: 'fit-content',
             }}
         >
             <List>
                 {/* Date */}
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
-                            <FontAwesomeIcon icon={faCalendar} size="sm" color="white" />
+                        <Avatar
+                            sx={{
+                                backgroundColor: 'primary.main',
+                                width: 36,
+                                height: 36,
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faCalendar}
+                                size="sm"
+                                color="white"
+                            />
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={competition.closeDate ? `${competition.date.toLocaleDateString('fr')} - ${competition.closeDate.toLocaleDateString('fr')}` : competition.date.toLocaleDateString('fr')}
+                        primary={
+                            competition.closeDate
+                                ? `${competition.date.toLocaleDateString(
+                                      'fr'
+                                  )} - ${competition.closeDate.toLocaleDateString(
+                                      'fr'
+                                  )}`
+                                : competition.date.toLocaleDateString('fr')
+                        }
                     />
                 </ListItem>
 
@@ -34,13 +63,29 @@ export const Infos = () => {
                 {(competition.location || competition.club) && (
                     <ListItem>
                         <ListItemAvatar>
-                            <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
-                                <FontAwesomeIcon icon={faLocationDot} size="sm" color="white" />
+                            <Avatar
+                                sx={{
+                                    backgroundColor: 'primary.main',
+                                    width: 36,
+                                    height: 36,
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faLocationDot}
+                                    size="sm"
+                                    color="white"
+                                />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={competition.location ? competition.location : competition.club?.abbr}
-                            secondary={competition.location && competition.club?.abbr}
+                            primary={
+                                competition.location
+                                    ? competition.location
+                                    : competition.club?.abbr
+                            }
+                            secondary={
+                                competition.location && competition.club?.abbr
+                            }
                         />
                     </ListItem>
                 )}
@@ -48,12 +93,27 @@ export const Infos = () => {
                 {/* Contact Email */}
                 <ListItem>
                     <ListItemAvatar>
-                        <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
-                            <FontAwesomeIcon icon={faEnvelope} size="sm" color="white" />
+                        <Avatar
+                            sx={{
+                                backgroundColor: 'primary.main',
+                                width: 36,
+                                height: 36,
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faEnvelope}
+                                size="sm"
+                                color="white"
+                            />
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={<Link href={`mailto:${competition.email}`}>{competition.email}</Link>}
+                        primary={
+                            <Link href={`mailto:${competition.email}`}>
+                                {competition.email}
+                            </Link>
+                        }
+                        sx={{ wordBreak: 'break-all' }}
                     />
                 </ListItem>
 
@@ -61,16 +121,24 @@ export const Infos = () => {
                 {competition.phone && (
                     <ListItem>
                         <ListItemAvatar>
-                            <Avatar sx={{ backgroundColor: 'primary.main', width: 36, height: 36 }}>
-                                <FontAwesomeIcon icon={faPhone} size="sm" color="white" />
+                            <Avatar
+                                sx={{
+                                    backgroundColor: 'primary.main',
+                                    width: 36,
+                                    height: 36,
+                                }}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faPhone}
+                                    size="sm"
+                                    color="white"
+                                />
                             </Avatar>
                         </ListItemAvatar>
-                        <ListItemText
-                            primary={competition.phone}
-                        />
+                        <ListItemText primary={competition.phone} />
                     </ListItem>
                 )}
             </List>
         </Card>
-    )
-}
+    );
+};

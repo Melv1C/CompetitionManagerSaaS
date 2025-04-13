@@ -37,7 +37,7 @@ export const UpdateRecordPopup: React.FC<UpdateRecordPopupProps> = ({
             disableRestoreFocus // prevent the focus to be restored to the button that opened the dialog
         >
             <DialogTitle variant="h5" align="center" id="update-record-title">
-                {t('inscription:updatePersonalBest')}
+                {t('competition:updatePersonalBest')}
             </DialogTitle>
             <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {/* readonly TextField for display the event */}

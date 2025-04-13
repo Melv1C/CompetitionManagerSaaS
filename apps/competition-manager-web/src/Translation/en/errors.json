@@ -1,0 +1,14 @@
+{
+    "inscriptionDeleteFailed": "Failed to delete registration",
+    "inscriptionDeleteFailed_plural": "Failed to delete registrations",
+    "internalServerError": "An internal server error occurred",
+    "inscriptionNotFound": "Registration not found",
+    "inscriptionNotBelongsToUser": "This registration does not belong to you",
+    "errorFallback": {
+        "title": "An error occurred",
+        "description": "An unexpected error occurred. Please try again later.",
+        "reload": "Reload the page",
+        "contact": "Contact support",
+        "persistentError": "If the problem persists, please contact support."
+    }
+} 

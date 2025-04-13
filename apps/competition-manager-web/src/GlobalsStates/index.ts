@@ -1,4 +1,11 @@
-import { Athlete, Competition, CompetitionEvent, DisplayInscription, Inscription, TokenData } from '@competition-manager/schemas';
+import {
+    Athlete,
+    Competition,
+    CompetitionEvent,
+    DisplayInscription,
+    Inscription,
+    TokenData,
+} from '@competition-manager/schemas';
 import { atom } from 'jotai';
 
 export const userTokenAtom = atom<TokenData | 'NOT_LOGGED' | null>(null);
@@ -16,10 +23,10 @@ export const adminInscriptionsAtom = atom<Inscription[] | null>(null);
 type InscriptionData = {
     athlete?: Athlete;
     inscriptionsData: {
-        eid: Inscription["eid"];
-        competitionEvent: Inscription["competitionEvent"];
-        record?: Inscription["record"];
-        paid: Inscription["paid"];
+        eid: Inscription['eid'];
+        competitionEvent: Inscription['competitionEvent'];
+        record?: Inscription['record'];
+        paid: Inscription['paid'];
     }[];
 };
 
@@ -30,18 +37,18 @@ export const inscriptionDataAtom = atom<InscriptionData>({
 
 // Store the data of the competition event form
 type CompetitionEventData = {
-    eid?: CompetitionEvent["eid"];
-    event?: CompetitionEvent["event"];
-    categories: CompetitionEvent["categories"];
-    name: CompetitionEvent["name"];
-    schedule?: CompetitionEvent["schedule"];
-    place?: CompetitionEvent["place"];
-    cost: CompetitionEvent["cost"];
+    eid?: CompetitionEvent['eid'];
+    event?: CompetitionEvent['event'];
+    categories: CompetitionEvent['categories'];
+    name: CompetitionEvent['name'];
+    schedule?: CompetitionEvent['schedule'];
+    place?: CompetitionEvent['place'];
+    cost: CompetitionEvent['cost'];
     children: {
-        eid?: CompetitionEvent["eid"];
-        event?: CompetitionEvent["event"];
-        name: CompetitionEvent["name"];
-        schedule?: CompetitionEvent["schedule"];
+        eid?: CompetitionEvent['eid'];
+        event?: CompetitionEvent['event'];
+        name: CompetitionEvent['name'];
+        schedule?: CompetitionEvent['schedule'];
     }[];
 };
 
@@ -55,6 +62,3 @@ export const competitionEventDataAtom = atom<CompetitionEventData>({
     cost: 0,
     children: [],
 });
-
-
-
