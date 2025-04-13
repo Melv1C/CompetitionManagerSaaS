@@ -39,10 +39,10 @@ import {
     Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-//import { FAQAnswer } from "./Components/FAQAnswer"
+import { AccountCreationAnswer } from './Components/AccountCreationAnswer';
 import { AccountVerificationAnswer } from './Components/AccountVerificationAnswer';
 import { CantFindAnswer } from './Components/CantFindAnswer';
-import { CompetitionInscriptionAnswer } from './Components/CompetitionInscriptionAnswer';
+import { ModifyRegistrationAnswer } from './Components/ModifyRegistrationAnswer';
 
 /**
  * Interface defining the structure of FAQ items
@@ -73,12 +73,16 @@ export const FAQ = () => {
      */
     const faqItems: FAQItem[] = [
         {
+            questionKey: 'questions.accountCreation',
+            answer: <AccountCreationAnswer />,
+        },
+        {
             questionKey: 'questions.accountVerification',
             answer: <AccountVerificationAnswer />,
         },
         {
-            questionKey: 'questions.inscription',
-            answer: <CompetitionInscriptionAnswer />,
+            questionKey: 'questions.modifyRegistration',
+            answer: <ModifyRegistrationAnswer />,
         },
     ];
 

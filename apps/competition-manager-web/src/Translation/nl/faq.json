@@ -1,66 +1,65 @@
 {
     "title": "Veelgestelde Vragen",
     "questions": {
-        "multipleCompetitions": "Kan ik meerdere wedstrijden tegelijk beheren?",
         "accountVerification": "Hoe verifieer ik mijn account?",
-        "inscription": "Hoe beheer ik wedstrijdinschrijvingen?"
-    },
-    "multipleCompetitions": {
-        "answer": "Ja, u kunt meerdere wedstrijden beheren vanaf uw dashboard. Elke wedstrijd kan onafhankelijk worden geconfigureerd en beheerd."
+        "accountCreation": "Hoe log ik in en maak ik een account aan?",
+        "modifyRegistration": "Hoe wijzig ik een bestaande inschrijving?"
     },
     "accountVerification": {
-        "intro": "Accountverificatie is vereist om de veiligheid en integriteit van ons wedstrijdbeheersysteem te waarborgen.",
+        "intro": "Accountverificatie is vereist om de veiligheid en integriteit van ons wedstrijdbeheersysteem te waarborgen. U moet uw account verifiëren voordat u zich kunt inschrijven voor wedstrijden.",
         "step1": {
             "title": "Controleer Uw E-mail",
-            "description": "Controleer na registratie uw e-mailbox voor de verificatielink. Vergeet niet om ook uw spammap te controleren."
+            "description": "Na registratie, zoek naar een e-mail met het onderwerp 'Verifieer uw e-mailadres' in uw inbox. Vergeet niet ook uw spammap te controleren."
         },
         "step2": {
             "title": "Klik op de Verificatielink",
-            "description": "Klik op de verificatielink in de e-mail. Dit brengt u naar een bevestigingspagina."
+            "description": "Klik op de link 'Verifieer mijn e-mail' in de e-mail. Dit bevestigt uw account."
         },
         "step3": {
-            "title": "Voltooi de Verificatie",
-            "description": "Zodra de verificatie is voltooid, wordt u doorgestuurd naar uw dashboard met volledige toegang tot alle functies."
+            "title": "Begin met het gebruik van het platform",
+            "description": "Eenmaal geverifieerd, wordt u doorgestuurd naar de site waar u zich kunt inschrijven voor wedstrijden door op de kalender te klikken en een wedstrijd te selecteren."
         },
         "note": "Als u de verificatie-e-mail niet binnen 5 minuten heeft ontvangen, kunt u een nieuwe aanvragen via uw profielinstellingen."
     },
-    "inscription": {
-        "intro": "Het beheren van wedstrijdinschrijvingen is eenvoudig via ons platform. Hier is alles wat u moet weten over het maken, wijzigen en verwijderen van inschrijvingen.",
-        "create": {
-            "title": "Een Nieuwe Inschrijving Maken",
-            "step1": {
-                "title": "Selecteer Wedstrijd",
-                "description": "Ga naar de wedstrijdpagina en klik op de 'Inschrijven' knop."
-            },
-            "step2": {
-                "title": "Vul Details In",
-                "description": "Vul het inschrijfformulier in met de atleetgegevens en selecteer de gewenste onderdelen."
-            },
-            "step3": {
-                "title": "Bevestig en Betaal",
-                "description": "Controleer uw inschrijfgegevens en rond eventuele betalingen af."
-            }
+    "accountCreation": {
+        "intro": "Om toegang te krijgen tot alle functies van ons platform, moet u een account aanmaken en inloggen.",
+        "step1": {
+            "title": "Klik op de knop \"Inloggen\"",
+            "description": "Klik op de knop \"Inloggen\" rechtsboven in het scherm. Er verschijnt een \"Inloggen\" pop-up."
         },
-        "modify": {
-            "title": "Een Bestaande Inschrijving Wijzigen",
-            "step1": {
-                "title": "Vind Uw Inschrijving",
-                "description": "Ga naar 'Mijn Inschrijvingen' in uw dashboard en selecteer de inschrijving die u wilt wijzigen."
-            },
-            "step2": {
-                "title": "Breng Wijzigingen Aan",
-                "description": "Werk de benodigde informatie bij en sla uw wijzigingen op. Let op: sommige wijzigingen kunnen extra goedkeuring vereisen."
-            }
+        "step2": {
+            "title": "Maak een Account aan",
+            "description": "Als dit de eerste keer is dat u deze site gebruikt, heeft u nog geen account. Klik op \"Registreren\" onderaan de pop-up. Er verschijnt een \"Registreren\" pop-up die u kunt invullen."
         },
-        "delete": {
-            "title": "Een Inschrijving Annuleren",
-            "description": "Om een inschrijving te annuleren, ga naar 'Mijn Inschrijvingen', selecteer de inschrijving en klik op de 'Inschrijving Annuleren' knop. Volg de instructies om de annulering te voltooien.",
-            "warning": "Let op: annuleringsbeleid verschilt per wedstrijd. Sommige wedstrijden kunnen deadlines voor annulering of specifieke restitutiebeleid hebben."
-        }
+        "step3": {
+            "title": "Verifieer Uw Account",
+            "description": "Om uw registratie te voltooien, moet u uw account verifiëren. Zie de sectie over accountverificatie voor details."
+        },
+        "note": "Na het aanmaken van uw account ontvangt u een verificatie-e-mail. U moet uw account verifiëren voordat u zich kunt inschrijven voor wedstrijden."
+    },
+    "modifyRegistration": {
+        "intro": "U kunt uw bestaande inschrijvingen eenvoudig wijzigen via de sectie \"Mijn Inschrijvingen\".",
+        "step1": {
+            "title": "Selecteer de inschrijving om te wijzigen",
+            "description": "In \"Mijn Inschrijvingen\", selecteer de inschrijving die u wilt wijzigen. Klik op de wijzigingsknop om het wijzigingsproces te starten."
+        },
+        "step2": {
+            "title": "Atleet",
+            "description": "Controleer de atletengegevens en klik op volgende."
+        },
+        "step3": {
+            "title": "Evenementen",
+            "description": "U kunt evenementen wijzigen, nieuwe evenementen toevoegen of evenementen verwijderen en vervolgens op volgende klikken."
+        },
+        "step4": {
+            "title": "Beste prestatie en samenvatting",
+            "description": "Pas indien nodig uw beste prestatie aan en klik op volgende. Op de samenvattingspagina houdt de te betalen prijs rekening met wat u al heeft betaald. Klik op bevestigen of betalen om af te ronden."
+        },
+        "note": "Wijzigingen in uw inschrijvingen kunnen extra kosten of terugbetalingen met zich meebrengen, afhankelijk van de wedstrijdregels."
     },
     "cantFindAnswer": {
         "title": "Kunt u niet vinden wat u zoekt?",
         "description": "Ons supportteam staat voor u klaar! Stuur ons een e-mail en we reageren zo snel mogelijk.",
         "contactSupport": "Contact Support"
     }
-} 
+}
