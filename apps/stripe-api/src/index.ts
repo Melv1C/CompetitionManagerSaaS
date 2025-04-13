@@ -155,7 +155,7 @@ app.post(
                     });
                     if (!competition) throw new Error('Competition not found');
 
-                    const { alreadyPaid, totalToPay, totalCost } = (
+                    const { totalCost } = (
                         await Promise.all(
                             inscriptionsGroupedByAthlete.map(
                                 async ({ athleteLicense, inscriptions }) => {
@@ -186,13 +186,11 @@ app.post(
                             )
                         )
                     ).reduce(
-                        (acc, { totalCost, alreadyPaid, totalToPay }) => {
+                        (acc, { totalCost }) => {
                             acc.totalCost += totalCost;
-                            acc.alreadyPaid += alreadyPaid;
-                            acc.totalToPay += totalToPay;
                             return acc;
                         },
-                        { totalCost: 0, alreadyPaid: 0, totalToPay: 0 }
+                        { totalCost: 0 }
                     );
 
                     await saveInscriptions(
@@ -238,7 +236,7 @@ app.post(
                             )
                         ),
                         Inscription$.array().parse(competition.inscriptions),
-                        alreadyPaid + totalToPay,
+                        totalCost,
                         CompetitionEvent$.array().parse(competition.events)
                     );
 
