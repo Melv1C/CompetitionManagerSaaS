@@ -1,17 +1,19 @@
 import { createInscriptions, CreateInscriptionsResponseType } from '@/api';
 import { Bib, StepperButtons } from '@/Components';
 import {
-    adminInscriptionsAtom,
     competitionAtom,
     inscriptionDataAtom,
-    inscriptionsAtom,
     userInscriptionsAtom,
 } from '@/GlobalsStates';
 import {
     CreateInscription$,
     PaymentMethod,
 } from '@competition-manager/schemas';
-import { formatPerf, getCostsInfo, isAthleteInAFreeClub } from '@competition-manager/utils';
+import {
+    formatPerf,
+    getCostsInfo,
+    isAthleteInAFreeClub,
+} from '@competition-manager/utils';
 import {
     Box,
     Card,
@@ -26,9 +28,10 @@ import {
     TableContainer,
     TableRow,
 } from '@mui/material';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from 'react-query';
 
 type SummaryProps = {
     isAdmin: boolean;
@@ -42,69 +45,71 @@ export const Summary: React.FC<SummaryProps> = ({
     handleNext,
 }) => {
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
 
     const competition = useAtomValue(competitionAtom);
-    const [userInscriptions, setUserInscriptions] =
-        useAtom(userInscriptionsAtom);
-    const setInscriptions = useSetAtom(inscriptionsAtom);
-    const setAdminInscriptions = useSetAtom(adminInscriptionsAtom);
+    const userInscriptions = useAtomValue(userInscriptionsAtom);
+    const { athlete, inscriptionsData } = useAtomValue(inscriptionDataAtom);
+
     if (!competition) throw new Error('Competition not found');
     if (!userInscriptions) throw new Error('User inscriptions not found');
-
-    const { athlete, inscriptionsData } = useAtomValue(inscriptionDataAtom);
     if (!athlete) throw new Error('Athlete not found');
     if (inscriptionsData.length === 0) throw new Error('No selected events');
 
     const [isAccepted, setIsAccepted] = useState(false);
 
-    const handleConfirm = async () => {
-        const createInscriptionData = CreateInscription$.array().parse([
-            {
-                athleteLicense: athlete.license,
-                inscriptions: inscriptionsData.map((inscriptionData) => ({
-                    competitionEventEid: inscriptionData.competitionEvent.eid,
-                    record: inscriptionData.record,
-                })),
-            },
-        ]);
+    // Create mutation for inscription creation
+    const createInscriptionMutation = useMutation(
+        () => {
+            const createInscriptionData = CreateInscription$.array().parse([
+                {
+                    athleteLicense: athlete.license,
+                    inscriptions: inscriptionsData.map((inscriptionData) => ({
+                        competitionEventEid:
+                            inscriptionData.competitionEvent.eid,
+                        record: inscriptionData.record,
+                    })),
+                },
+            ]);
 
-        const {
-            type,
-            url,
-            inscriptions: newInscriptions,
-        } = await createInscriptions(
-            competition.eid,
-            createInscriptionData,
-            isAdmin
-        );
-        if (type === CreateInscriptionsResponseType.URL) {
-            // Redirect to url
-            window.location.href = url!;
-        } else {
-            setInscriptions((prev) => [
-                ...prev!.filter(
-                    (inscription) =>
-                        inscription.athlete.license !== athlete.license
-                ),
-                ...newInscriptions,
-            ]);
-            setUserInscriptions((prev) => [
-                ...prev!.filter(
-                    (inscription) =>
-                        inscription.athlete.license !== athlete.license
-                ),
-                ...newInscriptions,
-            ]);
-            if (isAdmin)
-                setAdminInscriptions((prev) => [
-                    ...prev!.filter(
-                        (inscription) =>
-                            inscription.athlete.license !== athlete.license
-                    ),
-                    ...newInscriptions,
-                ]);
-            handleNext();
+            return createInscriptions(
+                competition.eid,
+                createInscriptionData,
+                isAdmin
+            );
+        },
+        {
+            onSuccess: (data) => {
+                const { type, url } = data;
+
+                if (type === CreateInscriptionsResponseType.URL) {
+                    // Redirect to url
+                    window.location.href = url!;
+                } else {
+                    // Invalidate queries to refresh data
+                    queryClient.invalidateQueries([
+                        'inscriptions',
+                        competition.eid,
+                    ]);
+                    queryClient.invalidateQueries([
+                        'userInscriptions',
+                        competition.eid,
+                    ]);
+                    if (isAdmin) {
+                        queryClient.invalidateQueries([
+                            'adminInscriptions',
+                            competition.eid,
+                        ]);
+                    }
+
+                    handleNext();
+                }
+            },
         }
+    );
+
+    const handleConfirm = async () => {
+        createInscriptionMutation.mutate();
     };
 
     const { totalCost, alreadyPaid, fees, totalToPay } = useMemo(
@@ -197,7 +202,8 @@ export const Summary: React.FC<SummaryProps> = ({
                                                     width={50}
                                                     align="right"
                                                 >
-                                                    {event.cost > 0 && !isAthleteInAFreeClub(
+                                                    {event.cost > 0 &&
+                                                    !isAthleteInAFreeClub(
                                                         competition,
                                                         athlete
                                                     )
@@ -339,7 +345,9 @@ export const Summary: React.FC<SummaryProps> = ({
                                 ? t('buttons:pay')
                                 : t('buttons:confirm'),
                         onClick: handleConfirm,
-                        disabled: !isAccepted && !isAdmin,
+                        disabled:
+                            (!isAccepted && !isAdmin) ||
+                            createInscriptionMutation.isLoading,
                     },
                 ]}
             />

@@ -23,6 +23,7 @@ import {
     inscriptionDataAtom,
     inscriptionsAtom,
     userInscriptionsAtom,
+    adminInscriptionsAtom
 } from '../../../GlobalsStates';
 
 type EventsProps = {
@@ -281,10 +282,10 @@ export const Events = ({ isAdmin, handleNext, handleBack }: EventsProps) => {
 
 const useGetCurrentInscription = (isAdmin: boolean) => {
     const userInscriptions = useAtomValue(userInscriptionsAtom);
-    const inscriptions = useAtomValue(inscriptionsAtom);
+    const adminInscriptions = useAtomValue(adminInscriptionsAtom);
     if (!userInscriptions) throw new Error('User inscriptions not found');
-    if (!inscriptions) throw new Error('Inscriptions not found');
-    const [{ athlete, inscriptionsData }, setInscriptionData] =
+    if (!adminInscriptions) throw new Error('Inscriptions not found');
+    const [{ athlete }, setInscriptionData] =
         useAtom(inscriptionDataAtom);
     if (!athlete) throw new Error('Athlete not found');
 
@@ -293,7 +294,8 @@ const useGetCurrentInscription = (isAdmin: boolean) => {
             userInscriptions
                 .filter(
                     (inscription) =>
-                        inscription.athlete.license === athlete.license
+                        inscription.athlete.license === athlete.license &&
+                        inscription.isDeleted === false
                 )
                 .map((inscription) => ({
                     eid: inscription.eid,
@@ -304,12 +306,13 @@ const useGetCurrentInscription = (isAdmin: boolean) => {
         [athlete, userInscriptions]
     );
 
-    const currentInscriptions = useMemo(
+    const currentAdminInscriptions = useMemo(
         () =>
-            inscriptions
+            adminInscriptions
                 .filter(
                     (inscription) =>
-                        inscription.athlete.license === athlete.license
+                        inscription.athlete.license === athlete.license &&
+                        inscription.isDeleted === false
                 )
                 .map((inscription) => ({
                     eid: inscription.eid,
@@ -317,12 +320,10 @@ const useGetCurrentInscription = (isAdmin: boolean) => {
                     record: inscription.record,
                     paid: 0,
                 })),
-        [athlete, inscriptions]
+        [athlete, adminInscriptions]
     );
 
     useEffect(() => {
-        if (inscriptionsData.length > 0) return;
-
         if (currentUserInscriptions.length > 0) {
             setInscriptionData((prev) => ({
                 ...prev,
@@ -330,26 +331,21 @@ const useGetCurrentInscription = (isAdmin: boolean) => {
             }));
             return;
         }
-        if (isAdmin && currentInscriptions.length > 0) {
+        if (isAdmin && currentAdminInscriptions.length > 0) {
             setInscriptionData((prev) => ({
                 ...prev,
-                inscriptionsData: currentInscriptions,
+                inscriptionsData: currentAdminInscriptions,
             }));
         }
     }, [
         currentUserInscriptions,
-        currentInscriptions,
+        currentAdminInscriptions,
         isAdmin,
-        inscriptionsData.length,
         setInscriptionData,
     ]);
 
     return {
         currentInscriptions:
-            currentUserInscriptions.length > 0
-                ? currentUserInscriptions
-                : isAdmin
-                ? currentInscriptions
-                : [],
+            isAdmin ? currentAdminInscriptions : currentUserInscriptions,
     };
 };
