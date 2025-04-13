@@ -1,17 +1,17 @@
 /**
  * File: src/routes/createResult.ts
- * 
+ *
  * Route handler for upserting competition results.
  * Validates input using Zod schemas and emits real-time updates via Socket.IO.
  * Requires ADMIN role and proper competition admin access rights.
- * 
+ *
  * Endpoint: POST /
  * Body: CreateResult schema containing:
  *   - competitionEid: Competition entity ID
  *   - competitionEventEid: Competition event entity ID
  *   - athleteLicense: Athlete's license number
  *   - Other result fields (bib, heat, orders, values, etc.)
- * 
+ *
  * Process:
  * 1. Validates request body
  * 2. Checks user permissions (ADMIN role + competition admin access)
@@ -19,23 +19,41 @@
  * 4. Finds athlete by license
  * 5. Upserts result with all relationships
  * 6. Emits real-time update
- * 
- * Response: 
+ *
+ * Response:
  * - 200/201: Upserted result with all relationships
  * - 404: Competition/Event/Athlete not found
  * - 403: Insufficient permissions
  * - 500: Internal server error
- * 
+ *
  * Socket Events:
  * - result:new/update - Emitted to competition room when a result is created/updated
  */
 
-import { Router } from 'express';
+import {
+    catchError,
+    checkAdminRole,
+    checkRole,
+    CustomRequest,
+    findAthleteWithLicense,
+    Key,
+    parseRequest,
+} from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
-import { Result$, CreateResult$, resultInclude, Role, Access, Admin$, Athlete$, EventType, competitionEventInclude } from '@competition-manager/schemas';
-import { catchError, checkAdminRole, checkRole, CustomRequest, findAthleteWithLicense, Key, parseRequest, setUserIfExist } from '@competition-manager/backend-utils';
-import { logger } from '../logger';
+import {
+    Access,
+    Admin$,
+    Athlete$,
+    competitionEventInclude,
+    CreateResult$,
+    EventType,
+    Result$,
+    resultInclude,
+    Role,
+} from '@competition-manager/schemas';
 import { isAuthorized, isBestResult } from '@competition-manager/utils';
+import { Router } from 'express';
+import { logger } from '../logger';
 
 export const router = Router();
 
@@ -46,7 +64,13 @@ router.post(
     async (req: CustomRequest, res) => {
         try {
             // Extract validated fields from request body
-            const { competitionEid, competitionEventEid, athleteLicense, details, ...rest } = CreateResult$.parse(req.body);
+            const {
+                competitionEid,
+                competitionEventEid,
+                athleteLicense,
+                details,
+                ...rest
+            } = CreateResult$.parse(req.body);
 
             // Fetch competition with related admins and events
             const competition = await prisma.competition.findUnique({
@@ -54,8 +78,8 @@ router.post(
                 include: {
                     admins: true,
                     events: { include: competitionEventInclude },
-                    oneDayAthletes: true
-                }
+                    oneDayAthletes: true,
+                },
             });
 
             // Return 404 if competition not found
@@ -65,7 +89,9 @@ router.post(
             }
 
             // Find matching competition event
-            const competitionEvent = competition.events.find(event => event.eid === competitionEventEid);
+            const competitionEvent = competition.events.find(
+                (event) => event.eid === competitionEventEid
+            );
 
             // Return 404 if event not found
             if (!competitionEvent) {
@@ -73,7 +99,10 @@ router.post(
                 return;
             }
 
-            const athlete = await findAthleteWithLicense(athleteLicense, Athlete$.array().parse(competition.oneDayAthletes));
+            const athlete = await findAthleteWithLicense(
+                athleteLicense,
+                Athlete$.array().parse(competition.oneDayAthletes)
+            );
 
             // Return 404 if athlete not found
             if (!athlete) {
@@ -82,7 +111,16 @@ router.post(
             }
 
             // Check if user has required permissions
-            if (!isAuthorized(req.user!, Role.SUPERADMIN) && !checkAdminRole(Access.RESULTS, req.user!.id, Admin$.array().parse(competition.admins), res, req.t)) {
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.RESULTS,
+                    req.user!.id,
+                    Admin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
                 return;
             }
 
@@ -91,27 +129,33 @@ router.post(
                 where: {
                     athleteId: athlete.id,
                     competitionEventId: competitionEvent.id,
-                    competitionId: competition.id
-                }
+                    competitionId: competition.id,
+                },
             });
 
             // Process details to compute best performances
             const processedDetails = details.map((detail, idx, arr) => {
-                const isBestPerf = arr.every(d => 
-                    d === detail || isBestResult(detail.value, d.value, competitionEvent.event.type as EventType)
+                const isBestPerf = arr.every(
+                    (d) =>
+                        d === detail ||
+                        isBestResult(
+                            detail.value,
+                            d.value,
+                            competitionEvent.event.type as EventType
+                        )
                 );
                 return {
                     tryNumber: detail.tryNumber,
                     value: detail.value,
-                    attempts: detail.attempts?.map(a => a.toString()) || [],
+                    attempts: detail.attempts?.map((a) => a.toString()) || [],
                     wind: detail.wind,
                     isBest: isBestPerf,
-                    isOfficialBest: isBestPerf // For now, assuming official best is same as best (TODO)
+                    isOfficialBest: isBestPerf, // For now, assuming official best is same as best (TODO)
                 };
             });
 
             // Find best performance for result-level values
-            const bestDetail = processedDetails.find(d => d.isBest);
+            const bestDetail = processedDetails.find((d) => d.isBest);
 
             // Prepare base result data
             const resultData = {
@@ -123,7 +167,7 @@ router.post(
                 clubId: athlete.club.id,
                 competitionId: competition.id,
                 inscriptionId: inscription?.id || null,
-                initialOrder: rest.tempOrder // Using tempOrder as initial order if not provided (TODO)
+                initialOrder: rest.tempOrder, // Using tempOrder as initial order if not provided (TODO)
             };
 
             // Upsert result
@@ -131,29 +175,31 @@ router.post(
                 where: {
                     competitionEventId_athleteId: {
                         competitionEventId: competitionEvent.id,
-                        athleteId: athlete.id
-                    }
+                        athleteId: athlete.id,
+                    },
                 },
                 create: {
                     ...resultData,
                     resultDetails: {
-                        create: processedDetails
-                    }
+                        create: processedDetails,
+                    },
                 },
                 update: {
                     ...resultData,
                     resultDetails: {
                         deleteMany: {},
-                        create: processedDetails
-                    }
+                        create: processedDetails,
+                    },
                 },
-                include: resultInclude
+                include: resultInclude,
             });
 
             // Emit appropriate event
-            req.app.get('io').to(`competition:${competitionEid}`)
+            req.app
+                .get('io')
+                .to(`competition:${competitionEid}`)
                 .emit('result:new', Result$.parse(result));
-            
+
             // Return response with appropriate status code
             res.status(201).json(Result$.parse(result));
             return;
@@ -169,4 +215,4 @@ router.post(
             return;
         }
     }
-); 
+);

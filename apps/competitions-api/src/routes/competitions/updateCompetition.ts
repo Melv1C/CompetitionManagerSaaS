@@ -1,8 +1,22 @@
-import { Router } from 'express';
+import {
+    CustomRequest,
+    Key,
+    catchError,
+    checkAdminRole,
+    checkRole,
+    parseRequest,
+} from '@competition-manager/backend-utils';
 import { Prisma, prisma } from '@competition-manager/prisma';
-import { parseRequest, CustomRequest, checkRole, checkAdminRole, Key, catchError } from '@competition-manager/backend-utils';
-import { UpdateCompetition$, Competition$, Access, Role, competitionInclude } from '@competition-manager/schemas';
-import { BaseAdmin$ } from '@competition-manager/schemas';
+import {
+    Access,
+    BaseAdmin$,
+    Competition$,
+    Role,
+    UpdateCompetition$,
+    competitionInclude,
+} from '@competition-manager/schemas';
+import { isAuthorized } from '@competition-manager/utils';
+import { Router } from 'express';
 import { logger } from '../../logger';
 
 export const router = Router();
@@ -20,39 +34,54 @@ router.put(
         try {
             //si add option stripe TODO
 
-            const { optionsId, freeClubsId, allowedClubsId, ...newCompetitionData } = UpdateCompetition$.parse(req.body);
+            const {
+                optionsId,
+                freeClubsId,
+                allowedClubsId,
+                ...newCompetitionData
+            } = UpdateCompetition$.parse(req.body);
             const { eid } = Params$.parse(req.params);
             const competition = await prisma.competition.findUnique({
                 where: {
-                    eid
+                    eid,
                 },
                 select: {
-                    admins: true
-                }
+                    admins: true,
+                },
             });
             if (!competition) {
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (req.user!.role !== Role.SUPERADMIN && !checkAdminRole(Access.COMPETITIONS, req.user!.id, BaseAdmin$.array().parse(competition.admins), res, req.t)) return;
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.COMPETITIONS,
+                    req.user!.id,
+                    BaseAdmin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            )
+                return;
             try {
                 const updatedCompetition = await prisma.competition.update({
                     where: {
-                        eid
+                        eid,
                     },
                     data: {
                         ...newCompetitionData,
                         options: {
-                            set: optionsId.map(id => ({ id }))
+                            set: optionsId.map((id) => ({ id })),
                         },
                         freeClubs: {
-                            set: freeClubsId.map(id => ({ id }))
+                            set: freeClubsId.map((id) => ({ id })),
                         },
                         allowedClubs: {
-                            set: allowedClubsId.map(id => ({ id }))
-                        }
+                            set: allowedClubsId.map((id) => ({ id })),
+                        },
                     },
-                    include: competitionInclude
+                    include: competitionInclude,
                 });
                 res.send(Competition$.parse(updatedCompetition));
             } catch (e) {
@@ -78,5 +107,4 @@ router.put(
             res.status(500).send(req.t('errors.internalServerError'));
         }
     }
-    
 );
