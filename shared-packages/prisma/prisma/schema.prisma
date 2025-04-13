@@ -236,7 +236,7 @@ model Inscription {
     competitionEventId  Int                @map("competition_event_id")
     competition         Competition        @relation(fields: [competitionId], references: [id], onDelete: Cascade)
     competitionId       Int                @map("competition_id")
-    paid                Int
+    paid                Float
     status              String
     user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId              Int                @map("user_id")
