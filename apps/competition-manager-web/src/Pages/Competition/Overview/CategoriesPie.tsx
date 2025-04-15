@@ -14,21 +14,36 @@ export const CategoriesPie = () => {
     if (!competition) throw new Error('No competition found');
     if (!inscriptions) throw new Error('No inscriptions found');
 
+    // First get unique athletes by license
+    const uniqueAthletes = useMemo(() => {
+        const athletesMap = new Map();
+        inscriptions.forEach((inscription) => {
+            if (!athletesMap.has(inscription.athlete.license)) {
+                athletesMap.set(
+                    inscription.athlete.license,
+                    inscription.athlete
+                );
+            }
+        });
+        return Array.from(athletesMap.values());
+    }, [inscriptions]);
+
+    // Then get categories from unique athletes
     const categories = useMemo(
         () =>
             new Set(
-                inscriptions.map((i) =>
+                uniqueAthletes.map((athlete) =>
                     getCategoryAbbr(
-                        i.athlete.birthdate,
-                        i.athlete.gender,
+                        athlete.birthdate,
+                        athlete.gender,
                         competition.date
                     )
                 )
             ),
-        [inscriptions, competition]
+        [uniqueAthletes, competition]
     );
 
-    if (inscriptions.length === 0) return null;
+    if (uniqueAthletes.length === 0) return null;
     return (
         <Card
             sx={{
@@ -45,11 +60,11 @@ export const CategoriesPie = () => {
                     {
                         data: Array.from(categories).map((category) => ({
                             id: category,
-                            value: inscriptions.filter(
-                                (i) =>
+                            value: uniqueAthletes.filter(
+                                (athlete) =>
                                     getCategoryAbbr(
-                                        i.athlete.birthdate,
-                                        i.athlete.gender,
+                                        athlete.birthdate,
+                                        athlete.gender,
                                         competition.date
                                     ) === category
                             ).length,

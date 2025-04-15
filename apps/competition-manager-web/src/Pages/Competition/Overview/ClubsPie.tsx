@@ -11,12 +11,27 @@ export const ClubsPie = () => {
     const inscriptions = useAtomValue(inscriptionsAtom);
     if (!inscriptions) throw new Error('No inscriptions found');
 
+    // First get unique athletes with their clubs by license
+    const uniqueAthletesWithClubs = useMemo(() => {
+        const athletesMap = new Map();
+        inscriptions.forEach((inscription) => {
+            if (!athletesMap.has(inscription.athlete.license)) {
+                athletesMap.set(inscription.athlete.license, {
+                    athlete: inscription.athlete,
+                    club: inscription.club,
+                });
+            }
+        });
+        return Array.from(athletesMap.values());
+    }, [inscriptions]);
+
+    // Then get unique clubs from unique athletes
     const clubsId = useMemo(
-        () => new Set(inscriptions.map((i) => i.club.id)),
-        [inscriptions]
+        () => new Set(uniqueAthletesWithClubs.map((item) => item.club.id)),
+        [uniqueAthletesWithClubs]
     );
 
-    if (inscriptions.length === 0) return null;
+    if (uniqueAthletesWithClubs.length === 0) return null;
     return (
         <Card
             sx={{
@@ -31,13 +46,13 @@ export const ClubsPie = () => {
             <PieChart
                 series={[
                     {
-                        data: Array.from(clubsId).map((clubsId) => ({
-                            id: clubsId,
-                            value: inscriptions.filter(
-                                (i) => i.club.id === clubsId
+                        data: Array.from(clubsId).map((clubId) => ({
+                            id: clubId,
+                            value: uniqueAthletesWithClubs.filter(
+                                (item) => item.club.id === clubId
                             ).length,
-                            label: inscriptions.find(
-                                (i) => i.club.id === clubsId
+                            label: uniqueAthletesWithClubs.find(
+                                (item) => item.club.id === clubId
                             )?.club.abbr,
                         })),
                         arcLabel: 'label',
