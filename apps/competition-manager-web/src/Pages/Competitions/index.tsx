@@ -1,6 +1,8 @@
 import { getCompetitions } from '@/api';
 import { ListCompetitions, Loading } from '@/Components';
 import { MaxWidth } from '@/Components/MaxWidth';
+import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 
@@ -10,6 +12,7 @@ const tomorrow = new Date();
 tomorrow.setHours(23, 59, 59, 999);
 
 export const Competitions: React.FC = () => {
+    const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const isPast = searchParams.get('isPast') === 'true';
 
@@ -31,6 +34,11 @@ export const Competitions: React.FC = () => {
 
     return (
         <MaxWidth>
+            <Typography variant="h4" component="h1" gutterBottom>
+                {isPast
+                    ? t('competitions:pastCompetitions')
+                    : t('competitions:upcomingCompetitions')}
+            </Typography>
             <ListCompetitions competitions={competitions} isPast={isPast} />
         </MaxWidth>
     );

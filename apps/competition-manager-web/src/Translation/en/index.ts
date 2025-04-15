@@ -8,6 +8,7 @@ import createCompetition from './createCompetition.json';
 import adminCompetition from './adminCompetition.json';
 import eventPopup from './eventPopup.json';
 import competition from './competition.json';
+import competitions from './competitions.json';
 import account from './account.json';
 import home from './home.json';
 import footer from './footer.json';
@@ -30,6 +31,7 @@ export default {
     adminCompetition,
     eventPopup,
     competition,
+    competitions,
     account,
     home,
     footer,
