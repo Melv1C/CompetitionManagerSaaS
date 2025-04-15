@@ -86,6 +86,7 @@ export const AllInscriptionsSection: React.FC<AllInscriptionsSectionProps> = ({
         () =>
             inscriptions
                 .sort((a, b) => b.date.getTime() - a.date.getTime())
+                .filter((i) => !i.competitionEvent.parentId) // Remove sub-events
                 .filter((i) => {
                     const category = getCategoryAbbr(
                         i.athlete.birthdate,
