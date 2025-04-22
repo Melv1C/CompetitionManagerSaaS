@@ -59,7 +59,7 @@ export const DistanceResults = ({ results }: { results: Result[] }) => (
                         eventType={EventType.DISTANCE}
                     >
                         <ResultDetails
-                            details={result.details}
+                            details={result.details.sort((a, b) => a.tryNumber - b.tryNumber)}
                             eventType={EventType.DISTANCE}
                         />
                     </ResultAccordion>
@@ -92,7 +92,7 @@ export const HeightResults = ({ results }: { results: Result[] }) => (
                                 eventType={EventType.HEIGHT}
                             >
                                 <ResultDetails
-                                    details={result.details}
+                                    details={result.details.sort((a, b) => a.tryNumber - b.tryNumber)}
                                     eventType={EventType.HEIGHT}
                                 />
                             </ResultAccordion>

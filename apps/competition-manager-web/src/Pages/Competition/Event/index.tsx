@@ -1,5 +1,9 @@
 import { Time } from '@/Components';
-import { competitionAtom, inscriptionsAtom } from '@/GlobalsStates';
+import {
+    competitionAtom,
+    inscriptionsAtom,
+    resultsAtom,
+} from '@/GlobalsStates';
 import { EventGroup } from '@competition-manager/schemas';
 import {
     Box,
@@ -11,7 +15,7 @@ import {
     Tabs,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { Inscriptions } from './Inscriptions';
@@ -25,8 +29,10 @@ export const Event = () => {
 
     const competition = useAtomValue(competitionAtom);
     const allInscriptions = useAtomValue(inscriptionsAtom);
+    const allResults = useAtomValue(resultsAtom);
     if (!competition) throw new Error('No competition found');
     if (!allInscriptions) throw new Error('No inscriptions found');
+    if (!allResults) throw new Error('No results found');
 
     const event = competition.events.find((e) => e.eid === eventEid);
     if (!event) throw new Error('No event found');
@@ -40,9 +46,18 @@ export const Event = () => {
         (i) => i.competitionEvent.id === event.id
     );
 
-    const handleTabChange = (_: React.SyntheticEvent, newValue: 'inscriptions' | 'results') => {
+    const handleTabChange = (
+        _: React.SyntheticEvent,
+        newValue: 'inscriptions' | 'results'
+    ) => {
         setTab(newValue);
     };
+
+    useEffect(() => {
+        if (allResults.filter((r) => r.competitionEvent.id === event.id).length > 0) {
+            setTab('results');
+        }
+    }, [allResults, event.id]);
 
     return (
         <Box
