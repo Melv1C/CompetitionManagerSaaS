@@ -55,8 +55,8 @@ router.post(
                         admins: true,
                         events: { include: competitionEventInclude },
                         oneDayAthletes: {
-                            include: athleteInclude
-                        }
+                            include: athleteInclude,
+                        },
                     },
                 });
 
@@ -118,8 +118,7 @@ router.post(
                     return {
                         tryNumber: detail.tryNumber,
                         value: detail.value,
-                        attempts:
-                            detail.attempts?.map((a) => a.toString()) || [],
+                        attempts: detail.attempts,
                         wind: detail.wind,
                         isBest: isBestPerf,
                         isOfficialBest: isBestPerf,
@@ -148,13 +147,13 @@ router.post(
                     },
                     create: {
                         ...resultData,
-                        resultDetails: {
+                        details: {
                             create: processedDetails,
                         },
                     },
                     update: {
                         ...resultData,
-                        resultDetails: {
+                        details: {
                             deleteMany: {},
                             create: processedDetails,
                         },

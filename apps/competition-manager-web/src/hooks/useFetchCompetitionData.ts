@@ -2,12 +2,14 @@ import {
     getAdminInscriptions,
     getCompetition,
     getInscriptions,
+    getResults,
     getUsersInscriptions,
 } from '@/api';
 import {
     adminInscriptionsAtom,
     competitionAtom,
     inscriptionsAtom,
+    resultsAtom,
     userInscriptionsAtom,
 } from '@/GlobalsStates';
 import { useAtom } from 'jotai';
@@ -25,6 +27,7 @@ export const useFetchCompetitionData = (
     const [globalAdminInscriptions, setAdminInscriptions] = useAtom(
         adminInscriptionsAtom
     );
+    const [globalResults, setResults] = useAtom(resultsAtom);
 
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -66,17 +69,27 @@ export const useFetchCompetitionData = (
         { enabled: isInitialized }
     );
 
+    const {
+        data: results,
+        isLoading: isResultsLoading,
+        isError: isResultsError,
+        refetch: refetchResults,
+    } = useQuery(['results', eid], () => getResults(eid), {
+        enabled: isInitialized,
+    });
+
     const isLoading =
         isCompetitionLoading ||
         isInscriptionsLoading ||
         isUserInscriptionsLoading ||
-        (isAdmin && isAdminInscriptionsLoading);
+        (isAdmin && isAdminInscriptionsLoading) ||
+        isResultsLoading;
     const isLoaded =
         globalComp &&
         globalInscriptions &&
         globalUserInscriptions &&
-        (!isAdmin || globalAdminInscriptions);
-
+        (!isAdmin || globalAdminInscriptions) &&
+        globalResults;
     useEffect(() => {
         if (!isLoaded && !isLoading && !isInitialized) {
             setIsInitialized(true);
@@ -107,6 +120,12 @@ export const useFetchCompetitionData = (
         }
     }, [adminInscriptions, setAdminInscriptions]);
 
+    useEffect(() => {
+        if (results) {
+            setResults(results);
+        }
+    }, [results, setResults]);
+
     if (isCompetitionError) throw new Error('Error while fetching competition');
     if (isInscriptionsError)
         throw new Error('Error while fetching inscriptions');
@@ -114,6 +133,7 @@ export const useFetchCompetitionData = (
         throw new Error('Error while fetching user inscriptions');
     if (isAdmin && isAdminInscriptionsError)
         throw new Error('Error while fetching admin inscriptions');
+    if (isResultsError) throw new Error('Error while fetching results');
 
     const refresh = () => {
         refetchCompetition();
@@ -122,6 +142,7 @@ export const useFetchCompetitionData = (
         if (isAdmin) {
             refetchAdminInscriptions();
         }
+        refetchResults();
     };
 
     const reset = () => {
@@ -130,6 +151,7 @@ export const useFetchCompetitionData = (
         setInscriptions(null);
         setUserInscriptions(null);
         setAdminInscriptions(null);
+        setResults(null);
     };
 
     return {
