@@ -56,15 +56,15 @@ const DistanceResultDetails = ({
                                       )
                                     : '-'}
                             </Typography>
-                            <Typography
-                                variant="caption"
-                                color="text.secondary"
-                            >
-                                {detail.wind !== undefined &&
-                                detail.wind !== null
-                                    ? `Wind: ${detail.wind} m/s`
-                                    : '0.0 m/s'}
-                            </Typography>
+                            {detail.wind !== undefined &&
+                            detail.wind !== null && (
+                                <Typography
+                                    variant="caption"
+                                    color="text.secondary"
+                                >
+                                    {`Wind: ${detail.wind} m/s`}
+                                </Typography>
+                            )}
                         </Box>
                     }
                     color="primary"
@@ -123,10 +123,7 @@ const HeightResultDetails = ({
                                 variant="caption"
                                 color="text.secondary"
                             >
-                                {detail.wind !== undefined &&
-                                detail.wind !== null
-                                    ? `Wind: ${detail.wind} m/s`
-                                    : '0.0 m/s'}
+                                {`Wind: ${detail.wind} m/s`}
                             </Typography>
                         </Box>
                     }

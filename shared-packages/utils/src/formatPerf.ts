@@ -36,8 +36,8 @@ export const formatPerf = (perf: number | undefined | null, eventType: EventType
 
         case EventType.DISTANCE:
         case EventType.HEIGHT:
-            // the perf is in centimeters
-            return `${perf} m`;
+            // the perf is in meters, format to 2 decimal places
+            return `${perf.toFixed(2)} m`;
         default:
             return perf;
     }

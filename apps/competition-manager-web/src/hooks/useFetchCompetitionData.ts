@@ -12,6 +12,8 @@ import {
     resultsAtom,
     userInscriptionsAtom,
 } from '@/GlobalsStates';
+import { joinCompetitionRoom, subscribeToNewResults } from '@/utils';
+import { Result } from '@competition-manager/schemas';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -30,6 +32,7 @@ export const useFetchCompetitionData = (
     const [globalResults, setResults] = useAtom(resultsAtom);
 
     const [isInitialized, setIsInitialized] = useState(false);
+    const [isSocketConnected, setIsSocketConnected] = useState(false);
 
     const {
         data: competition,
@@ -90,12 +93,59 @@ export const useFetchCompetitionData = (
         globalUserInscriptions &&
         (!isAdmin || globalAdminInscriptions) &&
         globalResults;
+
+    // Initialize data fetching
     useEffect(() => {
         if (!isLoaded && !isLoading && !isInitialized) {
             setIsInitialized(true);
         }
     }, [isLoaded, isLoading, isInitialized]);
 
+    // Set up socket connection for live results
+    useEffect(() => {
+        if (competition && !isSocketConnected) {
+            // Join the competition room to receive updates
+            joinCompetitionRoom(eid);
+            setIsSocketConnected(true);
+        }
+    }, [competition, eid, isSocketConnected]);
+
+    // Subscribe to real-time result updates
+    useEffect(() => {
+        if (isSocketConnected) {
+            // Subscribe to new result events
+            const unsubscribe = subscribeToNewResults((newResult: Result) => {
+                console.log('Received new result:', newResult);
+
+                // Update the results atom with the new result
+                setResults((currentResults) => {
+                    if (!currentResults) return [newResult];
+
+                    // Check if we already have this result and update it
+                    const resultIndex = currentResults.findIndex(
+                        (r) => r.id === newResult.id
+                    );
+
+                    if (resultIndex !== -1) {
+                        // Update existing result
+                        const updatedResults = [...currentResults];
+                        updatedResults[resultIndex] = newResult;
+                        return updatedResults;
+                    } else {
+                        // Add new result
+                        return [...currentResults, newResult];
+                    }
+                });
+            });
+
+            // Clean up subscription on unmount
+            return () => {
+                unsubscribe();
+            };
+        }
+    }, [isSocketConnected, setResults]);
+
+    // Update atoms when data is fetched
     useEffect(() => {
         if (competition) {
             setCompetition(competition);
