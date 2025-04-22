@@ -18,7 +18,6 @@ export const NavBar: React.FC<NavBarProps> = ({
     return (
         <Tabs
             value={currentEvent.eid}
-            centered
             variant="scrollable"
             sx={{
                 padding: '0 1rem',
