@@ -322,7 +322,7 @@ model Result {
     value                   Float?
     wind                    Float?
     points                  Int?
-    resultDetails           ResultDetail[]
+    details                 ResultDetail[]
 
     @@unique([competitionEventId, athleteId])
     @@map("results")

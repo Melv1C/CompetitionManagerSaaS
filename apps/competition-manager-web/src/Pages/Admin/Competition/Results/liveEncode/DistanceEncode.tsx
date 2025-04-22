@@ -1,105 +1,123 @@
-import { Paper, Box } from "@mui/material";
-import { useAtomValue } from "jotai";
-import { useTranslation } from "react-i18next";
-import { adminInscriptionsAtom, competitionAtom, resultsAtom } from '@/GlobalsStates'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { useState, KeyboardEvent, useEffect, useMemo } from "react";
-import { DistanceKeyboard } from "../components";
-import { EncodeProps, ResultsData } from "./type";
-import { InputResult } from "./InputResult";
-import { LiveOptions } from "./LiveOptions";
-import { getResults } from "@/api";
-
+import { upsertResults } from '@/api';
+import { competitionAtom, resultsAtom } from '@/GlobalsStates';
+import {
+    CreateResult$,
+    Id,
+    Result,
+    ResultDetail$,
+} from '@competition-manager/schemas';
+import {
+    Box,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from '@mui/material';
+import { useAtomValue } from 'jotai';
+import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from 'react-query';
+import { DistanceKeyboard } from '../components';
+import { InputResult } from './InputResult';
+import { CurrentInputState, EncodeProps } from './type';
 
 export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
     const { t } = useTranslation();
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
 
-    const results = useAtomValue(resultsAtom);
-    if (!results) throw new Error('No results data found');
-    const eventResults = useMemo(() => results.filter(result => result.competitionEvent.id === event.id), [results, event.id]);
+    const queryClient = useQueryClient();
+    const upsertResultsMutation = useMutation({
+        mutationFn: upsertResults,
+        onSuccess: () => {
+            // Invalidate all results for the competition
+            queryClient.invalidateQueries(['results', competition.eid]);
+        },
+        onError: (error) => {
+            console.error('Error upserting results:', error);
+        },
+    });
+
+    const handleBlur = (resultId: Id) => {
+        console.log('Blur event triggered for resultId:', resultId);
+        upsertResultsMutation.mutate(
+            CreateResult$.array().parse(
+                results.filter((result) => result.id === resultId).map((result) => ({
+                    ...result,
+                    competitionEid: competition.eid,
+                    competitionEventEid: event.eid,
+                    athleteLicense: result.athlete.license
+                }))
+            )
+        );
+    };
+
+    const baseResults = useAtomValue(resultsAtom);
+    if (!baseResults) throw new Error('No results data found');
+    const eventResults = useMemo(
+        () =>
+            baseResults.filter(
+                (result) => result.competitionEvent.id === event.id
+            ),
+        [baseResults, event.id]
+    );
 
     const [nbTry, setNbTry] = useState(6);
     const [showVirtualKeyboard, setShowVirtualKeyboard] = useState(false);
-    const [currentInputId, setCurrentInputId] = useState<string | null>(null);
-    const [currentInputValue, setCurrentInputValue] = useState<string>('');
-    const [inputMode, setInputMode] = useState<'perf' | 'wind' | 'both'>('perf');
+    const [inputMode, setInputMode] = useState<'value' | 'wind' | 'both'>(
+        'value'
+    );
+    const [currentInput, setCurrentInput] = useState<CurrentInputState>({
+        resultId: 0,
+        tryNumber: 0,
+        type: 'value',
+        value: '',
+    });
+    const [results, setResults] = useState<Result[]>(eventResults);
 
-    const adminInscriptions = useAtomValue(adminInscriptionsAtom);
-    if (!adminInscriptions) throw new Error('No inscriptions found');
-    const inscriptions = adminInscriptions.filter(inscription => inscription.competitionEvent.id === event.id);
-
-    // Update results with new try count while preserving existing data
-    const updateResultsForNewTryCount = (tryCount: number) => {
-        setResults(prevResults => {
-            const updatedResults: ResultsData = {};
-            
-            inscriptions.forEach(inscription => {
-                const inscriptionId = inscription.id;
-                const existingTries = prevResults[inscriptionId]?.tries || [];
-                const existingWind = prevResults[inscriptionId]?.wind || [];
-                
-                // Preserve existing data, either truncate or extend the array as needed
-                const newTries = Array.from({ length: tryCount }, (_, index) => 
-                    index < existingTries.length ? existingTries[index] : null
-                );
-                
-                const newWind = Array.from({ length: tryCount }, (_, index) => 
-                    index < existingWind.length ? existingWind[index] : null
-                );
-                
-                updatedResults[inscriptionId] = { 
-                    tries: newTries,
-                    wind: newWind
-                };
-            });
-            
-            return updatedResults;
-        });
-    };
-    
-    // Initialize results if not yet set
     useEffect(() => {
-        if (inscriptions.length > 0 && Object.keys(results).length === 0) {
-            updateResultsForNewTryCount(nbTry);
-        }
-        console.log("Results:", results);
-    }, [inscriptions, results]);
+        console.log(results);
+        setResults(eventResults);
+    }, [eventResults]);
 
     // Handle key press to move to next cell
     const handleKeyPress = (
         event: KeyboardEvent<HTMLInputElement>,
-        tryIndex: number,
-        rowIndex: number,
-        inscriptionId: string
+        resultId: Id,
+        tryNumber: number
     ) => {
         if (event.key === 'Enter') {
+            console.log('Enter key pressed', event.key);
             event.preventDefault();
-            
+
             // If in "both" mode, move to the wind input for the same try
             if (inputMode === 'both') {
-                const windCellId = `wind-${inscriptionId}-${tryIndex}`;
+                const windCellId = `wind-${resultId}-${tryNumber}`;
                 const windElement = document.getElementById(windCellId);
                 windElement?.focus();
                 return;
             }
-            
-            // Move to next inscription in the same try column
+            const rowIndex = results.findIndex(
+                (result) => result.id === resultId
+            );
+            // Move to next athlete in the same try column
             const nextRowIndex = rowIndex + 1;
-            
-            // If there are more inscriptions for this try
-            if (nextRowIndex < inscriptions.length) {
-                const nextInscriptionId = inscriptions[nextRowIndex].id;
-                const nextCellId = `result-${nextInscriptionId}-${tryIndex}`;
+
+            // If there are more athlete for this try
+            if (nextRowIndex < results.length) {
+                const nextResultId = results[nextRowIndex].id;
+                const nextCellId = `result-${nextResultId}-${tryNumber}`;
                 const nextElement = document.getElementById(nextCellId);
                 nextElement?.focus();
-            } 
-            // If we're at the last inscription for this try, move to the first inscription of the next try
-            else if (tryIndex < nbTry - 1) {
-                const nextTryIndex = tryIndex + 1;
-                const firstInscriptionId = inscriptions[0].id;
-                const nextCellId = `result-${firstInscriptionId}-${nextTryIndex}`;
+            }
+            // If we're at the last athlete for this try, move to the first athlete of the next try
+            else if (tryNumber < nbTry - 1) {
+                const nextTryIndex = tryNumber + 1;
+                const firstResultId = results[0].id;
+                const nextCellId = `result-${firstResultId}-${nextTryIndex}`;
                 const nextElement = document.getElementById(nextCellId);
                 nextElement?.focus();
             }
@@ -109,49 +127,53 @@ export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
     // Handle key press to move between wind inputs
     const handleWindKeyPress = (
         event: KeyboardEvent<HTMLInputElement>,
-        tryIndex: number,
-        rowIndex: number
+        resultId: Id,
+        tryNumber: number
     ) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            
+            const rowIndex = results.findIndex(
+                (result) => result.id === resultId
+            );
+
             // If in "both" mode, move to the next athlete's performance input
             if (inputMode === 'both') {
+                // Move to next athlete in the same try column
                 const nextRowIndex = rowIndex + 1;
-                
-                // If there are more inscriptions for this try
-                if (nextRowIndex < inscriptions.length) {
-                    const nextInscriptionId = inscriptions[nextRowIndex].id;
-                    const nextCellId = `result-${nextInscriptionId}-${tryIndex}`;
+
+                // If there are more athlete for this try
+                if (nextRowIndex < results.length) {
+                    const nextResultId = results[nextRowIndex].id;
+                    const nextCellId = `result-${nextResultId}-${tryNumber}`;
                     const nextElement = document.getElementById(nextCellId);
                     nextElement?.focus();
-                } 
-                // If we're at the last inscription for this try, move to the first inscription of the next try
-                else if (tryIndex < nbTry - 1) {
-                    const nextTryIndex = tryIndex + 1;
-                    const firstInscriptionId = inscriptions[0].id;
-                    const nextCellId = `result-${firstInscriptionId}-${nextTryIndex}`;
+                }
+                // If we're at the last athlete for this try, move to the first athlete of the next try
+                else if (tryNumber < nbTry - 1) {
+                    const nextTryIndex = tryNumber + 1;
+                    const firstResultId = results[0].id;
+                    const nextCellId = `result-${firstResultId}-${nextTryIndex}`;
                     const nextElement = document.getElementById(nextCellId);
                     nextElement?.focus();
                 }
                 return;
             }
 
-            // Move to next inscription in the same try column
+            // Move to next athlete in the same try column
             const nextRowIndex = rowIndex + 1;
-            
-            // If there are more inscriptions for this try
-            if (nextRowIndex < inscriptions.length) {
-                const nextInscriptionId = inscriptions[nextRowIndex].id;
-                const nextCellId = `wind-${nextInscriptionId}-${tryIndex}`;
+
+            // If there are more athlete for this try
+            if (nextRowIndex < results.length) {
+                const nextResultId = results[nextRowIndex].id;
+                const nextCellId = `wind-${nextResultId}-${tryNumber}`;
                 const nextElement = document.getElementById(nextCellId);
                 nextElement?.focus();
-            } 
-            // If we're at the last inscription for this try, move to the first inscription of the next try
-            else if (tryIndex < nbTry - 1) {
-                const nextTryIndex = tryIndex + 1;
-                const firstInscriptionId = inscriptions[0].id;
-                const nextCellId = `wind-${firstInscriptionId}-${nextTryIndex}`;
+            }
+            // If we're at the last result for this try, move to the first result of the next try
+            else if (tryNumber < nbTry - 1) {
+                const nextTryIndex = tryNumber + 1;
+                const firstResultId = results[0].id;
+                const nextCellId = `wind-${firstResultId}-${nextTryIndex}`;
                 const nextElement = document.getElementById(nextCellId);
                 nextElement?.focus();
             }
@@ -160,14 +182,14 @@ export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
 
     // Add this to ensure consistent styling
     const commonCellStyles = {
-        padding: '6px 16px',   // Match MUI default padding or adjust as needed
+        padding: '6px 16px', // Match MUI default padding or adjust as needed
         boxSizing: 'border-box' as 'border-box',
-        textAlign: 'center'
+        textAlign: 'center',
     };
 
     // Calculate row height based on whether wind input is shown
     const getRowHeight = () => {
-        return inputMode == 'both' ? '85px' : '56px';  // Increased height when wind input is shown
+        return inputMode == 'both' ? '85px' : '56px'; // Increased height when wind input is shown
     };
 
     const commonTableStyles = {
@@ -177,148 +199,162 @@ export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
         display: 'block',
     };
 
-    // Calculate the best performance from an array of tries
-    const calculateBestPerformance = (tries: (string | null)[]): string => {
-        const validTries = tries.filter(try_ => try_ !== null && try_ !== '')
-            .map(try_ => parseFloat(try_ as string))
-            .filter(value => !isNaN(value));
-        
-        if (validTries.length === 0) return "-";
-        return Math.max(...validTries).toString();
-    };
-
     // Focus handler for inputs
-    const handleInputFocus = (e: any, inputId: string) => {
+    const handleInputFocus = (
+        resultId: Id,
+        tryNumber: number,
+        type: 'value' | 'wind'
+    ) => {
         setShowVirtualKeyboard(true);
-        setCurrentInputId(inputId);
-        setCurrentInputValue(e.target.value);
+        setCurrentInput({
+            resultId,
+            tryNumber,
+            type,
+            value:
+                results
+                    .find((result) => result.id === resultId)
+                    ?.details[tryNumber]?.[type]?.toString() || '',
+        });
     };
 
-    // Handle result input change
-    const handleResultChange = (inscriptionId: string, tryIndex: number, value: string) => {
-        setResults(prev => ({
-            ...prev,
-            [inscriptionId]: {
-                ...prev[inscriptionId],
-                tries: prev[inscriptionId]?.tries.map((try_, index) => 
-                    index === tryIndex ? value : try_
-                ) || []
-            }
-        }));
-        
-        // Update current input value for virtual keyboard
-        if (currentInputId?.startsWith(`result-${inscriptionId}-${tryIndex}`)) {
-            setCurrentInputValue(value);
-        }
-    };
-
-    // Handle wind input change
-    const handleWindChange = (inscriptionId: string, tryIndex: number, value: string) => {
-        setResults(prev => ({
-            ...prev,
-            [inscriptionId]: {
-                ...prev[inscriptionId],
-                wind: prev[inscriptionId]?.wind?.map((wind, index) => 
-                    index === tryIndex ? value : wind
-                ) || []
-            }
-        }));
-        
-        // Update current input value for virtual keyboard
-        if (currentInputId === `wind-${inscriptionId}-${tryIndex}`) {
-            setCurrentInputValue(value);
-        }
-    };
-    
     // Handle virtual keyboard input
-    const handleVirtualKeyboardInput = (value: string) => {
-        if (!currentInputId) return;
-        
-        // Extract inscription ID and try index from the input ID
-        const match = currentInputId.match(/^(result|wind)-(.+)-(\d+)(?:-(\d))?$/);
-        if (!match) return;
-        
-        const [_, type, inscriptionId, tryIndexStr, subIndex] = match;
-        const tryIndex = parseInt(tryIndexStr);
-        
-        // Update the appropriate field based on input type
-        if (type === 'result') {
-            if (subIndex) {
-                // For height mode, digit inputs are handled separately in the InputResultHeight component
-                // We would need to combine the current digits
-                const currentHeight = results[inscriptionId]?.tries[tryIndex] || '';
-                const digitIndex = parseInt(subIndex) - 1;
-                
-                // Split current height into digits, update the specific one, then join
-                let digits = currentHeight.split('');
-                while (digits.length < 3) digits.push('');
-                digits[digitIndex] = value.charAt(0);
-                
-                const newHeight = digits.join('').trim();
-                handleResultChange(inscriptionId, tryIndex, newHeight);
-            } else {
-                handleResultChange(inscriptionId, tryIndex, value);
-            }
-        } else if (type === 'wind') {
-            handleWindChange(inscriptionId, tryIndex, value);
+    const handleChange = (value: string) => {
+        console.log('Keyboard input:', value);
+        setCurrentInput((prev) => ({ ...prev, value }));
+
+        const { resultId, tryNumber, type } = currentInput;
+        const result = results.find((result) => result.id === resultId);
+        if (!result) return;
+
+        const resultDetail = result.details.find(
+            (detail) => detail.tryNumber === tryNumber
+        );
+
+        if (!resultDetail) {
+            // Create a new result detail if it doesn't exist
+            const newDetail = ResultDetail$.parse({
+                id: 1,
+                tryNumber,
+                value: type === 'value' ? parseFloat(value) : 0,
+                wind: type === 'wind' ? parseFloat(value) : undefined,
+            });
+            newDetail.id = 0;
+            const updatedDetails = [...result.details, newDetail];
+            const updatedResult = { ...result, details: updatedDetails };
+            setResults((prevResults) =>
+                prevResults.map((res) =>
+                    res.id === resultId ? updatedResult : res
+                )
+            );
+        } else {
+            // Update the existing result detail
+            const updatedDetail = {
+                ...resultDetail,
+                [type]: parseFloat(value),
+            };
+            const updatedDetails = result.details.map((detail) =>
+                detail.tryNumber === tryNumber ? updatedDetail : detail
+            );
+            const updatedResult = { ...result, details: updatedDetails };
+            setResults((prevResults) =>
+                prevResults.map((res) =>
+                    res.id === resultId ? updatedResult : res
+                )
+            );
         }
-        
-        setCurrentInputValue(value);
     };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <LiveOptions 
+            {/* <LiveOptions 
                 setNbTry={setNbTry} 
                 updateResultsForNewTryCount={updateResultsForNewTryCount} 
                 inputMode={inputMode} 
                 setInputMode={setInputMode}
-            />
+            /> */}
 
-            <Box sx={{ 
-                display: 'flex', 
-                width: '100%', 
-                overflow: 'hidden',
-                position: 'relative',
-                justifyContent: 'center'
-            }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '100%',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    justifyContent: 'center',
+                }}
+            >
                 {/* Fixed columns (Name and Bib) */}
-                <TableContainer component={Paper} sx={{ 
-                    width: '300px',
-                    zIndex: 2,
-                    boxShadow: '5px 0 5px -2px rgba(0,0,0,0.1)'
-                }}>
+                <TableContainer
+                    component={Paper}
+                    sx={{
+                        width: '300px',
+                        zIndex: 2,
+                        boxShadow: '5px 0 5px -2px rgba(0,0,0,0.1)',
+                    }}
+                >
                     <Table stickyHeader sx={commonTableStyles}>
                         <TableHead>
                             <TableRow>
-                                <TableCell sx={{ ...commonCellStyles, width: '40%', textAlign: 'left', height: '56px' }}>{t('First Name')}</TableCell>
-                                <TableCell sx={{ ...commonCellStyles, width: '40%', textAlign: 'left'  }}>{t('Last Name')}</TableCell>
-                                <TableCell sx={{ ...commonCellStyles, width: '20%', textAlign: 'left'  }}>{t('Bib')}</TableCell>
+                                <TableCell
+                                    sx={{
+                                        ...commonCellStyles,
+                                        width: '40%',
+                                        textAlign: 'left',
+                                        height: '56px',
+                                    }}
+                                >
+                                    {t('First Name')}
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        ...commonCellStyles,
+                                        width: '40%',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    {t('Last Name')}
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        ...commonCellStyles,
+                                        width: '20%',
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    {t('Bib')}
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {inscriptions.map((inscription, rowIndex) => (
-                                <TableRow key={`fixed-${inscription.id || rowIndex}`}>
-                                    <TableCell sx={{ 
-                                        ...commonCellStyles, 
-                                        textAlign: 'left',
-                                        height: getRowHeight()
-                                    }}>
-                                        {inscription.athlete.firstName}
+                            {results.map((result, rowIndex) => (
+                                <TableRow
+                                    key={`fixed-${result.id || rowIndex}`}
+                                >
+                                    <TableCell
+                                        sx={{
+                                            ...commonCellStyles,
+                                            textAlign: 'left',
+                                            height: getRowHeight(),
+                                        }}
+                                    >
+                                        {result.athlete.firstName}
                                     </TableCell>
-                                    <TableCell sx={{ 
-                                        ...commonCellStyles, 
-                                        textAlign: 'left',
-                                        height: getRowHeight()
-                                    }}>
-                                        {inscription.athlete.lastName}
+                                    <TableCell
+                                        sx={{
+                                            ...commonCellStyles,
+                                            textAlign: 'left',
+                                            height: getRowHeight(),
+                                        }}
+                                    >
+                                        {result.athlete.lastName}
                                     </TableCell>
-                                    <TableCell sx={{ 
-                                        ...commonCellStyles, 
-                                        textAlign: 'left',
-                                        height: getRowHeight()
-                                    }}>
-                                        {inscription.bib}
+                                    <TableCell
+                                        sx={{
+                                            ...commonCellStyles,
+                                            textAlign: 'left',
+                                            height: getRowHeight(),
+                                        }}
+                                    >
+                                        {result.bib}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -327,68 +363,104 @@ export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
                 </TableContainer>
 
                 {/* Scrollable columns (Tries) */}
-                <TableContainer component={Paper} sx={{ 
-                    maxWidth: 'calc(100% - 300px)',
-                    overflowX: 'auto',
-                    overflowY: 'hidden',
-                    marginLeft: '0px',
-                    width: 'auto',
-                }}>
+                <TableContainer
+                    component={Paper}
+                    sx={{
+                        maxWidth: 'calc(100% - 300px)',
+                        overflowX: 'auto',
+                        overflowY: 'hidden',
+                        marginLeft: '0px',
+                        width: 'auto',
+                    }}
+                >
                     <Table stickyHeader sx={commonTableStyles}>
                         <TableHead>
                             <TableRow>
-                                {Array.from({ length: nbTry }, (_, index) => index + 1).map((tryNum) => (
-                                    <TableCell key={`head-${tryNum}`} sx={{ ...commonCellStyles, width: '100px', height: '56px' }}>
+                                {Array.from(
+                                    { length: nbTry },
+                                    (_, index) => index + 1
+                                ).map((tryNum) => (
+                                    <TableCell
+                                        key={`head-${tryNum}`}
+                                        sx={{
+                                            ...commonCellStyles,
+                                            width: '100px',
+                                            height: '56px',
+                                        }}
+                                    >
                                         {t('Try')} {tryNum}
                                     </TableCell>
                                 ))}
-                                <TableCell 
-                                    key="head-best-perf" 
-                                    sx={{ ...commonCellStyles, width: '120px', fontWeight: 'bold', backgroundColor: '#f5f5f5', height: '56px', whiteSpace: 'nowrap'}}
+                                <TableCell
+                                    key="head-best-perf"
+                                    sx={{
+                                        ...commonCellStyles,
+                                        width: '120px',
+                                        fontWeight: 'bold',
+                                        backgroundColor: '#f5f5f5',
+                                        height: '56px',
+                                        whiteSpace: 'nowrap',
+                                    }}
                                 >
                                     {t('Best Perf')}
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {inscriptions.map((inscription, rowIndex) => (
-                                <TableRow key={`scroll-${inscription.id || rowIndex}`}>
-                                    {Array.from({ length: nbTry }, (_, index) => index).map((tryIndex) => (
-                                        <TableCell key={tryIndex} sx={{ 
-                                            ...commonCellStyles, 
-                                            width: '100px',
-                                            padding: (inputMode === 'both') ? '6px 16px 0 16px' : '6px 16px', // Adjust padding when wind input is shown
-                                            height: getRowHeight()
-                                        }}>
+                            {results.map((result, rowIndex) => (
+                                <TableRow
+                                    key={`scroll-${result.id || rowIndex}`}
+                                >
+                                    {Array.from(
+                                        { length: nbTry },
+                                        (_, index) => index
+                                    ).map((tryIndex) => (
+                                        <TableCell
+                                            key={tryIndex}
+                                            sx={{
+                                                ...commonCellStyles,
+                                                width: '100px',
+                                                padding:
+                                                    inputMode === 'both'
+                                                        ? '6px 16px 0 16px'
+                                                        : '6px 16px', // Adjust padding when wind input is shown
+                                                height: getRowHeight(),
+                                            }}
+                                        >
                                             <InputResult
-                                                inscription={inscription} 
-                                                tryIndex={tryIndex} 
-                                                rowIndex={rowIndex} 
-                                                results={results}
-                                                handleKeyPress={handleKeyPress} 
-                                                handleInputFocus={handleInputFocus} 
-                                                inputMode={inputMode} 
-                                                handleWindKeyPress={handleWindKeyPress}
-                                                handleResultChange={handleResultChange}
-                                                handleWindChange={handleWindChange}
+                                                resultId={result.id}
+                                                tryNumber={tryIndex}
+                                                resultDetail={result.details.find(
+                                                    (detail) =>
+                                                        detail.tryNumber ===
+                                                        tryIndex
+                                                )}
+                                                inputMode={inputMode}
+                                                handleChange={handleChange}
+                                                handleKeyPress={handleKeyPress}
+                                                handleInputFocus={
+                                                    handleInputFocus
+                                                }
+                                                handleWindKeyPress={
+                                                    handleWindKeyPress
+                                                }
+                                                currentInput={currentInput}
+                                                handleBlur={handleBlur}
                                             />
                                         </TableCell>
                                     ))}
                                     {/* Best Performance Column */}
-                                    <TableCell 
-                                        key="best-perf" 
-                                        sx={{ 
-                                            ...commonCellStyles, 
-                                            width: '120px', 
+                                    <TableCell
+                                        key="best-perf"
+                                        sx={{
+                                            ...commonCellStyles,
+                                            width: '120px',
                                             fontWeight: 'bold',
                                             backgroundColor: '#f5f5f5',
-                                            height: getRowHeight()
+                                            height: getRowHeight(),
                                         }}
                                     >
-                                        {results[inscription.id] ? 
-                                            calculateBestPerformance(results[inscription.id].tries) : 
-                                            "-"
-                                        }
+                                        -
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -396,13 +468,12 @@ export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
                     </Table>
                 </TableContainer>
             </Box>
-            <DistanceKeyboard 
-                open={showVirtualKeyboard} 
-                setOpen={setShowVirtualKeyboard} 
-                inputValue={currentInputValue}
-                onKeyboardInput={handleVirtualKeyboardInput}
+            <DistanceKeyboard
+                open={showVirtualKeyboard}
+                setOpen={setShowVirtualKeyboard}
+                inputValue={currentInput.value}
+                onKeyboardInput={handleChange}
             />
         </Box>
     );
 };
-

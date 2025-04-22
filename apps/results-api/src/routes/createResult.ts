@@ -37,6 +37,7 @@ router.post(
     parseRequest(Key.Body, CreateResult$.array()),
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
+        console.log("zzzzzzzzzzzzzzzzzzzzzz");
         try {
             const results = CreateResult$.array().parse(req.body);
             const upsertedResults = [];
@@ -119,7 +120,7 @@ router.post(
                         tryNumber: detail.tryNumber,
                         value: detail.value,
                         attempts:
-                            detail.attempts?.map((a) => a.toString()) || [],
+                            detail.attempts || [],
                         wind: detail.wind,
                         isBest: isBestPerf,
                         isOfficialBest: isBestPerf,
@@ -148,13 +149,13 @@ router.post(
                     },
                     create: {
                         ...resultData,
-                        resultDetails: {
+                        details: {
                             create: processedDetails,
                         },
                     },
                     update: {
                         ...resultData,
-                        resultDetails: {
+                        details: {
                             deleteMany: {},
                             create: processedDetails,
                         },

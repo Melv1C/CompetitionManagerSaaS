@@ -180,13 +180,13 @@ router.post(
                 },
                 create: {
                     ...resultData,
-                    resultDetails: {
+                    details: {
                         create: processedDetails,
                     },
                 },
                 update: {
                     ...resultData,
-                    resultDetails: {
+                    details: {
                         deleteMany: {},
                         create: processedDetails,
                     },

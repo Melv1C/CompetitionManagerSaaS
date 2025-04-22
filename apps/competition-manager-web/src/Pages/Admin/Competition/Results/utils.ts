@@ -7,7 +7,7 @@
 
 import {
     AttemptValue,
-    CreateResultDetails,
+    CreateResultDetail,
     EventType,
 } from '@competition-manager/schemas';
 import { XMLParser } from 'fast-xml-parser';
@@ -66,7 +66,7 @@ export const handleHeats = (
 
         for (const participation of participations) {
             try {
-                const details: CreateResultDetails[] = [];
+                const details: CreateResultDetail[] = [];
                 let tryNumber = 1;
 
                 // Validate participation has necessary data
@@ -80,7 +80,7 @@ export const handleHeats = (
                 for (let j = 0; j < participation.results.result.length; j++) {
                     const result = participation.results.result[j];
 
-                    const detail: CreateResultDetails = {
+                    const detail: CreateResultDetail = {
                         tryNumber: tryNumber,
                         value:
                             eventType == EventType.TIME

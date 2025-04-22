@@ -1,7 +1,7 @@
-import { Box, Drawer } from "@mui/material";
+import { Box, Drawer } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import Keyboard from 'react-simple-keyboard';
-import "react-simple-keyboard/build/css/index.css";
-import { useRef, useState, useEffect } from "react";
+import 'react-simple-keyboard/build/css/index.css';
 
 type DistanceKeyboardProps = {
     open: boolean;
@@ -10,19 +10,23 @@ type DistanceKeyboardProps = {
     onKeyboardInput: (value: string) => void;
 };
 
-export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }: DistanceKeyboardProps) => {
+export const DistanceKeyboard = ({
+    open,
+    setOpen,
+    inputValue,
+    onKeyboardInput,
+}: DistanceKeyboardProps) => {
     const keyboardContainerRef = useRef<HTMLDivElement>(null);
     const keyboardRef = useRef<any>(null);
-    const [layoutName, setLayoutName] = useState("default");
-    const [internalInputValue, setInternalInputValue] = useState("");
-    const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null);
-
+    const [layoutName, setLayoutName] = useState('default');
+    const [lastFocusedElement, setLastFocusedElement] =
+        useState<HTMLElement | null>(null);
     // Track the last focused input element
     useEffect(() => {
         if (open) {
             // Store the currently focused element when the keyboard opens
             setLastFocusedElement(document.activeElement as HTMLElement);
-            
+
             // Add focus/blur event listeners to track focused elements
             const handleFocus = (e: FocusEvent) => {
                 const target = e.target as HTMLElement;
@@ -30,15 +34,15 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
                     setLastFocusedElement(target);
                 }
             };
-            
+
             document.addEventListener('focus', handleFocus, true);
-            
+
             return () => {
                 document.removeEventListener('focus', handleFocus, true);
             };
         }
     }, [open]);
-    
+
     // Prevent losing focus when clicking on the keyboard
     useEffect(() => {
         const handleMouseDown = (e: MouseEvent) => {
@@ -47,9 +51,9 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
                 e.preventDefault();
             }
         };
-        
+
         document.addEventListener('mousedown', handleMouseDown);
-        
+
         return () => {
             document.removeEventListener('mousedown', handleMouseDown);
         };
@@ -58,45 +62,44 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
     // Close keyboard when clicking outside (but not when clicking the keyboard itself)
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (open && 
-                keyboardContainerRef.current && 
-                !keyboardContainerRef.current.contains(event.target as Node)) {
+            if (
+                open &&
+                keyboardContainerRef.current &&
+                !keyboardContainerRef.current.contains(event.target as Node)
+            ) {
                 setOpen(false);
             }
         };
 
         if (open) {
-            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener('mousedown', handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [open, setOpen]);
 
-    // Update internal state when input value changes externally
-    useEffect(() => {
-        setInternalInputValue(inputValue || "");
-        if (keyboardRef.current) {
-            keyboardRef.current.setInput(inputValue || "");
-        }
-    }, [inputValue]);
-
     const handleKeyPress = (button: string) => {
         // Ensure the last focused element stays focused
-        if (lastFocusedElement && document.activeElement !== lastFocusedElement) {
+        if (
+            lastFocusedElement &&
+            document.activeElement !== lastFocusedElement
+        ) {
             lastFocusedElement.focus();
         }
 
-        if (button === "{code}") {
-            setLayoutName("code");
-        } else if (button === "{enter}") {
-            if (layoutName === "code") {
-                setLayoutName("default");
+        if (button === '{code}') {
+            setLayoutName('code');
+        } else if (button === '{enter}') {
+            if (layoutName === 'code') {
+                setLayoutName('default');
             } else {
                 // Ensure we have the correct active element
-                const activeElement = lastFocusedElement || document.activeElement as HTMLElement;
-                
+                const activeElement =
+                    lastFocusedElement ||
+                    (document.activeElement as HTMLElement);
+
                 if (activeElement && activeElement.tagName === 'INPUT') {
                     // Create and dispatch a keyboard event to simulate Enter key press
                     const enterEvent = new KeyboardEvent('keydown', {
@@ -105,34 +108,30 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
                         keyCode: 13,
                         which: 13,
                         bubbles: true,
-                        cancelable: true
+                        cancelable: true,
                     });
                     activeElement.dispatchEvent(enterEvent);
                 }
             }
-        } else if (button === "{back}") {
-            setLayoutName("default");
-        } else if (button === "{bksp}") {
+        } else if (button === '{back}') {
+            setLayoutName('default');
+        } else if (button === '{bksp}') {
             // Handle backspace
-            const newValue = internalInputValue.slice(0, -1);
-            setInternalInputValue(newValue);
+            const newValue = inputValue.slice(0, -1);
             onKeyboardInput(newValue);
-        } else if (button === "{DNF}" || button === "{DNS}" || button === "{DQ}") {
+        } else if (
+            button === '{DNF}' ||
+            button === '{DNS}' ||
+            button === '{DQ}'
+        ) {
             const value = button.replace(/[{}]/g, '');
-            setInternalInputValue(value);
             onKeyboardInput(value);
-            setLayoutName("default");
+            setLayoutName('default');
         } else {
             // Regular key press - append the character
-            const newValue = internalInputValue + button;
-            setInternalInputValue(newValue);
+            const newValue = inputValue + button;
             onKeyboardInput(newValue);
         }
-    };
-
-    const handleChange = (input: string) => {
-        setInternalInputValue(input);
-        onKeyboardInput(input);
     };
 
     return (
@@ -145,15 +144,15 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
                 onMouseDown: (e) => {
                     // Prevent input blur when clicking on the drawer
                     e.stopPropagation();
-                }
+                },
             }}
         >
-            <Box 
+            <Box
                 ref={keyboardContainerRef}
                 sx={{
-                    color: "black",
-                    padding: "0 10%",
-                    backgroundColor: "#ececec",
+                    color: 'black',
+                    padding: '0 10%',
+                    backgroundColor: '#ececec',
                 }}
                 // Prevent blur events
                 onMouseDown={(e) => {
@@ -164,20 +163,15 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
                     keyboardRef={(r) => (keyboardRef.current = r)}
                     layoutName={layoutName}
                     onKeyPress={handleKeyPress}
-                    onChange={handleChange}
                     inputName="numericInput"
-                    input={internalInputValue}
                     layout={{
                         default: [
-                            "7 8 9 {bksp}",
-                            "4 5 6 X",
-                            "1 2 3 -",
-                            "{code} 0 . {enter}"
+                            '7 8 9 {bksp}',
+                            '4 5 6 X',
+                            '1 2 3 -',
+                            '{code} 0 . {enter}',
                         ],
-                        code: [
-                            "{DNF} {DNS} {DQ}",
-                            "{back} {enter}",
-                        ]
+                        code: ['{DNF} {DNS} {DQ}', '{back} {enter}'],
                     }}
                     display={{
                         '{bksp}': '⌫',
@@ -188,12 +182,11 @@ export const DistanceKeyboard = ({ open, setOpen, inputValue, onKeyboardInput }:
                         '{DQ}': 'DQ',
                         '{back}': '← Back',
                     }}
-                    width={"100%"}
+                    width={'100%'}
                     physicalKeyboardHighlight={true}
                     preventMouseDownDefault={true}
                 />
             </Box>
         </Drawer>
-    )
+    );
 };
-
