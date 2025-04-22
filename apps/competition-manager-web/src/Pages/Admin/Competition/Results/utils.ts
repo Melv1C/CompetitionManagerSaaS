@@ -7,7 +7,7 @@
 
 import {
     AttemptValue,
-    CreateResultDetails,
+    CreateResultDetail,
     EventType,
 } from '@competition-manager/schemas';
 import { XMLParser } from 'fast-xml-parser';
@@ -23,7 +23,7 @@ import { DisplayResult$, XmlHeat, XmlResultDetail } from './types';
 export const getAttemptValue = (
     result: XmlResultDetail[],
     index: number
-): AttemptValue[] | undefined => {
+): AttemptValue[] => {
     if (result[index].value == AttemptValue.X) {
         let i = 1;
         while (result[index + i]?.value == AttemptValue.X) {
@@ -66,7 +66,7 @@ export const handleHeats = (
 
         for (const participation of participations) {
             try {
-                const details: CreateResultDetails[] = [];
+                const details: CreateResultDetail[] = [];
                 let tryNumber = 1;
 
                 // Validate participation has necessary data
@@ -80,7 +80,7 @@ export const handleHeats = (
                 for (let j = 0; j < participation.results.result.length; j++) {
                     const result = participation.results.result[j];
 
-                    const detail: CreateResultDetails = {
+                    const detail: CreateResultDetail = {
                         tryNumber: tryNumber,
                         value:
                             eventType == EventType.TIME
@@ -93,7 +93,7 @@ export const handleHeats = (
                                       participation.results.result,
                                       j
                                   )
-                                : undefined,
+                                : [],
                     };
 
                     if (detail.attempts && detail.attempts.length > 1) {

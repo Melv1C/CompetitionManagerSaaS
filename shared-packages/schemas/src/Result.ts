@@ -23,25 +23,25 @@ export enum ResultDetailCode {
     R = -3,
 }
 
-export const ResultDetails$ = z.object({
+export const ResultDetail$ = z.object({
     id: Id$,
     tryNumber: z.coerce.number(),
     value: z.coerce.number(),
-    attempts: z.nativeEnum(AttemptValue).array().max(3).min(1).nullish(),
+    attempts: z.nativeEnum(AttemptValue).array().max(3).default([]),
     wind: z.coerce.number().nullish(),
     isBest: Boolean$.default(false),
     isOfficialBest: Boolean$.default(false),
 });
-export type ResultDetails = z.infer<typeof ResultDetails$>;
+export type ResultDetail = z.infer<typeof ResultDetail$>;
 
 // Schema for creating a new result detail
-export const CreateResultDetails$ = ResultDetails$.omit({
+export const CreateResultDetail$ = ResultDetail$.omit({
     id: true,
     // Fields that will be auto-generated
     isBest: true,
     isOfficialBest: true,
 });
-export type CreateResultDetails = z.infer<typeof CreateResultDetails$>;
+export type CreateResultDetail = z.infer<typeof CreateResultDetail$>;
 
 export const Result$ = z.object({
     id: Id$,
@@ -60,7 +60,7 @@ export const Result$ = z.object({
     wind: z.coerce.number().nullish(),
     points: z.coerce.number().int().nonnegative().nullish(),
 
-    details: ResultDetails$.array().default([]),
+    details: ResultDetail$.array().default([]),
 });
 export type Result = z.infer<typeof Result$>;
 
@@ -70,7 +70,7 @@ export const resultInclude = {
     },
     athlete: true,
     club: true,
-    resultDetails: true
+    details: true
 };
 
 // Schema for creating a new result
@@ -89,7 +89,7 @@ export const CreateResult$ = Result$.omit({
     competitionEid: Eid$,
     competitionEventEid: Eid$,
     athleteLicense: License$,
-    details: CreateResultDetails$.array().default([]),
+    details: CreateResultDetail$.array().default([]),
 });
 export type CreateResult = z.infer<typeof CreateResult$>;
 

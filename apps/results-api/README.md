@@ -151,14 +151,14 @@ Get all results for a competition
     value?: number,
     wind?: number,
     points?: number,
-    details: ResultDetails[],
+    details: ResultDetail[],
     competitionEvent: CompetitionEvent,
     athlete: Athlete,
     club: Club
 }
 ```
 
-### ResultDetails
+### ResultDetail
 ```typescript
 {
     id: number,

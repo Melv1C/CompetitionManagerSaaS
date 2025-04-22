@@ -4,6 +4,7 @@ import {
     CompetitionEvent,
     DisplayInscription,
     Inscription,
+    Result,
     TokenData,
 } from '@competition-manager/schemas';
 import { atom } from 'jotai';
@@ -62,3 +63,5 @@ export const competitionEventDataAtom = atom<CompetitionEventData>({
     cost: 0,
     children: [],
 });
+
+export const resultsAtom = atom<Result[] | null>(null);
