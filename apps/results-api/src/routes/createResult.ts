@@ -18,6 +18,7 @@ import {
     Access,
     Admin$,
     Athlete$,
+    athleteInclude,
     competitionEventInclude,
     CreateResult$,
     EventType,
@@ -39,7 +40,6 @@ router.post(
         try {
             const results = CreateResult$.array().parse(req.body);
             const upsertedResults = [];
-
             for (const resultInfo of results) {
                 const {
                     competitionEid,
@@ -54,7 +54,9 @@ router.post(
                     include: {
                         admins: true,
                         events: { include: competitionEventInclude },
-                        oneDayAthletes: true,
+                        oneDayAthletes: {
+                            include: athleteInclude
+                        }
                     },
                 });
 
@@ -78,7 +80,6 @@ router.post(
                     athleteLicense,
                     Athlete$.array().parse(competition.oneDayAthletes)
                 );
-
                 if (!athlete) {
                     res.status(404).send(req.t('errors.athleteNotFound'));
                     return;
@@ -96,7 +97,6 @@ router.post(
                 ) {
                     return;
                 }
-
                 const inscription = await prisma.inscription.findFirst({
                     where: {
                         athleteId: athlete.id,
@@ -139,7 +139,6 @@ router.post(
                     inscriptionId: inscription?.id || null,
                     initialOrder: rest.tempOrder,
                 };
-
                 const result = await prisma.result.upsert({
                     where: {
                         competitionEventId_athleteId: {
@@ -170,7 +169,6 @@ router.post(
 
                 upsertedResults.push(Result$.parse(result));
             }
-
             res.status(201).json(upsertedResults);
             return;
         } catch (error) {
