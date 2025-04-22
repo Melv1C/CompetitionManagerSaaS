@@ -5,11 +5,16 @@ export type EncodeProps = {
 };
 
 export type ResultData = {
-    [key: string]: {
-        tries: (string | null)[],
-        wind?: (string | null)[]
-    }
+    tries: (string | null)[],
+    wind?: (string | null)[]
 };
+
+
+export type ResultsData = {
+    [key: string]: 
+};
+
+
 
 export type LiveOptionsProps = {
     setNbTry: React.Dispatch<React.SetStateAction<number>>;
@@ -22,11 +27,11 @@ export type InputResultProps = {
     inscription: any;
     tryIndex: number;
     rowIndex: number;
-    results: ResultData;
+    results: ResultsData;
     handleKeyPress: (event: React.KeyboardEvent<HTMLInputElement>, tryIndex: number, rowIndex: number, inscriptionId: string) => void;
     handleInputFocus: (event: React.FocusEvent<HTMLInputElement>, inputId: string) => void;
-    inputMode: 'perf' | 'wind' | 'both';
+    inputMode: 'perf' | 'wind' | 'both' | 'height';
     handleWindKeyPress: (event: React.KeyboardEvent<HTMLInputElement>, tryIndex: number, rowIndex: number) => void;
     handleResultChange: (inscriptionId: string, tryIndex: number, value: string) => void;
     handleWindChange: (inscriptionId: string, tryIndex: number, value: string) => void;
-}
+};

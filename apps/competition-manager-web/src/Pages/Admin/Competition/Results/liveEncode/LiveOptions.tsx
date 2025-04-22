@@ -91,6 +91,7 @@ export const LiveOptions:  React.FC<LiveOptionsProps> = ({
                     <MenuItem value="perf">{t('Only Performance')}</MenuItem>
                     <MenuItem value="wind">{t('Only Wind')}</MenuItem>
                     <MenuItem value="both">{t('Both')}</MenuItem>
+                    <MenuItem value="height">{t('Height')}</MenuItem>
                 </Select>
             </FormControl>
         </Box>
