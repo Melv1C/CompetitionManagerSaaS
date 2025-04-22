@@ -1,17 +1,9 @@
-import { formatPerf } from '@/utils/formatPerf';
 import {
     EventType,
-    ResultDetails as ResultDetailsType,
+    ResultDetail as ResultDetailsType,
 } from '@competition-manager/schemas';
-import {
-    Box,
-    Chip,
-    Divider,
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-} from '@mui/material';
+import { formatPerf } from '@competition-manager/utils';
+import { Box, Chip, Typography } from '@mui/material';
 
 interface ResultDetailsProps {
     details: ResultDetailsType[];
@@ -19,77 +11,140 @@ interface ResultDetailsProps {
 }
 
 export const ResultDetails = ({ details, eventType }: ResultDetailsProps) => {
-    if (!details || details.length === 0) {
-        return <Typography>No details available</Typography>;
+    switch (eventType) {
+        case EventType.DISTANCE:
+            return <DistanceResultDetails details={details} />;
+        case EventType.HEIGHT:
+            return <HeightResultDetails details={details} />;
+        default:
+            return null;
     }
+};
 
+const DistanceResultDetails = ({
+    details,
+}: {
+    details: ResultDetailsType[];
+}) => {
     return (
-        <List dense>
-            {details.map((detail, index) => (
-                <Box key={detail.id}>
-                    {index > 0 && <Divider component="li" />}
-                    <ListItem>
-                        <ListItemText
-                            primary={`Attempt ${detail.tryNumber}`}
-                            secondary={
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 1,
-                                        flexWrap: 'wrap',
-                                    }}
-                                >
-                                    <Typography variant="body2">
-                                        {formatPerf(detail.value, eventType)}
-                                    </Typography>
-                                    {detail.wind !== null && (
-                                        <Typography variant="body2">
-                                            ({(detail.wind ?? 0).toFixed(1)}{' '}
-                                            m/s)
-                                        </Typography>
-                                    )}
-                                    {detail.attempts && (
-                                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                                            {detail.attempts.map(
-                                                (attempt, i) => (
-                                                    <Chip
-                                                        key={i}
-                                                        label={attempt}
-                                                        size="small"
-                                                        color={
-                                                            attempt === 'O'
-                                                                ? 'success'
-                                                                : attempt ===
-                                                                  'X'
-                                                                ? 'error'
-                                                                : 'default'
-                                                        }
-                                                    />
-                                                )
-                                            )}
-                                        </Box>
-                                    )}
-                                    {detail.isBest && (
-                                        <Chip
-                                            label="Best"
-                                            size="small"
-                                            color="primary"
-                                        />
-                                    )}
-                                    {detail.isOfficialBest && (
-                                        <Chip
-                                            label="Official Best"
-                                            size="small"
-                                            color="secondary"
-                                        />
-                                    )}
-                                </Box>
-                            }
-                        />
-                    </ListItem>
-                </Box>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 1,
+                justifyContent: 'center',
+            }}
+        >
+            {details.map((detail) => (
+                <Chip
+                    key={detail.id}
+                    label={
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography variant="body1">
+                                {detail.value !== undefined &&
+                                detail.value !== null
+                                    ? formatPerf(
+                                          detail.value,
+                                          EventType.DISTANCE
+                                      )
+                                    : '-'}
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                            >
+                                {detail.wind !== undefined &&
+                                detail.wind !== null
+                                    ? `Wind: ${detail.wind} m/s`
+                                    : '0.0 m/s'}
+                            </Typography>
+                        </Box>
+                    }
+                    color="primary"
+                    sx={{
+                        height: 'auto',
+                        '& .MuiChip-label': {
+                            display: 'block',
+                            whiteSpace: 'normal',
+                        },
+                        padding: 1,
+                        border: detail.isBest ? `2px solid` : `1px solid`,
+                    }}
+                    variant="outlined"
+                />
             ))}
-        </List>
+        </Box>
     );
 };
+
+const HeightResultDetails = ({
+    details,
+}: {
+    details: ResultDetailsType[];
+}) => {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 1,
+                justifyContent: 'center',
+            }}
+        >
+            {details.map((detail) => (
+                <Chip
+                    key={detail.id}
+                    label={
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography variant="body1">
+                                {detail.value !== undefined &&
+                                detail.value !== null
+                                    ? formatPerf(
+                                          detail.value,
+                                          EventType.HEIGHT
+                                      )
+                                    : '-'}
+                            </Typography>
+                            <Typography
+                                variant="caption"
+                                color="text.secondary"
+                            >
+                                {detail.wind !== undefined &&
+                                detail.wind !== null
+                                    ? `Wind: ${detail.wind} m/s`
+                                    : '0.0 m/s'}
+                            </Typography>
+                        </Box>
+                    }
+                    color="primary"
+                    sx={{
+                        height: 'auto',
+                        '& .MuiChip-label': {
+                            display: 'block',
+                            whiteSpace: 'normal',
+                        },
+                        padding: 1,
+                        border: detail.isBest ? `2px solid` : `1px solid`,
+                    }}
+                    variant="outlined"
+                />
+            ))}
+        </Box>
+    );
+}
+
+

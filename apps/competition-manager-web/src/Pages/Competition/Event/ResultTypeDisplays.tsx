@@ -47,26 +47,22 @@ export const DistanceResults = ({ results }: { results: Result[] }) => (
                     <TableCell>Athlete</TableCell>
                     <TableCell>Club</TableCell>
                     <TableCell align="right">Distance</TableCell>
-                    <TableCell align="right">Wind</TableCell>
+                    <TableCell></TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {results.map((result, index) => (
-                    <TableRow key={result.id}>
-                        <TableCell colSpan={6} sx={{ p: 0, border: 0 }}>
-                            <ResultAccordion
-                                key={result.id}
-                                result={result}
-                                position={index + 1}
-                                eventType={EventType.DISTANCE}
-                            >
-                                <ResultDetails
-                                    details={result.details}
-                                    eventType={EventType.DISTANCE}
-                                />
-                            </ResultAccordion>
-                        </TableCell>
-                    </TableRow>
+                    <ResultAccordion
+                        key={result.id}
+                        result={result}
+                        position={index + 1}
+                        eventType={EventType.DISTANCE}
+                    >
+                        <ResultDetails
+                            details={result.details}
+                            eventType={EventType.DISTANCE}
+                        />
+                    </ResultAccordion>
                 ))}
             </TableBody>
         </Table>
