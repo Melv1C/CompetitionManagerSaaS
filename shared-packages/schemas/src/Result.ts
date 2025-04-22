@@ -27,7 +27,7 @@ export const ResultDetail$ = z.object({
     id: Id$,
     tryNumber: z.coerce.number(),
     value: z.coerce.number(),
-    attempts: z.nativeEnum(AttemptValue).array().max(3).min(1).nullish(),
+    attempts: z.nativeEnum(AttemptValue).array().max(3).default([]),
     wind: z.coerce.number().nullish(),
     isBest: Boolean$.default(false),
     isOfficialBest: Boolean$.default(false),

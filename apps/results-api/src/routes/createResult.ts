@@ -37,7 +37,6 @@ router.post(
     parseRequest(Key.Body, CreateResult$.array()),
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
-        console.log("zzzzzzzzzzzzzzzzzzzzzz");
         try {
             const results = CreateResult$.array().parse(req.body);
             const upsertedResults = [];
@@ -56,8 +55,8 @@ router.post(
                         admins: true,
                         events: { include: competitionEventInclude },
                         oneDayAthletes: {
-                            include: athleteInclude
-                        }
+                            include: athleteInclude,
+                        },
                     },
                 });
 
@@ -119,8 +118,7 @@ router.post(
                     return {
                         tryNumber: detail.tryNumber,
                         value: detail.value,
-                        attempts:
-                            detail.attempts || [],
+                        attempts: detail.attempts,
                         wind: detail.wind,
                         isBest: isBestPerf,
                         isOfficialBest: isBestPerf,
@@ -162,6 +160,8 @@ router.post(
                     },
                     include: resultInclude,
                 });
+
+                console.log('Result:', result);
 
                 req.app
                     .get('io')
