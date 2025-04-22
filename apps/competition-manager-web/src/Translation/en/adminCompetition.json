@@ -4,5 +4,26 @@
     "onLeavePopup": "Are you sure you want to leave?",
     "competitionNotCurrent": "This competition is not in progress",
     "confirmAll": "Confirm All",
-    "absent": "Absent"
+    "absent": "Absent",
+
+    "participants": "Participants",
+    "inscriptions": "Inscriptions",
+    "revenue": "Revenue",
+    "week": "Week",
+    "lastSevenDays": "Last 7 days",
+    "perParticipant": "per participant",
+    "perInscription": "per inscription",
+    "inscriptionsOverTime": "Inscriptions Over Time",
+
+    "noData": "No data available",
+    "viewType": "View Type",
+    "cumulative": "Cumulative",
+    "perTimeFrame": "Per Time Frame",
+    "timeFrameUnit": "Time Frame Unit",
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "overview": "Overview",
+    "participantsOverTime": "Participants Over Time",
+    "revenueOverTime": "Revenue Over Time"
 }
