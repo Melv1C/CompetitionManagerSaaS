@@ -1,7 +1,9 @@
 import { Loading, SideNav } from '@/Components';
 import { useFetchCompetitionData } from '@/hooks';
+import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from '@/utils/constants';
 import {
     faBasketShopping,
+    faChartLine,
     faClock,
     faGears,
     faInfo,
@@ -14,15 +16,12 @@ import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Route, Routes, useParams } from 'react-router-dom';
-import {
-    CLOSED_SIDENAV_WIDTH,
-    OPEN_SIDENAV_WIDTH,
-} from '@/utils/constants';
 import { Confirmations } from './Confirmations';
 import { Info } from './Info';
 import { Inscriptions } from './Inscriptions';
 import { Results } from './Results';
 import { Schedule } from './Schedule';
+import { Stats } from './Stats';
 
 export const AdminCompetition = () => {
     const { competitionEid } = useParams();
@@ -59,6 +58,11 @@ export const AdminCompetition = () => {
             text: t('glossary:results'),
             icon: faTrophy,
             link: `/admin/competitions/${competitionEid}/results`,
+        },
+        {
+            text: t('navigation:stats'),
+            icon: faChartLine,
+            link: `/admin/competitions/${competitionEid}/stats`,
         },
         {
             text: t('navigation:admins'),
@@ -117,6 +121,7 @@ export const AdminCompetition = () => {
                             element={<Confirmations />}
                         />
                         <Route path="/results" element={<Results />} />
+                        <Route path="/stats" element={<Stats />} />
                         <Route path="/admins" element={<Box>admins</Box>} />
                         <Route path="/options" element={<Box>options</Box>} />
                         <Route path="/settings" element={<Box>settings</Box>} />
