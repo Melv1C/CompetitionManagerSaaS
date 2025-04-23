@@ -8,9 +8,9 @@ export const isBestResult = (perf1: number, perf2: number, type: EventType) => {
         return true;
     }
     if (type === EventType.TIME) {
-        return perf1 < perf2;
+        return perf1 <= perf2;
     }
-    return perf1 > perf2;
+    return perf1 >= perf2;
 };
 
 

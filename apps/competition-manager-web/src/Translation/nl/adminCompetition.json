@@ -4,5 +4,26 @@
     "onLeavePopup": "Weet u zeker dat u wilt vertrekken?",
     "competitionNotCurrent": "Deze competitie is niet aan de gang",
     "confirmAll": "Bevestig alles",
-    "absent": "Afwezig"
+    "absent": "Afwezig",
+
+    "participants": "Deelnemers",
+    "inscriptions": "Inschrijvingen",
+    "revenue": "Inkomsten",
+    "week": "Week",
+    "lastSevenDays": "Laatste 7 dagen",
+    "perParticipant": "per deelnemer",
+    "perInscription": "per inschrijving",
+    "inscriptionsOverTime": "Inschrijvingen over tijd",
+
+    "noData": "Geen gegevens beschikbaar",
+    "viewType": "Weergavetype",
+    "cumulative": "Cumulatief",
+    "perTimeFrame": "Per tijdsframe",
+    "timeFrameUnit": "Tijdseenheid",
+    "hourly": "Per uur",
+    "daily": "Dagelijks",
+    "weekly": "Wekelijks",
+    "overview": "Overzicht",
+    "participantsOverTime": "Deelnemers over tijd",
+    "revenueOverTime": "Inkomsten over tijd"
 }
