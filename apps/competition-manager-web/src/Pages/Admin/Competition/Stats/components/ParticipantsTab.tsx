@@ -20,7 +20,6 @@ export const ParticipantsTab: React.FC<TabProps> = ({
     const isCumulative = timeFrameType === 'cumulative';
 
     if (isCumulative) {
-        console.log('Cumulative chartData:', chartData);
 
         return (
             <Card>
