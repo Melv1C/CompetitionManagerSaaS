@@ -1,54 +1,143 @@
-import { Box, TextField } from "@mui/material";
-import React from "react";
-import { ResultData } from "./type";
-import { AttemptValue, ResultCode } from "@competition-manager/schemas";
+import { AttemptValue, Id, ResultDetail } from '@competition-manager/schemas';
+import { Box, Typography } from '@mui/material';
+import { useEffect } from 'react';
 
 type InputResultHeightProps = {
-    inscription: any;
-    tryIndex: number;
-    rowIndex: number;
-    result: ResultData;
-    handleInputFocus: (event: React.FocusEvent<HTMLInputElement>, inputId: string) => void;
-    handleResultChange: (inscriptionId: string, tryIndex: number, value: AttemptValue | ResultCode | string | undefined) => void;
-    handleKeyPress: (
-        event: React.KeyboardEvent<HTMLInputElement>, 
-        tryIndex: number, 
-        rowIndex: number, 
-        inscriptionId: string,
-        subIndex?: number
-    ) => void;
+    resultId: Id;
+    height: number;
+    resultDetail: ResultDetail | undefined;
+    handleInputFocus: (resultId: Id, height: number) => void;
+    currentInput: {
+        resultId: Id;
+        height: number;
+        value: string;
+    };
+    isDisabled?: boolean;
+    onKeyboardInput?: (value: string) => void;
+    findNextInput?: (
+        resultId: Id,
+        height: number
+    ) => { resultId: Id; height: number } | null;
 };
 
 export const InputResultHeight = ({
-    inscription,
-    tryIndex,
-    rowIndex,
-    result,
+    resultId,
+    height,
+    resultDetail,
     handleInputFocus,
-    handleResultChange,
-    handleKeyPress
+    currentInput,
+    isDisabled = false,
+    onKeyboardInput,
+    findNextInput,
 }: InputResultHeightProps) => {
-    console.log(result)
+    // Create attempt symbols display
+    const attempts = resultDetail?.attempts || [];
+
+    // Set up keyboard event listeners when this input is focused
+    useEffect(() => {
+        // Only add keyboard listeners when this input is focused
+        if (
+            currentInput?.resultId === resultId &&
+            currentInput?.height === height &&
+            !isDisabled
+        ) {
+            const handleKeyDown = (event: KeyboardEvent) => {
+                // Handle X, O, - keys
+                if (event.key === 'x' || event.key === 'X') {
+                    onKeyboardInput?.(currentInput.value + AttemptValue.X);
+                } else if (event.key === 'o' || event.key === 'O') {
+                    onKeyboardInput?.(currentInput.value + AttemptValue.O);
+                } else if (event.key === '-') {
+                    onKeyboardInput?.(currentInput.value + AttemptValue.PASS);
+                } else if (event.key === 'Enter' || event.key === 'Tab') {
+                    // Navigate to next input on Enter or Tab
+                    if (findNextInput) {
+                        const nextInput = findNextInput(resultId, height);
+                        if (nextInput) {
+                            // Prevent default Tab behavior
+                            event.preventDefault();
+                            // Focus the next input
+                            handleInputFocus(
+                                nextInput.resultId,
+                                nextInput.height
+                            );
+                        }
+                    }
+                } else if (event.key === 'Backspace') {
+                    // Handle Backspace to remove the last character
+                    if (currentInput.value.length > 0) {
+                        onKeyboardInput?.(
+                            currentInput.value.slice(0, -1)
+                        );
+                    }
+                }
+            };
+
+            // Add the event listener
+            document.addEventListener('keydown', handleKeyDown);
+
+            // Clean up the event listener
+            return () => {
+                document.removeEventListener('keydown', handleKeyDown);
+            };
+        }
+    }, [
+        currentInput,
+        resultId,
+        height,
+        onKeyboardInput,
+        handleInputFocus,
+        findNextInput,
+        isDisabled,
+    ]);
+
+    // Display a clickable box showing the attempts for this height
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: '2px' }}>
-            <TextField
-                id={`result-${inscription.id}-${tryIndex}`}
-                variant="outlined"
-                size="small"
-                inputProps={{
-                    style: {
-                        padding: '8px',
-                        width: '20px',
-                        height: '20px',
-                        textAlign: 'center'
-                    },
-                    maxLength: 1
-                }}
-                value={result.tries}
-                onChange={(e) => handleResultChange(inscription.id.toString(), tryIndex, e.target.value)}
-                onFocus={(e) => handleInputFocus(e as React.FocusEvent<HTMLInputElement>, `result-${inscription.id}-${tryIndex}`)}
-                onKeyDown={(e) => handleKeyPress(e as React.KeyboardEvent<HTMLInputElement>, tryIndex, rowIndex, inscription.id.toString())}
-            />
+        <Box
+            onClick={() => !isDisabled && handleInputFocus(resultId, height)}
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 0.5,
+                cursor: isDisabled ? 'not-allowed' : 'pointer',
+                padding: 1,
+                borderRadius: 1,
+                minWidth: '70px',
+                border: '1px solid #e0e0e0',
+                backgroundColor: isDisabled
+                    ? '#f0f0f0'
+                    : currentInput?.resultId === resultId &&
+                      currentInput?.height === height
+                    ? 'rgb(156, 209, 255)'
+                    : 'inherit',
+                height: '16px',
+                opacity: isDisabled ? 0.6 : 1,
+            }}
+        >
+            {attempts.length > 0 ? (
+                attempts.map((attempt, index) => (
+                    <Typography
+                        key={index}
+                        variant="body1"
+                        sx={{
+                            fontWeight: 'bold',
+                            color:
+                                attempt === AttemptValue.O
+                                    ? 'green'
+                                    : attempt === AttemptValue.X
+                                    ? 'red'
+                                    : 'grey',
+                        }}
+                    >
+                        {attempt}
+                    </Typography>
+                ))
+            ) : (
+                <Typography variant="body2" color="text.secondary">
+                    {isDisabled ? '—' : ''}
+                </Typography>
+            )}
         </Box>
     );
 };
