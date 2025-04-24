@@ -1,7 +1,10 @@
 import { Select, MenuItem } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { NbTrySelectProps } from './type'
 
+type NbTrySelectProps = {
+    trySelector: string
+    handleTrySelectorChange: (event: any) => void
+}
 
 export const NbTrySelect: React.FC<NbTrySelectProps> = ({
     trySelector,
