@@ -9,6 +9,7 @@ import {
     AttemptValue,
     CreateResultDetail,
     EventType,
+    ResultDetailCode,
 } from '@competition-manager/schemas';
 import { XMLParser } from 'fast-xml-parser';
 import { DisplayResult$, XmlHeat, XmlResultDetail } from './types';
@@ -162,5 +163,28 @@ export const parseXmlFile = (fileData: string): any => {
                 error instanceof Error ? error.message : 'Unknown error'
             }`
         );
+    }
+};
+
+export const formatValueDistance = (value: number | undefined) => {
+    if (value === undefined) return '';
+    if (value === ResultDetailCode.X) return 'X';
+    if (value === ResultDetailCode.PASS) return '-';
+    if (value === ResultDetailCode.R) return 'r';
+    return value.toString();
+};
+
+export const extractValueDistance = (value: string) => {
+    switch (value) {
+        case 'X':
+            return ResultDetailCode.X;
+        case '-':
+            return ResultDetailCode.PASS;
+        case 'r':
+            return ResultDetailCode.R;
+        case '':
+            return null;
+        default:
+            return parseFloat(value.replace(',', '.'));
     }
 };
