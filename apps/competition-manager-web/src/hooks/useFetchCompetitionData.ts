@@ -101,12 +101,33 @@ export const useFetchCompetitionData = (
         }
     }, [isLoaded, isLoading, isInitialized]);
 
-    // Set up socket connection for live results
+    // Set up socket connection for live results, but only on the day of the competition
     useEffect(() => {
         if (competition && !isSocketConnected) {
-            // Join the competition room to receive updates
-            joinCompetitionRoom(eid);
-            setIsSocketConnected(true);
+            // Check if today is the day of the competition
+            const startDate = new Date(competition.date);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = competition.closeDate
+                ? new Date(competition.closeDate)
+                : new Date(competition.date);
+            endDate.setHours(23, 59, 59, 999); // End of the day
+            const today = new Date();
+
+            // Only connect if today is between the start and end dates (inclusive)
+            const isCompetitionDay = today >= startDate && today <= endDate;
+
+            if (isCompetitionDay) {
+                console.log(
+                    'Competition is today - connecting to real-time results'
+                );
+                // Join the competition room to receive updates
+                joinCompetitionRoom(eid);
+                setIsSocketConnected(true);
+            } else {
+                console.log(
+                    'Competition is not today - skipping real-time results connection'
+                );
+            }
         }
     }, [competition, eid, isSocketConnected]);
 
