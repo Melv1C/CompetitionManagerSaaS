@@ -1,5 +1,6 @@
 import { resultsAtom } from '@/GlobalsStates';
 import { EventType, Result } from '@competition-manager/schemas';
+import { isBestResult } from '@competition-manager/utils';
 import { Box, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,6 @@ import {
     PointsResults,
     TimeResults,
 } from './ResultTypeDisplays';
-import { isBestResult } from '@competition-manager/utils';
 
 interface ResultsProps {
     eventId: string;
@@ -24,7 +24,7 @@ export const Results = ({ eventId, eventType }: ResultsProps) => {
     if (!allResults || allResults.length === 0) {
         return (
             <Typography variant="body1" color="text.secondary">
-                {t('No results available')}
+                {t('competition:results.noResultsAvailable')}
             </Typography>
         );
     }
@@ -44,7 +44,7 @@ export const Results = ({ eventId, eventType }: ResultsProps) => {
     if (results.length === 0) {
         return (
             <Typography variant="body1" color="text.secondary">
-                {t('No results available for this event')}
+                {t('competition:results.noResultsForEvent')}
             </Typography>
         );
     }
@@ -52,7 +52,7 @@ export const Results = ({ eventId, eventType }: ResultsProps) => {
     return (
         <Box sx={{ mt: 2 }}>
             <Typography variant="h6" gutterBottom>
-                {t('Results')}
+                {t('glossary:results')}
             </Typography>
 
             {renderResultsByType(results, eventType)}

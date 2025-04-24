@@ -67,5 +67,19 @@
     "confirmDeleteInscriptionMessage_plural": "Weet u zeker dat u alle {{count}} inschrijvingen van {{athlete}} wilt verwijderen?",
     "inscriptionDeletedSuccess": "Inschrijving succesvol verwijderd",
     "inscriptionDeletedSuccess_plural": "Inschrijvingen succesvol verwijderd",
+    "results": {
+        "position": "Pos",
+        "bib": "Strt",
+        "athlete": "Atleet",
+        "club": "Club",
+        "time": "Tijd",
+        "distance": "Afstand",
+        "height": "Hoogte",
+        "points": "Punten",
+        "result": "Resultaat",
+        "details": "Details",
+        "noResultsAvailable": "Geen resultaten beschikbaar",
+        "noResultsForEvent": "Geen resultaten beschikbaar voor dit onderdeel"
+    },
     "refundPolicyWarning": "Let op: terugbetalingen voor betaalde inschrijvingen worden afgehandeld door de organisator en worden niet automatisch via het platform verwerkt. Neem rechtstreeks contact op met de organisator voor terugbetalingsverzoeken."
 }

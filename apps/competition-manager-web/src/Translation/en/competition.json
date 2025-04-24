@@ -67,5 +67,19 @@
     "confirmDeleteInscriptionMessage_plural": "Are you sure you want to delete all {{count}} registrations for {{athlete}}?",
     "inscriptionDeletedSuccess": "Registration deleted successfully",
     "inscriptionDeletedSuccess_plural": "Registrations deleted successfully",
+    "results": {
+        "position": "Pos",
+        "bib": "Bib",
+        "athlete": "Athlete",
+        "club": "Club",
+        "time": "Time",
+        "distance": "Distance",
+        "height": "Height",
+        "points": "Points",
+        "result": "Result",
+        "details": "Details",
+        "noResultsAvailable": "No results available",
+        "noResultsForEvent": "No results available for this event"
+    },
     "refundPolicyWarning": "Please note that refunds for paid registrations are handled by the organizer and are not automatically processed through the platform. Contact the organizer directly for refund requests."
 }
