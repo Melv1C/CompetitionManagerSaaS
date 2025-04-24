@@ -1,5 +1,8 @@
 import { EventType, Result } from '@competition-manager/schemas';
+import { faList, faTable } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+    Box,
     Paper,
     Table,
     TableBody,
@@ -7,8 +10,12 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    ToggleButton,
+    ToggleButtonGroup,
 } from '@mui/material';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { HeightResultsTable } from './HeightResultsTable';
 import { ResultAccordion, ResultRow } from './ResultComponents';
 import { ResultDetails } from './ResultDetails';
 
@@ -104,55 +111,103 @@ export const DistanceResults = ({ results }: { results: Result[] }) => {
 
 export const HeightResults = ({ results }: { results: Result[] }) => {
     const { t } = useTranslation();
+    const [displayMode, setDisplayMode] = useState<'list' | 'table'>('list');
+
+    const handleDisplayModeChange = (
+        _: React.MouseEvent<HTMLElement>,
+        newDisplayMode: 'list' | 'table' | null
+    ) => {
+        if (newDisplayMode !== null) {
+            setDisplayMode(newDisplayMode);
+        }
+    };
 
     return (
-        <TableContainer component={Paper}>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            {t('competition:results.position')}
-                        </TableCell>
-                        <TableCell>{t('competition:results.bib')}</TableCell>
-                        <TableCell>
-                            {t('competition:results.athlete')}
-                        </TableCell>
-                        <TableCell>{t('competition:results.club')}</TableCell>
-                        <TableCell align="right">
-                            {t('competition:results.height')}
-                        </TableCell>
-                        <TableCell></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {results.map((result, index) =>
-                        result.details && result.details.length > 0 ? (
-                            <ResultAccordion
-                                key={result.id}
-                                result={result}
-                                position={index + 1}
-                                eventType={EventType.HEIGHT}
-                            >
-                                <ResultDetails
-                                    details={result.details.sort(
-                                        (a, b) => a.tryNumber - b.tryNumber
-                                    )}
-                                    eventType={EventType.HEIGHT}
-                                />
-                            </ResultAccordion>
-                        ) : (
-                            <ResultRow
-                                key={result.id}
-                                result={result}
-                                position={index + 1}
-                                eventType={EventType.HEIGHT}
-                                extraColumns={<TableCell />}
-                            />
-                        )
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <>
+            <Box
+                sx={{
+                    position: 'relative',
+                }}
+            >
+                <ToggleButtonGroup
+                    sx={{
+                        position: 'absolute',
+                        top: -38,
+                        right: 0,
+                        zIndex: 1,
+                    }}
+                    value={displayMode}
+                    exclusive
+                    onChange={handleDisplayModeChange}
+                    aria-label="display mode"
+                    size="small"
+                >
+                    <ToggleButton value="list" aria-label="list view">
+                        <FontAwesomeIcon icon={faList} />
+                    </ToggleButton>
+                    <ToggleButton value="table" aria-label="table view">
+                        <FontAwesomeIcon icon={faTable} />
+                    </ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
+
+            {displayMode === 'list' ? (
+                <TableContainer component={Paper}>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>
+                                    {t('competition:results.position')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('competition:results.bib')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('competition:results.athlete')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('competition:results.club')}
+                                </TableCell>
+                                <TableCell align="right">
+                                    {t('competition:results.height')}
+                                </TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {results.map((result, index) =>
+                                result.details && result.details.length > 0 ? (
+                                    <ResultAccordion
+                                        key={result.id}
+                                        result={result}
+                                        position={index + 1}
+                                        eventType={EventType.HEIGHT}
+                                    >
+                                        <ResultDetails
+                                            details={result.details.sort(
+                                                (a, b) =>
+                                                    a.tryNumber - b.tryNumber
+                                            )}
+                                            eventType={EventType.HEIGHT}
+                                        />
+                                    </ResultAccordion>
+                                ) : (
+                                    <ResultRow
+                                        key={result.id}
+                                        result={result}
+                                        position={index + 1}
+                                        eventType={EventType.HEIGHT}
+                                        extraColumns={<TableCell />}
+                                    />
+                                )
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            ) : (
+                <HeightResultsTable results={results} />
+            )}
+        </>
     );
 };
 
