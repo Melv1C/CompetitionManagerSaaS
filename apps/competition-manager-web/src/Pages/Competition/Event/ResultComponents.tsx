@@ -3,6 +3,7 @@ import { formatPerf } from '@competition-manager/utils';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+    Box,
     Collapse,
     TableCell,
     TableRow,
@@ -69,9 +70,9 @@ export const ResultAccordion = ({
             <TableRow>
                 <TableCell colSpan={6} sx={{ p: 0, border: 0 }}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <div style={{ padding: '16px' }}>
+                        <Box style={{ padding: '16px' }}>
                             {children}
-                        </div>
+                        </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>

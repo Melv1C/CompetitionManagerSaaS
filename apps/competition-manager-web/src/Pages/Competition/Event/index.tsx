@@ -93,8 +93,8 @@ export const Event = () => {
                 )}
 
                 <Tabs value={tab} onChange={handleTabChange} centered>
-                    <Tab label={t('Inscriptions')} value="inscriptions" />
-                    <Tab label={t('Results')} value="results" />
+                    <Tab label={t('glossary:inscriptions')} value="inscriptions" />
+                    <Tab label={t('glossary:results')} value="results" />
                 </Tabs>
 
                 <Divider />
