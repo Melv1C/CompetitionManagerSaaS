@@ -1,4 +1,5 @@
 import {
+    AttemptValue,
     EventType,
     ResultDetail as ResultDetailsType,
 } from '@competition-manager/schemas';
@@ -57,14 +58,14 @@ const DistanceResultDetails = ({
                                     : '-'}
                             </Typography>
                             {detail.wind !== undefined &&
-                            detail.wind !== null && (
-                                <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                >
-                                    {`Wind: ${detail.wind} m/s`}
-                                </Typography>
-                            )}
+                                detail.wind !== null && (
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                    >
+                                        {`Wind: ${detail.wind} m/s`}
+                                    </Typography>
+                                )}
                         </Box>
                     }
                     color="primary"
@@ -84,11 +85,7 @@ const DistanceResultDetails = ({
     );
 };
 
-const HeightResultDetails = ({
-    details,
-}: {
-    details: ResultDetailsType[];
-}) => {
+const HeightResultDetails = ({ details }: { details: ResultDetailsType[] }) => {
     return (
         <Box
             sx={{
@@ -111,20 +108,34 @@ const HeightResultDetails = ({
                             }}
                         >
                             <Typography variant="body1">
-                                {detail.value !== undefined &&
-                                detail.value !== null
-                                    ? formatPerf(
-                                          detail.value,
-                                          EventType.HEIGHT
-                                      )
-                                    : '-'}
+                                {formatPerf(detail.tryNumber, EventType.HEIGHT)}
                             </Typography>
-                            <Typography
-                                variant="caption"
-                                color="text.secondary"
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    gap: 0.5,
+                                    mt: 0.5,
+                                }}
                             >
-                                {`Wind: ${detail.wind} m/s`}
-                            </Typography>
+                                {detail.attempts.map((attempt, index) => (
+                                    <Typography
+                                        key={index}
+                                        variant="body2"
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            color:
+                                                attempt === AttemptValue.X
+                                                    ? 'error.main'
+                                                    : attempt === AttemptValue.O
+                                                    ? 'success.main'
+                                                    : 'text.secondary',
+                                        }}
+                                    >
+                                        {attempt}
+                                    </Typography>
+                                ))}
+                            </Box>
                         </Box>
                     }
                     color="primary"
@@ -142,6 +153,4 @@ const HeightResultDetails = ({
             ))}
         </Box>
     );
-}
-
-
+};
