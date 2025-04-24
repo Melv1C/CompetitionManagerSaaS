@@ -530,7 +530,9 @@ export const DistanceEncode: React.FC<EncodeProps> = ({ event }) => {
                                         {result.details.length > 0 ? (
                                             <>
                                                 {formatValueDistance(
-                                                    result.value ? result.value : 0,
+                                                    result.value
+                                                        ? result.value
+                                                        : 0
                                                 )}
                                             </>
                                         ) : (

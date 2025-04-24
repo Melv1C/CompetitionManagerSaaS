@@ -90,7 +90,7 @@ export const Results = () => {
                     </Box>
                 </Paper>
             </MaxWidth>
-            <Box sx={{ mb: 2 }}>
+            <Box sx={{ mb: 2, justifyContent: 'center', display: 'flex' }}>
                 {/* Event selector */} 
                 <FormControl sx={{ width: 320 }}>
                     <InputLabel id="event-select-label">{t('common:event')}</InputLabel>
