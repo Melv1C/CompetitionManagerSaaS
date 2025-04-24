@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { DistanceEncode } from './DistanceEncode';
 import { ParticipantsSelector } from './ParticipantsSelector';
 import { EncodeProps } from './type';
+import { HeightEncode } from './HeightEncode';
 
 export const Encode: React.FC<EncodeProps> = ({ event }) => {
     const results = useAtomValue(resultsAtom);
@@ -87,7 +88,11 @@ export const Encode: React.FC<EncodeProps> = ({ event }) => {
     // Show the appropriate encode component based on event type
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <DistanceEncode event={event} />
+            {event.event.type === 'height' ? (
+                <HeightEncode event={event} />
+            ) : (
+                <DistanceEncode event={event} />
+            )}
         </Box>
     );
 };
