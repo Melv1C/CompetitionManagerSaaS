@@ -66,9 +66,7 @@ export const InputResultHeight = ({
                 } else if (event.key === 'Backspace') {
                     // Handle Backspace to remove the last character
                     if (currentInput.value.length > 0) {
-                        onKeyboardInput?.(
-                            currentInput.value.slice(0, -1)
-                        );
+                        onKeyboardInput?.(currentInput.value.slice(0, -1));
                     }
                 }
             };

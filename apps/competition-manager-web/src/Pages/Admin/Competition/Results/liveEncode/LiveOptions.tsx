@@ -41,7 +41,7 @@ export const LiveOptions:  React.FC<LiveOptionsProps> = ({
 
     return (
         /* Try count selector, Wind switch, and Virtual Keyboard switch */
-        <Box sx={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: 2 , justifyContent: 'center'}}>
             <FormControl variant="outlined" size="small" sx={{ width: '150px' }}>
                 <InputLabel id="try-count-select-label">{t('Number of Tries')}</InputLabel>
                 <Select

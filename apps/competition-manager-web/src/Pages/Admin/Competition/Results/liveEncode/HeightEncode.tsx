@@ -28,6 +28,7 @@ import { InputResultHeight } from './InputResultHeight';
 import { EncodeProps } from './type';
 
 const formatAttemptValue = (value: string): string => {
+    console.log('Formatting attempt value:', value);
     // Limit to 3 characters
     if (value.length > 3) {
         value = value.slice(0, 3);
@@ -41,21 +42,24 @@ const formatAttemptValue = (value: string): string => {
             Object.values(AttemptValue).includes(char as AttemptValue)
         );
 
+    console.log('Filtered attempt value:', validChars.join(''));
+    console.log('Filtered attempt value:', validChars);
+
     // If we have a '-' or 'O', it should be the only character
     if (
         validChars.includes(AttemptValue.PASS) &&
         validChars.indexOf(AttemptValue.PASS) !== validChars.length - 1
     ) {
-        validChars.splice(validChars.indexOf(AttemptValue.PASS), 1);
+        validChars.splice(validChars.indexOf(AttemptValue.PASS) + 1, validChars.length - validChars.indexOf(AttemptValue.PASS) - 1);
     }
 
     if (
         validChars.includes(AttemptValue.O) &&
         validChars.indexOf(AttemptValue.O) !== validChars.length - 1
     ) {
-        validChars.splice(validChars.indexOf(AttemptValue.O), 1);
+        validChars.splice(validChars.indexOf(AttemptValue.O) + 1, validChars.length - validChars.indexOf(AttemptValue.O) - 1);
     }
-
+    console.log('Valid attempt value:', validChars.join(''));
     return validChars.join('');
 };
 
@@ -106,20 +110,30 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
     useEffect(() => {
         //add height if missing
         const newHeights = eventResults.reduce((acc: number[], result) => {
-            const resultHeights = result.details.map((detail) => detail.tryNumber);
-            return [...acc, ...resultHeights];
+            const resultHeights = result.details.map(
+            (detail) => detail.tryNumber
+            );
+            // Use a Set to filter out duplicates then merge with existing heights
+            const uniqueHeights = [...new Set([...acc, ...resultHeights])];
+            return uniqueHeights; // Sort heights in ascending order
         }, []);
-        setHeights(newHeights);
+        setHeights((prev) => {
+            const uniqueHeights = [...new Set([...prev, ...newHeights])];
+            return uniqueHeights.sort((a, b) => a - b);
+        });
+
     }, [eventResults]);
 
     const sendResult = (result: Result) => {
         upsertResultsMutation.mutate(
-            CreateResult$.array().parse([{
-                ...result,
-                competitionEid: competition.eid,
-                competitionEventEid: event.eid,
-                athleteLicense: result.athlete.license,
-            }])
+            CreateResult$.array().parse([
+                {
+                    ...result,
+                    competitionEid: competition.eid,
+                    competitionEventEid: event.eid,
+                    athleteLicense: result.athlete.license,
+                }
+            ])
         );
     };
 
@@ -324,7 +338,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
                 attempts: validValue.split('') as AttemptValue[],
                 value: validValue.includes(AttemptValue.O)
                     ? height
-                    : resultDetail.value,
+                    : 0,
             };
 
             const updatedDetails = result.details.map((detail) =>
@@ -360,7 +374,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, justifyContent: 'center' }}>
                 <TextField
                     label={t('Add Height')}
                     variant="outlined"
