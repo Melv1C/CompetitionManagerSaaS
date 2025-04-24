@@ -1,6 +1,6 @@
 import { Id, Inscription } from "@competition-manager/schemas";
 import { useState } from "react";
-import { Box, Button, Checkbox, CircularProgress, List, ListItem, ListItemIcon, ListItemText, Paper, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper, Typography } from "@mui/material";
 
 type ParticipantsSelectorProps = {
     inscriptions: Inscription[];
@@ -55,19 +55,21 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({ insc
             
             <List sx={{ maxHeight: 400, overflow: "auto" }}>
                 {inscriptions.map((inscription) => (
-                    <ListItem key={inscription.id} dense button onClick={() => handleToggleParticipant(inscription.id)}>
-                        <ListItemIcon>
-                            <Checkbox
-                                edge="start"
-                                checked={selectedParticipants.includes(inscription.id)}
-                                tabIndex={-1}
-                                disableRipple
+                    <ListItem key={inscription.id} disablePadding>
+                        <ListItemButton dense onClick={() => handleToggleParticipant(inscription.id)}>
+                            <ListItemIcon>
+                                <Checkbox
+                                    edge="start"
+                                    checked={selectedParticipants.includes(inscription.id)}
+                                    tabIndex={-1}
+                                    disableRipple
+                                />
+                            </ListItemIcon>
+                            <ListItemText 
+                                primary={`${inscription.athlete.firstName} ${inscription.athlete.lastName}`} 
+                                secondary={`Bib: ${inscription.bib}`} 
                             />
-                        </ListItemIcon>
-                        <ListItemText 
-                            primary={`${inscription.athlete.firstName} ${inscription.athlete.lastName}`} 
-                            secondary={`Bib: ${inscription.bib}`} 
-                        />
+                        </ListItemButton>
                     </ListItem>
                 ))}
             </List>
