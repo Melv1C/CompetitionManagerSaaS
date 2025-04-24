@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FilePopup } from './FilePopup';
 import { CompetitionEvent } from '@competition-manager/schemas';
-import { Encode } from './liveEncode';
+import { LiveEncode } from './LiveEncode';
 
 /**
  * Results page component for managing competition results
@@ -109,7 +109,7 @@ export const Results = () => {
                     </Select>
                 </FormControl>
             </Box>
-            {selectedEvent ? <Encode event={selectedEvent}/> : null}
+            {selectedEvent ? <LiveEncode event={selectedEvent}/> : null}
         </Box>
     );
 };
