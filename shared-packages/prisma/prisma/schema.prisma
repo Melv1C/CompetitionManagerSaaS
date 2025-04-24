@@ -288,7 +288,7 @@ model Log {
 ////////////////
 model ResultDetail {
     id                      Int               @id @default(autoincrement())
-    tryNumber               Int               @map("try_number")
+    tryNumber               Float             @map("try_number")
     value                   Float
     attempts                String[]
     wind                    Float?
