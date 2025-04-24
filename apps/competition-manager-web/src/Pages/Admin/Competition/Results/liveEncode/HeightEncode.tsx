@@ -1,6 +1,8 @@
+import { upsertResults } from '@/api';
 import { competitionAtom, resultsAtom } from '@/GlobalsStates';
 import {
     AttemptValue,
+    CreateResult$,
     Id,
     Result,
     ResultDetail$,
@@ -20,6 +22,7 @@ import {
 import { useAtomValue } from 'jotai';
 import { KeyboardEvent, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from 'react-query';
 import { HeightKeyboard } from '../components/HeightKeyboard';
 import { InputResultHeight } from './InputResultHeight';
 import { EncodeProps } from './type';
@@ -61,6 +64,18 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
 
+    const queryClient = useQueryClient();
+    const upsertResultsMutation = useMutation({
+        mutationFn: upsertResults,
+        onSuccess: () => {
+            // Invalidate all results for the competition
+            queryClient.invalidateQueries(['results', competition.eid]);
+        },
+        onError: (error) => {
+            console.error('Error upserting results:', error);
+        },
+    });
+
     const baseResults = useAtomValue(resultsAtom);
     if (!baseResults) throw new Error('No results data found');
 
@@ -87,6 +102,26 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
             eventResults.sort((a, b) => a.initialOrder - b.initialOrder)
         );
     }, [eventResults]);
+
+    useEffect(() => {
+        //add height if missing
+        const newHeights = eventResults.reduce((acc: number[], result) => {
+            const resultHeights = result.details.map((detail) => detail.tryNumber);
+            return [...acc, ...resultHeights];
+        }, []);
+        setHeights(newHeights);
+    }, [eventResults]);
+
+    const sendResult = (result: Result) => {
+        upsertResultsMutation.mutate(
+            CreateResult$.array().parse([{
+                ...result,
+                competitionEid: competition.eid,
+                competitionEventEid: event.eid,
+                athleteLicense: result.athlete.license,
+            }])
+        );
+    };
 
     // Handle adding a new height
     const addHeight = () => {
@@ -119,7 +154,9 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
         const prevHeight = heights[heightIndex - 1];
 
         // Find result detail for the previous height
-        const prevDetail = result.details.find((d) => d.value === prevHeight);
+        const prevDetail = result.details.find(
+            (d) => d.tryNumber === prevHeight
+        );
 
         if (
             prevDetail?.attempts?.filter((a) => a === AttemptValue.X).length ===
@@ -150,7 +187,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
             // Check if this athlete has already passed this height
             const nextResult = results.find((r) => r.id === nextResultId);
             const detail = nextResult?.details.find(
-                (d) => d.value === heightValue
+                (d) => d.tryNumber === heightValue
             );
 
             // Skip if the athlete has already passed this height
@@ -174,7 +211,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
                 // Check if this athlete has already passed this height
                 const nextResult = results[i];
                 const detail = nextResult?.details.find(
-                    (d) => d.value === nextHeight
+                    (d) => d.tryNumber === nextHeight
                 );
 
                 // Skip if the athlete has already passed this height
@@ -199,7 +236,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
         const result = results.find((r) => r.id === resultId);
         if (!result) return;
 
-        const detail = result.details.find((d) => d.value === height);
+        const detail = result.details.find((d) => d.tryNumber === height);
 
         setCurrentInput({
             resultId,
@@ -210,6 +247,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
 
     // Handle virtual keyboard input
     const handleInputChange = (value: string) => {
+        console.log('Input change:', value);
         // Ensure value is max 3 characters and only contains valid AttemptValues
         const validValue = formatAttemptValue(value);
 
@@ -219,7 +257,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
         const result = results.find((r) => r.id === resultId);
         if (!result) return;
 
-        const resultDetail = result.details.find((d) => d.value === height);
+        const resultDetail = result.details.find((d) => d.tryNumber === height);
 
         // Check if we're entering a PASS
         const isPassingHeight = validValue == AttemptValue.PASS;
@@ -233,20 +271,18 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
             for (let i = 0; i < heightIndex; i++) {
                 const prevHeight = heights[i];
                 const prevDetail = updatedResult.details.find(
-                    (d) => d.value === prevHeight
+                    (d) => d.tryNumber === prevHeight
                 );
 
                 if (!prevDetail) {
                     // Create a new result detail with PASS for previous height
                     const newPrevDetail = ResultDetail$.parse({
-                        id: Date.now() - i, // Ensure unique temp ID
-                        tryNumber: 0,
-                        value: prevHeight,
+                        id: 1,
+                        tryNumber: prevHeight,
+                        value: 0,
                         attempts: [AttemptValue.PASS],
-                        wind: null,
-                        isBest: false,
-                        isOfficialBest: false,
                     });
+                    newPrevDetail.id = 0;
                     updatedResult.details.push(newPrevDetail);
                 } else if (
                     !prevDetail.attempts ||
@@ -256,52 +292,52 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
                     prevDetail.attempts = [AttemptValue.PASS];
                 }
             }
-
+            sendResult(updatedResult); // Send the updated result to the server
             // Update state with the filled-in passes
-            setResults((prevResults) =>
-                prevResults.map((res) =>
-                    res.id === resultId ? updatedResult : res
-                )
-            );
+            // setResults((prevResults) =>
+            //     prevResults.map((res) =>
+            //         res.id === resultId ? updatedResult : res
+            //     )
+            // );
         }
 
         if (!resultDetail) {
             // Create a new result detail if it doesn't exist
             const newDetail = ResultDetail$.parse({
-                id: Date.now(), // Temporary ID
-                tryNumber: 0, // Not used for height attempts
-                value: height, // Store height as value
+                id: 1, // Temporary ID
+                tryNumber: height, // Not used for height attempts
+                value: validValue.includes(AttemptValue.O) ? height : 0,
                 attempts: validValue.split('') as AttemptValue[],
-                wind: null,
-                isBest: false,
-                isOfficialBest: false,
             });
-
-            const updatedDetails = [...result.details, newDetail];
-            const updatedResult = { ...result, details: updatedDetails };
-
-            setResults((prevResults) =>
-                prevResults.map((res) =>
-                    res.id === resultId ? updatedResult : res
-                )
-            );
+            newDetail.id = 0;
+            result.details.push(newDetail);
+            sendResult(result); // Send the result to the server
+            // setResults((prevResults) =>
+            //     prevResults.map((res) =>
+            //         res.id === resultId ? { ...result, details: result.details } : res
+            //     )
+            // );
         } else {
             // Update the existing result detail
             const updatedDetail = {
                 ...resultDetail,
                 attempts: validValue.split('') as AttemptValue[],
+                value: validValue.includes(AttemptValue.O)
+                    ? height
+                    : resultDetail.value,
             };
 
             const updatedDetails = result.details.map((detail) =>
-                detail.value === height ? updatedDetail : detail
+                detail.tryNumber === height ? updatedDetail : detail
             );
 
             const updatedResult = { ...result, details: updatedDetails };
-            setResults((prevResults) =>
-                prevResults.map((res) =>
-                    res.id === resultId ? updatedResult : res
-                )
-            );
+            sendResult(updatedResult); // Send the result to the server
+            // setResults((prevResults) =>
+            //     prevResults.map((res) =>
+            //         res.id === resultId ? updatedResult : res
+            //     )
+            // );
         }
 
         // Auto-navigate on O or PASS
@@ -319,13 +355,6 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
                     handleInputFocus(nextInput.resultId, nextInput.height);
                 }, 200);
             }
-        }
-
-        // If three X values, disable next heights for this athlete
-        if (
-            validValue === `${AttemptValue.X}${AttemptValue.X}${AttemptValue.X}`
-        ) {
-            // Nothing extra needed here since the isHeightDisabled function will handle it
         }
     };
 
@@ -507,7 +536,7 @@ export const HeightEncode: React.FC<EncodeProps> = ({ event }) => {
                                                     height={height}
                                                     resultDetail={result.details.find(
                                                         (detail) =>
-                                                            detail.value ===
+                                                            detail.tryNumber ===
                                                             height
                                                     )}
                                                     handleInputFocus={
