@@ -20,6 +20,9 @@ export const userInscriptionsAtom = atom<Inscription[] | null>(null);
 // Store the inscriptions get as an admin
 export const adminInscriptionsAtom = atom<Inscription[] | null>(null);
 
+// Store the results of the current competition
+export const resultsAtom = atom<Result[] | null>(null);
+
 // Store the data of the inscription form
 type InscriptionData = {
     athlete?: Athlete;
@@ -63,5 +66,3 @@ export const competitionEventDataAtom = atom<CompetitionEventData>({
     cost: 0,
     children: [],
 });
-
-export const resultsAtom = atom<Result[] | null>(null);

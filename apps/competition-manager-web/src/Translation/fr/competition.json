@@ -67,5 +67,19 @@
     "confirmDeleteInscriptionMessage_plural": "Êtes-vous sûr de vouloir supprimer les {{count}} inscriptions de {{athlete}} ?",
     "inscriptionDeletedSuccess": "Inscription supprimée avec succès",
     "inscriptionDeletedSuccess_plural": "Inscriptions supprimées avec succès",
+    "results": {
+        "position": "Pos",
+        "bib": "Doss",
+        "athlete": "Athlète",
+        "club": "Club",
+        "time": "Temps",
+        "distance": "Distance",
+        "height": "Hauteur",
+        "points": "Points",
+        "result": "Résultat",
+        "details": "Détails",
+        "noResultsAvailable": "Aucun résultat disponible",
+        "noResultsForEvent": "Aucun résultat disponible pour cette épreuve"
+    },
     "refundPolicyWarning": "Veuillez noter que les remboursements des inscriptions payées sont gérés par l'organisateur et ne sont pas traités automatiquement via la plateforme. Contactez directement l'organisateur pour les demandes de remboursement."
 }
