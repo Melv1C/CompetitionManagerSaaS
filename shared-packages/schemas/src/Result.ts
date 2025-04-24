@@ -8,6 +8,7 @@ export enum AttemptValue {
     X = 'X',
     O = 'O',
     PASS = '-',
+    R = 'r',
 }
 
 export enum ResultCode {
