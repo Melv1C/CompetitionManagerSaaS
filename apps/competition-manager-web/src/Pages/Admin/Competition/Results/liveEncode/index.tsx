@@ -18,7 +18,7 @@ import { ParticipantsSelector } from './ParticipantsSelector';
 import { EncodeProps } from './type';
 import { HeightEncode } from './HeightEncode';
 
-export const Encode: React.FC<EncodeProps> = ({ event }) => {
+export const LiveEncode: React.FC<EncodeProps> = ({ event }) => {
     const results = useAtomValue(resultsAtom);
     if (!results) throw new Error('No results found');
 
