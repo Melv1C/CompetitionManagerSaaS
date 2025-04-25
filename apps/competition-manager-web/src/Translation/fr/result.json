@@ -35,5 +35,10 @@
     "noMatchingInscriptions": "Aucune inscription correspondante",
     "tryDifferentSearch": "Essayez un autre terme de recherche",
     "startEncodingResults": "Commencer l'encodage des résultats",
-    "notConfirmed": "Non confirmé"
+    "notConfirmed": "Non confirmé",
+    "noEventsSelected": "Aucune épreuve sélectionnée",
+    "addEvent": "Ajouter une Épreuve",
+    "timeEncodingNotImplemented": "L'encodage des temps n'est pas encore implémenté",
+    "pointsEncodingNotImplemented": "L'encodage des points n'est pas encore implémenté",
+    "encodingNotAvailable": "Encodage non disponible pour ce type d'épreuve"
 }
