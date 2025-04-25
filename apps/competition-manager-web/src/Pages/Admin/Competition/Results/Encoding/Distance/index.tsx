@@ -4,13 +4,12 @@ import { useDeviceSize } from '@/hooks/useDeviceSize';
 import {
     CompetitionEvent,
     CreateResult$,
-    EventType,
     Id,
     Result,
     ResultDetail$,
     ResultDetailCode,
 } from '@competition-manager/schemas';
-import { formatPerf } from '@competition-manager/utils';
+import { formatResult } from '@competition-manager/utils';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -254,7 +253,6 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
 
     // Handle blur events - now contains all the logic for updating and saving results
     const handleInputBlur = () => {
-
         console.log('handleInputBlur', currentInput);
 
         const { resultId, tryNumber, value } = currentInput;
@@ -515,10 +513,7 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
                                         align="center"
                                         sx={{ width: '80px' }}
                                     >
-                                        {formatPerf(
-                                            result.value,
-                                            EventType.DISTANCE
-                                        )}
+                                        {formatResult(result)}
                                     </TableCell>
                                 </TableRow>
                             );
