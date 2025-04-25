@@ -16,5 +16,7 @@
     "modify": "Wijzigen",
     "gotIt": "Begrepen",
     "close": "Sluiten",
-    "clear": "Wissen"
+    "clear": "Wissen",
+    "selectAll": "Alles selecteren",
+    "deselectAll": "Alles deselecteren"
 }
