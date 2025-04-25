@@ -27,7 +27,7 @@ import {
     resultInclude,
     Role,
 } from '@competition-manager/schemas';
-import { isAuthorized, isBestResult } from '@competition-manager/utils';
+import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
 import { logger } from '../logger';
 
@@ -148,31 +148,24 @@ router.post(
                     return updatedDetail;
                 });
 
-                // Then calculate best performances using the updated values
-                const processedDetails = updatedDetails.map((updatedDetail) => {
-                    const eventType = competitionEvent.event.type as EventType;
+                const sortedDetails = updatedDetails.sort((a, b) =>
+                    sortPerf(
+                        a.value,
+                        b.value,
+                        competitionEvent.event.type as EventType
+                    )
+                );
 
-                    // Calculate if this is the best performance using updated values
-                    const isBestPerf = updatedDetails.every(
-                        (d) =>
-                            d === updatedDetail ||
-                            isBestResult(
-                                updatedDetail.value,
-                                d.value,
-                                eventType
-                            )
-                    );
+                // Update the field isBest for each detail
+                const processedDetails = sortedDetails.map(
+                    (detail, idx, arr) => ({
+                        ...detail,
+                        isBest: idx === 0,
+                        isOfficialBest: idx === 0, // Assuming the first detail is the official best for now
+                    })
+                );
 
-                    return {
-                        tryNumber: updatedDetail.tryNumber,
-                        value: updatedDetail.value,
-                        attempts: updatedDetail.attempts,
-                        wind: updatedDetail.wind,
-                        isBest: isBestPerf,
-                        isOfficialBest: isBestPerf,
-                    };
-                });
-
+                // Find the best detail for result-level values
                 const bestDetail = processedDetails.find((d) => d.isBest);
 
                 const resultData = {
