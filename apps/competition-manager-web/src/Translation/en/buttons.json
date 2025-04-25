@@ -16,5 +16,7 @@
     "modify": "Modify",
     "gotIt": "Got it",
     "close": "Close",
-    "clear": "Clear"
+    "clear": "Clear",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All"
 }
