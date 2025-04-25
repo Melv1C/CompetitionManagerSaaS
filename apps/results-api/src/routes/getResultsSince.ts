@@ -8,26 +8,39 @@
  * Returns results that have been updated after the specified timestamp.
  */
 
-import { catchError, CustomRequest } from '@competition-manager/backend-utils';
+import {
+    catchError,
+    CustomRequest,
+    Key,
+    parseRequest,
+} from '@competition-manager/backend-utils';
 import { prisma } from '@competition-manager/prisma';
-import { Result$ } from '@competition-manager/schemas';
+import { Eid$, Result$, resultInclude } from '@competition-manager/schemas';
 import { Router } from 'express';
+import { z } from 'zod';
 import { logger } from '../logger';
 
 export const router = Router();
 
+const Param$ = z.object({
+    eid: Eid$,
+    timestamp: z.coerce.number(),
+});
+
 router.get(
     '/competitions/:eid/since/:timestamp',
+    parseRequest(Key.Params, Param$),
     async (req: CustomRequest, res) => {
         try {
-            const { eid, timestamp } = req.params;
+            const { eid, timestamp } = Param$.parse(req.params);
 
             // Convert timestamp to Date
-            const since = new Date(Number(timestamp));
+            const since = new Date(timestamp);
 
             // Validate timestamp
             if (isNaN(since.getTime())) {
-                return res.status(400).send(req.t('errors.invalidTimestamp'));
+                res.status(400).send(req.t('errors.invalidTimestamp'));
+                return;
             }
 
             // Fetch results updated after the timestamp
@@ -38,17 +51,7 @@ router.get(
                         gt: since,
                     },
                 },
-                include: {
-                    competitionEvent: {
-                        include: {
-                            event: true,
-                            category: true,
-                        },
-                    },
-                    athlete: true,
-                    club: true,
-                    details: true,
-                },
+                include: resultInclude,
                 orderBy: {
                     updatedAt: 'asc',
                 },
