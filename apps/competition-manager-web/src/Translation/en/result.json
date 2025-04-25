@@ -35,5 +35,10 @@
     "noMatchingInscriptions": "No matching inscriptions",
     "tryDifferentSearch": "Try a different search term",
     "startEncodingResults": "Start Encoding Results",
-    "notConfirmed": "Not confirmed"
+    "notConfirmed": "Not confirmed",
+    "noEventsSelected": "No events selected",
+    "addEvent": "Add Event",
+    "timeEncodingNotImplemented": "Time encoding is not yet implemented",
+    "pointsEncodingNotImplemented": "Points encoding is not yet implemented",
+    "encodingNotAvailable": "Encoding not available for this event type"
 }
