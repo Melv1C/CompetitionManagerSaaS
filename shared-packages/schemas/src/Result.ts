@@ -1,8 +1,8 @@
 import z from 'zod';
 import { AthleteWithoutClub$ } from './Athlete';
-import { Bib$, Boolean$, Eid$, Id$, License$ } from './Base';
-import { CompetitionEvent$, competitionEventInclude } from './CompetitionEvent';
+import { Bib$, Boolean$, Date$, Eid$, Id$, License$ } from './Base';
 import { Club$ } from './Club';
+import { CompetitionEvent$, competitionEventInclude } from './CompetitionEvent';
 
 export enum AttemptValue {
     X = 'X',
@@ -62,21 +62,25 @@ export const Result$ = z.object({
     points: z.coerce.number().int().nonnegative().nullish(),
 
     details: ResultDetail$.array().default([]),
+
+    // Add timestamp fields for tracking and synchronization
+    createdAt: Date$,
+    updatedAt: Date$,
 });
 export type Result = z.infer<typeof Result$>;
 
 export const resultInclude = {
     competitionEvent: {
-        include: competitionEventInclude
+        include: competitionEventInclude,
     },
     athlete: true,
     club: true,
-    details: true
+    details: true,
 };
 
 // Schema for creating a new result
-export const CreateResult$ = Result$.omit({ 
-    id: true, 
+export const CreateResult$ = Result$.omit({
+    id: true,
     eid: true,
     competitionEvent: true,
     athlete: true,
@@ -86,6 +90,8 @@ export const CreateResult$ = Result$.omit({
     value: true,
     wind: true,
     points: true,
+    createdAt: true,
+    updatedAt: true,
 }).extend({
     competitionEid: Eid$,
     competitionEventEid: Eid$,
@@ -93,4 +99,3 @@ export const CreateResult$ = Result$.omit({
     details: CreateResultDetail$.array().default([]),
 });
 export type CreateResult = z.infer<typeof CreateResult$>;
-

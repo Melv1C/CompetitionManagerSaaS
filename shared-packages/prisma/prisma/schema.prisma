@@ -323,6 +323,8 @@ model Result {
     wind                    Float?
     points                  Int?
     details                 ResultDetail[]
+    createdAt               DateTime          @default(now()) @map("created_at")
+    updatedAt               DateTime          @updatedAt @map("updated_at")
 
     @@unique([competitionEventId, athleteId])
     @@map("results")
