@@ -34,5 +34,7 @@
     "female": "Vrouw",
     "license": "Licentie",
     "club": "Club",
-    "country": "Land"
+    "country": "Land",
+    "search": "Zoeken",
+    "processing": "Verwerken"
 }

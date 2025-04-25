@@ -24,5 +24,21 @@
     "unknownError": "Onbekende fout",
     "noPendingData": "Geen gegevens beschikbaar om te verwerken",
     "eventNotFound": "Geselecteerd onderdeel niet gevonden",
-    "selectionCanceled": "Onderdeelselectie is geannuleerd"
+    "selectionCanceled": "Onderdeelselectie is geannuleerd",
+    "attempt": "Poging {{number}}",
+    "noResultsAvailable": "Geen resultaten beschikbaar",
+    "noInscriptionsForEvent": "Er zijn geen inschrijvingen voor dit onderdeel",
+    "searchOtherAthletes": "Zoek naar andere atleten",
+    "comingSoon": "Binnenkort beschikbaar",
+    "selectParticipants": "Selecteer deelnemers",
+    "selectParticipantsDescription": "Selecteer de deelnemers die u wilt opnemen in de resultaten",
+    "noMatchingInscriptions": "Geen overeenkomende inschrijvingen",
+    "tryDifferentSearch": "Probeer een andere zoekterm",
+    "startEncodingResults": "Begin met het invoeren van resultaten",
+    "notConfirmed": "Niet bevestigd",
+    "noEventsSelected": "Geen onderdelen geselecteerd",
+    "addEvent": "Onderdeel Toevoegen",
+    "timeEncodingNotImplemented": "Tijdcodering is nog niet geïmplementeerd",
+    "pointsEncodingNotImplemented": "Puntencodering is nog niet geïmplementeerd",
+    "encodingNotAvailable": "Codering niet beschikbaar voor dit type onderdeel"
 }
