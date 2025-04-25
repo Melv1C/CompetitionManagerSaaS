@@ -6,7 +6,7 @@
  */
 import { competitionAtom } from '@/GlobalsStates';
 import { EventType } from '@competition-manager/schemas';
-import { formatPerf } from '@competition-manager/utils';
+import { formatResultDetail } from '@competition-manager/utils';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -128,8 +128,8 @@ const Row = memo(function Row({ row, eventType }: ResultRowProps) {
                                                 {resultDetail.tryNumber}
                                             </TableCell>
                                             <TableCell>
-                                                {formatPerf(
-                                                    resultDetail.value,
+                                                {formatResultDetail(
+                                                    resultDetail,
                                                     eventType
                                                 )}
                                             </TableCell>

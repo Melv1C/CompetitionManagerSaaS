@@ -4,7 +4,7 @@ import {
     ResultDetail,
     ResultDetailCode,
 } from '@competition-manager/schemas';
-import { formatPerf } from '@competition-manager/utils';
+import { formatResultDetail } from '@competition-manager/utils';
 import { Box, TextField } from '@mui/material';
 import { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react';
 
@@ -64,18 +64,8 @@ export const InputResultDistance: React.FC<InputResultDistanceProps> = ({
         if (!resultDetail) {
             return '';
         }
-
-        // Handle special codes first
-        if (resultDetail.value === ResultDetailCode.X) {
-            return 'X';
-        } else if (resultDetail.value === ResultDetailCode.PASS) {
-            return '-';
-        } else if (resultDetail.value === ResultDetailCode.R) {
-            return 'r';
-        }
-
-        // Format numeric value
-        return formatPerf(resultDetail.value || 0, EventType.DISTANCE);
+        
+        return formatResultDetail(resultDetail, EventType.DISTANCE);
     };
 
     // Handle keyboard interaction for direct physical keyboard input
