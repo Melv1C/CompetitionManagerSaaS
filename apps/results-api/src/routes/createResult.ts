@@ -19,6 +19,7 @@ import {
     Admin$,
     Athlete$,
     athleteInclude,
+    AttemptValue,
     competitionEventInclude,
     CreateResult$,
     EventType,
@@ -105,21 +106,68 @@ router.post(
                     },
                 });
 
-                const processedDetails = details.map((detail, idx, arr) => {
-                    const isBestPerf = arr.every(
+                // Filter and process details based on event type
+                const validDetails = details.filter((detail) => {
+                    const eventType = competitionEvent.event.type as EventType;
+
+                    // For Distance events
+                    if (eventType === EventType.DISTANCE) {
+                        // Remove if value is 0
+                        return detail.value !== 0;
+                    }
+
+                    // For Height events
+                    if (eventType === EventType.HEIGHT) {
+                        // Remove if attempts is empty
+                        return detail.attempts && detail.attempts.length > 0;
+                    }
+
+                    // For other event types, keep all details
+                    return true;
+                });
+
+                // First map to update values based on event types
+                const updatedDetails = validDetails.map((detail) => {
+                    const eventType = competitionEvent.event.type as EventType;
+                    let updatedDetail = { ...detail };
+
+                    // Process based on event type
+                    if (eventType === EventType.DISTANCE) {
+                        // For Distance events, ensure attempts is empty
+                        updatedDetail.attempts = [];
+                    } else if (eventType === EventType.HEIGHT) {
+                        // For Height events, set value based on attempts
+                        const hasSuccessfulAttempt = detail.attempts.includes(
+                            AttemptValue.O
+                        );
+                        updatedDetail.value = hasSuccessfulAttempt
+                            ? detail.tryNumber
+                            : 0;
+                    }
+
+                    return updatedDetail;
+                });
+
+                // Then calculate best performances using the updated values
+                const processedDetails = updatedDetails.map((updatedDetail) => {
+                    const eventType = competitionEvent.event.type as EventType;
+
+                    // Calculate if this is the best performance using updated values
+                    const isBestPerf = updatedDetails.every(
                         (d) =>
-                            d === detail ||
+                            d === updatedDetail ||
                             isBestResult(
-                                detail.value,
+                                updatedDetail.value,
                                 d.value,
-                                competitionEvent.event.type as EventType
+                                eventType
                             )
                     );
+
                     return {
-                        tryNumber: detail.tryNumber,
-                        value: detail.value,
-                        attempts: detail.attempts,
-                        wind: detail.wind,
+                        tryNumber: updatedDetail.tryNumber,
+                        value: updatedDetail.value,
+                        attempts: updatedDetail.attempts,
+                        wind: updatedDetail.wind,
                         isBest: isBestPerf,
                         isOfficialBest: isBestPerf,
                     };
