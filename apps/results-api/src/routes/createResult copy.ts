@@ -51,7 +51,7 @@ import {
     resultInclude,
     Role,
 } from '@competition-manager/schemas';
-import { isAuthorized, isBestResult } from '@competition-manager/utils';
+import { isAuthorized, isFirstPerfBetter } from '@competition-manager/utils';
 import { Router } from 'express';
 import { logger } from '../logger';
 
@@ -138,7 +138,7 @@ router.post(
                 const isBestPerf = arr.every(
                     (d) =>
                         d === detail ||
-                        isBestResult(
+                        isFirstPerfBetter(
                             detail.value,
                             d.value,
                             competitionEvent.event.type as EventType

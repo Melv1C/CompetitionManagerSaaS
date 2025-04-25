@@ -30,7 +30,7 @@ Instead of the full codebase, you are provided with this **structured summary** 
     *   `schemas`: Defines data validation schemas using **Zod**. Contains schemas for core entities like `User`, `Competition`, `CompetitionEvent`, `Inscription`, `Athlete`, `Result`, `Category`, `Club`, `PaymentPlan`, `Option`, `Log`, `TokenData`, etc. This is the source of truth for data shapes across services.
     *   `translations`: Manages internationalization (i18n) strings for different languages (en, fr, nl), likely using `i18next`. Contains translations for backend (mail, enums, zod errors) and frontend.
     *   `backend-utils`: Provides common utilities for backend services, including authentication middleware (`checkRole`, JWT handling), custom request types, error handling (`catchError`), logging (`createLogger`, middleware), database helpers (`findAthleteWithLicense`, `saveInscriptions`), email sending (`sendEmail`), password hashing, CORS middleware, and request parsing (`parseRequest`).
-    *   `utils`: Contains shared utility functions potentially used by both frontend and backend (e.g., `isAuthorized`, `getCategoryAbbr`, `isBestResult`, `getCostsInfo`).
+    *   `utils`: Contains shared utility functions potentially used by both frontend and backend (e.g., `isAuthorized`, `getCategoryAbbr`, `getCostsInfo`).
     *   `stripe`: Likely contains shared Stripe configuration or utility functions.
 
 *   **Technology Stack:**

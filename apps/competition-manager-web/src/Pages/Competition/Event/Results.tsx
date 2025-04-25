@@ -1,6 +1,6 @@
 import { resultsAtom } from '@/GlobalsStates';
 import { EventType, Result } from '@competition-manager/schemas';
-import { isBestResult } from '@competition-manager/utils';
+import { sortPerf } from '@competition-manager/utils';
 import { Box, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
@@ -34,11 +34,14 @@ export const Results = ({ eventId, eventType }: ResultsProps) => {
         .filter((r) => r.competitionEvent.eid === eventId)
         .sort((a, b) => {
             // Sort by finalOrder if available, then by value
-            if (a.finalOrder !== null && b.finalOrder !== null) {
-                return (a.finalOrder ?? 0) - (b.finalOrder ?? 0);
+            if (a.finalOrder && b.finalOrder) {
+                return a.finalOrder - b.finalOrder;
             }
-            // Provide default values (0) if the result values are null or undefined
-            return isBestResult(a.value ?? 0, b.value ?? 0, eventType) ? -1 : 1;
+            return sortPerf(
+                a.value ?? -1,
+                b.value ?? -1,
+                a.competitionEvent.event.type
+            );
         });
 
     if (results.length === 0) {
