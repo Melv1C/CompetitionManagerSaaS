@@ -1,15 +1,7 @@
 import { useDeviceSize } from '@/hooks';
 import { faCheck, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    Alert,
-    Box,
-    Button,
-    Chip,
-    InputBase,
-    Paper,
-    Snackbar,
-} from '@mui/material';
+import { Box, Button, Chip, InputBase, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -27,7 +19,6 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
     const [heightValue, setHeightValue] = useState<number>(0);
     const [inputValue, setInputValue] = useState<string>('0.00');
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
     const [heightExists, setHeightExists] = useState(false);
 
     // Common increments for quick addition
@@ -74,9 +65,6 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
         }
 
         onAddHeight(heightValue);
-
-        // Show success feedback via snackbar
-        setSuccess(true);
 
         // Move to next suggested height
         const newValue = parseFloat((heightValue + 0.05).toFixed(2));
@@ -239,21 +227,6 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                     <FontAwesomeIcon icon={faCheck} />
                 </Button>
             </Paper>
-
-            <Snackbar
-                open={success}
-                autoHideDuration={2000}
-                onClose={() => setSuccess(false)}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert
-                    severity="success"
-                    variant="filled"
-                    onClose={() => setSuccess(false)}
-                >
-                    {t('result:heightAdded')}
-                </Alert>
-            </Snackbar>
         </Box>
     );
 };
