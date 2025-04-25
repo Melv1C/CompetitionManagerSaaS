@@ -34,5 +34,7 @@
     "female": "Female",
     "license": "License",
     "club": "Club",
-    "country": "Country"
+    "country": "Country",
+    "search": "Search",
+    "processing": "Processing"
 }

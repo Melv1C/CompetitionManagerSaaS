@@ -16,5 +16,7 @@
     "modify": "Modifier",
     "gotIt": "Compris",
     "close": "Fermer",
-    "clear": "Effacer"
+    "clear": "Effacer",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner"
 }

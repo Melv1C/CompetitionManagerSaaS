@@ -24,5 +24,16 @@
     "unknownError": "Erreur inconnue",
     "noPendingData": "Aucune donnée disponible à traiter",
     "eventNotFound": "Épreuve sélectionnée introuvable",
-    "selectionCanceled": "La sélection de l'épreuve a été annulée"
+    "selectionCanceled": "La sélection de l'épreuve a été annulée",
+    "attempt": "Essai {{number}}",
+    "noResultsAvailable": "Aucun résultat disponible",
+    "noInscriptionsForEvent": "Il n'y a pas d'inscriptions pour cette épreuve",
+    "searchOtherAthletes": "Rechercher d'autres athlètes",
+    "comingSoon": "Bientôt disponible",
+    "selectParticipants": "Sélectionner des participants",
+    "selectParticipantsDescription": "Sélectionnez les participants que vous souhaitez inclure dans les résultats",
+    "noMatchingInscriptions": "Aucune inscription correspondante",
+    "tryDifferentSearch": "Essayez un autre terme de recherche",
+    "startEncodingResults": "Commencer l'encodage des résultats",
+    "notConfirmed": "Non confirmé"
 }

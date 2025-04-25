@@ -21,15 +21,15 @@ import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
-import { EventSelectionDialog } from './components/EventSelectionDialog';
-import { FileSelector } from './components/FileSelector';
+import { EventSelectionDialog } from './EventSelectionDialog';
+import { FileSelector } from './FileSelector';
 import { FileTable } from './FileTable';
 import { useFileProcessing } from './hooks';
 
 /**
  * Props for the FilePopup component
  */
-type PopupProps = {
+type FileUploadDialogProps = {
     /** Whether the dialog is open */
     open: boolean;
     /** Function to call when the dialog is closed */
@@ -39,7 +39,7 @@ type PopupProps = {
 /**
  * Dialog component for uploading and processing competition result files
  */
-export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
+export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClose }) => {
     const { t } = useTranslation();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
