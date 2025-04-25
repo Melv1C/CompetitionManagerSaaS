@@ -3,7 +3,7 @@ import {
     EventType,
     ResultDetail as ResultDetailsType,
 } from '@competition-manager/schemas';
-import { formatPerf } from '@competition-manager/utils';
+import { formatPerf, formatResultDetail } from '@competition-manager/utils';
 import { Box, Chip, Typography } from '@mui/material';
 
 interface ResultDetailsProps {
@@ -51,8 +51,8 @@ const DistanceResultDetails = ({
                             <Typography variant="body1">
                                 {detail.value !== undefined &&
                                 detail.value !== null
-                                    ? formatPerf(
-                                          detail.value,
+                                    ? formatResultDetail(
+                                          detail,
                                           EventType.DISTANCE
                                       )
                                     : '-'}

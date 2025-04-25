@@ -7,7 +7,6 @@ import { HeightsTable } from './HeightsTable';
 import { useHeightResults, useInputHandling, useNextInput } from './hooks';
 import { HeightEncodeProps } from './types';
 import {
-    getBestResult,
     hasSucceededHeight,
     isAthleteRetired,
     isHeightDisabled,
@@ -68,7 +67,6 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
                 currentInput={currentInput}
                 handleInputChange={handleInputChange}
                 isMobileDevice={isMobileDevice}
-                getBestResult={getBestResult}
                 isHeightDisabled={(resultId, heightIndex) =>
                     isHeightDisabled(resultId, heightIndex, heights, results)
                 }

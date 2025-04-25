@@ -102,13 +102,3 @@ export const canAddMoreAttempts = (
     );
 };
 
-/**
- * Calculate best result for an athlete
- */
-export const getBestResult = (result: Result): number => {
-    // Find the highest height that the athlete cleared
-    return result.details.reduce(
-        (best, detail) => (detail.value > best ? detail.value : best),
-        0
-    );
-};

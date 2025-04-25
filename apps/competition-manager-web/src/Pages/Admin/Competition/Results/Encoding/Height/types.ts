@@ -16,7 +16,6 @@ export interface HeightsTableProps {
     currentInput: CurrentInputState;
     handleInputChange: (value: string) => void;
     isMobileDevice: boolean;
-    getBestResult: (result: Result) => number;
     isHeightDisabled: (resultId: Id, heightIndex: number) => boolean;
     isAthleteRetired: (resultId: Id) => boolean;
     hasSucceededHeight: (resultId: Id, heightValue: number) => boolean;
