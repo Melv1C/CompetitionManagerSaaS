@@ -39,5 +39,6 @@
     "unexpectedError": "An unexpected error occurred",
     "order": "Order",
     "best": "Best",
-    "processing": "Processing"
+    "processing": "Processing",
+    "search": "Search"
 }
