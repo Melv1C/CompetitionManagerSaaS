@@ -74,16 +74,17 @@ export const Schedule = () => {
         return Array.from(categoriesMap.values()).sort((a, b) => a.id - b.id);
     }, [competition.events]);
 
-    const allEventsAbbr = useMemo(() => {
-        // Use a Set to store unique abbreviations
-        const abbrSet = new Set<Event>();
-
+    const allEvents = useMemo(() => {
+        // Use a Map to store unique events
+        const eventMap = new Map<number, Event>(); // Change back to Map for events
         competition.events.forEach((event) => {
-            abbrSet.add(event.event);
+            // Only add if the event ID isn't already in the map
+            if (!eventMap.has(event.event.id)) {
+                eventMap.set(event.event.id, event.event);
+            }
         });
-
-        // Convert set to array and sort
-        return Array.from(abbrSet).sort((a, b) => a.id - b.id);
+        // Convert map values to array and sort by ID
+        return Array.from(eventMap.values()).sort((a, b) => a.id - b.id);
     }, [competition.events]);
 
     // Handle category selection changes
@@ -230,7 +231,7 @@ export const Schedule = () => {
                                 <MenuItem value="">
                                     <em>{t('glossary:all')}</em>
                                 </MenuItem>
-                                {allEventsAbbr.map((event) => (
+                                {allEvents.map((event) => (
                                     <MenuItem key={event.id} value={event.abbr}>
                                         {event.abbr}
                                     </MenuItem>
