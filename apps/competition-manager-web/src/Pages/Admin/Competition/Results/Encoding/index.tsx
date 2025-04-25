@@ -1,5 +1,5 @@
 import { competitionAtom } from '@/GlobalsStates';
-import { CompetitionEvent, EventType } from '@competition-manager/schemas';
+import { CompetitionEvent, EventType, Id } from '@competition-manager/schemas';
 import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -19,8 +19,9 @@ import {
     Typography,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocalStorage } from 'usehooks-ts';
 import { DistanceEncode } from './Distance';
 import { HeightEncode } from './Height';
 
@@ -52,13 +53,46 @@ const TabPanel = (props: TabPanelProps) => {
 
 export const Encoding = () => {
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState(0);
-    const [openEventDialog, setOpenEventDialog] = useState(false);
-    const [eventTabs, setEventTabs] = useState<CompetitionEvent[]>([]);
-
-    // Get competition data from global state
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
+
+    // Use local storage for active tab and event tabs with competition-specific keys
+    const [activeTab, setActiveTab] = useLocalStorage<number>(
+        `encoding-active-tab-${competition.id}`,
+        0
+    );
+    const [openEventDialog, setOpenEventDialog] = useState(false);
+
+    // Store event IDs in local storage instead of full objects to avoid serialization issues
+    const [eventTabIds, setEventTabIds] = useLocalStorage<Id[]>(
+        `encoding-event-tabs-${competition.id}`,
+        []
+    );
+
+    // Reconstruct full event objects from IDs
+    const [eventTabs, setEventTabs] = useState<CompetitionEvent[]>([]);
+
+    // Reconstruct event tabs from IDs when competition data is available
+    useEffect(() => {
+        if (competition && eventTabIds.length > 0) {
+            const tabs = eventTabIds
+                .map((id) =>
+                    competition.events.find((event) => event.id === id)
+                )
+                .filter(
+                    (event): event is CompetitionEvent => event !== undefined
+                );
+
+            setEventTabs(tabs);
+
+            // Ensure active tab is valid
+            if (activeTab >= tabs.length) {
+                setActiveTab(Math.max(0, tabs.length - 1));
+            }
+        } else {
+            setEventTabs([]);
+        }
+    }, [competition, eventTabIds, activeTab, setActiveTab]);
 
     // Handle tab change
     const handleTabChange = (
@@ -71,8 +105,10 @@ export const Encoding = () => {
 
     // Handle adding a new event tab
     const handleAddEventTab = (event: CompetitionEvent) => {
-        setEventTabs([...eventTabs, event]);
-        setActiveTab(eventTabs.length);
+        const newEventTabs = [...eventTabs, event];
+        setEventTabs(newEventTabs);
+        setEventTabIds(newEventTabs.map((e) => e.id));
+        setActiveTab(newEventTabs.length - 1);
         setOpenEventDialog(false);
     };
 
@@ -82,6 +118,7 @@ export const Encoding = () => {
         const newEventTabs = [...eventTabs];
         newEventTabs.splice(index, 1);
         setEventTabs(newEventTabs);
+        setEventTabIds(newEventTabs.map((e) => e.id));
 
         // Adjust the active tab if necessary
         if (index <= activeTab) {
@@ -246,7 +283,7 @@ export const Encoding = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenEventDialog(false)}>
-                        {t('common:cancel')}
+                        {t('buttons:cancel')}
                     </Button>
                 </DialogActions>
             </Dialog>
