@@ -134,7 +134,7 @@ export const useFetchCompetitionData = (
             // Only connect if user is admin OR today is between the start and end dates (inclusive)
             const isCompetitionDay = today >= startDate && today <= endDate;
 
-            if (isAdmin || isCompetitionDay) {
+            if (isAdmin || true) {
                 console.log(
                     'Connecting to real-time results - ' +
                         (isAdmin ? 'Admin user' : 'Competition is today')
