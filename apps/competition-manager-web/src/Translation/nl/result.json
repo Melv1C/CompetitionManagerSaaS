@@ -35,5 +35,10 @@
     "noMatchingInscriptions": "Geen overeenkomende inschrijvingen",
     "tryDifferentSearch": "Probeer een andere zoekterm",
     "startEncodingResults": "Begin met het invoeren van resultaten",
-    "notConfirmed": "Niet bevestigd"
+    "notConfirmed": "Niet bevestigd",
+    "noEventsSelected": "Geen onderdelen geselecteerd",
+    "addEvent": "Onderdeel Toevoegen",
+    "timeEncodingNotImplemented": "Tijdcodering is nog niet geïmplementeerd",
+    "pointsEncodingNotImplemented": "Puntencodering is nog niet geïmplementeerd",
+    "encodingNotAvailable": "Codering niet beschikbaar voor dit type onderdeel"
 }
