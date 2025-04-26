@@ -9,7 +9,7 @@ import {
     ResultDetail$,
     ResultDetailCode,
 } from '@competition-manager/schemas';
-import { formatResult } from '@competition-manager/utils';
+import { formatResult, sortResult } from '@competition-manager/utils';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -330,6 +330,29 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
         });
     };
 
+    // Use useMemo to avoid recalculations on every render
+    const places = useMemo(() => {
+        const resultPlaces = new Map();
+
+        // Only calculate places for results that have a valid value
+        const validResults = results.filter(
+            (result) => result.value !== null && result.value !== undefined
+        );
+
+        validResults.forEach((result) => {
+            // Count results that are better than the current one
+            const betterResults = validResults.filter(
+                (other) => sortResult(other, result) < 0
+            );
+
+            // Place is 1 + number of better results
+            const place = betterResults.length + 1;
+            resultPlaces.set(result.id, place);
+        });
+
+        return resultPlaces;
+    }, [results]); // Only recalculate when results change
+
     // If no results are available yet, show the participants selector
     if (results.length === 0) {
         return (
@@ -435,8 +458,12 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
                     </TableHead>
                     <TableBody>
                         {results.map((result) => {
-                            // Calculate current place based on best results
-                            const currentPlace = 0; // TODO: Implement current place calculation
+                            // Get the calculated place from our map, or show '-' if no valid result
+                            const currentPlace =
+                                result.value !== null &&
+                                result.value !== undefined
+                                    ? places.get(result.id) || '-'
+                                    : '-';
 
                             return (
                                 <TableRow key={result.id}>
