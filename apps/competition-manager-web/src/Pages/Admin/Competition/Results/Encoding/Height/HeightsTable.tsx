@@ -1,5 +1,5 @@
 import { EventType } from '@competition-manager/schemas';
-import { formatPerf } from '@competition-manager/utils';
+import { formatPerf, formatResult } from '@competition-manager/utils';
 import {
     Paper,
     Table,
@@ -20,9 +20,8 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
     currentInput,
     handleInputChange,
     isMobileDevice,
-    getBestResult,
     isHeightDisabled,
-    onEnterPressed
+    onEnterPressed,
 }) => {
     const { t } = useTranslation();
 
@@ -58,9 +57,6 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
                 </TableHead>
                 <TableBody>
                     {results.map((result) => {
-                        // Calculate the best result for this athlete
-                        const bestResult = getBestResult(result);
-
                         // Calculate current place (placeholder for now)
                         const currentPlace = 0; // TODO: Implement current place calculation
 
@@ -120,7 +116,7 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
                                     align="center"
                                     sx={{ width: '80px' }}
                                 >
-                                    {formatPerf(bestResult, EventType.HEIGHT)}
+                                    {formatResult(result)}
                                 </TableCell>
                             </TableRow>
                         );

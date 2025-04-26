@@ -1,5 +1,5 @@
 import { AttemptValue, EventType, Result } from '@competition-manager/schemas';
-import { formatPerf } from '@competition-manager/utils';
+import { formatPerf, formatResult } from '@competition-manager/utils';
 import {
     Box,
     Paper,
@@ -8,7 +8,8 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, Typography
+    TableRow,
+    Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +36,11 @@ const AttemptCircle = ({ attempt }: { attempt: AttemptValue | undefined }) => {
             );
         case AttemptValue.PASS:
             return (
-                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontWeight: 'bold' }}
+                >
                     {AttemptValue.PASS}
                 </Typography>
             );
@@ -93,7 +98,7 @@ export const HeightResultsTable = ({ results }: HeightResultsTableProps) => {
                             <TableCell>{`${result.athlete.firstName} ${result.athlete.lastName}`}</TableCell>
                             <TableCell>{result.club.abbr}</TableCell>
                             <TableCell align="right">
-                                {formatPerf(result.value, EventType.HEIGHT)}
+                                {formatResult(result)}
                             </TableCell>
                             {sortedHeights.map((height) => {
                                 const detailForHeight = result.details?.find(
@@ -125,9 +130,7 @@ export const HeightResultsTable = ({ results }: HeightResultsTableProps) => {
                                                     )
                                                 )}
                                             </Box>
-                                        ) : (
-                                            null
-                                        )}
+                                        ) : null}
                                     </TableCell>
                                 );
                             })}
