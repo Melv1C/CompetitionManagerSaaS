@@ -44,6 +44,12 @@ const AttemptCircle = ({ attempt }: { attempt: AttemptValue | undefined }) => {
                     {AttemptValue.PASS}
                 </Typography>
             );
+        case AttemptValue.R:
+            return (
+                <Typography variant="body2" color="text.secondary">
+                    {AttemptValue.R}
+                </Typography>
+            );
         default:
             <Typography variant="body2" color="text.secondary">
                 {attempt}
