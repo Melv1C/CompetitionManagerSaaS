@@ -2,6 +2,7 @@ import {
     AttemptValue,
     EventType,
     Result,
+    ResultCode,
     ResultDetail,
     ResultDetailCode,
 } from '@competition-manager/schemas';
@@ -11,11 +12,35 @@ export const formatResult = (result: Result) => {
     if (
         result.value !== undefined &&
         result.value !== null &&
-        result.value !== 0
+        result.value > 0
     ) {
         return formatPerf(result.value, result.competitionEvent.event.type);
     }
+
     // Handle special result codes
+    if (
+        result.value !== undefined &&
+        result.value !== null &&
+        result.value < 0
+    ) {
+        switch (result.value) {
+            case ResultCode.DNF:
+                return 'DNF';
+            case ResultCode.DQ:
+                return 'DQ';
+            case ResultCode.DNS:
+                return 'DNS';
+            case ResultCode.NM:
+                return 'NM';
+            default:
+                console.error(
+                    `Unknown result code: ${result.value}`
+                );
+                return '';
+        }
+    }
+
+    // Compute the special result code based on the details
 
     // If there is no details, return empty string
     if (result.details.length === 0) {
@@ -41,9 +66,7 @@ export const formatResult = (result: Result) => {
                 detail.attempts.length === 1 &&
                 detail.attempts[0] === AttemptValue.PASS
         ) ||
-        result.details.every(
-            (detail) => detail.value === ResultDetailCode.PASS
-        )
+        result.details.every((detail) => detail.value === ResultDetailCode.PASS)
     ) {
         return '';
     }
