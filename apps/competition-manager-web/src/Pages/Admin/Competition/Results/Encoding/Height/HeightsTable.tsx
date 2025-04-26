@@ -23,10 +23,7 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
     results,
     handleInputFocus,
     currentInput,
-    handleInputChange,
-    isMobileDevice,
     isHeightDisabled,
-    onEnterPressed,
 }) => {
     const { t } = useTranslation();
 
@@ -126,10 +123,6 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
                                                 result.id,
                                                 heightIndex
                                             )}
-                                            onInputChange={handleInputChange}
-                                            isMobileDevice={isMobileDevice}
-                                            onInputBlur={() => {}}
-                                            onEnterKeyPress={onEnterPressed}
                                         />
                                     </TableCell>
                                 ))}

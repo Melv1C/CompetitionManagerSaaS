@@ -1,6 +1,5 @@
 import { upsertResults } from '@/api';
 import { competitionAtom, resultsAtom } from '@/GlobalsStates';
-import { useDeviceSize } from '@/hooks/useDeviceSize';
 import {
     CompetitionEvent,
     CreateResult$,
@@ -41,11 +40,6 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
 
-    // Add device detection using the useDeviceSize hook
-    const { isMobile, isTablet } = useDeviceSize();
-    // Consider both mobile and tablet as mobile devices
-    const isMobileDevice = isMobile || isTablet;
-
     const upsertResultsMutation = useMutation({
         mutationFn: upsertResults,
         onError: (error) => {
@@ -74,7 +68,7 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
 
     const [nbOfAttempts, setNbOfAttempts] = useState(3);
 
-    const MIN_BASE_ATTEMPTS = 3;
+    const MIN_BASE_ATTEMPTS = 2;
     const MAX_ATTEMPTS = 6;
 
     // Calculate the minimum number of attempts based on existing result details
@@ -154,6 +148,7 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
             return;
         }
 
+        // Show the virtual keyboard
         setShowVirtualKeyboard(true);
 
         const result = results.find((r) => r.id === resultId);
@@ -247,15 +242,15 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
 
     // Handle virtual keyboard input for distance - only update the current input value
     const handleInputChange = (value: string) => {
-        // Only update the current input value in state, don't update result details
         setCurrentInput((prev) => ({ ...prev, value }));
     };
 
     // Handle blur events - now contains all the logic for updating and saving results
     const handleInputBlur = () => {
-        console.log('handleInputBlur', currentInput);
-
+        console.log('Input blurred:', currentInput);
         const { resultId, tryNumber, value } = currentInput;
+        if (!resultId || !tryNumber) return; // Skip if no valid input
+
         const result = results.find((r) => r.id === resultId);
         if (!result) return;
 
@@ -321,8 +316,10 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
 
         // Send to backend when user leaves input
         sendResult(updatedResult);
+    };
 
-        // Reset the currentInput state after processing
+    const handleKeyboardClose = () => {
+        setShowVirtualKeyboard(false);
         setCurrentInput({
             resultId: 0,
             tryNumber: 0,
@@ -511,20 +508,7 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
                                                         currentInput={
                                                             currentInput
                                                         }
-                                                        onInputChange={
-                                                            handleInputChange
-                                                        }
-                                                        onEnterKeyPress={
-                                                            moveToNextInput
-                                                        }
-                                                        onInputBlur={
-                                                            handleInputBlur
-                                                        }
                                                         isDisabled={isDisabled}
-                                                        // Pass the device information
-                                                        isMobileDevice={
-                                                            isMobileDevice
-                                                        }
                                                     />
                                                 </TableCell>
                                             );
@@ -551,11 +535,16 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
 
             <DistanceKeyboard
                 open={showVirtualKeyboard}
-                setOpen={setShowVirtualKeyboard}
                 inputValue={currentInput.value}
                 onKeyboardInput={handleInputChange}
-                onEnterPressed={moveToNextInput}
-                onClose={handleInputBlur}
+                onEnterPressed={() => {
+                    handleInputBlur(); // Call the blur handler to save the input
+                    moveToNextInput(); // Move to the next input after Enter key is pressed
+                }}
+                onClose={() => {
+                    handleInputBlur(); // Call the blur handler to save the input
+                    handleKeyboardClose(); // Close the keyboard
+                }}
             />
         </Box>
     );
