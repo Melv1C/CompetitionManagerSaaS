@@ -347,6 +347,11 @@ export const useInputHandling = (
         updatedResult?: Result
     ) => { resultId: Id; height: number } | null
 ) => {
+    const handleKeyboardClose = () => {
+        setShowVirtualKeyboard(false);
+        setCurrentInput({ resultId: 0, height: 0 });
+    }   
+
     // Focus handler for inputs
     const handleInputFocus = (resultId: Id, height: number) => {
         setShowVirtualKeyboard(true);
@@ -355,7 +360,6 @@ export const useInputHandling = (
 
     // Handle input change
     const handleInputChange = (value: string) => {
-        console.log('Input value changed:', value);
         const { resultId, height } = currentInput;
         const result = results.find((r) => r.id === resultId);
         if (!result) return;
@@ -482,28 +486,25 @@ export const useInputHandling = (
         }
     };
 
-    // Handle saving on keyboard close
-    const handleKeyboardClose = () => {
-        // Don't reset currentInput when closing keyboard
-        // This allows desktop keyboard input to continue working
-        // We just need to close the virtual keyboard
-        // Previously, this was resetting currentInput to {resultId: 0, height: 0}
-        // which prevented desktop keyboard from working
-    };
-
     const handleEnterPressed = () => {
         // Find the next input based on current input state
         const nextInput = findNextInput(
             currentInput.resultId,
             currentInput.height
         );
+
         if (nextInput) {
             handleInputFocus(nextInput.resultId, nextInput.height);
         } else {
-            // If no next input, close the virtual keyboard
-            setShowVirtualKeyboard(false);
+            // If no next input, close the keyboard
+            handleKeyboardClose();
         }
     }
 
-    return { handleInputFocus, handleInputChange, handleKeyboardClose, handleEnterPressed };
+    return {
+        handleKeyboardClose,
+        handleInputFocus,
+        handleInputChange,
+        handleEnterPressed,
+    };
 };

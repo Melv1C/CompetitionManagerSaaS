@@ -9,22 +9,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Button, Drawer, Grid, Typography } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { canAddMoreAttempts } from './utils';
 
 interface HeightKeyboardProps {
     open: boolean;
-    setOpen: (open: boolean) => void;
     inputValue: string;
     onKeyboardInput: (value: string) => void;
     onEnterPressed?: () => void;
-    onClose?: () => void;
+    onClose: () => void;
 }
 
 export const HeightKeyboard: React.FC<HeightKeyboardProps> = ({
     open,
-    setOpen,
     inputValue,
     onKeyboardInput,
     onEnterPressed,
@@ -32,38 +30,76 @@ export const HeightKeyboard: React.FC<HeightKeyboardProps> = ({
 }) => {
     const { t } = useTranslation();
     const keyboardContainerRef = useRef<HTMLDivElement>(null);
-    const [lastFocusedElement, setLastFocusedElement] =
-        useState<HTMLElement | null>(null);
 
     // Check if we can add more attempts
     const canAddMore = canAddMoreAttempts(
         inputValue.split('') as AttemptValue[]
     );
 
-    // Track the last focused element
+    // Capture physical keyboard events when the virtual keyboard is open
     useEffect(() => {
-        if (open) {
-            // Store the currently focused element when the keyboard opens
-            const activeElement = document.activeElement as HTMLElement;
-            if (activeElement && activeElement.tagName === 'INPUT') {
-                setLastFocusedElement(activeElement);
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Only process keyboard events when the keyboard is open
+            if (!open) return;
+
+            // Prevent default behavior for these keys to avoid scrolling or other browser actions
+            if (
+                e.key === 'Enter' ||
+                e.key === 'Backspace' ||
+                e.key === 'o' ||
+                e.key === 'O' ||
+                e.key === 'x' ||
+                e.key === 'X' ||
+                e.key === '-' ||
+                e.key === 'r' ||
+                e.key === 'R'
+            ) {
+                e.preventDefault();
             }
 
-            // Add focus/blur event listeners to track focused elements
-            const handleFocus = (e: FocusEvent) => {
-                const target = e.target as HTMLElement;
-                if (target.tagName === 'INPUT') {
-                    setLastFocusedElement(target);
-                }
-            };
+            // Map physical keyboard input to virtual keyboard actions
+            switch (e.key) {
+                case 'Enter':
+                    handleKeyPress('NEXT');
+                    break;
+                case 'Backspace':
+                    handleKeyPress('BKSP');
+                    break;
+                case 'o':
+                case 'O':
+                    if (canAddMore) handleKeyPress('O');
+                    break;
+                case 'x':
+                case 'X':
+                    if (canAddMore) handleKeyPress('X');
+                    break;
+                case '-':
+                    if (canAddMore) handleKeyPress('-');
+                    break;
+                case 'r':
+                case 'R':
+                    if (canAddMore) handleKeyPress('r');
+                    break;
+                default:
+                    // Ignore other keys
+                    break;
+            }
+        };
 
-            document.addEventListener('focus', handleFocus, true);
+        // Add event listener for physical keyboard input
+        document.addEventListener('keydown', handleKeyDown);
 
-            return () => {
-                document.removeEventListener('focus', handleFocus, true);
-            };
-        }
-    }, [open]);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [
+        open,
+        inputValue,
+        onKeyboardInput,
+        onEnterPressed,
+        onClose,
+        canAddMore,
+    ]);
 
     // Prevent losing focus when clicking on the keyboard
     useEffect(() => {
@@ -88,12 +124,7 @@ export const HeightKeyboard: React.FC<HeightKeyboardProps> = ({
                 keyboardContainerRef.current &&
                 !keyboardContainerRef.current.contains(event.target as Node)
             ) {
-                setOpen(false);
-
-                // Call onClose when keyboard is closed
-                if (onClose) {
-                    onClose();
-                }
+                onClose(); // Close the keyboard if clicked outside
             }
         };
 
@@ -104,19 +135,13 @@ export const HeightKeyboard: React.FC<HeightKeyboardProps> = ({
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [open, setOpen, onClose]);
+    }, [open, onClose]);
 
+    // Handle NEXT button press with clearer execution flow
     const handleKeyPress = (value: string) => {
-        // Ensure the last focused element stays focused
-        if (
-            lastFocusedElement &&
-            document.activeElement !== lastFocusedElement
-        ) {
-            lastFocusedElement.focus();
-        }
-
         if (value === 'NEXT') {
-            // Call the onEnterPressed callback if provided
+            // Call the onEnterPressed callback and then let the parent component
+            // handle all subsequent navigation logic
             if (onEnterPressed) {
                 onEnterPressed();
             }
@@ -148,7 +173,7 @@ export const HeightKeyboard: React.FC<HeightKeyboardProps> = ({
             anchor={'bottom'}
             variant="persistent"
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={onClose}
             SlideProps={{
                 onMouseDown: (e) => {
                     // Prevent input blur when clicking on the drawer

@@ -8,53 +8,86 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Button, Drawer, Grid } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface DistanceKeyboardProps {
     open: boolean;
-    setOpen: (open: boolean) => void;
     inputValue: string;
     onKeyboardInput: (value: string) => void;
-    onEnterPressed?: () => void; // Added callback for Enter key
-    onClose?: () => void; // Add callback for when keyboard is closed
+    onEnterPressed: () => void;
+    onClose: () => void;
 }
 
 export const DistanceKeyboard: React.FC<DistanceKeyboardProps> = ({
     open,
-    setOpen,
     inputValue,
     onKeyboardInput,
     onEnterPressed,
     onClose,
 }) => {
     const keyboardContainerRef = useRef<HTMLDivElement>(null);
-    const [lastFocusedElement, setLastFocusedElement] =
-        useState<HTMLElement | null>(null);
 
-    // Track the last focused element
+    // Capture physical keyboard events when the virtual keyboard is open
     useEffect(() => {
-        if (open) {
-            // Store the currently focused element when the keyboard opens
-            const activeElement = document.activeElement as HTMLElement;
-            if (activeElement && activeElement.tagName === 'INPUT') {
-                setLastFocusedElement(activeElement);
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Only process keyboard events when the keyboard is open
+            if (!open) return;
+
+            // Prevent default behavior for these keys to avoid scrolling or other browser actions
+            if (
+                e.key === 'Enter' ||
+                e.key === 'Backspace' ||
+                e.key.match(/^[0-9.]$/) ||
+                e.key === 'x' ||
+                e.key === 'X' ||
+                e.key === '-' ||
+                e.key === 'r' ||
+                e.key === 'R'
+            ) {
+                e.preventDefault();
             }
 
-            // Add focus/blur event listeners to track focused elements
-            const handleFocus = (e: FocusEvent) => {
-                const target = e.target as HTMLElement;
-                if (target.tagName === 'INPUT') {
-                    setLastFocusedElement(target);
-                }
-            };
+            // Map physical keyboard input to virtual keyboard actions
+            switch (e.key) {
+                case 'Enter':
+                    handleKeyPress('ENTER');
+                    break;
+                case 'Backspace':
+                    handleKeyPress('BKSP');
+                    break;
+                case 'x':
+                case 'X':
+                    handleKeyPress('X');
+                    break;
+                case '-':
+                    handleKeyPress('-');
+                    break;
+                case 'r':
+                case 'R':
+                    handleKeyPress('r');
+                    break;
+                case '.':
+                case ',': // Allow comma as decimal separator too
+                    handleKeyPress('.');
+                    break;
+                default:
+                    // Handle numeric keys
+                    if (e.key.match(/^[0-9]$/)) {
+                        handleKeyPress(e.key);
+                    }
+                    break;
+            }
+        };
 
-            document.addEventListener('focus', handleFocus, true);
-
-            return () => {
-                document.removeEventListener('focus', handleFocus, true);
-            };
+        if (open) {
+            // Add global keyboard event listener
+            document.addEventListener('keydown', handleKeyDown);
         }
-    }, [open]);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [open, inputValue, onKeyboardInput, onEnterPressed, onClose]);
 
     // Prevent losing focus when clicking on the keyboard
     useEffect(() => {
@@ -79,12 +112,8 @@ export const DistanceKeyboard: React.FC<DistanceKeyboardProps> = ({
                 keyboardContainerRef.current &&
                 !keyboardContainerRef.current.contains(event.target as Node)
             ) {
-                setOpen(false);
-
                 // Call onClose when keyboard is closed
-                if (onClose) {
-                    onClose();
-                }
+                onClose();
             }
         };
 
@@ -95,42 +124,12 @@ export const DistanceKeyboard: React.FC<DistanceKeyboardProps> = ({
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [open, setOpen, onClose]);
+    }, [open, onClose]);
 
     const handleKeyPress = (value: string) => {
-        // Ensure the last focused element stays focused
-        if (
-            lastFocusedElement &&
-            document.activeElement !== lastFocusedElement
-        ) {
-            lastFocusedElement.focus();
-        }
-
         if (value === 'ENTER') {
-            // Simulate Enter key press
-            const activeElement =
-                lastFocusedElement || (document.activeElement as HTMLElement);
-            if (activeElement && activeElement.tagName === 'INPUT') {
-                const enterEvent = new KeyboardEvent('keydown', {
-                    key: 'Enter',
-                    code: 'Enter',
-                    keyCode: 13,
-                    which: 13,
-                    bubbles: true,
-                    cancelable: true,
-                });
-                activeElement.dispatchEvent(enterEvent);
-            }
-
-            // Call onClose to trigger save
-            if (onClose) {
-                onClose();
-            }
-
-            // Call the onEnterPressed callback if provided
-            if (onEnterPressed) {
-                onEnterPressed();
-            }
+            // Call the onEnterPressed callback
+            onEnterPressed();
         } else if (value === 'BKSP') {
             let correctedValue = inputValue;
             switch (parseFloat(correctedValue)) {
@@ -151,7 +150,7 @@ export const DistanceKeyboard: React.FC<DistanceKeyboardProps> = ({
             const newValue = correctedValue.slice(0, -1);
             onKeyboardInput(newValue);
         } else if (value === 'X' || value === '-' || value === 'r') {
-            // For special characters, replace the entire inpu
+            // For special characters, replace the entire input
             onKeyboardInput(value);
         } else {
             // Regular key press - append the character
@@ -165,7 +164,7 @@ export const DistanceKeyboard: React.FC<DistanceKeyboardProps> = ({
             anchor={'bottom'}
             variant="persistent"
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={onClose}
             SlideProps={{
                 onMouseDown: (e) => {
                     // Prevent input blur when clicking on the drawer
