@@ -1,6 +1,6 @@
 import { resultsAtom } from '@/GlobalsStates';
 import { EventType, Result } from '@competition-manager/schemas';
-import { sortPerf } from '@competition-manager/utils';
+import { sortResult } from '@competition-manager/utils';
 import { Box, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
@@ -37,11 +37,7 @@ export const Results = ({ eventId, eventType }: ResultsProps) => {
             if (a.finalOrder && b.finalOrder) {
                 return a.finalOrder - b.finalOrder;
             }
-            return sortPerf(
-                a.value ?? -1,
-                b.value ?? -1,
-                a.competitionEvent.event.type
-            );
+            return sortResult(a, b);
         });
 
     if (results.length === 0) {
