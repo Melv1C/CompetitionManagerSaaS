@@ -1,4 +1,3 @@
-import { useDeviceSize } from '@/hooks';
 import { Box } from '@mui/material';
 import { ParticipantsSelector } from '../components/ParticipantsSelector';
 import { AddHeightForm } from './AddHeightForm';
@@ -13,11 +12,6 @@ import {
 } from './utils';
 
 export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
-    // Add device detection using the useDeviceSize hook
-    const { isMobile, isTablet } = useDeviceSize();
-    // Consider both mobile and tablet as mobile devices
-    const isMobileDevice = isMobile || isTablet;
-
     // Get results and heights state
     const {
         results,
@@ -37,8 +31,8 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
     const {
         handleInputFocus,
         handleInputChange,
-        handleKeyboardClose,
         handleEnterPressed,
+        handleKeyboardClose,
     } = useInputHandling(
         results,
         heights,
@@ -65,8 +59,6 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
                 results={results}
                 handleInputFocus={handleInputFocus}
                 currentInput={currentInput}
-                handleInputChange={handleInputChange}
-                isMobileDevice={isMobileDevice}
                 isHeightDisabled={(resultId, heightIndex) =>
                     isHeightDisabled(resultId, heightIndex, heights, results)
                 }
@@ -76,12 +68,10 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
                 hasSucceededHeight={(resultId, heightValue) =>
                     hasSucceededHeight(resultId, heightValue, results)
                 }
-                onEnterPressed={handleEnterPressed}
             />
 
             <HeightKeyboard
                 open={showVirtualKeyboard}
-                setOpen={setShowVirtualKeyboard}
                 inputValue={
                     results
                         .find((r) => r.id === currentInput.resultId)

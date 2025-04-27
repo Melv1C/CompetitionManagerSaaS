@@ -1,5 +1,9 @@
 import { EventType } from '@competition-manager/schemas';
-import { formatPerf, formatResult } from '@competition-manager/utils';
+import {
+    formatPerf,
+    formatResult,
+    sortResult,
+} from '@competition-manager/utils';
 import {
     Paper,
     Table,
@@ -9,6 +13,7 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { InputResultHeight } from './InputResultHeight';
 import { HeightsTableProps } from './types';
@@ -18,12 +23,34 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
     results,
     handleInputFocus,
     currentInput,
-    handleInputChange,
-    isMobileDevice,
     isHeightDisabled,
-    onEnterPressed,
 }) => {
     const { t } = useTranslation();
+
+    // Use useMemo to avoid recalculations on every render
+    const places = useMemo(() => {
+        const resultPlaces = new Map();
+
+        // Only calculate places for results that have a valid value
+        const validResults = results.filter(
+            (result) =>
+                result.value !== null &&
+                result.value !== undefined
+        );
+
+        validResults.forEach((result) => {
+            // Count results that are better than the current one
+            const betterResults = validResults.filter(
+                (other) => sortResult(other, result) < 0
+            );
+
+            // Place is 1 + number of better results
+            const place = betterResults.length + 1;
+            resultPlaces.set(result.id, place);
+        });
+
+        return resultPlaces;
+    }, [results]); // Only recalculate when results change
 
     return (
         <TableContainer component={Paper}>
@@ -57,8 +84,6 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
                 </TableHead>
                 <TableBody>
                     {results.map((result) => {
-                        // Calculate current place (placeholder for now)
-                        const currentPlace = 0; // TODO: Implement current place calculation
 
                         return (
                             <TableRow key={result.id}>
@@ -98,10 +123,6 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
                                                 result.id,
                                                 heightIndex
                                             )}
-                                            onInputChange={handleInputChange}
-                                            isMobileDevice={isMobileDevice}
-                                            onInputBlur={() => {}}
-                                            onEnterKeyPress={onEnterPressed}
                                         />
                                     </TableCell>
                                 ))}
@@ -110,7 +131,7 @@ export const HeightsTable: React.FC<HeightsTableProps> = ({
                                     align="center"
                                     sx={{ width: '30px' }}
                                 >
-                                    {currentPlace}
+                                    {places.get(result.id) ?? '-'}
                                 </TableCell>
                                 <TableCell
                                     align="center"
