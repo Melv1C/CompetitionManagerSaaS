@@ -108,7 +108,7 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
 
     useEffect(() => {
         setResults(
-            eventResults.sort((a, b) => a.initialOrder - b.initialOrder)
+            eventResults.sort((a, b) => a.tempOrder - b.tempOrder)
         );
     }, [eventResults]);
 
