@@ -1,43 +1,46 @@
 import { upsertResults } from '@/api';
-import { Bib } from '@/Components';
 import { adminInscriptionsAtom, competitionAtom } from '@/GlobalsStates';
-import { useDeviceSize } from '@/hooks/useDeviceSize';
 import {
     Bib as BibType,
     CompetitionEvent,
     CreateResult$,
     Id,
+    Inscription,
     InscriptionStatus,
     License,
 } from '@competition-manager/schemas';
+import { sortPerf } from '@competition-manager/utils';
 import {
-    faCheckCircle,
-    faExclamationTriangle,
-    faSearch,
-    faUserPlus,
-} from '@fortawesome/free-solid-svg-icons';
+    closestCenter,
+    DndContext,
+    DragEndEvent,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { faCheckCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     Alert,
     Box,
     Button,
     Card,
-    Checkbox,
     Divider,
-    InputAdornment,
     List,
     ListItem,
-    ListItemAvatar,
-    ListItemButton,
     ListItemText,
-    Paper,
-    TextField,
     Typography,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { SortableInscriptionItem } from './SortableInscriptionItem';
 
 interface ParticipantsSelectorProps {
     event: CompetitionEvent;
@@ -49,30 +52,68 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
     onResultsCreated,
 }) => {
     const { t } = useTranslation();
-    const { isMobile } = useDeviceSize();
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
 
     const adminInscriptions = useAtomValue(adminInscriptionsAtom);
     if (!adminInscriptions) throw new Error('No inscriptions found');
 
-    const [searchQuery, setSearchQuery] = useState('');
     const [selectedInscriptions, setSelectedInscriptions] = useState<
         Record<number, boolean>
     >({});
 
+    // State for ordered inscriptions
+    const [orderedInscriptions, setOrderedInscriptions] = useState<
+        Inscription[]
+    >([]);
+
     // Filter inscriptions for the current event and with status ACCEPTED or CONFIRMED
-    const inscriptions = useMemo(
-        () =>
-            adminInscriptions.filter(
-                (inscription) =>
-                    inscription.competitionEvent.id === event.id &&
-                    (inscription.status === InscriptionStatus.ACCEPTED ||
-                        inscription.status === InscriptionStatus.CONFIRMED)
-            ),
-        [adminInscriptions, event.id]
+    const inscriptions = useMemo(() => {
+        const filtered = adminInscriptions.filter(
+            (inscription) =>
+                inscription.competitionEvent.id === event.id &&
+                (inscription.status === InscriptionStatus.ACCEPTED ||
+                    inscription.status === InscriptionStatus.CONFIRMED)
+        );
+
+        // Sort by performance record if available
+        return filtered.sort((a, b) =>
+            sortPerf(
+                a.record?.perf ?? 0,
+                b.record?.perf ?? 0,
+                a.competitionEvent.event.type
+            )
+        );
+    }, [adminInscriptions, event.id]);
+
+    // Update ordered inscriptions when inscriptions change
+    useEffect(() => {
+        setOrderedInscriptions(inscriptions);
+    }, [inscriptions]);
+
+    // Configure sensors for drag and drop
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 10,
+            },
+        })
     );
-    
+
+    // Handle drag end - reorder participants
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (over && active.id !== over.id) {
+            setOrderedInscriptions((items) => {
+                const oldIndex = items.findIndex(
+                    (item) => item.id === active.id
+                );
+                const newIndex = items.findIndex((item) => item.id === over.id);
+                return arrayMove(items, oldIndex, newIndex);
+            });
+        }
+    };
+
     const createEmptyResults = async (
         data: {
             inscriptionId: Id;
@@ -80,6 +121,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
             athleteLicense: License;
         }[]
     ) => {
+        // Map selected inscriptions to create results with proper ordering
         const results = data.map(
             ({ inscriptionId, bib, athleteLicense }, index: number) => {
                 return CreateResult$.parse({
@@ -121,18 +163,6 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
         }
     }, [inscriptions]);
 
-    // Filter inscriptions based on search query
-    const filteredInscriptions = inscriptions.filter((inscription) => {
-        const fullName =
-            `${inscription.athlete.firstName} ${inscription.athlete.lastName}`.toLowerCase();
-        const query = searchQuery.toLowerCase();
-        return (
-            fullName.includes(query) ||
-            inscription.athlete.license?.toLowerCase().includes(query) ||
-            inscription.club?.abbr?.toLowerCase().includes(query)
-        );
-    });
-
     // Toggle selection for an inscription
     const toggleSelection = (id: number) => {
         setSelectedInscriptions((prev) => ({
@@ -152,27 +182,20 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
 
     // Start encoding with selected participants
     const handleStartEncoding = () => {
-        const selectedIds = Object.entries(selectedInscriptions)
-            .filter(([, isSelected]) => isSelected)
-            .map(([id]) => parseInt(id));
+        // Get selected inscriptions in the current order
+        const selectedItems = orderedInscriptions
+            .filter((inscription) => selectedInscriptions[inscription.id])
+            .map((inscription) => ({
+                inscriptionId: inscription.id,
+                bib: inscription.bib,
+                athleteLicense: inscription.athlete.license,
+            }));
 
-        if (selectedIds.length === 0) {
+        if (selectedItems.length === 0) {
             return; // Don't create results if no inscriptions selected
         }
 
-        createEmptyResultsMutation.mutate(
-            selectedIds.map((id) => {
-                const inscription = inscriptions.find((i) => i.id === id);
-                if (!inscription) {
-                    throw new Error(`Inscription with ID ${id} not found`);
-                }
-                return {
-                    inscriptionId: inscription.id,
-                    bib: inscription.bib,
-                    athleteLicense: inscription.athlete.license,
-                };
-            })
-        );
+        createEmptyResultsMutation.mutate(selectedItems);
     };
 
     // If there are no inscriptions for this event
@@ -200,10 +223,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
     }
 
     return (
-        <Paper
-            elevation={1}
-            sx={{ p: { xs: 2, sm: 3 }, maxWidth: '800px', mx: 'auto' }}
-        >
+        <>
             <Box sx={{ mb: 3, textAlign: 'center' }}>
                 <Typography
                     variant="h5"
@@ -225,174 +245,77 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
 
             <Box
                 sx={{
+                    mb: 1,
                     display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    justifyContent: 'space-between',
-                    gap: 2,
-                    mb: 2,
+                    justifyContent: 'flex-start',
+                    gap: 1,
                 }}
             >
-                <TextField
-                    placeholder={t('labels:search')}
+                <Button
                     variant="outlined"
                     size="small"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ flexGrow: 1, maxWidth: { sm: '400px', xs: '100%' } }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <FontAwesomeIcon icon={faSearch} />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Box
-                    sx={{
-                        display: 'flex',
-                        width: '100%',
-                        justifyContent: { xs: 'space-between', sm: 'flex-end' },
-                        gap: 1,
-                    }}
+                    onClick={() => toggleAll(true)}
                 >
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => toggleAll(true)}
-                        sx={{
-                            flex: { xs: 1, sm: 'none' },
-                            py: { xs: 1, sm: 'inherit' },
-                            fontSize: { xs: '0.6rem', sm: 'inherit' },
-                        }}
-                    >
-                        {t('buttons:selectAll')}
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => toggleAll(false)}
-                        sx={{
-                            flex: { xs: 1, sm: 'none' },
-                            py: { xs: 1, sm: 'inherit' },
-                            fontSize: { xs: '0.6rem', sm: 'inherit' },
-                        }}
-                    >
-                        {t('buttons:deselectAll')}
-                    </Button>
-                </Box>
+                    {t('buttons:selectAll')}
+                </Button>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => toggleAll(false)}
+                >
+                    {t('buttons:deselectAll')}
+                </Button>
             </Box>
 
             <Card
                 variant="outlined"
                 sx={{
                     mb: 3,
-                    maxHeight: { xs: '300px', sm: '400px' },
-                    overflow: 'auto',
                 }}
             >
-                <List disablePadding>
-                    {filteredInscriptions.length > 0 ? (
-                        filteredInscriptions.map((inscription, index) => (
-                            <>
-                                {index > 0 && <Divider component="li" />}
-                                <ListItemButton
-                                    key={inscription.id}
-                                    onClick={() =>
-                                        toggleSelection(inscription.id)
-                                    }
-                                    sx={{
-                                        py: { xs: 2, sm: 1 },
-                                        px: { xs: 1, sm: 2 },
-                                        backgroundColor:
-                                            inscription.status ===
-                                            InscriptionStatus.ACCEPTED
-                                                ? 'rgba(211, 47, 47, 0.04)'
-                                                : undefined,
-                                    }}
-                                >
-                                    <Checkbox
-                                        edge="start"
-                                        checked={
-                                            !!selectedInscriptions[
-                                                inscription.id
-                                            ]
-                                        }
-                                        tabIndex={-1}
-                                        disableRipple
-                                    />
-
-                                    {!isMobile && (
-                                        <ListItemAvatar
-                                            sx={{ minWidth: 'auto', m: 1 }}
-                                        >
-                                            <Bib
-                                                value={inscription.bib}
-                                                size="sm"
+                {orderedInscriptions.length > 0 ? (
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={orderedInscriptions.map((item) => item.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <List disablePadding>
+                                {orderedInscriptions.map(
+                                    (inscription, index) => (
+                                        <Box key={inscription.id}>
+                                            {index > 0 && (
+                                                <Divider component="li" />
+                                            )}
+                                            <SortableInscriptionItem
+                                                inscription={inscription}
+                                                isSelected={
+                                                    !!selectedInscriptions[
+                                                        inscription.id
+                                                    ]
+                                                }
+                                                toggleSelection={
+                                                    toggleSelection
+                                                }
                                             />
-                                        </ListItemAvatar>
-                                    )}
-
-                                    <ListItemText
-                                        primary={`${inscription.athlete.firstName} ${inscription.athlete.lastName}`}
-                                        secondary={
-                                            isMobile ? (
-                                                <>
-                                                    {`${inscription.bib} - ${inscription.club?.abbr}`}
-                                                    {inscription.status ===
-                                                        InscriptionStatus.ACCEPTED && (
-                                                        <Box
-                                                            component="span"
-                                                            sx={{
-                                                                ml: 1,
-                                                                color: 'warning.main',
-                                                                display:
-                                                                    'inline-flex',
-                                                                alignItems:
-                                                                    'center',
-                                                            }}
-                                                        >
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faExclamationTriangle
-                                                                }
-                                                                size="xs"
-                                                            />
-                                                        </Box>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                inscription.club?.abbr
-                                            )
-                                        }
-                                        primaryTypographyProps={{
-                                            noWrap: isMobile,
-                                            sx: { fontWeight: 'medium' },
-                                        }}
-                                    />
-
-                                    {!isMobile &&
-                                        inscription.status ===
-                                            InscriptionStatus.ACCEPTED && (
-                                            <Typography
-                                                variant="caption"
-                                                color="warning.main"
-                                                sx={{ ml: 1 }}
-                                            >
-                                                {t('result:notConfirmed')}
-                                            </Typography>
-                                        )}
-                                </ListItemButton>
-                            </>
-                        ))
-                    ) : (
+                                        </Box>
+                                    )
+                                )}
+                            </List>
+                        </SortableContext>
+                    </DndContext>
+                ) : (
+                    <List disablePadding>
                         <ListItem>
                             <ListItemText
                                 primary={t('result:noMatchingInscriptions')}
-                                secondary={t('result:tryDifferentSearch')}
                             />
                         </ListItem>
-                    )}
-                </List>
+                    </List>
+                )}
             </Card>
 
             <Box sx={{ mb: 3 }}>
@@ -438,6 +361,6 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                     </Typography>
                 )}
             </Box>
-        </Paper>
+        </>
     );
 };
