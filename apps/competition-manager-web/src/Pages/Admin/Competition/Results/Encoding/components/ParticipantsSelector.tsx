@@ -23,11 +23,7 @@ import {
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import {
-    faCheckCircle,
-    faSearch,
-    faUserPlus,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     Alert,
@@ -35,11 +31,9 @@ import {
     Button,
     Card,
     Divider,
-    InputAdornment,
     List,
     ListItem,
     ListItemText,
-    TextField,
     Typography,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
@@ -64,7 +58,6 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
     const adminInscriptions = useAtomValue(adminInscriptionsAtom);
     if (!adminInscriptions) throw new Error('No inscriptions found');
 
-    const [searchQuery, setSearchQuery] = useState('');
     const [selectedInscriptions, setSelectedInscriptions] = useState<
         Record<number, boolean>
     >({});
@@ -170,20 +163,6 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
         }
     }, [inscriptions]);
 
-    // Filter inscriptions based on search query
-    const filteredInscriptions = useMemo(() => {
-        return orderedInscriptions.filter((inscription) => {
-            const fullName =
-                `${inscription.athlete.firstName} ${inscription.athlete.lastName}`.toLowerCase();
-            const query = searchQuery.toLowerCase();
-            return (
-                fullName.includes(query) ||
-                inscription.athlete.license?.toLowerCase().includes(query) ||
-                inscription.club?.abbr?.toLowerCase().includes(query)
-            );
-        });
-    }, [orderedInscriptions, searchQuery]);
-
     // Toggle selection for an inscription
     const toggleSelection = (id: number) => {
         setSelectedInscriptions((prev) => ({
@@ -266,61 +245,26 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
 
             <Box
                 sx={{
+                    mb: 1,
                     display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    justifyContent: 'space-between',
-                    gap: 2,
-                    mb: 2,
+                    justifyContent: 'flex-start',
+                    gap: 1,
                 }}
             >
-                <TextField
-                    placeholder={t('labels:search')}
+                <Button
                     variant="outlined"
                     size="small"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ flexGrow: 1, maxWidth: { sm: '400px', xs: '100%' } }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <FontAwesomeIcon icon={faSearch} />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Box
-                    sx={{
-                        display: 'flex',
-                        width: '100%',
-                        justifyContent: { xs: 'space-between', sm: 'flex-end' },
-                        gap: 1,
-                    }}
+                    onClick={() => toggleAll(true)}
                 >
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => toggleAll(true)}
-                        sx={{
-                            flex: { xs: 1, sm: 'none' },
-                            py: { xs: 1, sm: 'inherit' },
-                            fontSize: { xs: '0.6rem', sm: 'inherit' },
-                        }}
-                    >
-                        {t('buttons:selectAll')}
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={() => toggleAll(false)}
-                        sx={{
-                            flex: { xs: 1, sm: 'none' },
-                            py: { xs: 1, sm: 'inherit' },
-                            fontSize: { xs: '0.6rem', sm: 'inherit' },
-                        }}
-                    >
-                        {t('buttons:deselectAll')}
-                    </Button>
-                </Box>
+                    {t('buttons:selectAll')}
+                </Button>
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => toggleAll(false)}
+                >
+                    {t('buttons:deselectAll')}
+                </Button>
             </Box>
 
             <Card
@@ -329,18 +273,18 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                     mb: 3,
                 }}
             >
-                {filteredInscriptions.length > 0 ? (
+                {orderedInscriptions.length > 0 ? (
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
                         onDragEnd={handleDragEnd}
                     >
                         <SortableContext
-                            items={filteredInscriptions.map((item) => item.id)}
+                            items={orderedInscriptions.map((item) => item.id)}
                             strategy={verticalListSortingStrategy}
                         >
                             <List disablePadding>
-                                {filteredInscriptions.map(
+                                {orderedInscriptions.map(
                                     (inscription, index) => (
                                         <Box key={inscription.id}>
                                             {index > 0 && (
@@ -368,7 +312,6 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                         <ListItem>
                             <ListItemText
                                 primary={t('result:noMatchingInscriptions')}
-                                secondary={t('result:tryDifferentSearch')}
                             />
                         </ListItem>
                     </List>
