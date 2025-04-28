@@ -177,7 +177,6 @@ router.post(
                     clubId: athlete.club.id,
                     competitionId: competition.id,
                     inscriptionId: inscription?.id || null,
-                    initialOrder: rest.tempOrder,
                 };
                 const result = await prisma.result.upsert({
                     where: {
