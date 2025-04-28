@@ -235,12 +235,7 @@ export const Encoding = () => {
                             value={activeTab}
                             index={index}
                         >
-                            <Paper
-                                elevation={0}
-                                sx={{ p: 2, bgcolor: 'background.default' }}
-                            >
-                                {renderEncodingComponent(event)}
-                            </Paper>
+                            {renderEncodingComponent(event)}
                         </TabPanel>
                     ))
                 )}
