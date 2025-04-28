@@ -60,9 +60,6 @@ export const SortableInscriptionItem: React.FC<
                             : undefined,
                     display: 'flex',
                     alignItems: 'center',
-                    '&:hover .drag-handle': {
-                        opacity: 1,
-                    },
                 }}
             >
                 <Box
@@ -70,7 +67,6 @@ export const SortableInscriptionItem: React.FC<
                     {...attributes}
                     {...listeners}
                     sx={{
-                        opacity: isSelected ? 0.7 : 0.3,
                         cursor: 'grab',
                         color: 'text.secondary',
                         mr: 1,
@@ -83,7 +79,7 @@ export const SortableInscriptionItem: React.FC<
                         padding: 0.5,
                     }}
                 >
-                    <FontAwesomeIcon icon={faGripLines} />
+                    <FontAwesomeIcon icon={faGripLines} style={{ color: 'inherit' }} />
                 </Box>
 
                 <Checkbox
