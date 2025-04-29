@@ -91,20 +91,13 @@ export const Inscriptions = () => {
         ].join(',');
 
         const rows = inscriptions.map((inscription) => {
-            const record = inscription.record?.perf
-                ? formatPerf(
-                      inscription.record.perf,
-                      inscription.competitionEvent.event.type
-                  )
-                : '-';
-
             return [
                 inscription.athlete.firstName,
                 inscription.athlete.lastName,
                 inscription.bib,
                 inscription.competitionEvent.name,
-                record,
-            ].join(',');
+                inscription.record?.perf,
+            ].join(';');
         });
 
         return [headers, ...rows].join('\n');
@@ -121,7 +114,17 @@ export const Inscriptions = () => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.setAttribute('href', url);
-        link.setAttribute('download', `${competition.name}-inscriptions.csv`);
+        link.setAttribute(
+            'download',
+            `${competition.name
+                .normalize('NFD')           // Remove accents
+                .replace(/[\s;]+/g, '')     // Remove spaces and semicolons
+            }_${
+                competition.date
+                    ? new Date(competition.date).toISOString().split('T')[0]
+                    : ''
+            }.csv`
+        );
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
