@@ -32,7 +32,7 @@ export const sendEmailInscription = async (
                 (e) => e.eid == inscription.competitionEventEid
             );
             const eventSchedule = event?.schedule
-                ? new Date(event.schedule).toLocaleTimeString('fr-be', {
+                ? event.schedule.toLocaleTimeString('fr', {
                       hour: '2-digit',
                       minute: '2-digit',
                   })
