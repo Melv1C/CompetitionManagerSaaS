@@ -4,7 +4,6 @@ import {
     CreateInscription,
     Email,
     EmailData$,
-    EventType,
 } from '@competition-manager/schemas';
 import { formatPerf } from '@competition-manager/utils';
 import { TFunction } from 'i18next';
@@ -41,16 +40,16 @@ export const sendEmailInscription = async (
             htmlTableRow += `
                 <tr>
                     <td>${eventSchedule}</td>
-                    <td>${event?.name}</td>
+                    <td>${event.name}</td>
                     <td>${
                         inscription.record?.perf
                             ? formatPerf(
                                   inscription.record.perf,
-                                  event?.event.type || EventType.TIME
+                                  event.event.type
                               )
                             : '-'
                     }</td>
-                    ${totalCost == 0 ? '' : `<td>${event?.cost}€</td>`}
+                    ${totalCost == 0 ? '' : `<td>${event.cost}€</td>`}
                 </tr>`;
         }
         tables.push(`
