@@ -21,8 +21,9 @@ export const createLogger = (service: SERVICE) => {
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
-                        second: '2-digit'
-                    }
+                        second: '2-digit',
+                        timeZone: 'Europe/Brussels',
+                    },
                 );
                 return `${dateTime} ${service} [${level.toUpperCase()}]: ${message}${Object.keys(meta).length > 0 ? `\n${JSON.stringify(meta, null, 2)}` : ''}`
             })
@@ -43,7 +44,8 @@ export const createLogger = (service: SERVICE) => {
                                 day: '2-digit',
                                 hour: '2-digit',
                                 minute: '2-digit',
-                                second: '2-digit'
+                                second: '2-digit',
+                                timeZone: 'Europe/Brussels',
                             }
                         );
                         return `${dateTime} ${service} [${level.toUpperCase()}]: ${message}${Object.keys(meta).length > 0 ? `\n${JSON.stringify(meta, null, 2)}` : ''}`

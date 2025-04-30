@@ -31,12 +31,13 @@ export const sendEmailInscription = async (
             const event = events.find(
                 (e) => e.eid == inscription.competitionEventEid
             );
-            const eventSchedule = event?.schedule
-                ? event.schedule.toLocaleTimeString('fr', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                  })
-                : '';
+            if (!event) throw new Error('Event not found in inscription email');
+
+            const eventSchedule = event.schedule.toLocaleTimeString('fr', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Brussels',
+            });
             htmlTableRow += `
                 <tr>
                     <td>${eventSchedule}</td>
