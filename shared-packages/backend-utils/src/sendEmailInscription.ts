@@ -6,10 +6,10 @@ import {
     EmailData$,
     EventType,
 } from '@competition-manager/schemas';
+import { formatPerf } from '@competition-manager/utils';
 import { TFunction } from 'i18next';
 import { findAthleteWithLicense } from './findAthleteWithLicense';
 import { sendEmail } from './sendEmail';
-import { formatPerf } from '@competition-manager/utils';
 
 export const sendEmailInscription = async (
     inscriptionDatas: CreateInscription[],
@@ -41,7 +41,14 @@ export const sendEmailInscription = async (
                 <tr>
                     <td>${eventSchedule}</td>
                     <td>${event?.name}</td>
-                    <td>${inscription.record?.perf ? formatPerf(inscription.record.perf, event?.event.type || EventType.TIME) : '-'}</td>
+                    <td>${
+                        inscription.record?.perf
+                            ? formatPerf(
+                                  inscription.record.perf,
+                                  event?.event.type || EventType.TIME
+                              )
+                            : '-'
+                    }</td>
                     ${totalCost == 0 ? '' : `<td>${event?.cost}€</td>`}
                 </tr>`;
         }
