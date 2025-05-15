@@ -3,11 +3,12 @@ import { adminInscriptionsAtom, competitionAtom } from '@/GlobalsStates';
 import {
     Bib as BibType,
     CompetitionEvent,
-    CreateResult$,
     Id,
     Inscription,
     InscriptionStatus,
     License,
+    UpsertResult$,
+    UpsertResultType,
 } from '@competition-manager/schemas';
 import { sortPerf } from '@competition-manager/utils';
 import {
@@ -124,8 +125,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
         // Map selected inscriptions to create results with proper ordering
         const results = data.map(
             ({ inscriptionId, bib, athleteLicense }, index: number) => {
-                return CreateResult$.parse({
-                    competitionEid: competition.eid,
+                return UpsertResult$.parse({
                     competitionEventEid: event.eid,
                     inscriptionId: inscriptionId,
                     bib: bib,
@@ -136,7 +136,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
             }
         );
 
-        return upsertResults(results);
+        return upsertResults(competition.eid, UpsertResultType.LIVE, results);
     };
 
     // Create empty results mutation

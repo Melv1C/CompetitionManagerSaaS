@@ -6,7 +6,7 @@
  */
 import { upsertResults } from '@/api';
 import { competitionAtom } from '@/GlobalsStates';
-import { CreateResult$ } from '@competition-manager/schemas';
+import { UpsertResult$, UpsertResultType } from '@competition-manager/schemas';
 import {
     Box,
     Button,
@@ -39,7 +39,10 @@ type FileUploadDialogProps = {
 /**
  * Dialog component for uploading and processing competition result files
  */
-export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClose }) => {
+export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
+    open,
+    onClose,
+}) => {
     const { t } = useTranslation();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -69,7 +72,11 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
             if (!selectedFile) {
                 throw new Error('No file selected');
             }
-            return await upsertResults(CreateResult$.array().parse(results));
+            return await upsertResults(
+                competition.eid,
+                UpsertResultType.FILE,
+                UpsertResult$.array().parse(results)
+            );
         },
         onSuccess: () => {
             // Reset form state after successful upload

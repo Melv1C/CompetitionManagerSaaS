@@ -10,8 +10,8 @@ import {
     Athlete$,
     Boolean$,
     CompetitionEvent$,
-    CreateResult$,
     Gender,
+    UpsertResult$,
 } from '@competition-manager/schemas';
 import { z } from 'zod';
 
@@ -103,9 +103,9 @@ export type XmlData = z.infer<typeof XmlData$>;
 
 /**
  * Schema for extended result type that includes display-oriented information
- * Extends the CreateResult schema with additional fields for UI display purposes
+ * Extends the UpsertResult schema with additional fields for UI display purposes
  */
-export const DisplayResult$ = CreateResult$.extend({
+export const DisplayResult$ = UpsertResult$.extend({
     /** Athlete's first name */
     firstName: Athlete$.shape.firstName,
     /** Athlete's last name */
