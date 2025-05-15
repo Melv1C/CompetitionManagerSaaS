@@ -11,14 +11,14 @@
  */
 
 import { Router } from 'express';
-import { router as createResultRouter } from './createResult';
+import { router as upsertResultsRouter } from './upsertResults';
 import { router as getCompetitionResultsRouter } from './getCompetitionResults';
 import { router as getResultsSinceRouter } from './getResultsSince';
 
 const router = Router();
 
 // Mount result route handlers
-router.use('/', createResultRouter);
+router.use('/', upsertResultsRouter);
 router.use('/', getCompetitionResultsRouter);
 router.use('/', getResultsSinceRouter);
 

@@ -21,25 +21,33 @@ import {
     athleteInclude,
     AttemptValue,
     competitionEventInclude,
-    CreateResult$,
+    UpsertResult$,
     EventType,
     Result$,
     resultInclude,
     Role,
+    UpsertResultType,
 } from '@competition-manager/schemas';
 import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
+import { z } from 'zod';
 import { logger } from '../logger';
 
 export const router = Router();
 
+const Query$ = z.object({
+    type: z.nativeEnum(UpsertResultType).default(UpsertResultType.FILE),
+});
+
 router.post(
     '/',
-    parseRequest(Key.Body, CreateResult$.array()),
+    parseRequest(Key.Query, Query$),
+    parseRequest(Key.Body, UpsertResult$.array()),
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
         try {
-            const results = CreateResult$.array().parse(req.body);
+            const { type } = Query$.parse(req.query);
+            const results = UpsertResult$.array().parse(req.body);
             const upsertedResults = [];
             for (const resultInfo of results) {
                 const {
@@ -178,6 +186,7 @@ router.post(
                     competitionId: competition.id,
                     inscriptionId: inscription?.id || null,
                 };
+
                 const result = await prisma.result.upsert({
                     where: {
                         competitionEventId_athleteId: {
