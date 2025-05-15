@@ -2,6 +2,7 @@ import { Icons, MaxWidth } from '@/Components';
 import { useCompetition, useFetchCompetitionData } from '@/hooks';
 import { Alert, Box, Divider, IconButton, Typography } from '@mui/material';
 import { useAtomValue } from 'jotai';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     adminInscriptionsAtom,
@@ -17,6 +18,11 @@ export const Confirmations = () => {
     const adminInscriptions = useAtomValue(adminInscriptionsAtom);
     if (!competition) throw new Error('No competition found');
     if (!adminInscriptions) throw new Error('No inscriptions found');
+
+    const inscriptions = useMemo(
+        () => adminInscriptions.filter((inscription) => !inscription.isDeleted),
+        [adminInscriptions]
+    );
 
     const { refresh } = useFetchCompetitionData(competition.eid, true);
 
@@ -67,7 +73,7 @@ export const Confirmations = () => {
 
             {/* Confirmation Zone */}
             <Confirmation
-                inscriptions={adminInscriptions}
+                inscriptions={inscriptions}
                 competitionDate={competition.date}
                 competitionEid={competition.eid}
             />
@@ -75,7 +81,7 @@ export const Confirmations = () => {
             <Divider />
 
             {/* Event expand list */}
-            <Events inscriptions={adminInscriptions} />
+            <Events inscriptions={inscriptions} />
         </MaxWidth>
     );
 };
