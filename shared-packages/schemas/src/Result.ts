@@ -89,11 +89,10 @@ export const UpsertResult$ = Result$.omit({
     // Fields that will be auto-generated
     value: true,
     wind: true,
-    points: true,
+    // points: true, // TODO: Uncomment when points calculation is implemented
     createdAt: true,
     updatedAt: true,
 }).extend({
-    competitionEid: Eid$,
     competitionEventEid: Eid$,
     athleteLicense: License$,
     details: CreateResultDetail$.array().default([]),

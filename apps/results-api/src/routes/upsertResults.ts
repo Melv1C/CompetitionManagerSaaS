@@ -20,14 +20,15 @@ import {
     Athlete$,
     athleteInclude,
     AttemptValue,
+    CompetitionEvent$,
     competitionEventInclude,
-    UpsertResult$,
+    Eid$,
     EventType,
     Result$,
     resultInclude,
     Role,
+    UpsertResult$,
     UpsertResultType,
-    Eid$,
 } from '@competition-manager/schemas';
 import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
@@ -80,27 +81,21 @@ router.post(
                 return;
             }
 
-            // Check if all results belong to the same competition
-            const allResultsSameCompetition = results.every((result) => {
-                return result.competitionEid === competitionEid;
-            });
-
-            if (!allResultsSameCompetition) {
-                res.status(400).send(req.t('errors.resultsNotBelongToCompetition'));
-                return;
-            }
-
             const upsertedResults = [];
             for (const resultInfo of results) {
                 const {
                     competitionEventEid,
                     athleteLicense,
                     details,
+                    points,
+                    finalOrder,
                     ...rest
                 } = resultInfo;
 
-                const competitionEvent = competition.events.find(
-                    (event) => event.eid === competitionEventEid
+                const competitionEvent = CompetitionEvent$.parse(
+                    competition.events.find(
+                        (event) => event.eid === competitionEventEid
+                    )
                 );
 
                 if (!competitionEvent) {
@@ -114,11 +109,12 @@ router.post(
                     athleteLicense,
                     Athlete$.array().parse(competition.oneDayAthletes)
                 );
+
                 if (!athlete) {
                     res.status(404).send(req.t('errors.athleteNotFound'));
                     return;
                 }
-                
+
                 const inscription = await prisma.inscription.findFirst({
                     where: {
                         athleteId: athlete.id,
@@ -129,7 +125,7 @@ router.post(
 
                 // Filter and process details based on event type
                 const validDetails = details.filter((detail) => {
-                    const eventType = competitionEvent.event.type as EventType;
+                    const eventType = competitionEvent.event.type;
 
                     // For Distance events
                     if (eventType === EventType.DISTANCE) {
@@ -149,7 +145,7 @@ router.post(
 
                 // First map to update values based on event types
                 const updatedDetails = validDetails.map((detail) => {
-                    const eventType = competitionEvent.event.type as EventType;
+                    const eventType = competitionEvent.event.type;
                     let updatedDetail = { ...detail };
 
                     // Process based on event type
@@ -189,8 +185,27 @@ router.post(
                 // Find the best detail for result-level values
                 const bestDetail = processedDetails.find((d) => d.isBest);
 
+                // Check if result already exists
+                const existingResult = await prisma.result.findUnique({
+                    where: {
+                        competitionEventId_athleteId: {
+                            competitionEventId: competitionEvent.id,
+                            athleteId: athlete.id,
+                        },
+                    },
+                    include: resultInclude,
+                });
+
                 const resultData = {
                     ...rest,
+                    points:
+                        type === UpsertResultType.FILE
+                            ? points
+                            : existingResult?.points || null,
+                    finalOrder:
+                        type === UpsertResultType.FILE
+                            ? finalOrder
+                            : existingResult?.finalOrder || null,
                     value: bestDetail?.value,
                     wind: bestDetail?.wind,
                     competitionEventId: competitionEvent.id,
@@ -199,6 +214,27 @@ router.post(
                     competitionId: competition.id,
                     inscriptionId: inscription?.id || null,
                 };
+
+                // Determine if we should update details based on type and comparison
+                let shouldUpdateDetails = false;
+                if (type === UpsertResultType.FILE) {
+                    // For FILE type, update if:
+                    // 1. No existing result, or
+                    // 2. Existing result value differs from the new best value, or
+                    // 3. We have more processed details than existing details
+                    if (
+                        !existingResult ||
+                        existingResult.value !== bestDetail?.value ||
+                        (existingResult.details &&
+                            processedDetails.length >=
+                                existingResult.details.length)
+                    ) {
+                        shouldUpdateDetails = true;
+                    }
+                } else {
+                    // For other types, always update details
+                    shouldUpdateDetails = true;
+                }
 
                 const result = await prisma.result.upsert({
                     where: {
@@ -215,10 +251,12 @@ router.post(
                     },
                     update: {
                         ...resultData,
-                        details: {
-                            deleteMany: {},
-                            create: processedDetails,
-                        },
+                        details: shouldUpdateDetails
+                            ? {
+                                  deleteMany: {},
+                                  create: processedDetails,
+                              }
+                            : undefined,
                     },
                     include: resultInclude,
                 });
