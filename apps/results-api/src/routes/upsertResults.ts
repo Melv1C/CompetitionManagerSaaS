@@ -27,6 +27,7 @@ import {
     resultInclude,
     Role,
     UpsertResultType,
+    Eid$,
 } from '@competition-manager/schemas';
 import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
@@ -36,6 +37,7 @@ import { logger } from '../logger';
 export const router = Router();
 
 const Query$ = z.object({
+    competitionEid: Eid$,
     type: z.nativeEnum(UpsertResultType).default(UpsertResultType.FILE),
 });
 
@@ -46,33 +48,56 @@ router.post(
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
         try {
-            const { type } = Query$.parse(req.query);
+            const { type, competitionEid } = Query$.parse(req.query);
             const results = UpsertResult$.array().parse(req.body);
+
+            const competition = await prisma.competition.findUnique({
+                where: { eid: competitionEid },
+                include: {
+                    admins: true,
+                    events: { include: competitionEventInclude },
+                    oneDayAthletes: {
+                        include: athleteInclude,
+                    },
+                },
+            });
+
+            if (!competition) {
+                res.status(404).send(req.t('errors.competitionNotFound'));
+                return;
+            }
+
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.RESULTS,
+                    req.user!.id,
+                    Admin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
+                return;
+            }
+
+            // Check if all results belong to the same competition
+            const allResultsSameCompetition = results.every((result) => {
+                return result.competitionEid === competitionEid;
+            });
+
+            if (!allResultsSameCompetition) {
+                res.status(400).send(req.t('errors.resultsNotBelongToCompetition'));
+                return;
+            }
+
             const upsertedResults = [];
             for (const resultInfo of results) {
                 const {
-                    competitionEid,
                     competitionEventEid,
                     athleteLicense,
                     details,
                     ...rest
                 } = resultInfo;
-
-                const competition = await prisma.competition.findUnique({
-                    where: { eid: competitionEid },
-                    include: {
-                        admins: true,
-                        events: { include: competitionEventInclude },
-                        oneDayAthletes: {
-                            include: athleteInclude,
-                        },
-                    },
-                });
-
-                if (!competition) {
-                    res.status(404).send(req.t('errors.competitionNotFound'));
-                    return;
-                }
 
                 const competitionEvent = competition.events.find(
                     (event) => event.eid === competitionEventEid
@@ -93,19 +118,7 @@ router.post(
                     res.status(404).send(req.t('errors.athleteNotFound'));
                     return;
                 }
-
-                if (
-                    !isAuthorized(req.user!, Role.SUPERADMIN) &&
-                    !checkAdminRole(
-                        Access.RESULTS,
-                        req.user!.id,
-                        Admin$.array().parse(competition.admins),
-                        res,
-                        req.t
-                    )
-                ) {
-                    return;
-                }
+                
                 const inscription = await prisma.inscription.findFirst({
                     where: {
                         athleteId: athlete.id,
