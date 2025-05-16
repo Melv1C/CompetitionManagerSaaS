@@ -22,9 +22,13 @@ import {
     AttemptValue,
     CompetitionEvent$,
     competitionEventInclude,
+    CreateResultDetail,
     Eid$,
     EventType,
     Result$,
+    ResultCode,
+    ResultDetail,
+    ResultDetailCode,
     resultInclude,
     Role,
     UpsertResult$,
@@ -34,6 +38,8 @@ import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
 import { z } from 'zod';
 import { logger } from '../logger';
+
+
 
 export const router = Router();
 
@@ -196,6 +202,43 @@ router.post(
                     include: resultInclude,
                 });
 
+                const getResultValue = (bestDetail: CreateResultDetail | undefined) => {
+                    if (!bestDetail) return {
+                        value: null,
+                        wind: null,
+                    }
+                    if (bestDetail.value > 0) {
+                        return {
+                            value: bestDetail.value,
+                            wind: bestDetail.wind,
+                        };
+                    }
+                    switch (bestDetail.value) {
+                        case ResultDetailCode.X:
+                            return {
+                                value: ResultCode.NM,
+                                wind: null,
+                            };
+                        case ResultDetailCode.PASS:
+                            return {
+                                value: null,
+                                wind: null,
+                            };
+                        case ResultDetailCode.R:
+                            return {
+                                value: ResultCode.DNF,
+                                wind: null,
+                            };
+                        default:
+                            return {
+                                value: null,
+                                wind: null,
+                            };
+                    }
+                };
+
+                const { value, wind } = getResultValue(bestDetail);
+
                 const resultData = {
                     ...rest,
                     points:
@@ -206,8 +249,8 @@ router.post(
                         type === UpsertResultType.FILE
                             ? finalOrder
                             : existingResult?.finalOrder || null,
-                    value: bestDetail?.value,
-                    wind: bestDetail?.wind,
+                    value,
+                    wind,
                     competitionEventId: competitionEvent.id,
                     athleteId: athlete.id,
                     clubId: athlete.club.id,
