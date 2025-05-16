@@ -100,6 +100,6 @@ export const UpsertResult$ = Result$.omit({
 export type UpsertResult = z.infer<typeof UpsertResult$>;
 
 export enum UpsertResultType {
-    LIVE,
-    FILE
+    LIVE = 'LIVE',
+    FILE = 'FILE'
 }
