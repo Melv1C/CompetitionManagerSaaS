@@ -1,4 +1,4 @@
-import { Inscription } from '@competition-manager/schemas';
+import { Inscription, InscriptionStatus } from '@competition-manager/schemas';
 import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,15 +8,78 @@ import {
     AccordionSummary,
     Avatar,
     Box,
+    Chip,
+    Stack,
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import React from 'react';
-import { ShowUsersNumber } from '../../../../Components';
+
+// Component to display status counts
+const StatusCounts: React.FC<{ inscriptions: Inscription[] }> = ({
+    inscriptions,
+}) => {
+    const counts = inscriptions.reduce((acc, inscription) => {
+        acc[inscription.status] = (acc[inscription.status] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    return (
+        <Stack direction="row" spacing={1}>
+            {Object.entries(counts).map(([status, count]) => {
+                let color: 'success' | 'warning' | 'error' | 'default' =
+                    'default';
+
+                switch (status) {
+                    case InscriptionStatus.CONFIRMED:
+                        color = 'success';
+                        break;
+                    case InscriptionStatus.ACCEPTED:
+                        color = 'warning';
+                        break;
+                    case InscriptionStatus.REMOVED:
+                        color = 'error';
+                        break;
+                }
+
+                return (
+                    <Tooltip key={status} title={status}>
+                        <Chip
+                            size="small"
+                            color={color}
+                            label={count}
+                            sx={{ fontWeight: 'bold' }}
+                        />
+                    </Tooltip>
+                );
+            })}
+        </Stack>
+    );
+};
+
+// Component for status display in table cell
+const StatusChip: React.FC<{ status: string }> = ({ status }) => {
+    let color: 'success' | 'warning' | 'error' | 'default' = 'default';
+
+    switch (status) {
+        case InscriptionStatus.CONFIRMED:
+            color = 'success';
+            break;
+        case InscriptionStatus.ACCEPTED:
+            color = 'warning';
+            break;
+        case InscriptionStatus.REMOVED:
+            color = 'error';
+            break;
+    }
+
+    return <Chip size="small" color={color} label={status} />;
+};
 
 type EventsProps = {
     inscriptions: Inscription[];
@@ -36,7 +99,7 @@ export const Events: React.FC<EventsProps> = ({ inscriptions }) => {
     }, {} as Record<string, { event: Inscription['competitionEvent']; inscriptions: Inscription[] }>);
 
     return (
-        <div>
+        <Box>
             {Object.values(groupedInscriptions)
                 .sort(
                     (a, b) =>
@@ -78,7 +141,7 @@ export const Events: React.FC<EventsProps> = ({ inscriptions }) => {
                                     {event.name}
                                 </Typography>
 
-                                <ShowUsersNumber value={inscriptions.length} />
+                                <StatusCounts inscriptions={inscriptions} />
                             </Box>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -121,7 +184,9 @@ export const Events: React.FC<EventsProps> = ({ inscriptions }) => {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {inscription.status}
+                                                <StatusChip
+                                                    status={inscription.status}
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -130,6 +195,6 @@ export const Events: React.FC<EventsProps> = ({ inscriptions }) => {
                         </AccordionDetails>
                     </Accordion>
                 ))}
-        </div>
+        </Box>
     );
 };
