@@ -20,54 +20,82 @@ import {
     Athlete$,
     athleteInclude,
     AttemptValue,
+    CompetitionEvent$,
     competitionEventInclude,
-    CreateResult$,
+    Eid$,
     EventType,
     Result$,
     resultInclude,
     Role,
+    UpsertResult$,
+    UpsertResultType,
 } from '@competition-manager/schemas';
 import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
+import { z } from 'zod';
 import { logger } from '../logger';
 
 export const router = Router();
 
+const Query$ = z.object({
+    competitionEid: Eid$,
+    type: z.nativeEnum(UpsertResultType).default(UpsertResultType.FILE),
+});
+
 router.post(
     '/',
-    parseRequest(Key.Body, CreateResult$.array()),
+    parseRequest(Key.Query, Query$),
+    parseRequest(Key.Body, UpsertResult$.array()),
     checkRole(Role.ADMIN),
     async (req: CustomRequest, res) => {
         try {
-            const results = CreateResult$.array().parse(req.body);
+            const { type, competitionEid } = Query$.parse(req.query);
+            const results = UpsertResult$.array().parse(req.body);
+
+            const competition = await prisma.competition.findUnique({
+                where: { eid: competitionEid },
+                include: {
+                    admins: true,
+                    events: { include: competitionEventInclude },
+                    oneDayAthletes: {
+                        include: athleteInclude,
+                    },
+                },
+            });
+
+            if (!competition) {
+                res.status(404).send(req.t('errors.competitionNotFound'));
+                return;
+            }
+
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.RESULTS,
+                    req.user!.id,
+                    Admin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
+                return;
+            }
+
             const upsertedResults = [];
             for (const resultInfo of results) {
                 const {
-                    competitionEid,
                     competitionEventEid,
                     athleteLicense,
                     details,
+                    points,
+                    finalOrder,
                     ...rest
                 } = resultInfo;
 
-                const competition = await prisma.competition.findUnique({
-                    where: { eid: competitionEid },
-                    include: {
-                        admins: true,
-                        events: { include: competitionEventInclude },
-                        oneDayAthletes: {
-                            include: athleteInclude,
-                        },
-                    },
-                });
-
-                if (!competition) {
-                    res.status(404).send(req.t('errors.competitionNotFound'));
-                    return;
-                }
-
-                const competitionEvent = competition.events.find(
-                    (event) => event.eid === competitionEventEid
+                const competitionEvent = CompetitionEvent$.parse(
+                    competition.events.find(
+                        (event) => event.eid === competitionEventEid
+                    )
                 );
 
                 if (!competitionEvent) {
@@ -81,23 +109,12 @@ router.post(
                     athleteLicense,
                     Athlete$.array().parse(competition.oneDayAthletes)
                 );
+
                 if (!athlete) {
                     res.status(404).send(req.t('errors.athleteNotFound'));
                     return;
                 }
 
-                if (
-                    !isAuthorized(req.user!, Role.SUPERADMIN) &&
-                    !checkAdminRole(
-                        Access.RESULTS,
-                        req.user!.id,
-                        Admin$.array().parse(competition.admins),
-                        res,
-                        req.t
-                    )
-                ) {
-                    return;
-                }
                 const inscription = await prisma.inscription.findFirst({
                     where: {
                         athleteId: athlete.id,
@@ -108,7 +125,7 @@ router.post(
 
                 // Filter and process details based on event type
                 const validDetails = details.filter((detail) => {
-                    const eventType = competitionEvent.event.type as EventType;
+                    const eventType = competitionEvent.event.type;
 
                     // For Distance events
                     if (eventType === EventType.DISTANCE) {
@@ -128,7 +145,7 @@ router.post(
 
                 // First map to update values based on event types
                 const updatedDetails = validDetails.map((detail) => {
-                    const eventType = competitionEvent.event.type as EventType;
+                    const eventType = competitionEvent.event.type;
                     let updatedDetail = { ...detail };
 
                     // Process based on event type
@@ -168,8 +185,27 @@ router.post(
                 // Find the best detail for result-level values
                 const bestDetail = processedDetails.find((d) => d.isBest);
 
+                // Check if result already exists
+                const existingResult = await prisma.result.findUnique({
+                    where: {
+                        competitionEventId_athleteId: {
+                            competitionEventId: competitionEvent.id,
+                            athleteId: athlete.id,
+                        },
+                    },
+                    include: resultInclude,
+                });
+
                 const resultData = {
                     ...rest,
+                    points:
+                        type === UpsertResultType.FILE
+                            ? points
+                            : existingResult?.points || null,
+                    finalOrder:
+                        type === UpsertResultType.FILE
+                            ? finalOrder
+                            : existingResult?.finalOrder || null,
                     value: bestDetail?.value,
                     wind: bestDetail?.wind,
                     competitionEventId: competitionEvent.id,
@@ -178,6 +214,28 @@ router.post(
                     competitionId: competition.id,
                     inscriptionId: inscription?.id || null,
                 };
+
+                // Determine if we should update details based on type and comparison
+                let shouldUpdateDetails = false;
+                if (type === UpsertResultType.FILE) {
+                    // For FILE type, update if:
+                    // 1. No existing result, or
+                    // 2. Existing result value differs from the new best value, or
+                    // 3. We have more processed details than existing details
+                    if (
+                        !existingResult ||
+                        existingResult.value !== bestDetail?.value ||
+                        (existingResult.details &&
+                            processedDetails.length >=
+                                existingResult.details.length)
+                    ) {
+                        shouldUpdateDetails = true;
+                    }
+                } else {
+                    // For other types, always update details
+                    shouldUpdateDetails = true;
+                }
+
                 const result = await prisma.result.upsert({
                     where: {
                         competitionEventId_athleteId: {
@@ -193,10 +251,12 @@ router.post(
                     },
                     update: {
                         ...resultData,
-                        details: {
-                            deleteMany: {},
-                            create: processedDetails,
-                        },
+                        details: shouldUpdateDetails
+                            ? {
+                                  deleteMany: {},
+                                  create: processedDetails,
+                              }
+                            : undefined,
                     },
                     include: resultInclude,
                 });

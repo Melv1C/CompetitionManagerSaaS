@@ -79,7 +79,7 @@ export const resultInclude = {
 };
 
 // Schema for creating a new result
-export const CreateResult$ = Result$.omit({
+export const UpsertResult$ = Result$.omit({
     id: true,
     eid: true,
     competitionEvent: true,
@@ -89,13 +89,17 @@ export const CreateResult$ = Result$.omit({
     // Fields that will be auto-generated
     value: true,
     wind: true,
-    points: true,
+    // points: true, // TODO: Uncomment when points calculation is implemented
     createdAt: true,
     updatedAt: true,
 }).extend({
-    competitionEid: Eid$,
     competitionEventEid: Eid$,
     athleteLicense: License$,
     details: CreateResultDetail$.array().default([]),
 });
-export type CreateResult = z.infer<typeof CreateResult$>;
+export type UpsertResult = z.infer<typeof UpsertResult$>;
+
+export enum UpsertResultType {
+    LIVE,
+    FILE
+}

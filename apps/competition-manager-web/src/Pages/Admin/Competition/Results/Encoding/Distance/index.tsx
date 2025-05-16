@@ -2,11 +2,14 @@ import { upsertResults } from '@/api';
 import { competitionAtom, resultsAtom } from '@/GlobalsStates';
 import {
     CompetitionEvent,
-    CreateResult$,
+    Eid,
     Id,
     Result,
     ResultDetail$,
     ResultDetailCode,
+    UpsertResult,
+    UpsertResult$,
+    UpsertResultType,
 } from '@competition-manager/schemas';
 import { formatResult, sortResult } from '@competition-manager/utils';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -41,7 +44,11 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
     if (!competition) throw new Error('No competition data found');
 
     const upsertResultsMutation = useMutation({
-        mutationFn: upsertResults,
+        mutationFn: (params: {
+            competitionEid: Eid;
+            type: UpsertResultType;
+            results: UpsertResult[];
+        }) => upsertResults(params.competitionEid, params.type, params.results),
         onError: (error) => {
             console.error('Error upserting results:', error);
         },
@@ -107,22 +114,21 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
     };
 
     useEffect(() => {
-        setResults(
-            eventResults.sort((a, b) => a.tempOrder - b.tempOrder)
-        );
+        setResults(eventResults.sort((a, b) => a.tempOrder - b.tempOrder));
     }, [eventResults]);
 
     const sendResult = (result: Result) => {
-        upsertResultsMutation.mutate(
-            CreateResult$.array().parse([
+        upsertResultsMutation.mutate({
+            competitionEid: competition.eid,
+            type: UpsertResultType.LIVE,
+            results: UpsertResult$.array().parse([
                 {
                     ...result,
-                    competitionEid: competition.eid,
                     competitionEventEid: event.eid,
                     athleteLicense: result.athlete.license,
                 },
-            ])
-        );
+            ]),
+        });
     };
 
     // Check if athlete is retired (has 'r' in any previous attempt)

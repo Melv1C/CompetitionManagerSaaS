@@ -2,10 +2,13 @@ import { upsertResults } from '@/api';
 import { competitionAtom, resultsAtom } from '@/GlobalsStates';
 import {
     AttemptValue,
-    CreateResult$,
+    Eid,
     Id,
     Result,
     ResultDetail$,
+    UpsertResult,
+    UpsertResult$,
+    UpsertResultType,
 } from '@competition-manager/schemas';
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
@@ -22,7 +25,11 @@ export const useHeightResults = (eventId: number) => {
     if (!competition) throw new Error('No competition data found');
 
     const upsertResultsMutation = useMutation({
-        mutationFn: upsertResults,
+        mutationFn: (params: {
+            competitionEid: Eid;
+            type: UpsertResultType;
+            results: UpsertResult[];
+        }) => upsertResults(params.competitionEid, params.type, params.results),
         onError: (error) => {
             console.error('Error upserting results:', error);
         },
@@ -80,18 +87,19 @@ export const useHeightResults = (eventId: number) => {
             prev.map((r) => (r.id === result.id ? result : r))
         );
 
-        upsertResultsMutation.mutate(
-            CreateResult$.array().parse([
+        upsertResultsMutation.mutate({
+            competitionEid: competition.eid,
+            type: UpsertResultType.LIVE,
+            results: UpsertResult$.array().parse([
                 {
                     ...result,
-                    competitionEid: competition.eid,
                     competitionEventEid: competition.events.find(
                         (event) => event.id === eventId
                     )?.eid,
                     athleteLicense: result.athlete.license,
                 },
-            ])
-        );
+            ]),
+        });
     };
 
     // Handle adding a new height
@@ -350,7 +358,7 @@ export const useInputHandling = (
     const handleKeyboardClose = () => {
         setShowVirtualKeyboard(false);
         setCurrentInput({ resultId: 0, height: 0 });
-    }   
+    };
 
     // Focus handler for inputs
     const handleInputFocus = (resultId: Id, height: number) => {
@@ -499,7 +507,7 @@ export const useInputHandling = (
             // If no next input, close the keyboard
             handleKeyboardClose();
         }
-    }
+    };
 
     return {
         handleKeyboardClose,
