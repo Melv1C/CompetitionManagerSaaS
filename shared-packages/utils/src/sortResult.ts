@@ -23,7 +23,13 @@ export const sortResult = (result1: Result, result2: Result) => {
             const sortedDetails2 = result2.details.sort((a, b) =>
                 sortPerf(a.value, b.value, EventType.DISTANCE)
             );
-            for (let i = 0; i < sortedDetails1.length; i++) {
+
+            // Compare each detail in order (best attempts first)
+            const minLength = Math.min(
+                sortedDetails1.length,
+                sortedDetails2.length
+            );
+            for (let i = 0; i < minLength; i++) {
                 if (sortedDetails1[i].value !== sortedDetails2[i].value) {
                     return sortPerf(
                         sortedDetails1[i].value,
@@ -32,6 +38,13 @@ export const sortResult = (result1: Result, result2: Result) => {
                     );
                 }
             }
+
+            // If we've gone through all shared positions without finding a difference,
+            // check if one array has more details than the other
+            if (sortedDetails1.length !== sortedDetails2.length) {
+                return sortedDetails2.length - sortedDetails1.length; // More valid attempts is better
+            }
+
             return 0; // All details are equal, so the results are equal
         case EventType.HEIGHT:
             // Compare the number of fails (X) in the last attempt
