@@ -79,7 +79,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
 
         // Sort by performance record if available
         return filtered.sort((a, b) =>
-            sortPerf(
+            -1 * sortPerf(
                 a.record?.perf ?? 0,
                 b.record?.perf ?? 0,
                 a.competitionEvent.event.type
