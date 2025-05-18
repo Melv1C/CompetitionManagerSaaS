@@ -27,7 +27,7 @@ import {
     EventType,
     Result$,
     ResultCode,
-    ResultDetail,
+    ResultDetail$,
     ResultDetailCode,
     resultInclude,
     Role,
@@ -38,8 +38,6 @@ import { isAuthorized, sortPerf } from '@competition-manager/utils';
 import { Router } from 'express';
 import { z } from 'zod';
 import { logger } from '../logger';
-
-
 
 export const router = Router();
 
@@ -110,6 +108,16 @@ router.post(
                     );
                     return;
                 }
+
+                //check if event is a subevent
+                const isSubEvent = competitionEvent.parentId !== null;
+                const parentEvent = isSubEvent
+                    ? CompetitionEvent$.parse(
+                          competition.events.find(
+                              (event) => event.id === competitionEvent.parentId
+                          )
+                      )
+                    : null;
 
                 const athlete = await findAthleteWithLicense(
                     athleteLicense,
@@ -202,11 +210,14 @@ router.post(
                     include: resultInclude,
                 });
 
-                const getResultValue = (bestDetail: CreateResultDetail | undefined) => {
-                    if (!bestDetail) return {
-                        value: null,
-                        wind: null,
-                    }
+                const getResultValue = (
+                    bestDetail: CreateResultDetail | undefined
+                ) => {
+                    if (!bestDetail)
+                        return {
+                            value: null,
+                            wind: null,
+                        };
                     if (bestDetail.value > 0) {
                         return {
                             value: bestDetail.value,
@@ -308,6 +319,104 @@ router.post(
                     .get('io')
                     .to(`competition:${competitionEid}`)
                     .emit('result:new', Result$.parse(result));
+
+                if (parentEvent) {
+                    const existingParentResult = Result$.parse(
+                        await prisma.result.findUnique({
+                            where: {
+                                competitionEventId_athleteId: {
+                                    competitionEventId: parentEvent.id,
+                                    athleteId: athlete.id,
+                                },
+                            },
+                            include: resultInclude,
+                        })
+                    );
+
+                    const parentInscription = existingParentResult ? await prisma.inscription.findFirst({
+                        where: {
+                            athleteId: athlete.id,
+                            competitionEventId: parentEvent.id,
+                            competitionId: competition.id,
+                        },
+                    }) : null;
+
+                    const updateParentDetails = existingParentResult
+                        ? existingParentResult.details.map((detail) => {
+                              if (detail.tryNumber === competitionEvent.id) {
+                                  return {
+                                      ...detail,
+                                      value: points || 0,
+                                  };
+                              }
+
+                              return detail;
+                          })
+                        : undefined;
+
+                    const parentResult = await prisma.result.upsert({
+                        where: {
+                            competitionEventId_athleteId: {
+                                competitionEventId: parentEvent.id,
+                                athleteId: athlete.id,
+                            },
+                        },
+                        create: {
+                            competitionEventId: parentEvent.id,
+                            athleteId: athlete.id,
+                            bib: result.bib,
+                            clubId: athlete.club.id,
+                            competitionId: competition.id,
+                            inscriptionId: parentInscription?.id || null,
+                            value: points,
+                            points: points,
+                            initialOrder: 0,
+                            tempOrder: 0,
+                            heat: 1,
+                            details: {
+                                create: ResultDetail$.omit({
+                                    id: true,
+                                })
+                                    .array()
+                                    .parse([
+                                        {
+                                            tryNumber: competitionEvent.id,
+                                            value: points,
+                                        },
+                                    ]),
+                            },
+                        },
+                        update: {
+                            value: updateParentDetails?.reduce(
+                                (acc, detail) => {
+                                    if (detail.value) {
+                                        return acc + detail.value;
+                                    }
+                                    return acc;
+                                },
+                                0
+                            ),
+                            points: updateParentDetails?.reduce(
+                                (acc, detail) => {
+                                    if (detail.value) {
+                                        return acc + detail.value;
+                                    }
+                                    return acc;
+                                },
+                                0
+                            ),
+                            details: {
+                                deleteMany: {},
+                                create: updateParentDetails,
+                            },
+                        },
+                    });
+
+                    req.app
+                        .get('io')
+                        .to(`competition:${competitionEid}`)
+                        .emit('result:new', Result$.parse(parentResult));
+                }
 
                 upsertedResults.push(Result$.parse(result));
             }
