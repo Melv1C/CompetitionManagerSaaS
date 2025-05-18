@@ -29,7 +29,13 @@ export const useHeightResults = (eventId: number) => {
             competitionEid: Eid;
             type: UpsertResultType;
             results: UpsertResult[];
-        }) => upsertResults(params.competitionEid, params.type, params.results),
+        }) => {
+            return upsertResults(
+                params.competitionEid,
+                params.type,
+                params.results
+            );
+        },
         onError: (error) => {
             console.error('Error upserting results:', error);
         },
@@ -451,9 +457,6 @@ export const useInputHandling = (
                     prevDetail.attempts = [AttemptValue.PASS];
                 }
             }
-
-            // Update the result with the filled-in passes
-            sendResult(updatedResult);
         }
 
         if (!resultDetail) {
