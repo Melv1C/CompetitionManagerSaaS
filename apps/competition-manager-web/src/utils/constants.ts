@@ -1,4 +1,3 @@
-
 export const DRAWER_WIDTH = '12rem';
 
 export const OPEN_SIDENAV_WIDTH = '12rem';

@@ -65,6 +65,12 @@ router.get(
                 res.send(Inscription$.array().parse(competition.inscriptions));
                 return;
             }
+
+            if (!competition.isInscriptionVisible) {
+                res.send([]);
+                return;
+            }
+
             res.send(DisplayInscription$.array().parse(competition.inscriptions));
         } catch(error) {
             console.error(error);

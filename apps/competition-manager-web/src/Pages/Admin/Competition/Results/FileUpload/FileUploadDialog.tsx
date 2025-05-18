@@ -6,7 +6,7 @@
  */
 import { upsertResults } from '@/api';
 import { competitionAtom } from '@/GlobalsStates';
-import { CreateResult$ } from '@competition-manager/schemas';
+import { UpsertResult$, UpsertResultType } from '@competition-manager/schemas';
 import {
     Box,
     Button,
@@ -15,21 +15,22 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     Typography,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
-import { EventSelectionDialog } from './components/EventSelectionDialog';
-import { FileSelector } from './components/FileSelector';
+import { EventSelectionDialog } from './EventSelectionDialog';
+import { FileSelector } from './FileSelector';
 import { FileTable } from './FileTable';
 import { useFileProcessing } from './hooks';
 
 /**
  * Props for the FilePopup component
  */
-type PopupProps = {
+type FileUploadDialogProps = {
     /** Whether the dialog is open */
     open: boolean;
     /** Function to call when the dialog is closed */
@@ -39,7 +40,10 @@ type PopupProps = {
 /**
  * Dialog component for uploading and processing competition result files
  */
-export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
+export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
+    open,
+    onClose,
+}) => {
     const { t } = useTranslation();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -51,6 +55,7 @@ export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
     const {
         results,
         setResults,
+        resultsByRounds,
         error,
         setError,
         isProcessing,
@@ -59,6 +64,8 @@ export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
         handleEventSelection,
         cancelEventSelection,
         availableEvents,
+        hasMultipleRounds,
+        roundNames,
     } = useFileProcessing(competition);
 
     /**
@@ -69,7 +76,11 @@ export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
             if (!selectedFile) {
                 throw new Error('No file selected');
             }
-            return await upsertResults(CreateResult$.array().parse(results));
+            return await upsertResults(
+                competition.eid,
+                UpsertResultType.FILE,
+                UpsertResult$.array().parse(results)
+            );
         },
         onSuccess: () => {
             // Reset form state after successful upload
@@ -150,7 +161,6 @@ export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
                         {t('result:instructionsText')}
                     </Typography>
                 </Box>
-
                 {/* File selection section */}
                 <FileSelector
                     selectedFile={selectedFile}
@@ -158,18 +168,15 @@ export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
                     onClear={handleClearFile}
                     disabled={isLoading}
                     error={displayError}
-                />
-
-                {/* Loading indicator */}
-
+                />{' '}
                 {/* Event selection dialog */}
                 <EventSelectionDialog
                     open={needsEventSelection}
                     availableEvents={availableEvents}
-                    onEventSelected={handleEventSelection}
+                    roundNames={roundNames}
+                    onEventsSelected={handleEventSelection}
                     onCancel={cancelEventSelection}
                 />
-
                 {/* Empty state when no file is selected and not loading */}
                 {!selectedFile && !isLoading && !results.length && (
                     <Box
@@ -192,9 +199,39 @@ export const FilePopup: React.FC<PopupProps> = ({ open, onClose }) => {
                         </Typography>
                     </Box>
                 )}
-
                 {/* Results preview section */}
-                {results.length > 0 && <FileTable rows={results} />}
+                {hasMultipleRounds && resultsByRounds.length > 0 ? (
+                    <Box sx={{ mt: 2 }}>
+                        {resultsByRounds.map((roundResult, index) => (
+                            <Box
+                                key={`${roundResult.eventEid}-${roundResult.roundName}`}
+                                sx={{ mb: 4 }}
+                            >
+                                <Typography variant="h6" sx={{ mb: 1 }}>
+                                    {roundResult.eventName} -{' '}
+                                    {roundResult.roundName}
+                                </Typography>
+                                <FileTable rows={roundResult.results} />
+                                {index < resultsByRounds.length - 1 && (
+                                    <Divider sx={{ mt: 2, mb: 2 }} />
+                                )}
+                            </Box>
+                        ))}
+                    </Box>
+                ) : (
+                    results.length > 0 && <FileTable rows={results} />
+                )}
+                {isProcessing && (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            my: 4,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button

@@ -4,12 +4,15 @@ import {
     competitionAtom,
     inscriptionDataAtom,
 } from '@/GlobalsStates';
-import { Athlete, Inscription } from '@competition-manager/schemas';
+import { Athlete, EventType, Inscription } from '@competition-manager/schemas';
 import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
+import { faFileExport } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     Alert,
     Box,
     Divider,
+    IconButton,
     Paper,
     Snackbar,
     Tab,
@@ -45,7 +48,10 @@ export const Inscriptions = () => {
         setSnackbarOpen(false);
     };
 
-    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (
+        _event: React.SyntheticEvent,
+        newValue: number
+    ) => {
         setTabValue(newValue);
     };
 
@@ -73,6 +79,69 @@ export const Inscriptions = () => {
 
     const [isInscriptionPopupVisible, setIsInscriptionPopupVisible] =
         useState(false);
+
+    // Function to transform inscriptions data into CSV format
+    const generateCSV = (inscriptions: Inscription[]) => {
+        const headers = [
+            t('glossary:license'),
+            t('glossary:bib'),
+            t('glossary:firstName'),
+            t('glossary:lastName'),
+            t('glossary:clubs'),
+            t('glossary:category'),
+            t('glossary:event'),
+            t('glossary:personalBest'),
+        ].join(';');
+
+        const rows = inscriptions.map((inscription) => {
+            return [
+                inscription.athlete.license,
+                inscription.bib,
+                inscription.athlete.firstName,
+                inscription.athlete.lastName,
+                inscription.club.abbr,
+                getCategoryAbbr(
+                    inscription.athlete.birthdate,
+                    inscription.athlete.gender,
+                    competition.date
+                ),
+                inscription.competitionEvent.name,
+                inscription.record?.perf && inscription.competitionEvent.event.type == EventType.TIME
+                    ? inscription.record.perf / 1000
+                    : inscription.record?.perf,
+            ].join(';');
+        });
+
+        return [headers, ...rows].join('\n');
+    };
+
+    // Function to download CSV file
+    const downloadCSV = () => {
+        const inscriptions =
+            tabValue === 0 ? activeInscriptions : deletedInscriptions;
+        const csvContent = generateCSV(inscriptions);
+        const blob = new Blob([csvContent], {
+            type: 'text/csv;charset=utf-8;',
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute(
+            'download',
+            `${
+                competition.name
+                    .normalize('NFD') // Remove accents
+                    .replace(/[\s;]+/g, '') // Remove spaces and semicolons
+            }_${
+                competition.date
+                    ? new Date(competition.date).toISOString().split('T')[0]
+                    : ''
+            }.csv`
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const baseColumns: GridColDef[] = [
         {
@@ -165,7 +234,12 @@ export const Inscriptions = () => {
                     <CircleButton
                         size="2rem"
                         color="error"
-                        onClick={() => handleShowWarning('Delete', `${row.id} ${row.athlete.firstName} ${row.athlete.lastName}: ${row.competitionEvent.name}`)}
+                        onClick={() =>
+                            handleShowWarning(
+                                'Delete',
+                                `${row.id} ${row.athlete.firstName} ${row.athlete.lastName}: ${row.competitionEvent.name}`
+                            )
+                        }
                     >
                         <Icons.Delete />
                     </CircleButton>
@@ -185,7 +259,12 @@ export const Inscriptions = () => {
                     <CircleButton
                         size="2rem"
                         color="success"
-                        onClick={() => handleShowWarning('Restore', `${row.id} ${row.athlete.firstName} ${row.athlete.lastName}: ${row.competitionEvent.name}`)}
+                        onClick={() =>
+                            handleShowWarning(
+                                'Restore',
+                                `${row.id} ${row.athlete.firstName} ${row.athlete.lastName}: ${row.competitionEvent.name}`
+                            )
+                        }
                     >
                         <Icons.Refresh />
                     </CircleButton>
@@ -236,8 +315,23 @@ export const Inscriptions = () => {
             </Snackbar>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="h5">{competition.name}</Typography>
-
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
+                    <Typography variant="h5">{competition.name}</Typography>
+                    <IconButton
+                        color="primary"
+                        onClick={downloadCSV}
+                        size="medium"
+                    >
+                        <FontAwesomeIcon icon={faFileExport} />
+                    </IconButton>
+                </Box>
                 <Divider />
 
                 <Paper sx={{ width: '100%', mb: 2 }}>

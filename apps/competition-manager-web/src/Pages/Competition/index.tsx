@@ -13,7 +13,7 @@ import {
     useParams,
 } from 'react-router-dom';
 
-import { Event } from './Event.tsx';
+import { Event } from './Event';
 import { Inscription } from './Inscription';
 import { Inscriptions } from './Inscriptions';
 import { Overview } from './Overview';
@@ -45,7 +45,7 @@ export const Competition = () => {
         return () => {
             reset();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (isLoading) return <Loading />;
@@ -111,13 +111,7 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({
                             value="inscriptions"
                         />
                     )}
-                    {isCurrent && (
-                        <Tab
-                            label={t('glossary:liveResults')}
-                            value="liveResults"
-                        />
-                    )}
-                    {isPast && (
+                    {(isPast || isCurrent) && (
                         <Tab label={t('glossary:results')} value="results" />
                     )}
                 </Tabs>

@@ -3,7 +3,7 @@ import { DisplayInscription } from '@competition-manager/schemas';
 import {
     formatPerf,
     getCategoryAbbr,
-    isBestResult,
+    sortPerf,
 } from '@competition-manager/utils';
 import {
     Table,
@@ -74,20 +74,13 @@ export const Inscriptions: React.FC<InscriptionsProps> = ({ inscriptions }) => {
                         )}
 
                         {inscriptions
-                            .sort((a, b) => {
-                                if (a.record && b.record) {
-                                    return isBestResult(
-                                        a.record.perf,
-                                        b.record.perf,
-                                        a.competitionEvent.event.type
-                                    )
-                                        ? -1
-                                        : 1;
-                                }
-                                if (a.record) return -1;
-                                if (b.record) return 1;
-                                return 0;
-                            })
+                            .sort((a, b) =>
+                                sortPerf(
+                                    a.record?.perf ?? -1,
+                                    b.record?.perf ?? -1,
+                                    a.competitionEvent.event.type
+                                )
+                            )
                             .map((inscription) => (
                                 <TableRow key={inscription.eid}>
                                     <TableCell align="center">

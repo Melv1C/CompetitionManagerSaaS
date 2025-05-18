@@ -36,5 +36,9 @@
     "personalBest": "Meilleure performance",
     "total": "Total",
     "all": "Tout",
-    "unexpectedError": "Une erreur inattendue s'est produite"
+    "unexpectedError": "Une erreur inattendue s'est produite",
+    "order": "Ordre",
+    "best": "Meilleur",
+    "processing": "En cours",
+    "search": "Rechercher"
 }

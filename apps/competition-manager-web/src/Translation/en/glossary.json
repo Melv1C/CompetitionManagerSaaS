@@ -36,5 +36,9 @@
     "personalBest": "Personal Best",
     "total": "Total",
     "all": "All",
-    "unexpectedError": "An unexpected error occurred"
+    "unexpectedError": "An unexpected error occurred",
+    "order": "Order",
+    "best": "Best",
+    "processing": "Processing",
+    "search": "Search"
 }

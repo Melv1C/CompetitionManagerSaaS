@@ -36,5 +36,9 @@
     "personalBest": "Persoonlijk record",
     "total": "Totaal",
     "all": "Alles",
-    "unexpectedError": "Er is een onverwachte fout opgetreden"
+    "unexpectedError": "Er is een onverwachte fout opgetreden",
+    "order": "Volgorde",
+    "best": "Beste",
+    "processing": "Verwerken",
+    "search": "Zoeken"
 }
