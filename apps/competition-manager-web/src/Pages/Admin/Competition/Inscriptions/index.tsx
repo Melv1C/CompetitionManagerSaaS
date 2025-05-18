@@ -4,7 +4,7 @@ import {
     competitionAtom,
     inscriptionDataAtom,
 } from '@/GlobalsStates';
-import { Athlete, Inscription } from '@competition-manager/schemas';
+import { Athlete, EventType, Inscription } from '@competition-manager/schemas';
 import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
 import { faFileExport } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -83,20 +83,26 @@ export const Inscriptions = () => {
     // Function to transform inscriptions data into CSV format
     const generateCSV = (inscriptions: Inscription[]) => {
         const headers = [
+            t('glossary:license'),
+            t('glossary:bib'),
             t('glossary:firstName'),
             t('glossary:lastName'),
-            t('glossary:bib'),
+            t('glossary:clubs'),
             t('glossary:event'),
             t('glossary:personalBest'),
-        ].join(',');
+        ].join(';');
 
         const rows = inscriptions.map((inscription) => {
             return [
+                inscription.athlete.license,
+                inscription.bib,
                 inscription.athlete.firstName,
                 inscription.athlete.lastName,
-                inscription.bib,
+                inscription.club.abbr,
                 inscription.competitionEvent.name,
-                inscription.record?.perf,
+                inscription.record?.perf && inscription.competitionEvent.event.type == EventType.TIME
+                    ? inscription.record.perf / 1000
+                    : inscription.record?.perf,
             ].join(';');
         });
 
@@ -116,9 +122,10 @@ export const Inscriptions = () => {
         link.setAttribute('href', url);
         link.setAttribute(
             'download',
-            `${competition.name
-                .normalize('NFD')           // Remove accents
-                .replace(/[\s;]+/g, '')     // Remove spaces and semicolons
+            `${
+                competition.name
+                    .normalize('NFD') // Remove accents
+                    .replace(/[\s;]+/g, '') // Remove spaces and semicolons
             }_${
                 competition.date
                     ? new Date(competition.date).toISOString().split('T')[0]
