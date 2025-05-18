@@ -386,7 +386,7 @@ router.post(
                                     .parse([
                                         {
                                             tryNumber: competitionEvent.id,
-                                            value: points,
+                                            value: points || 0,
                                         },
                                     ]),
                             },
