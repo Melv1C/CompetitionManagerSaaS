@@ -15,6 +15,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    Divider,
     Typography,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
@@ -54,6 +55,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
     const {
         results,
         setResults,
+        resultsByRounds,
         error,
         setError,
         isProcessing,
@@ -62,6 +64,8 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
         handleEventSelection,
         cancelEventSelection,
         availableEvents,
+        hasMultipleRounds,
+        roundNames,
     } = useFileProcessing(competition);
 
     /**
@@ -157,7 +161,6 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                         {t('result:instructionsText')}
                     </Typography>
                 </Box>
-
                 {/* File selection section */}
                 <FileSelector
                     selectedFile={selectedFile}
@@ -165,18 +168,15 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                     onClear={handleClearFile}
                     disabled={isLoading}
                     error={displayError}
-                />
-
-                {/* Loading indicator */}
-
+                />{' '}
                 {/* Event selection dialog */}
                 <EventSelectionDialog
                     open={needsEventSelection}
                     availableEvents={availableEvents}
-                    onEventSelected={handleEventSelection}
+                    roundNames={roundNames}
+                    onEventsSelected={handleEventSelection}
                     onCancel={cancelEventSelection}
                 />
-
                 {/* Empty state when no file is selected and not loading */}
                 {!selectedFile && !isLoading && !results.length && (
                     <Box
@@ -199,9 +199,39 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                         </Typography>
                     </Box>
                 )}
-
                 {/* Results preview section */}
-                {results.length > 0 && <FileTable rows={results} />}
+                {hasMultipleRounds && resultsByRounds.length > 0 ? (
+                    <Box sx={{ mt: 2 }}>
+                        {resultsByRounds.map((roundResult, index) => (
+                            <Box
+                                key={`${roundResult.eventEid}-${roundResult.roundName}`}
+                                sx={{ mb: 4 }}
+                            >
+                                <Typography variant="h6" sx={{ mb: 1 }}>
+                                    {roundResult.eventName} -{' '}
+                                    {roundResult.roundName}
+                                </Typography>
+                                <FileTable rows={roundResult.results} />
+                                {index < resultsByRounds.length - 1 && (
+                                    <Divider sx={{ mt: 2, mb: 2 }} />
+                                )}
+                            </Box>
+                        ))}
+                    </Box>
+                ) : (
+                    results.length > 0 && <FileTable rows={results} />
+                )}
+                {isProcessing && (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            my: 4,
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button
