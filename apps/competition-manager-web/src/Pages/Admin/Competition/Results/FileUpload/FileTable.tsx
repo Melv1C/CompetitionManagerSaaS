@@ -24,7 +24,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { useAtomValue } from 'jotai';
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DisplayResult } from './types';
 
@@ -172,16 +172,19 @@ type FileTableProps = {
  * @param props - Component properties with result data
  * @returns React component for the file table
  */
-export const FileTable: React.FC<FileTableProps> = ({ rows }) => {
+export const FileTable: React.FC<FileTableProps> = ({ rows, eventType }) => {
     const { t } = useTranslation();
 
     const competition = useAtomValue(competitionAtom);
-    if (!competition) throw new Error('No competition data found');
+    if (!competition) throw new Error('No competition data found'); // Create a map for faster event type lookups
+    const eventTypeMap = useMemo(() => {
+        // Add the provided eventType if specified, useful when rendering tables per round
+        const map = new Map(
+            competition.events.map((event) => [event.eid, event.event.type])
+        );
 
-    // Create a map for faster event type lookups
-    const eventTypeMap = new Map(
-        competition.events.map((event) => [event.eid, event.event.type])
-    );
+        return map;
+    }, [competition.events, eventType]);
 
     return (
         <TableContainer
@@ -217,17 +220,21 @@ export const FileTable: React.FC<FileTableProps> = ({ rows }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {/* Render actual rows if available */}
-                    {rows.map((row) => (
-                        <Row
-                            key={`${row.athleteLicense}-${row.bib}`}
-                            row={row}
-                            eventType={
-                                eventTypeMap.get(row.competitionEventEid) ||
-                                EventType.DISTANCE
-                            }
-                        />
-                    ))}
+                    {/* Render actual rows if available */}{' '}
+                    {rows.map((row) => {
+                        const rowEventType =
+                            eventType ||
+                            eventTypeMap.get(row.competitionEventEid) ||
+                            EventType.DISTANCE;
+
+                        return (
+                            <Row
+                                key={`${row.athleteLicense}-${row.bib}-${row.heat}`}
+                                row={row}
+                                eventType={rowEventType}
+                            />
+                        );
+                    })}
                 </TableBody>
             </Table>
         </TableContainer>

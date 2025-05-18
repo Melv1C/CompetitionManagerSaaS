@@ -5,11 +5,21 @@
  * Provides functionality for file content processing and API communication.
  */
 
-import { Competition, CompetitionEvent } from '@competition-manager/schemas';
+import { Competition } from '@competition-manager/schemas';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DisplayResult, XmlData, XmlData$ } from './types';
+import { DisplayResult, XmlData, XmlData$, XmlEvent, XmlRound } from './types';
 import { handleHeats, parseXmlFile } from './utils';
+
+/**
+ * Result type with round information
+ */
+type ResultsByRound = {
+    roundName: string;
+    eventEid: string;
+    eventName: string;
+    results: DisplayResult[];
+};
 
 /**
  * Custom hook for processing uploaded result files
@@ -20,12 +30,20 @@ import { handleHeats, parseXmlFile } from './utils';
 export const useFileProcessing = (competition: Competition) => {
     // Using DisplayResult type to store enhanced result information
     const [results, setResults] = useState<DisplayResult[]>([]);
+    // Results organized by rounds for multi-round files
+    const [resultsByRounds, setResultsByRounds] = useState<ResultsByRound[]>(
+        []
+    );
     const [error, setError] = useState<string | null>(null);
     const [isTableVisible, setIsTableVisible] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     // States for handling event selection
     const [needsEventSelection, setNeedsEventSelection] = useState(false);
     const [pendingXmlData, setPendingXmlData] = useState<XmlData | null>(null);
+    // Track if we have multiple rounds
+    const [hasMultipleRounds, setHasMultipleRounds] = useState(false);
+    // Track round names for selection
+    const [roundNames, setRoundNames] = useState<string[]>([]);
 
     // Memoize available events to prevent unnecessary re-renders
     const availableEvents = useMemo(
@@ -45,39 +63,25 @@ export const useFileProcessing = (competition: Competition) => {
     const processFileContent = async (fileContent: string): Promise<void> => {
         setError(null);
         setIsProcessing(true);
+        setResultsByRounds([]);
+        setHasMultipleRounds(false);
 
         try {
             // Parse the XML data
             const parsedData = XmlData$.parse(parseXmlFile(fileContent));
-            const eventName = parsedData.event.name;
+            console.log('Parsed XML Data:', parsedData);
 
-            // Find the matching event in competition data - try exact match first
-            let event = competition.events.find(
-                (event) => event.name.toLowerCase() === eventName.toLowerCase()
-            );
-
-            // If no exact match, try to find a similar event
-            if (!event) {
-                event = competition.events.find(
-                    (event) =>
-                        event.name
-                            .toLowerCase()
-                            .includes(eventName.toLowerCase()) ||
-                        eventName
-                            .toLowerCase()
-                            .includes(event.name.toLowerCase())
+            // Handle the two possible XML structures
+            if ('event' in parsedData) {
+                // Single event case
+                const eventName = parsedData.event.name;
+                await handleSingleEvent(parsedData.event, eventName);
+            } else if ('events' in parsedData) {
+                //todo
+                throw new Error(
+                    t('result:multipleEventsNotSupported')
                 );
             }
-
-            if (!event) {
-                // Instead of throwing error, store data and prompt for selection
-                setPendingXmlData(parsedData);
-                setNeedsEventSelection(true);
-                return;
-            }
-
-            // Process data with the found event
-            await processWithEvent(parsedData, event);
         } catch (error) {
             console.error('Error processing XML:', error);
             setError(
@@ -92,6 +96,135 @@ export const useFileProcessing = (competition: Competition) => {
         } finally {
             setIsProcessing(false);
         }
+    };    /**
+     * Handles a single event in the XML
+     */
+    const handleSingleEvent = async (event: XmlEvent, eventName: string) => {
+        // Check if there are multiple rounds
+        const rounds = event.rounds.round;
+
+        if (Array.isArray(rounds) && rounds.length > 1) {
+            // Multiple rounds in a single event
+            setHasMultipleRounds(true);
+            const names = rounds.map((r) => r.name);
+            setRoundNames(names);
+            
+            // Check if each round name matches an event before asking for selection
+            const eventSelections: Record<string, string> = {};
+            let allRoundsMatched = true;
+            
+            for (const round of rounds) {
+                const roundName = round.name;
+                if (round['@_combinedTotal']) {
+                    // Skip combined total rounds
+                    continue;
+                }
+
+                // Try to find an exact match for the round name in events
+                const matchedEvent = competition.events.find(
+                    (e) => e.name.toLowerCase() === roundName.toLowerCase()
+                );
+                
+                if (matchedEvent) {
+                    // Store the match
+                    eventSelections[roundName] = matchedEvent.eid;
+                } else {
+                    // No match found for this round
+                    allRoundsMatched = false;
+                    break;
+                }
+            }
+            
+            // Only ask for selection if at least one round doesn't match
+            if (!allRoundsMatched) {
+                setPendingXmlData({ event });
+                setNeedsEventSelection(true);
+                return;
+            } else {
+                // All rounds matched, process directly with the matches
+                await processWithEvent(event, eventSelections);
+                return;
+            }
+        }
+
+        // Find the matching event in competition data - try exact match first
+        let matchedEvent = competition.events.find(
+            (e) => e.name.toLowerCase() === eventName.toLowerCase()
+        );
+
+        // If no exact match, try to find a similar event
+        if (!matchedEvent) {
+            matchedEvent = competition.events.find(
+                (e) =>
+                    e.name.toLowerCase().includes(eventName.toLowerCase()) ||
+                    eventName.toLowerCase().includes(e.name.toLowerCase())
+            );
+        }
+
+        if (!matchedEvent) {
+            // Instead of throwing error, store data and prompt for selection
+            setPendingXmlData({ event });
+            setNeedsEventSelection(true);
+            return;
+        }
+
+        // Process data with the found event
+        await processWithEvent(event, { event: matchedEvent.eid });
+    };
+
+    /**
+     * Process a single round of results
+     *
+     * @param round - Round data from XML
+     * @param eventEid - Selected event ID
+     * @param roundName - Name of the round
+     * @returns Processed results for the round or null if processing failed
+     */
+    const processRound = (
+        round: XmlRound,
+        eventEid: string,
+        roundName: string
+    ): ResultsByRound | null => {
+        console.log('Processing round:', round);
+        const selectedEvent = competition.events.find(
+            (e) => e.eid === eventEid
+        );
+
+        if (!selectedEvent) {
+            console.warn(`Event ${eventEid} not found for round ${roundName}`);
+            return null;
+        }
+
+        if (!round.heats) {
+            return null;
+        }
+
+        const heats = round.heats.heat;
+        if (!heats) return null;
+
+        const processedResults = handleHeats(
+            heats,
+            selectedEvent.eid,
+            competition.eid,
+            selectedEvent.event.type
+        );
+
+        // Sort by order
+        processedResults.sort(
+            (a, b) => (a.finalOrder || 0) - (b.finalOrder || 0)
+        );
+
+        if (processedResults.length === 0) {
+            console.warn(`No results found for round ${roundName}`);
+            return null;
+        }
+
+        return {
+            roundName,
+            eventEid: selectedEvent.eid,
+            eventName: selectedEvent.name,
+            results: processedResults,
+        };
     };
 
     /**
@@ -99,51 +232,81 @@ export const useFileProcessing = (competition: Competition) => {
      * Called either automatically when event is found or after user selection
      *
      * @param parsedData - The parsed XML data
-     * @param event - The selected event from competition data
+     * @param eventSelections - Map of round names to event IDs
      */
     const processWithEvent = async (
-        parsedData: XmlData,
-        event: CompetitionEvent
+        event: XmlEvent,
+        eventSelections: Record<string, string>
     ): Promise<void> => {
         try {
-            const rounds = parsedData.event.rounds.round;
-
-            // Array to hold all processed results with display information
-            let processedResults: DisplayResult[] = [];
-
+            // Initialize result arrays
+            let allResults: DisplayResult[] = [];
+            const roundResults: ResultsByRound[] = [];
+            const rounds = event.rounds.round;
             // Process single round case
             if (!Array.isArray(rounds)) {
-                const heats = rounds.heats.heat;
-                processedResults = handleHeats(
-                    heats,
-                    event.eid,
-                    competition.eid,
-                    event.event.type
+                const eventEid =
+                    eventSelections.event || eventSelections.default;
+                const selectedEvent = competition.events.find(
+                    (e) => e.eid === eventEid
                 );
-            }
-            // Process multiple rounds case
-            else {
+
+                if (!selectedEvent) {
+                    throw new Error(t('result:eventNotFound'));
+                }
+
+                // Process the single round
+                const round = rounds as unknown as XmlRound; // Type assertion for the round
+                const defaultRoundName = round.name;
+                const roundResult = processRound(
+                    round,
+                    eventEid,
+                    defaultRoundName
+                );
+
+                if (roundResult) {
+                    allResults = [...roundResult.results];
+                    roundResults.push(roundResult);
+                }
+            } else { // Process multiple rounds
                 for (const round of rounds) {
-                    if (round['@_combinedTotal'] === false) {
-                        const heats = round.heats.heat;
-                        const roundResults = handleHeats(
-                            heats,
-                            event.eid,
-                            competition.eid,
-                            event.event.type
+                    if (round['@_combinedTotal']) {
+                        // Skip combined total rounds
+                        continue;
+                    }
+                    const roundName = round.name;
+                    const eventEid =
+                        eventSelections[roundName] ||
+                        eventSelections.event ||
+                        eventSelections.default;
+
+                    if (!eventEid) {
+                        console.warn(
+                            `No event selected for round ${roundName}`
                         );
-                        processedResults.push(...roundResults);
+                        continue;
+                    }
+
+                    const roundResult = processRound(
+                        round,
+                        eventEid,
+                        roundName
+                    );
+                    if (roundResult) {
+                        allResults = [
+                            ...allResults,
+                            ...roundResult.results,
+                        ];
+                        roundResults.push(roundResult);
                     }
                 }
             }
 
-            // Sort results by order for better presentation
-            processedResults.sort((a, b) => 
-                (a.finalOrder || 0) - (b.finalOrder || 0)
-            );
-
-            setResults(processedResults);
+            // Update states
+            setResults(allResults);
+            setResultsByRounds(roundResults);
             setIsTableVisible(true);
+
             // Reset selection state
             setPendingXmlData(null);
             setNeedsEventSelection(false);
@@ -160,28 +323,30 @@ export const useFileProcessing = (competition: Competition) => {
             setIsTableVisible(false);
         }
     };
-
     /**
      * Handles user event selection from the popup
      *
-     * @param selectedEventEid - The ID of the event selected by the user
+     * @param eventSelections - Map of round names to selected event IDs
      */
-    const handleEventSelection = (selectedEventEid: string): void => {
+    const handleEventSelection = (
+        eventSelections: Record<string, string>
+    ): void => {
         if (!pendingXmlData) {
             setError(t('result:noPendingData'));
             return;
         }
 
-        const selectedEvent = competition.events.find(
-            (event) => event.eid === selectedEventEid
-        );
+        // Combine pre-matched events (if any) with user selections
+        const combinedSelections = { ...eventSelections };
 
-        if (!selectedEvent) {
-            setError(t('result:eventNotFound'));
+        const event = 'event' in pendingXmlData ? pendingXmlData.event : null;
+        if (!event) {
+            setError(t('result:noEventFound'));
             return;
         }
 
-        processWithEvent(pendingXmlData, selectedEvent);
+        // Process the XML with the combined selections
+        processWithEvent(event, combinedSelections);
     };
 
     /**
@@ -196,6 +361,7 @@ export const useFileProcessing = (competition: Competition) => {
     return {
         results,
         setResults,
+        resultsByRounds,
         error,
         setError,
         isTableVisible,
@@ -206,5 +372,7 @@ export const useFileProcessing = (competition: Competition) => {
         handleEventSelection,
         cancelEventSelection,
         availableEvents,
+        hasMultipleRounds,
+        roundNames,
     };
 };
