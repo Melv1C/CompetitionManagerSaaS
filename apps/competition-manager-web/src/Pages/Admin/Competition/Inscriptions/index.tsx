@@ -88,6 +88,7 @@ export const Inscriptions = () => {
             t('glossary:firstName'),
             t('glossary:lastName'),
             t('glossary:clubs'),
+            t('glossary:category'),
             t('glossary:event'),
             t('glossary:personalBest'),
         ].join(';');
@@ -99,6 +100,11 @@ export const Inscriptions = () => {
                 inscription.athlete.firstName,
                 inscription.athlete.lastName,
                 inscription.club.abbr,
+                getCategoryAbbr(
+                    inscription.athlete.birthdate,
+                    inscription.athlete.gender,
+                    competition.date
+                ),
                 inscription.competitionEvent.name,
                 inscription.record?.perf && inscription.competitionEvent.event.type == EventType.TIME
                     ? inscription.record.perf / 1000
