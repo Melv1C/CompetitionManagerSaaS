@@ -54,7 +54,7 @@ export const Competition$ = z.object({
     allowedClubs: z.array(Club$).default([]),
     oneDayPermissions: z.array(z.nativeEnum(OneDayPermission)).default([]),
     oneDayBibStart: z.coerce.number().positive().max(9999).min(9900).default(9900),
-        
+    isInscriptionVisible: z.boolean().default(true),
 });
 export type Competition = z.infer<typeof Competition$>;
 

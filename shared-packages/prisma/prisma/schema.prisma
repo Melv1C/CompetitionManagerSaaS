@@ -154,6 +154,7 @@ model Competition {
     isDeleted            Boolean             @map("is_deleted")
     maxEventByAthlete    Int?                @map("max_event_by_athlete")
     allowedClubs         Club[]              @relation("allowedClubsToCompetition")
+    isInscriptionVisible Boolean             @map("is_inscription_visible")
 
     @@map("competitions")
 }
