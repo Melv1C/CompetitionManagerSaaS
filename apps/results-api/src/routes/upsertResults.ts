@@ -415,6 +415,7 @@ router.post(
                                 create: updateParentDetails,
                             },
                         },
+                        include: resultInclude,
                     });
 
                     req.app
