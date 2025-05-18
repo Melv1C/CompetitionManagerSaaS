@@ -20,6 +20,7 @@ import {
     Athlete$,
     athleteInclude,
     AttemptValue,
+    BaseAdmin$,
     CompetitionEvent$,
     competitionEventInclude,
     CreateResultDetail,
@@ -77,7 +78,7 @@ router.post(
                 !checkAdminRole(
                     Access.RESULTS,
                     req.user!.id,
-                    Admin$.array().parse(competition.admins),
+                    BaseAdmin$.array().parse(competition.admins),
                     res,
                     req.t
                 )
