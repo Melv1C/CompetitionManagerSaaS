@@ -16,7 +16,6 @@ import {
 import { prisma } from '@competition-manager/prisma';
 import {
     Access,
-    Admin$,
     Athlete$,
     athleteInclude,
     AttemptValue,
@@ -322,7 +321,7 @@ router.post(
                     .emit('result:new', Result$.parse(result));
 
                 if (parentEvent) {
-                    const existingParentResult = Result$.parse(
+                    const existingParentResultData =
                         await prisma.result.findUnique({
                             where: {
                                 competitionEventId_athleteId: {
@@ -331,16 +330,21 @@ router.post(
                                 },
                             },
                             include: resultInclude,
-                        })
-                    );
+                        });
 
-                    const parentInscription = existingParentResult ? await prisma.inscription.findFirst({
-                        where: {
-                            athleteId: athlete.id,
-                            competitionEventId: parentEvent.id,
-                            competitionId: competition.id,
-                        },
-                    }) : null;
+                    const existingParentResult = existingParentResultData
+                        ? Result$.parse(existingParentResultData)
+                        : null;
+
+                    const parentInscription = existingParentResult
+                        ? await prisma.inscription.findFirst({
+                              where: {
+                                  athleteId: athlete.id,
+                                  competitionEventId: parentEvent.id,
+                                  competitionId: competition.id,
+                              },
+                          })
+                        : null;
 
                     const updateParentDetails = existingParentResult
                         ? existingParentResult.details.map((detail) => {
