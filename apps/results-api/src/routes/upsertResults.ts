@@ -337,26 +337,31 @@ router.post(
                         : null;
 
                     const parentInscription = existingParentResult
-                        ? await prisma.inscription.findFirst({
+                        ? null
+                        : await prisma.inscription.findFirst({
                               where: {
                                   athleteId: athlete.id,
                                   competitionEventId: parentEvent.id,
                                   competitionId: competition.id,
                               },
-                          })
-                        : null;
+                          });
 
                     const updateParentDetails = existingParentResult
-                        ? existingParentResult.details.map((detail) => {
-                              if (detail.tryNumber === competitionEvent.id) {
-                                  return {
-                                      ...detail,
-                                      value: points || 0,
-                                  };
-                              }
-
-                              return detail;
+                        ? ResultDetail$.omit({
+                              id: true,
                           })
+                              .array()
+                              .parse([
+                                  ...existingParentResult.details.filter(
+                                      (detail) =>
+                                          detail.tryNumber !==
+                                          competitionEvent.id
+                                  ),
+                                  {
+                                      tryNumber: competitionEvent.id,
+                                      value: points || 0,
+                                  },
+                              ])
                         : undefined;
 
                     const parentResult = await prisma.result.upsert({
