@@ -184,7 +184,7 @@ export const FileTable: React.FC<FileTableProps> = ({ rows, eventType }) => {
         );
 
         return map;
-    }, [competition.events, eventType]);
+    }, [competition.events]);
 
     return (
         <TableContainer
