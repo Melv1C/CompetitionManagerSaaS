@@ -41,7 +41,7 @@ jobs:
               - shared-packages/prisma/**
             competition-manager-web: 
               - apps/competition-manager-web/**
-              - shared-packages/schemas/**
+              - shared-packages/**
             users-api:
               - apps/users-api/**
               - shared-packages/**
