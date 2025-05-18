@@ -78,15 +78,29 @@ export const handleHeats = (
                     continue;
                 }
 
+                if (!participation.results?.result) {
+                    console.warn('Skipping participation with missing results data');
+                    continue;
+                }
+                
                 for (let j = 0; j < participation.results.result.length; j++) {
                     const result = participation.results.result[j];
-
+                    let value = result.result_value;
+                    if (value < 0) {
+                        switch (value) {
+                            case -8:
+                                value = ResultDetailCode.R;
+                                break;
+                            default:
+                                break;
+                        }
+                    } else if (eventType == EventType.TIME) {
+                        // Convert time to milliseconds
+                        value *= 1000;
+                    }
                     const detail: CreateResultDetail = {
                         tryNumber: tryNumber,
-                        value:
-                            eventType == EventType.TIME
-                                ? result.result_value * 1000
-                                : result.result_value,
+                        value,
                         wind: result.wind,
                         attempts:
                             eventType == EventType.HEIGHT
