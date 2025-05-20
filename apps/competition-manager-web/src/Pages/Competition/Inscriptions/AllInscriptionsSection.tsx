@@ -111,11 +111,11 @@ export const AllInscriptionsSection: React.FC<AllInscriptionsSectionProps> = ({
     return (
         <Stack spacing={2}>
             <Typography variant="h6">
-                {t('competition:allInscriptions')} ({inscriptions.length})
+                {t('competition:allInscriptions')}
             </Typography>
 
-            <TableContainer>
-                <Table size="small">
+            <TableContainer sx={{ maxHeight: 400 }}>
+                <Table size="small" stickyHeader>
                     <TableHead sx={{ backgroundColor: 'rgba(0, 0, 0, 0.04)' }}>
                         <TableRow>
                             <TableCell width={50} align="center">
