@@ -163,7 +163,7 @@ export const Inscriptions = () => {
                 ),
                 inscription.competitionEvent.name,
                 inscription.record?.perf &&
-                inscription.competitionEvent.event.type == EventType.TIME
+                inscription.competitionEvent.event.type === EventType.TIME
                     ? inscription.record.perf / 1000
                     : inscription.record?.perf,
             ].join(';');
