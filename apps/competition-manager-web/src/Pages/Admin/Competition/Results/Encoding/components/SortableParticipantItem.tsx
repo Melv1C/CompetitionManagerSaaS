@@ -21,6 +21,7 @@ import {
     ListItemAvatar,
     ListItemButton,
     ListItemText,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -32,17 +33,19 @@ type Participant = {
     athlete: AthleteType; // Full athlete data
     inscriptionId?: Id; // Optional inscription ID (missing for external athletes)
     isSelected: boolean; // Whether this participant is selected
+    resultId?: Id; // Optional result ID (present if already has results)
 };
 
 type SortableParticipantItemProps = {
     participant: Participant;
     toggleSelection: () => void;
     inscription?: Inscription; // Optional - used for showing inscription-specific data
+    isCheckboxDisabled?: boolean; // New prop to disable checkbox
 };
 
 export const SortableParticipantItem: React.FC<
     SortableParticipantItemProps
-> = ({ participant, toggleSelection, inscription }) => {
+> = ({ participant, toggleSelection, inscription, isCheckboxDisabled }) => {
     const { t } = useTranslation();
     const { isMobile } = useDeviceSize();
 
@@ -62,10 +65,34 @@ export const SortableParticipantItem: React.FC<
         return undefined;
     };
 
+    // Get checkbox with optional tooltip
+    const renderCheckbox = () => {
+        const checkbox = (
+            <Checkbox
+                edge="start"
+                checked={participant.isSelected}
+                tabIndex={-1}
+                disableRipple
+                disabled={isCheckboxDisabled}
+            />
+        );
+
+        // If checkbox is disabled and there's a result ID, wrap in tooltip
+        if (isCheckboxDisabled && participant.resultId) {
+            return (
+                <Tooltip title={t('result:cannotRemoveAthleteWithResults')}>
+                    {checkbox}
+                </Tooltip>
+            );
+        }
+
+        return checkbox;
+    };
+
     return (
         <Box ref={setNodeRef} style={style}>
             <ListItemButton
-                onClick={toggleSelection}
+                onClick={isCheckboxDisabled ? undefined : toggleSelection}
                 sx={{
                     py: { xs: 2, sm: 1 },
                     px: { xs: 1, sm: 2 },
@@ -97,12 +124,7 @@ export const SortableParticipantItem: React.FC<
                     />
                 </Box>
 
-                <Checkbox
-                    edge="start"
-                    checked={participant.isSelected}
-                    tabIndex={-1}
-                    disableRipple
-                />
+                {renderCheckbox()}
 
                 {!isMobile && (
                     <ListItemAvatar sx={{ minWidth: 'auto', m: 1 }}>

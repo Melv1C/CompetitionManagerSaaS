@@ -51,6 +51,7 @@ export const Result$ = z.object({
     athlete: AthleteWithoutClub$,
     bib: Bib$,
     club: Club$,
+    inscriptionId: Id$.nullish(),
 
     heat: z.coerce.number().default(1),
     initialOrder: z.coerce.number(),

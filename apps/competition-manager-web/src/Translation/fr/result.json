@@ -40,5 +40,10 @@
     "addEvent": "Ajouter une Épreuve",
     "timeEncodingNotImplemented": "L'encodage des temps n'est pas encore implémenté",
     "pointsEncodingNotImplemented": "L'encodage des points n'est pas encore implémenté",
-    "encodingNotAvailable": "Encodage non disponible pour ce type d'épreuve"
+    "encodingNotAvailable": "Encodage non disponible pour ce type d'épreuve",
+    "manageParticipants": "Gérer les Participants",
+    "dragToReorderOrAddAthletes": "Faites glisser pour réorganiser les athlètes ou les sélectionner/désélectionner",
+    "noParticipantsFound": "Aucun participant trouvé",
+    "cannotRemoveAthleteWithResults": "Impossible de supprimer un athlète qui a déjà des résultats",
+    "searchAthletes": "Rechercher des Athlètes"
 }
