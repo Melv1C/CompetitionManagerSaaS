@@ -30,7 +30,11 @@ export const BaseAdmin$ = Admin$.pick({
 });
 export type BaseAdmin = z.infer<typeof BaseAdmin$>;
 
-export const CreateAdmin$ = BaseAdmin$
+export const CreateAdmin$ = Admin$.pick({
+    access: true,
+}).extend({
+    email: z.string().email(),
+});
 export type CreateAdmin = z.infer<typeof CreateAdmin$>;
 
 export const UpdateAdmin$ = Admin$.omit({
