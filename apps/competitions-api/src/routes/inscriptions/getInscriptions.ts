@@ -39,7 +39,7 @@ router.get(
                     res.status(404).send('Competition not found');
                     return;
                 }
-                if (BaseAdmin$.array().parse(competition.admins).some(admin => admin.userId === req.user!.id)) {
+                if (!competition.admins.some(admin => admin.userId === req.user!.id)) {
                     res.status(401).send('Unauthorized');
                     return;
                 }
