@@ -56,6 +56,18 @@ router.post(
                 return;
             }
             try {
+                // Find user by email
+                const user = await prisma.user.findUnique({
+                    where: {
+                        email: newAdmin.email,
+                    },
+                });
+
+                if (!user) {
+                    res.status(404).send('User not found');
+                    return;
+                }
+
                 const admin = await prisma.admin.create({
                     data: {
                         access: newAdmin.access,
@@ -66,7 +78,7 @@ router.post(
                         },
                         user: {
                             connect: {
-                                id: newAdmin.userId,
+                                id: user.id,
                             },
                         },
                     },
