@@ -13,6 +13,7 @@ import {
     Competition$,
     CreateAdmin$,
     Role,
+    User$,
 } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
 import { Router } from 'express';
@@ -61,9 +62,11 @@ router.post(
                 return;
             }
             // Check if the email is already an admin
-            if (competition.admins.some(
-                (admin) => admin.user.email === newAdmin.email
-            )) {
+            if (
+                competition.admins.some(
+                    (admin) => admin.user.email === newAdmin.email
+                )
+            ) {
                 res.status(400).send('User is already an admin');
                 return;
             }
@@ -73,11 +76,27 @@ router.post(
                     where: {
                         email: newAdmin.email,
                     },
+                    include: {
+                        club: true,
+                        preferences: true,
+                    },
                 });
 
                 if (!user) {
                     res.status(404).send('User not found');
                     return;
+                }
+
+                // Elevate user role to ADMIN if they're not already admin or higher
+                if (!isAuthorized(User$.parse(user), Role.ADMIN)) {
+                    await prisma.user.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            role: Role.ADMIN,
+                        },
+                    });
                 }
 
                 const admin = await prisma.admin.create({
