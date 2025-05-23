@@ -35,7 +35,7 @@ export const saveInscriptions = async (
 
         // Update inscriptions
         for (const inscription of toUpdateInscriptions) {
-            const { data, meta } = inscriptionData.inscriptions.find(i => i.data.competitionEventEid === inscription.competitionEvent.eid)!;
+            const { data } = inscriptionData.inscriptions.find(i => i.data.competitionEventEid === inscription.competitionEvent.eid)!;
             const record = data.record ?? undefined;
 
             const event = competitionEvents.find(e => e.eid === data.competitionEventEid);
@@ -48,8 +48,7 @@ export const saveInscriptions = async (
                 data: {
                     record: inscription.record ? { update: record } : { create: record },
                     paid: Math.min(totalPaid, event.cost),
-                    isDeleted: false,
-                    ...meta
+                    isDeleted: false
                 },
                 include: inscriptionsInclude
             });
