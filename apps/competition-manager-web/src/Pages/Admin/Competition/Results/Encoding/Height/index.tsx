@@ -1,4 +1,9 @@
-import { Box } from '@mui/material';
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, Button } from '@mui/material';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ManageParticipantsModal } from '../components/ManageParticipantsModal';
 import { ParticipantsSelector } from '../components/ParticipantsSelector';
 import { AddHeightForm } from './AddHeightForm';
 import { HeightKeyboard } from './HeightKeyboard';
@@ -10,8 +15,13 @@ import {
     isAthleteRetired,
     isHeightDisabled,
 } from './utils';
+import { useDeviceSize } from '@/hooks';
 
 export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
+    const { t } = useTranslation();
+    const { isTablet } = useDeviceSize();
+    const [manageParticipantsOpen, setManageParticipantsOpen] = useState(false);
+
     // Get results and heights state
     const {
         results,
@@ -52,7 +62,31 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <AddHeightForm onAddHeight={addHeight} existingHeights={heights} />
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: isTablet ? 'column' : 'row',
+                    justifyContent: 'space-between',
+                    alignItems: isTablet ? 'stretch' : 'center',
+                    gap: isTablet ? 2 : 0,
+                    mb: 2,
+                }}
+            >
+                <Button
+                    fullWidth={isTablet}
+                    variant="outlined"
+                    startIcon={<FontAwesomeIcon icon={faUsers} />}
+                    onClick={() => setManageParticipantsOpen(true)}
+                    sx={{ py: 1, px: 4 }}
+                >
+                    {t('result:manageParticipants')}
+                </Button>
+
+                <AddHeightForm
+                    onAddHeight={addHeight}
+                    existingHeights={heights}
+                />
+            </Box>
 
             <HeightsTable
                 heights={heights}
@@ -83,6 +117,13 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
                 onKeyboardInput={handleInputChange}
                 onEnterPressed={handleEnterPressed}
                 onClose={handleKeyboardClose}
+            />
+
+            <ManageParticipantsModal
+                open={manageParticipantsOpen}
+                onClose={() => setManageParticipantsOpen(false)}
+                event={event}
+                existingResults={results}
             />
         </Box>
     );

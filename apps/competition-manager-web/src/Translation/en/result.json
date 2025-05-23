@@ -40,5 +40,10 @@
     "addEvent": "Add Event",
     "timeEncodingNotImplemented": "Time encoding is not yet implemented",
     "pointsEncodingNotImplemented": "Points encoding is not yet implemented",
-    "encodingNotAvailable": "Encoding not available for this event type"
+    "encodingNotAvailable": "Encoding not available for this event type",
+    "manageParticipants": "Manage Participants",
+    "dragToReorderOrAddAthletes": "Drag to reorder athletes or select/deselect them",
+    "noParticipantsFound": "No participants found",
+    "cannotRemoveAthleteWithResults": "Cannot remove an athlete who already has results",
+    "searchAthletes": "Search Athletes"
 }
