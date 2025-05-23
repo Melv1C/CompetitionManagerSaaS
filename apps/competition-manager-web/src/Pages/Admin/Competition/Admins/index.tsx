@@ -24,7 +24,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 // Import directly from the project files since path aliases might not be configured in this editor
-import { createAdmin } from '@/api/admin';
+import { createAdmin, removeAdmin } from '@/api/admin';
 import { competitionAtom, userTokenAtom } from '@/GlobalsStates';
 import {
     Access,
@@ -35,7 +35,6 @@ import {
 } from '@competition-manager/schemas';
 import { useAtomValue } from 'jotai';
 import { useTranslation } from 'react-i18next';
-import { removeAdmin } from '@/api/admin/removeAdmin';
 
 export const Admins = () => {
     const { t } = useTranslation();
@@ -151,10 +150,7 @@ export const Admins = () => {
 
     const handleRemoveAdmin = async (adminId: number) => {
         try {
-            await removeAdmin(
-                competition!.eid,
-                adminId
-            );
+            await removeAdmin(competition!.eid, adminId);
             setAdmins((prev) => prev.filter((admin) => admin.id !== adminId));
 
             setSnackbar({
@@ -196,11 +192,15 @@ export const Admins = () => {
     };
 
     const isAdminCompet = () => {
-        if (userToken == "NOT_LOGGED") return false;
+        if (userToken == 'NOT_LOGGED') return false;
         const admin = competition?.admins.find(
             (admin) => admin.user.id === userToken?.id
         );
-        if (admin && (admin.access.includes(Access.COMPETITIONS) || admin.access.includes(Access.OWNER))) {
+        if (
+            admin &&
+            (admin.access.includes(Access.COMPETITIONS) ||
+                admin.access.includes(Access.OWNER))
+        ) {
             return true;
         }
         return false;
@@ -286,7 +286,7 @@ export const Admins = () => {
                                                     variant="outlined"
                                                     onClick={() => {
                                                         // TODO
-                                                        alert("TODO")
+                                                        alert('TODO');
                                                     }}
                                                 >
                                                     {t('actions.edit', 'Edit')}
