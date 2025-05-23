@@ -99,6 +99,7 @@ export const ManageParticipantsModal: React.FC<
         const filtered = adminInscriptions.filter(
             (inscription) =>
                 inscription.competitionEvent.id === event.id &&
+                !inscription.isDeleted &&
                 (inscription.status === InscriptionStatus.ACCEPTED ||
                     inscription.status === InscriptionStatus.CONFIRMED)
         );

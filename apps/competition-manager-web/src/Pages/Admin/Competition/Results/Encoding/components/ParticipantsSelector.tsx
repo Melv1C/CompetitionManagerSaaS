@@ -82,6 +82,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
         const filtered = adminInscriptions.filter(
             (inscription) =>
                 inscription.competitionEvent.id === event.id &&
+                !inscription.isDeleted &&
                 (inscription.status === InscriptionStatus.ACCEPTED ||
                     inscription.status === InscriptionStatus.CONFIRMED)
         );
@@ -298,7 +299,11 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                                             )}
                                             <SortableParticipantItem
                                                 participant={participant}
-                                                toggleSelection={() => toggleSelection(participant.license)}
+                                                toggleSelection={() =>
+                                                    toggleSelection(
+                                                        participant.license
+                                                    )
+                                                }
                                                 inscription={
                                                     participant.inscriptionId
                                                         ? inscriptions.find(
