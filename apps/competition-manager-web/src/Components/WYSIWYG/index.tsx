@@ -6,12 +6,14 @@ type WysiwygEditorProps = {
     value: string;
     onChange: (value: string) => void;
     placeholder?: string;
+    disabled?: boolean;
 };
 
 export const WysiwygEditor: React.FC<WysiwygEditorProps> = ({ 
     value, 
     onChange,
     placeholder = "Write something here...",
+    disabled = false
 }) => {
     return (
         <ReactQuill
@@ -30,6 +32,7 @@ export const WysiwygEditor: React.FC<WysiwygEditorProps> = ({
                     ["link"]
                 ],
             }}
+            readOnly={disabled}
         />
     );
 };

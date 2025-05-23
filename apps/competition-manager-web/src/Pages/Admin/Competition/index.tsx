@@ -1,5 +1,5 @@
 import { Loading, SideNav } from '@/Components';
-import { competitionAtom, userTokenAtom } from '@/GlobalsStates';
+import { userTokenAtom } from '@/GlobalsStates';
 import { useFetchCompetitionData } from '@/hooks';
 import { CLOSED_SIDENAV_WIDTH, OPEN_SIDENAV_WIDTH } from '@/utils/constants';
 import { Access, Role } from '@competition-manager/schemas';
@@ -30,18 +30,19 @@ export const AdminCompetition = () => {
     if (!competitionEid) throw new Error('No competition EID provided');
 
     const userToken = useAtomValue(userTokenAtom);
-    const competition = useAtomValue(competitionAtom);
-    if (!competition) throw new Error('No competition found in state');
 
     const { t } = useTranslation();
 
-    const { isLoading, reset } = useFetchCompetitionData(competitionEid, true);
+    const { isLoading, reset, competition } = useFetchCompetitionData(
+        competitionEid,
+        true
+    );
 
     const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
     // Find the current user's admin access in this competition
     const currentUserAdminAccess = useMemo(() => {
-        if (!userToken || userToken === 'NOT_LOGGED' || !competition.admins) {
+        if (!userToken || userToken === 'NOT_LOGGED' || !competition?.admins) {
             return null;
         }
 
@@ -50,7 +51,7 @@ export const AdminCompetition = () => {
             (admin) => admin.userId === userToken.id
         );
         return adminEntry?.access || null;
-    }, [userToken, competition.admins]);
+    }, [userToken, competition?.admins]);
 
     const allNavItems = useMemo(() => {
         return [
@@ -58,7 +59,13 @@ export const AdminCompetition = () => {
                 text: t('navigation:info'),
                 icon: faInfo,
                 link: `/admin/competitions/${competitionEid}`,
-                accesses: [Access.OWNER, Access.COMPETITIONS],
+                accesses: [
+                    Access.OWNER,
+                    Access.COMPETITIONS,
+                    Access.INSCRIPTIONS,
+                    Access.CONFIRMATIONS,
+                    Access.RESULTS,
+                ],
             },
             {
                 text: t('navigation:schedule'),
