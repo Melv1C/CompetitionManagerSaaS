@@ -5,7 +5,6 @@ import { AxiosError } from 'axios';
 export const createAdmin = async (eid: Eid, admin: CreateAdmin) => {
     try {
         const { data } = await api.post(`/competitions/${eid}/admins`, admin);
-        console.log('data', data);
         return Admin$.parse(data);
     } catch (error: unknown) {
         switch ((error as AxiosError).response?.data) {
