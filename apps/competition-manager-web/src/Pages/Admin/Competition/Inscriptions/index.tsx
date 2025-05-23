@@ -4,6 +4,8 @@ import {
     competitionAtom,
     inscriptionDataAtom,
 } from '@/GlobalsStates';
+import { deleteInscriptions } from '@/api';
+import { useConfirmDialog, useSnackbar } from '@/hooks';
 import { Athlete, EventType, Inscription } from '@competition-manager/schemas';
 import { formatPerf, getCategoryAbbr } from '@competition-manager/utils';
 import { faFileExport } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     Alert,
     Box,
+    DialogContentText,
     Divider,
     IconButton,
     Paper,
@@ -23,10 +26,14 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQueryClient } from 'react-query';
 import { InscriptionPopup } from './InscriptionPopup';
 
 export const Inscriptions = () => {
     const { t } = useTranslation();
+    const { confirm } = useConfirmDialog();
+    const { showSnackbar } = useSnackbar();
+    const queryClient = useQueryClient();
 
     const competition = useAtomValue(competitionAtom);
     const adminInscriptions = useAtomValue(adminInscriptionsAtom);
@@ -53,6 +60,55 @@ export const Inscriptions = () => {
         newValue: number
     ) => {
         setTabValue(newValue);
+    };
+
+    // Delete mutation for handling inscription deletion
+    const deleteMutation = useMutation(
+        async ({ inscriptionEid }: { inscriptionEid: string }) => {
+            return deleteInscriptions(competition.eid, inscriptionEid, true);
+        },
+        {
+            onSuccess: () => {
+                // Invalidate and refetch all related queries to ensure UI consistency
+                queryClient.invalidateQueries([
+                    'adminInscriptions',
+                    competition.eid,
+                ]);
+                showSnackbar(
+                    t('competition:inscriptionDeletedSuccess'),
+                    'success'
+                );
+            },
+            onError: () => {
+                showSnackbar(t('errors:inscriptionDeleteFailed'), 'error');
+            },
+        }
+    );
+
+    // Handle the delete confirmation and action
+    const handleDelete = async (inscription: Inscription) => {
+        const confirmed = await confirm({
+            title: t('competition:confirmDeleteInscription', { count: 1 }),
+            message: (
+                <DialogContentText>
+                    {t('competition:confirmDeleteInscriptionMessage', {
+                        athlete: `${inscription.athlete.firstName} ${inscription.athlete.lastName}`,
+                        count: 1,
+                    })}
+                </DialogContentText>
+            ),
+            additionalContent: inscription.paid ? (
+                <Alert severity="warning" sx={{ mt: 2 }}>
+                    {t('competition:refundPolicyWarning')}
+                </Alert>
+            ) : undefined,
+        });
+
+        if (confirmed) {
+            deleteMutation.mutateAsync({
+                inscriptionEid: inscription.eid,
+            });
+        }
     };
 
     const activeInscriptions = useMemo(
@@ -106,7 +162,8 @@ export const Inscriptions = () => {
                     competition.date
                 ),
                 inscription.competitionEvent.name,
-                inscription.record?.perf && inscription.competitionEvent.event.type == EventType.TIME
+                inscription.record?.perf &&
+                inscription.competitionEvent.event.type === EventType.TIME
                     ? inscription.record.perf / 1000
                     : inscription.record?.perf,
             ].join(';');
@@ -234,12 +291,7 @@ export const Inscriptions = () => {
                     <CircleButton
                         size="2rem"
                         color="error"
-                        onClick={() =>
-                            handleShowWarning(
-                                'Delete',
-                                `${row.id} ${row.athlete.firstName} ${row.athlete.lastName}: ${row.competitionEvent.name}`
-                            )
-                        }
+                        onClick={() => handleDelete(row)}
                     >
                         <Icons.Delete />
                     </CircleButton>
