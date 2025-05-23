@@ -36,7 +36,11 @@ router.post(
                     eid,
                 },
                 include: {
-                    admins: true,
+                    admins: {
+                        include: {
+                            user: true,
+                        },
+                    },
                 },
             });
             if (!competition) {
@@ -44,15 +48,22 @@ router.post(
                 return;
             }
             if (
-                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !isAuthorized(req.user!, Role.ADMIN) &&
                 !checkAdminRole(
-                    Access.OWNER,
+                    Access.COMPETITIONS,
                     req.user!.id,
                     BaseAdmin$.array().parse(competition.admins),
                     res,
                     req.t
                 )
             ) {
+                return;
+            }
+            // Check if the email is already an admin
+            if (competition.admins.some(
+                (admin) => admin.user.email === newAdmin.email
+            )) {
+                res.status(400).send('User is already an admin');
                 return;
             }
             try {

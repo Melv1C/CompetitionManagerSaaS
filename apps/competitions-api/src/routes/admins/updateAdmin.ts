@@ -47,9 +47,9 @@ router.put(
                 return;
             }
             if (
-                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !isAuthorized(req.user!, Role.ADMIN) &&
                 !checkAdminRole(
-                    Access.OWNER,
+                    Access.COMPETITIONS,
                     req.user!.id,
                     BaseAdmin$.array().parse(competition.admins),
                     res,
