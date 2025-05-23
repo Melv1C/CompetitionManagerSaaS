@@ -2,13 +2,15 @@ import { getClubs, updateCompetition } from '@/api';
 import { Icons, Loading, TextFieldWith$, WysiwygEditor } from '@/Components';
 import { CircleButton } from '@/Components/CircleButton';
 import { MaxWidth } from '@/Components/MaxWidth';
-import { competitionAtom } from '@/GlobalsStates';
+import { competitionAtom, userTokenAtom } from '@/GlobalsStates';
 import {
+    Access,
     Competition,
     Competition$,
     Id,
     OneDayPermission,
     PaymentMethod,
+    Role,
     UpdateCompetition,
 } from '@competition-manager/schemas';
 import {
@@ -24,7 +26,7 @@ import {
     Typography,
 } from '@mui/material';
 import { MobileDatePicker, MobileDateTimePicker } from '@mui/x-date-pickers';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -36,8 +38,37 @@ export const Info = () => {
 
     const { data: clubs } = useQuery('clubs', getClubs);
 
+    const userToken = useAtomValue(userTokenAtom);
     const [competition, setCompetition] = useAtom(competitionAtom);
     const [competitionState, setCompetitionState] = useState<Competition>();
+
+    // Check if user has OWNER or COMPETITIONS access
+    const canEdit = useMemo(() => {
+        // SUPERADMIN can always edit
+        if (
+            userToken &&
+            userToken !== 'NOT_LOGGED' &&
+            userToken.role === Role.SUPERADMIN
+        ) {
+            return true;
+        }
+
+        // Check if user is an admin with OWNER or COMPETITIONS access
+        if (competition?.admins && userToken && userToken !== 'NOT_LOGGED') {
+            const adminEntry = competition.admins.find(
+                (admin) => admin.userId === userToken.id
+            );
+            return (
+                adminEntry?.access?.some(
+                    (access) =>
+                        access === Access.OWNER ||
+                        access === Access.COMPETITIONS
+                ) || false
+            );
+        }
+
+        return false;
+    }, [userToken, competition?.admins]);
 
     const allowedClubsId = useMemo(
         () => competitionState?.allowedClubs.map((club) => club.id) || [],
@@ -96,8 +127,8 @@ export const Info = () => {
     );
 
     const isSaveEnabled = useMemo(
-        () => isFormValid && isModified,
-        [isFormValid, isModified]
+        () => isFormValid && isModified && canEdit,
+        [isFormValid, isModified, canEdit]
     );
 
     useEffect(() => {
@@ -134,12 +165,12 @@ export const Info = () => {
 
     // TODO: extract to custom hook
     //--------------------------------------------------------------------------------
-    const blocker = useBlocker(isModified);
+    const blocker = useBlocker(isModified && canEdit);
     const [isBlock, setIsBlock] = useState(false);
 
     useEffect(() => {
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-            if (isModified) {
+            if (isModified && canEdit) {
                 e.preventDefault();
                 e.returnValue = '';
             }
@@ -149,7 +180,7 @@ export const Info = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, [isModified]);
+    }, [isModified, canEdit]);
 
     useEffect(() => {
         if (blocker.state === 'blocked') {
@@ -205,6 +236,7 @@ export const Info = () => {
                                 })
                             }
                             sx={{ alignSelf: 'center' }}
+                            readOnly={!canEdit}
                         />
                     </FormControl>
 
@@ -225,16 +257,19 @@ export const Info = () => {
                             setIsValid: setIsNameValid,
                         }}
                         formControlProps={{ fullWidth: true }}
+                        disabled={!canEdit}
                     />
 
-                    <CircleButton
-                        onClick={onSave}
-                        variant="contained"
-                        color="success"
-                        disabled={!isSaveEnabled}
-                    >
-                        <Icons.Save size="xl" />
-                    </CircleButton>
+                    {canEdit && (
+                        <CircleButton
+                            onClick={onSave}
+                            variant="contained"
+                            color="success"
+                            disabled={!isSaveEnabled}
+                        >
+                            <Icons.Save size="xl" />
+                        </CircleButton>
+                    )}
                 </Box>
 
                 <Box
@@ -271,7 +306,13 @@ export const Info = () => {
                             }}
                             onError={(error) => setIsDateValid(!error)}
                             format="dd/MM/yyyy"
-                            slotProps={{ textField: { required: true } }}
+                            slotProps={{
+                                textField: {
+                                    required: true,
+                                    disabled: !canEdit,
+                                },
+                            }}
+                            disabled={!canEdit}
                         />
 
                         <FormControl>
@@ -289,6 +330,7 @@ export const Info = () => {
                                     setIsCloseDateValid(true);
                                 }}
                                 sx={{ alignSelf: 'center' }}
+                                disabled={!canEdit}
                             />
                         </FormControl>
 
@@ -312,7 +354,13 @@ export const Info = () => {
                                           )
                                         : undefined
                                 }
-                                slotProps={{ textField: { required: true } }}
+                                slotProps={{
+                                    textField: {
+                                        required: true,
+                                        disabled: !canEdit,
+                                    },
+                                }}
+                                disabled={!canEdit}
                             />
                         )}
                     </Box>
@@ -326,6 +374,7 @@ export const Info = () => {
                             })
                         }
                         placeholder={t('labels:description')}
+                        disabled={!canEdit}
                     />
 
                     <TextFieldWith$
@@ -344,6 +393,7 @@ export const Info = () => {
                             isValid: isLocationValid,
                             setIsValid: setIsLocationValid,
                         }}
+                        disabled={!canEdit}
                     />
 
                     <Divider />
@@ -368,6 +418,7 @@ export const Info = () => {
                             isValid: isEmailValid,
                             setIsValid: setIsEmailValid,
                         }}
+                        disabled={!canEdit}
                     />
 
                     <TextFieldWith$
@@ -386,6 +437,7 @@ export const Info = () => {
                             isValid: isPhoneValid,
                             setIsValid: setIsPhoneValid,
                         }}
+                        disabled={!canEdit}
                     />
 
                     <Divider />
@@ -420,6 +472,12 @@ export const Info = () => {
                             }
                             format="dd/MM/yyyy HH:mm"
                             maxDate={competitionState.date}
+                            slotProps={{
+                                textField: {
+                                    disabled: !canEdit,
+                                },
+                            }}
+                            disabled={!canEdit}
                         />
 
                         <MobileDateTimePicker
@@ -449,10 +507,16 @@ export const Info = () => {
                                     : undefined
                             }
                             maxDate={competitionState.date}
+                            slotProps={{
+                                textField: {
+                                    disabled: !canEdit,
+                                },
+                            }}
+                            disabled={!canEdit}
                         />
                     </Box>
 
-                    <FormControl sx={{ minWidth: 200 }}>
+                    <FormControl sx={{ minWidth: 200 }} disabled={!canEdit}>
                         <InputLabel id="allowedClubsLabel">
                             {t('labels:allowedClubs')}
                         </InputLabel>
@@ -489,18 +553,25 @@ export const Info = () => {
                                             <Chip
                                                 key={id}
                                                 label={club?.abbr}
-                                                onDelete={() => {
-                                                    const newAllowedClubs =
-                                                        competitionState.allowedClubs.filter(
-                                                            (club) =>
-                                                                club.id !== id
-                                                        );
-                                                    setCompetitionState({
-                                                        ...competitionState,
-                                                        allowedClubs:
-                                                            newAllowedClubs,
-                                                    });
-                                                }}
+                                                onDelete={
+                                                    canEdit
+                                                        ? () => {
+                                                              const newAllowedClubs =
+                                                                  competitionState.allowedClubs.filter(
+                                                                      (club) =>
+                                                                          club.id !==
+                                                                          id
+                                                                  );
+                                                              setCompetitionState(
+                                                                  {
+                                                                      ...competitionState,
+                                                                      allowedClubs:
+                                                                          newAllowedClubs,
+                                                                  }
+                                                              );
+                                                          }
+                                                        : undefined
+                                                }
                                                 onMouseDown={(e) =>
                                                     e.stopPropagation()
                                                 }
@@ -527,7 +598,7 @@ export const Info = () => {
                             gap: '1rem',
                         }}
                     >
-                        <FormControl sx={{ minWidth: 120 }}>
+                        <FormControl sx={{ minWidth: 120 }} disabled={!canEdit}>
                             <InputLabel id="methodLabel">
                                 {t('labels:paymentMethod')}
                             </InputLabel>
@@ -556,7 +627,10 @@ export const Info = () => {
                         </FormControl>
 
                         {competitionState.method !== PaymentMethod.FREE && (
-                            <FormControl sx={{ minWidth: 200 }}>
+                            <FormControl
+                                sx={{ minWidth: 200 }}
+                                disabled={!canEdit}
+                            >
                                 <InputLabel id="freeClubsLabel">
                                     {t('labels:freeClubs')}
                                 </InputLabel>
@@ -594,21 +668,27 @@ export const Info = () => {
                                                     <Chip
                                                         key={id}
                                                         label={club?.abbr}
-                                                        onDelete={() => {
-                                                            const newFreeClubs =
-                                                                competitionState.freeClubs.filter(
-                                                                    (club) =>
-                                                                        club.id !==
-                                                                        id
-                                                                );
-                                                            setCompetitionState(
-                                                                {
-                                                                    ...competitionState,
-                                                                    freeClubs:
-                                                                        newFreeClubs,
-                                                                }
-                                                            );
-                                                        }}
+                                                        onDelete={
+                                                            canEdit
+                                                                ? () => {
+                                                                      const newFreeClubs =
+                                                                          competitionState.freeClubs.filter(
+                                                                              (
+                                                                                  club
+                                                                              ) =>
+                                                                                  club.id !==
+                                                                                  id
+                                                                          );
+                                                                      setCompetitionState(
+                                                                          {
+                                                                              ...competitionState,
+                                                                              freeClubs:
+                                                                                  newFreeClubs,
+                                                                          }
+                                                                      );
+                                                                  }
+                                                                : undefined
+                                                        }
                                                         onMouseDown={(e) =>
                                                             e.stopPropagation()
                                                         }
@@ -635,7 +715,7 @@ export const Info = () => {
                         )}
 
                         {competitionState.method === PaymentMethod.ONLINE && (
-                            <FormControl>
+                            <FormControl disabled={!canEdit}>
                                 <FormLabel sx={{ textAlign: 'center' }}>
                                     {t('labels:isFeesAdditionnal')}
                                 </FormLabel>
@@ -649,12 +729,13 @@ export const Info = () => {
                                         })
                                     }
                                     sx={{ alignSelf: 'center' }}
+                                    disabled={!canEdit}
                                 />
                             </FormControl>
                         )}
                     </Box>
 
-                    <FormControl sx={{ minWidth: 200 }}>
+                    <FormControl sx={{ minWidth: 200 }} disabled={!canEdit}>
                         <InputLabel id="oneDayPermissionsLabel">
                             {t('labels:oneDayPermission')}
                         </InputLabel>
@@ -666,7 +747,8 @@ export const Info = () => {
                             multiple
                             value={competitionState.oneDayPermissions}
                             onChange={(e) => {
-                                const selectedPermissions = e.target.value as OneDayPermission[];
+                                const selectedPermissions = e.target
+                                    .value as OneDayPermission[];
                                 setCompetitionState({
                                     ...competitionState,
                                     oneDayPermissions: selectedPermissions,
@@ -680,38 +762,51 @@ export const Info = () => {
                                         gap: '0.5rem',
                                     }}
                                 >
-                                    {(selected as OneDayPermission[]).map((permission) => (
-                                        <Chip
-                                            key={permission}
-                                            label={t(
-                                                `labels:${permission}`
-                                            )}
-                                            onDelete={() => {
-                                                const newPermissions =
-                                                    competitionState.oneDayPermissions.filter(
-                                                        (perm) =>
-                                                            perm !==
-                                                            permission
-                                                    );
-                                                setCompetitionState({
-                                                    ...competitionState,
-                                                    oneDayPermissions:
-                                                        newPermissions,
-                                                });
-                                            }}
-                                            onMouseDown={(e) =>
-                                                e.stopPropagation()
-                                            }
-                                        />
-                                    ))}
+                                    {(selected as OneDayPermission[]).map(
+                                        (permission) => (
+                                            <Chip
+                                                key={permission}
+                                                label={t(
+                                                    `labels:${permission}`
+                                                )}
+                                                onDelete={
+                                                    canEdit
+                                                        ? () => {
+                                                              const newPermissions =
+                                                                  competitionState.oneDayPermissions.filter(
+                                                                      (perm) =>
+                                                                          perm !==
+                                                                          permission
+                                                                  );
+                                                              setCompetitionState(
+                                                                  {
+                                                                      ...competitionState,
+                                                                      oneDayPermissions:
+                                                                          newPermissions,
+                                                                  }
+                                                              );
+                                                          }
+                                                        : undefined
+                                                }
+                                                onMouseDown={(e) =>
+                                                    e.stopPropagation()
+                                                }
+                                            />
+                                        )
+                                    )}
                                 </Box>
                             )}
                         >
-                            {Object.values(OneDayPermission).map((permission) => (
-                                <MenuItem key={permission} value={permission}>
-                                    {t(`labels:${permission}`)}
-                                </MenuItem>
-                            ))}
+                            {Object.values(OneDayPermission).map(
+                                (permission) => (
+                                    <MenuItem
+                                        key={permission}
+                                        value={permission}
+                                    >
+                                        {t(`labels:${permission}`)}
+                                    </MenuItem>
+                                )
+                            )}
                         </Select>
                     </FormControl>
 
@@ -742,6 +837,7 @@ export const Info = () => {
                         }}
                         type="number"
                         formControlProps={{ sx: { maxWidth: 200 } }}
+                        disabled={!canEdit}
                     />
                 </Box>
             </Box>

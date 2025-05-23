@@ -1,5 +1,6 @@
 import { upsertResults } from '@/api';
 import { competitionAtom, resultsAtom } from '@/GlobalsStates';
+import { useDeviceSize } from '@/hooks';
 import {
     CompetitionEvent,
     Eid,
@@ -12,7 +13,7 @@ import {
     UpsertResultType,
 } from '@competition-manager/schemas';
 import { formatResult, sortResult } from '@competition-manager/utils';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faMinus, faPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     Box,
@@ -30,6 +31,7 @@ import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { ManageParticipantsModal } from '../components/ManageParticipantsModal';
 import { ParticipantsSelector } from '../components/ParticipantsSelector';
 import { DistanceKeyboard } from './DistanceKeyboard';
 import { InputResultDistance } from './InputResultDistance';
@@ -40,8 +42,12 @@ interface DistanceEncodeProps {
 
 export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
     const { t } = useTranslation();
+    const { isMobile, isTablet } = useDeviceSize();
+    const isSmallScreen = isMobile || isTablet;
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
+
+    const [manageParticipantsOpen, setManageParticipantsOpen] = useState(false);
 
     const upsertResultsMutation = useMutation({
         mutationFn: (params: {
@@ -371,12 +377,23 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'flex-end',
+                    flexDirection: isSmallScreen ? 'column' : 'row',
+                    justifyContent: 'space-between',
+                    alignItems: isSmallScreen ? 'stretch' : 'center',
                     mb: 2,
-                    alignItems: 'center',
-                    gap: 2,
+                    gap: isSmallScreen ? 2 : 2,
                 }}
             >
+                <Button
+                    fullWidth={isSmallScreen}
+                    variant="outlined"
+                    startIcon={<FontAwesomeIcon icon={faUsers} />}
+                    onClick={() => setManageParticipantsOpen(true)}
+                    sx={{ py: 1, px: 4 }}
+                >
+                    {t('result:manageParticipants')}
+                </Button>
+
                 <Paper
                     elevation={1}
                     sx={{
@@ -429,6 +446,7 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
                     </Button>
                 </Paper>
             </Box>
+
             <TableContainer component={Paper}>
                 <Table stickyHeader>
                     <TableHead>
@@ -551,6 +569,14 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
                     handleInputBlur(); // Call the blur handler to save the input
                     handleKeyboardClose(); // Close the keyboard
                 }}
+            />
+
+            {/* Add the ManageParticipantsModal */}
+            <ManageParticipantsModal
+                open={manageParticipantsOpen}
+                onClose={() => setManageParticipantsOpen(false)}
+                event={event}
+                existingResults={results}
             />
         </Box>
     );

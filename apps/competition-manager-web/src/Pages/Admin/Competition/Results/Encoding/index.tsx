@@ -250,6 +250,11 @@ export const Encoding = () => {
                 <DialogContent>
                     <List>
                         {competition.events
+                            .filter(
+                                (event) =>
+                                    event.event.type === EventType.HEIGHT ||
+                                    event.event.type === EventType.DISTANCE
+                            )
                             .sort(
                                 (a, b) =>
                                     a.schedule.getTime() - b.schedule.getTime()

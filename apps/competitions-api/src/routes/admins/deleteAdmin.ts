@@ -12,7 +12,6 @@ import {
     Eid$,
     Id$,
     Role,
-    UpdateAdmin$,
 } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
 import { Router } from 'express';
@@ -25,15 +24,13 @@ const Params$ = z.object({
     adminId: Id$,
 });
 
-router.put(
+router.delete(
     '/:competitionEid/admins/:adminId',
-    parseRequest(Key.Body, UpdateAdmin$),
+    checkRole(Role.ADMIN),
     parseRequest(Key.Params, Params$),
-    checkRole(Role.CLUB),
     async (req: CustomRequest, res) => {
         try {
-            const { competitionEid, adminId } = Params$.parse(req.params);
-            const newAdmin = UpdateAdmin$.parse(req.body);
+            const { competitionEid, adminId } = req.params;
             const competition = await prisma.competition.findUnique({
                 where: {
                     eid: competitionEid,
@@ -58,25 +55,14 @@ router.put(
             ) {
                 return;
             }
-            try {
-                const admin = await prisma.admin.update({
-                    where: {
-                        id: adminId,
-                    },
-                    data: newAdmin,
-                });
-                res.send(admin);
-            } catch (e: any) {
-                if (e.code === 'P2025') {
-                    res.status(404).send('Admin not found');
-                } else {
-                    console.error(e);
-                    res.status(500).send(req.t('error.internalServerError'));
-                }
-            }
+            await prisma.admin.delete({
+                where: {
+                    id: Number(adminId),
+                },
+            });
+            res.status(200).send('Admin deleted successfully');
         } catch (error) {
-            console.error(error);
-            res.status(500).send(req.t('error.internalServerError'));
+            res.status(500).send('Internal server error');
         }
     }
 );

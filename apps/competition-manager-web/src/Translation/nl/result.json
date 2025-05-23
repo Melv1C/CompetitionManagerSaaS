@@ -40,5 +40,10 @@
     "addEvent": "Onderdeel Toevoegen",
     "timeEncodingNotImplemented": "Tijdcodering is nog niet geïmplementeerd",
     "pointsEncodingNotImplemented": "Puntencodering is nog niet geïmplementeerd",
-    "encodingNotAvailable": "Codering niet beschikbaar voor dit type onderdeel"
+    "encodingNotAvailable": "Codering niet beschikbaar voor dit type onderdeel",
+    "manageParticipants": "Deelnemers Beheren",
+    "dragToReorderOrAddAthletes": "Sleep om atleten te herschikken of te selecteren/deselecteren",
+    "noParticipantsFound": "Geen deelnemers gevonden",
+    "cannotRemoveAthleteWithResults": "Kan een atleet die al resultaten heeft niet verwijderen",
+    "searchAthletes": "Atleten Zoeken"
 }

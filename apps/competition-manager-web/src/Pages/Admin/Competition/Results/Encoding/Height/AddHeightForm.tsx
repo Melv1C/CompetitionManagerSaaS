@@ -15,7 +15,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
     existingHeights,
 }) => {
     const { t } = useTranslation();
-    const { isMobile } = useDeviceSize();
+    const { isTablet } = useDeviceSize();
     const [heightValue, setHeightValue] = useState<number>(0);
     const [inputValue, setInputValue] = useState<string>('0.00');
     const [error, setError] = useState<string | null>(null);
@@ -109,7 +109,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
         <Box
             sx={{
                 display: 'flex',
-                justifyContent: isMobile ? 'center' : 'flex-end',
+                justifyContent: isTablet ? 'center' : 'flex-end',
                 width: '100%',
                 mb: 2,
             }}
@@ -118,13 +118,13 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                 elevation={2}
                 sx={{
                     display: 'flex',
-                    flexDirection: isMobile ? 'column' : 'row',
+                    flexDirection: isTablet ? 'column' : 'row',
                     alignItems: 'center',
                     gap: 1.5,
                     p: 1.5,
                     borderRadius: '10px',
                     border: '1px solid rgba(0, 0, 0, 0.08)',
-                    width: isMobile ? '100%' : 'auto',
+                    width: isTablet ? '100%' : 'auto',
                     maxWidth: '100%',
                 }}
             >
@@ -137,7 +137,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                         overflow: 'hidden',
                         border: '1px solid rgba(0, 0, 0, 0.08)',
                         height: '40px',
-                        width: isMobile ? '100%' : 'auto',
+                        width: isTablet ? '100%' : 'auto',
                     }}
                 >
                     <Button
@@ -146,7 +146,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                             minWidth: '40px',
                             minHeight: '40px',
                             borderRadius: 0,
-                            flex: isMobile ? 1 : 'none',
+                            flex: isTablet ? 1 : 'none',
                         }}
                     >
                         <FontAwesomeIcon icon={faMinus} />
@@ -178,7 +178,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                             minWidth: '40px',
                             minHeight: '40px',
                             borderRadius: 0,
-                            flex: isMobile ? 1 : 'none',
+                            flex: isTablet ? 1 : 'none',
                         }}
                     >
                         <FontAwesomeIcon icon={faPlus} />
@@ -192,7 +192,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                         flexWrap: 'wrap',
                         gap: 1,
                         justifyContent: 'center',
-                        width: isMobile ? '100%' : 'auto',
+                        width: isTablet ? '100%' : 'auto',
                     }}
                 >
                     {commonIncrements.map((increment) => (
@@ -206,7 +206,7 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                             onClick={() => adjustHeight(increment)}
                             sx={{
                                 height: '32px',
-                                flex: isMobile ? '1 1 calc(33% - 8px)' : 'none',
+                                flex: isTablet ? '1 1 calc(33% - 8px)' : 'none',
                             }}
                         />
                     ))}
@@ -220,8 +220,8 @@ export const AddHeightForm: React.FC<AddHeightFormProps> = ({
                     size="small"
                     sx={{
                         height: '40px',
-                        minWidth: isMobile ? '100%' : '40px',
-                        width: isMobile ? '100%' : '40px',
+                        minWidth: isTablet ? '100%' : '40px',
+                        width: isTablet ? '100%' : '40px',
                     }}
                 >
                     <FontAwesomeIcon icon={faCheck} />

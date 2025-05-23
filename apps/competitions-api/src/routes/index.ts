@@ -7,6 +7,7 @@ import { router as createEventRouter } from './events/createEvent';
 import { router as updateEventRouter } from './events/updateEvent';
 import { router as createAdminRouter } from './admins/createAdmin';
 import { router as updateAdminRouter } from './admins/updateAdmin';
+import { router as deleteAdminRouter } from './admins/deleteAdmin';
 import { router as createInscriptionRouter } from './inscriptions/createInscription';
 import { router as createOneDayAthRouter } from './createOneDayAth';
 import { router as restoreCompetitionRouter } from './competitions/restoreCompetition';
@@ -29,5 +30,6 @@ export default [
     restoreCompetitionRouter,
     getInscriptionsRouter,
     updateInscriptionRouter,
-    deleteInscriptionRouter
+    deleteInscriptionRouter,
+    deleteAdminRouter
 ];

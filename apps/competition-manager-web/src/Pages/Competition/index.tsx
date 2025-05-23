@@ -70,7 +70,7 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
-    const { isPast, isFuture, isCurrent } = useCompetition();
+    const { isFuture, isCurrent } = useCompetition();
 
     const activeTab = useMemo(
         () =>
@@ -111,9 +111,9 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({
                             value="inscriptions"
                         />
                     )}
-                    {(isPast || isCurrent) && (
+                    {/* {(isPast || isCurrent) && (
                         <Tab label={t('glossary:results')} value="results" />
-                    )}
+                    )} */}
                 </Tabs>
             </Box>
 
@@ -126,18 +126,9 @@ const CompetitionNavbar: React.FC<CompetitionNavbarProps> = ({
                 {(isFuture || isCurrent) && (
                     <Route path="/inscriptions" element={<Inscriptions />} />
                 )}
-                {isCurrent && (
-                    <Route
-                        path="/liveResults"
-                        element={<Box>{t('glossary:liveResults')}</Box>}
-                    />
-                )}
-                {isPast && (
-                    <Route
-                        path="/results"
-                        element={<Box>{t('glossary:results')}</Box>}
-                    />
-                )}
+                {/* {(isPast || isCurrent) && (
+                    <Route path="/results" element={<Box>Results</Box>} />
+                )} */}
                 <Route path="/events/:eventEid" element={<Event />} />
                 <Route
                     path="*"

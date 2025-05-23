@@ -8,10 +8,12 @@ import {
 import { prisma } from '@competition-manager/prisma';
 import {
     Access,
+    Admin$,
     BaseAdmin$,
     Competition$,
     CreateAdmin$,
     Role,
+    User$,
 } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
 import { Router } from 'express';
@@ -36,7 +38,11 @@ router.post(
                     eid,
                 },
                 include: {
-                    admins: true,
+                    admins: {
+                        include: {
+                            user: true,
+                        },
+                    },
                 },
             });
             if (!competition) {
@@ -46,7 +52,7 @@ router.post(
             if (
                 !isAuthorized(req.user!, Role.SUPERADMIN) &&
                 !checkAdminRole(
-                    Access.OWNER,
+                    Access.COMPETITIONS,
                     req.user!.id,
                     BaseAdmin$.array().parse(competition.admins),
                     res,
@@ -55,7 +61,44 @@ router.post(
             ) {
                 return;
             }
+            // Check if the email is already an admin
+            if (
+                competition.admins.some(
+                    (admin) => admin.user.email === newAdmin.email
+                )
+            ) {
+                res.status(400).send('User is already an admin');
+                return;
+            }
             try {
+                // Find user by email
+                const user = await prisma.user.findUnique({
+                    where: {
+                        email: newAdmin.email,
+                    },
+                    include: {
+                        club: true,
+                        preferences: true,
+                    },
+                });
+
+                if (!user) {
+                    res.status(404).send('User not found');
+                    return;
+                }
+
+                // Elevate user role to ADMIN if they're not already admin or higher
+                if (!isAuthorized(User$.parse(user), Role.ADMIN)) {
+                    await prisma.user.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            role: Role.ADMIN,
+                        },
+                    });
+                }
+
                 const admin = await prisma.admin.create({
                     data: {
                         access: newAdmin.access,
@@ -66,12 +109,15 @@ router.post(
                         },
                         user: {
                             connect: {
-                                id: newAdmin.userId,
+                                id: user.id,
                             },
                         },
                     },
+                    include: {
+                        user: true,
+                    },
                 });
-                res.send(admin);
+                res.send(Admin$.parse(admin));
             } catch (e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('User not found');
