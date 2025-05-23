@@ -42,7 +42,8 @@ interface DistanceEncodeProps {
 
 export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
     const { t } = useTranslation();
-    const { isTablet } = useDeviceSize();
+    const { isMobile, isTablet } = useDeviceSize();
+    const isSmallScreen = isMobile || isTablet;
     const competition = useAtomValue(competitionAtom);
     if (!competition) throw new Error('No competition data found');
 
@@ -376,15 +377,15 @@ export const DistanceEncode: React.FC<DistanceEncodeProps> = ({ event }) => {
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: isTablet ? 'column' : 'row',
+                    flexDirection: isSmallScreen ? 'column' : 'row',
                     justifyContent: 'space-between',
-                    alignItems: isTablet ? 'stretch' : 'center',
+                    alignItems: isSmallScreen ? 'stretch' : 'center',
                     mb: 2,
-                    gap: isTablet ? 2 : 2,
+                    gap: isSmallScreen ? 2 : 2,
                 }}
             >
                 <Button
-                    fullWidth={isTablet}
+                    fullWidth={isSmallScreen}
                     variant="outlined"
                     startIcon={<FontAwesomeIcon icon={faUsers} />}
                     onClick={() => setManageParticipantsOpen(true)}

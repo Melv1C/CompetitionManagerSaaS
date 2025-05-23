@@ -19,7 +19,8 @@ import { useDeviceSize } from '@/hooks';
 
 export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
     const { t } = useTranslation();
-    const { isTablet } = useDeviceSize();
+    const { isMobile, isTablet } = useDeviceSize();
+    const isSmallScreen = isMobile || isTablet;
     const [manageParticipantsOpen, setManageParticipantsOpen] = useState(false);
 
     // Get results and heights state
@@ -65,15 +66,15 @@ export const HeightEncode: React.FC<HeightEncodeProps> = ({ event }) => {
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: isTablet ? 'column' : 'row',
+                    flexDirection: isSmallScreen ? 'column' : 'row',
                     justifyContent: 'space-between',
-                    alignItems: isTablet ? 'stretch' : 'center',
-                    gap: isTablet ? 2 : 0,
+                    alignItems: isSmallScreen ? 'stretch' : 'center',
+                    gap: isSmallScreen ? 2 : 0,
                     mb: 2,
                 }}
             >
                 <Button
-                    fullWidth={isTablet}
+                    fullWidth={isSmallScreen}
                     variant="outlined"
                     startIcon={<FontAwesomeIcon icon={faUsers} />}
                     onClick={() => setManageParticipantsOpen(true)}
