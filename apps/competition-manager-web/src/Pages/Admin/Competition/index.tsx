@@ -22,6 +22,7 @@ import { Inscriptions } from './Inscriptions';
 import { Results } from './Results';
 import { Schedule } from './Schedule';
 import { Stats } from './Stats';
+import { Admins } from './Admins';
 
 export const AdminCompetition = () => {
     const { competitionEid } = useParams();
@@ -122,7 +123,7 @@ export const AdminCompetition = () => {
                         />
                         <Route path="/results" element={<Results />} />
                         <Route path="/stats" element={<Stats />} />
-                        <Route path="/admins" element={<Box>admins</Box>} />
+                        <Route path="/admins" element={<Admins />} />
                         <Route path="/options" element={<Box>options</Box>} />
                         <Route path="/settings" element={<Box>settings</Box>} />
                     </Routes>
