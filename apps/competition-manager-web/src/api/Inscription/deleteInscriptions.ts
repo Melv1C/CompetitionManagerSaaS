@@ -17,6 +17,7 @@ import { Eid } from '@competition-manager/schemas';
  *
  * @param competitionEid - External ID of the competition
  * @param inscriptionEid - External ID of the inscription to delete
+ * @param isAdmin - Optional flag to indicate if request is made as admin (defaults to false)
  * @returns Promise<boolean> - Resolves to true if deletion was successful
  *
  * @example
@@ -31,10 +32,14 @@ import { Eid } from '@competition-manager/schemas';
  */
 export const deleteInscriptions = async (
     competitionEid: Eid,
-    inscriptionEid: Eid
+    inscriptionEid: Eid,
+    isAdmin: boolean = false
 ): Promise<boolean> => {
     await api.delete(
-        `/competitions/${competitionEid}/inscriptions/${inscriptionEid}`
+        `/competitions/${competitionEid}/inscriptions/${inscriptionEid}`,
+        {
+            params: { isAdmin },
+        }
     );
     return true;
 };
