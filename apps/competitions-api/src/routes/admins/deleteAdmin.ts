@@ -9,18 +9,25 @@ import { prisma } from '@competition-manager/prisma';
 import {
     Access,
     BaseAdmin$,
+    Eid$,
+    Id$,
     Role,
-    UpdateAdmin$,
 } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
 import { Router } from 'express';
+import { z } from 'zod';
 
 export const router = Router();
 
+const Params$ = z.object({
+    competitionEid: Eid$,
+    adminId: Id$,
+});
+
 router.delete(
     '/:competitionEid/admins/:adminId',
-    parseRequest(Key.Body, UpdateAdmin$),
     checkRole(Role.ADMIN),
+    parseRequest(Key.Params, Params$),
     async (req: CustomRequest, res) => {
         try {
             const { competitionEid, adminId } = req.params;
