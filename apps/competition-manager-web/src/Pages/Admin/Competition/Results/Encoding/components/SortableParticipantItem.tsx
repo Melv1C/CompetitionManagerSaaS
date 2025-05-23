@@ -1,9 +1,12 @@
 import { Bib } from '@/Components';
 import { useDeviceSize } from '@/hooks';
 import {
+    Athlete as AthleteType,
+    Bib as BibType,
     Id,
     Inscription,
     InscriptionStatus,
+    License,
 } from '@competition-manager/schemas';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -22,42 +25,51 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-type SortableInscriptionItemProps = {
-    inscription: Inscription;
-    isSelected: boolean;
-    toggleSelection: (id: Id) => void;
+// Type definition for our unified Participant type
+type Participant = {
+    license: License; // Athlete license (used as unique ID)
+    bib: BibType; // Athlete bib number
+    athlete: AthleteType; // Full athlete data
+    inscriptionId?: Id; // Optional inscription ID (missing for external athletes)
+    isSelected: boolean; // Whether this participant is selected
 };
 
-export const SortableInscriptionItem: React.FC<
-    SortableInscriptionItemProps
-> = ({ inscription, isSelected, toggleSelection }) => {
+type SortableParticipantItemProps = {
+    participant: Participant;
+    toggleSelection: () => void;
+    inscription?: Inscription; // Optional - used for showing inscription-specific data
+};
+
+export const SortableParticipantItem: React.FC<
+    SortableParticipantItemProps
+> = ({ participant, toggleSelection, inscription }) => {
     const { t } = useTranslation();
     const { isMobile } = useDeviceSize();
 
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-    } = useSortable({ id: inscription.id });
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id: participant.license });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
 
+    // Determine background color based on status (for inscribed athletes)
+    const getBackgroundColor = () => {
+        if (inscription && inscription.status === InscriptionStatus.ACCEPTED) {
+            return 'rgba(211, 47, 47, 0.04)';
+        }
+        return undefined;
+    };
+
     return (
         <Box ref={setNodeRef} style={style}>
             <ListItemButton
-                onClick={() => toggleSelection(inscription.id)}
+                onClick={toggleSelection}
                 sx={{
                     py: { xs: 2, sm: 1 },
                     px: { xs: 1, sm: 2 },
-                    backgroundColor:
-                        inscription.status === InscriptionStatus.ACCEPTED
-                            ? 'rgba(211, 47, 47, 0.04)'
-                            : undefined,
+                    backgroundColor: getBackgroundColor(),
                     display: 'flex',
                     alignItems: 'center',
                 }}
@@ -79,50 +91,54 @@ export const SortableInscriptionItem: React.FC<
                         padding: 0.5,
                     }}
                 >
-                    <FontAwesomeIcon icon={faGripLines} style={{ color: 'inherit' }} />
+                    <FontAwesomeIcon
+                        icon={faGripLines}
+                        style={{ color: 'inherit' }}
+                    />
                 </Box>
 
                 <Checkbox
                     edge="start"
-                    checked={isSelected}
+                    checked={participant.isSelected}
                     tabIndex={-1}
                     disableRipple
                 />
 
                 {!isMobile && (
                     <ListItemAvatar sx={{ minWidth: 'auto', m: 1 }}>
-                        <Bib value={inscription.bib} size="sm" />
+                        <Bib value={participant.bib} size="sm" />
                     </ListItemAvatar>
                 )}
 
                 <ListItemText
-                    primary={`${inscription.athlete.firstName} ${inscription.athlete.lastName}`}
+                    primary={`${participant.athlete.firstName} ${participant.athlete.lastName}`}
                     secondary={
                         isMobile ? (
                             <>
-                                {`${inscription.bib} - ${inscription.club?.abbr}`}
-                                {inscription.status ===
-                                    InscriptionStatus.ACCEPTED && (
-                                    <Box
-                                        component="span"
-                                        sx={{
-                                            ml: 1,
-                                            color: 'warning.main',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={faExclamationTriangle}
-                                            size="xs"
-                                        />
-                                    </Box>
-                                )}
+                                {`${participant.bib} - ${participant.athlete.club?.abbr}`}
+                                {inscription &&
+                                    inscription.status ===
+                                        InscriptionStatus.ACCEPTED && (
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                ml: 1,
+                                                color: 'warning.main',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faExclamationTriangle}
+                                                size="xs"
+                                            />
+                                        </Box>
+                                    )}
                             </>
                         ) : (
                             <>
-                                {inscription.club?.abbr}
-                                {inscription.record?.perf && (
+                                {participant.athlete.club?.abbr}
+                                {inscription?.record?.perf && (
                                     <Box
                                         component="span"
                                         sx={{
@@ -144,6 +160,7 @@ export const SortableInscriptionItem: React.FC<
                 />
 
                 {!isMobile &&
+                    inscription &&
                     inscription.status === InscriptionStatus.ACCEPTED && (
                         <Typography
                             variant="caption"

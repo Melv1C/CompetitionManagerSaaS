@@ -1,10 +1,10 @@
 import { upsertResults } from '@/api';
 import { adminInscriptionsAtom, competitionAtom } from '@/GlobalsStates';
 import {
+    Athlete as AthleteType,
     Bib as BibType,
     CompetitionEvent,
     Id,
-    Inscription,
     InscriptionStatus,
     License,
     UpsertResult$,
@@ -41,7 +41,17 @@ import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
-import { SortableInscriptionItem } from './SortableInscriptionItem';
+import { SearchAthleteModal } from './SearchAthleteModal';
+import { SortableParticipantItem } from './SortableParticipantItem';
+
+// Simplified Participant type with only required properties
+type Participant = {
+    license: License; // Athlete license (used as unique ID)
+    bib: BibType; // Athlete bib number
+    athlete: AthleteType; // Full athlete data
+    inscriptionId?: Id; // Optional inscription ID (missing for external athletes)
+    isSelected: boolean; // Whether this participant is selected
+};
 
 interface ParticipantsSelectorProps {
     event: CompetitionEvent;
@@ -59,14 +69,13 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
     const adminInscriptions = useAtomValue(adminInscriptionsAtom);
     if (!adminInscriptions) throw new Error('No inscriptions found');
 
-    const [selectedInscriptions, setSelectedInscriptions] = useState<
-        Record<number, boolean>
-    >({});
-
-    // State for ordered inscriptions
-    const [orderedInscriptions, setOrderedInscriptions] = useState<
-        Inscription[]
+    // State for ordered participants (both inscriptions and external athletes)
+    const [orderedParticipants, setOrderedParticipants] = useState<
+        Participant[]
     >([]);
+
+    // State for search modal
+    const [searchModalOpen, setSearchModalOpen] = useState(false);
 
     // Filter inscriptions for the current event and with status ACCEPTED or CONFIRMED
     const inscriptions = useMemo(() => {
@@ -78,18 +87,29 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
         );
 
         // Sort by performance record if available
-        return filtered.sort((a, b) =>
-            -1 * sortPerf(
-                a.record?.perf ?? 0,
-                b.record?.perf ?? 0,
-                a.competitionEvent.event.type
-            )
+        return filtered.sort(
+            (a, b) =>
+                -1 *
+                sortPerf(
+                    a.record?.perf ?? 0,
+                    b.record?.perf ?? 0,
+                    a.competitionEvent.event.type
+                )
         );
     }, [adminInscriptions, event.id]);
 
-    // Update ordered inscriptions when inscriptions change
+    // Initialize orderedParticipants from inscriptions
     useEffect(() => {
-        setOrderedInscriptions(inscriptions);
+        if (inscriptions.length > 0) {
+            const participants = inscriptions.map((inscription) => ({
+                license: inscription.athlete.license,
+                bib: inscription.athlete.bib,
+                athlete: { ...inscription.athlete, club: inscription.club },
+                inscriptionId: inscription.id,
+                isSelected: inscription.status === InscriptionStatus.CONFIRMED,
+            }));
+            setOrderedParticipants(participants);
+        }
     }, [inscriptions]);
 
     // Configure sensors for drag and drop
@@ -105,36 +125,32 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         if (over && active.id !== over.id) {
-            setOrderedInscriptions((items) => {
+            setOrderedParticipants((items) => {
                 const oldIndex = items.findIndex(
-                    (item) => item.id === active.id
+                    (item) => item.license === active.id
                 );
-                const newIndex = items.findIndex((item) => item.id === over.id);
+                const newIndex = items.findIndex(
+                    (item) => item.license === over.id
+                );
                 return arrayMove(items, oldIndex, newIndex);
             });
         }
     };
 
-    const createEmptyResults = async (
-        data: {
-            inscriptionId: Id;
-            bib: BibType;
-            athleteLicense: License;
-        }[]
-    ) => {
-        // Map selected inscriptions to create results with proper ordering
-        const results = data.map(
-            ({ inscriptionId, bib, athleteLicense }, index: number) => {
+    const createEmptyResults = async (participants: Participant[]) => {
+        // Map selected participants to create results with proper ordering
+        const results = participants
+            .filter((p) => p.isSelected)
+            .map((participant, index) => {
                 return UpsertResult$.parse({
                     competitionEventEid: event.eid,
-                    inscriptionId: inscriptionId,
-                    bib: bib,
-                    athleteLicense: athleteLicense,
+                    inscriptionId: participant.inscriptionId || null,
+                    bib: participant.bib,
+                    athleteLicense: participant.license,
                     initialOrder: index + 1,
                     tempOrder: index + 1,
                 });
-            }
-        );
+            });
 
         return upsertResults(competition.eid, UpsertResultType.LIVE, results);
     };
@@ -151,51 +167,47 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
         },
     });
 
-    // Initialize only CONFIRMED inscriptions as selected by default
-    useEffect(() => {
-        if (inscriptions && inscriptions.length > 0) {
-            const initialSelected: Record<number, boolean> = {};
-            inscriptions.forEach((inscription) => {
-                initialSelected[inscription.id] =
-                    inscription.status === InscriptionStatus.CONFIRMED;
-            });
-            setSelectedInscriptions(initialSelected);
-        }
-    }, [inscriptions]);
-
-    // Toggle selection for an inscription
-    const toggleSelection = (id: number) => {
-        setSelectedInscriptions((prev) => ({
-            ...prev,
-            [id]: !prev[id],
-        }));
+    // Toggle selection for a participant
+    const toggleSelection = (license: License) => {
+        setOrderedParticipants((prev) =>
+            prev.map((p) =>
+                p.license === license ? { ...p, isSelected: !p.isSelected } : p
+            )
+        );
     };
 
-    // Select or deselect all inscriptions
+    // Select or deselect all participants
     const toggleAll = (select: boolean) => {
-        const newSelection: Record<number, boolean> = {};
-        inscriptions.forEach((inscription) => {
-            newSelection[inscription.id] = select;
-        });
-        setSelectedInscriptions(newSelection);
+        setOrderedParticipants((prev) =>
+            prev.map((p) => ({ ...p, isSelected: select }))
+        );
     };
 
     // Start encoding with selected participants
     const handleStartEncoding = () => {
-        // Get selected inscriptions in the current order
-        const selectedItems = orderedInscriptions
-            .filter((inscription) => selectedInscriptions[inscription.id])
-            .map((inscription) => ({
-                inscriptionId: inscription.id,
-                bib: inscription.bib,
-                athleteLicense: inscription.athlete.license,
-            }));
-
-        if (selectedItems.length === 0) {
-            return; // Don't create results if no inscriptions selected
+        if (orderedParticipants.filter((p) => p.isSelected).length === 0) {
+            return; // Don't create results if no participants selected
         }
 
-        createEmptyResultsMutation.mutate(selectedItems);
+        createEmptyResultsMutation.mutate(orderedParticipants);
+    };
+
+    // Add an athlete from search to the participants list
+    const handleAddExternalAthlete = (athlete: AthleteType) => {
+        // Check if athlete is already in the list
+        if (orderedParticipants.some((p) => p.license === athlete.license)) {
+            return;
+        }
+
+        const newParticipant: Participant = {
+            license: athlete.license,
+            bib: athlete.bib,
+            athlete: athlete,
+            isSelected: true,
+        };
+
+        setOrderedParticipants((prev) => [...prev, newParticipant]);
+        setSearchModalOpen(false);
     };
 
     // If there are no inscriptions for this event
@@ -208,16 +220,10 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                 <Button
                     variant="outlined"
                     startIcon={<FontAwesomeIcon icon={faUserPlus} />}
+                    onClick={() => setSearchModalOpen(true)}
                 >
                     {t('result:searchOtherAthletes')}
                 </Button>
-                <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mt: 1, display: 'block' }}
-                >
-                    {t('result:comingSoon')}
-                </Typography>
             </Box>
         );
     }
@@ -273,32 +279,34 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                     mb: 3,
                 }}
             >
-                {orderedInscriptions.length > 0 ? (
+                {orderedParticipants.length > 0 ? (
                     <DndContext
                         sensors={sensors}
                         collisionDetection={closestCenter}
                         onDragEnd={handleDragEnd}
                     >
                         <SortableContext
-                            items={orderedInscriptions.map((item) => item.id)}
+                            items={orderedParticipants.map((p) => p.license)}
                             strategy={verticalListSortingStrategy}
                         >
                             <List disablePadding>
-                                {orderedInscriptions.map(
-                                    (inscription, index) => (
-                                        <Box key={inscription.id}>
+                                {orderedParticipants.map(
+                                    (participant, index) => (
+                                        <Box key={participant.license}>
                                             {index > 0 && (
                                                 <Divider component="li" />
                                             )}
-                                            <SortableInscriptionItem
-                                                inscription={inscription}
-                                                isSelected={
-                                                    !!selectedInscriptions[
-                                                        inscription.id
-                                                    ]
-                                                }
-                                                toggleSelection={
-                                                    toggleSelection
+                                            <SortableParticipantItem
+                                                participant={participant}
+                                                toggleSelection={() => toggleSelection(participant.license)}
+                                                inscription={
+                                                    participant.inscriptionId
+                                                        ? inscriptions.find(
+                                                              (i) =>
+                                                                  i.id ===
+                                                                  participant.inscriptionId
+                                                          )
+                                                        : undefined
                                                 }
                                             />
                                         </Box>
@@ -324,16 +332,10 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                     startIcon={<FontAwesomeIcon icon={faUserPlus} />}
                     fullWidth
                     sx={{ py: { xs: 1.5, sm: 1 } }}
+                    onClick={() => setSearchModalOpen(true)}
                 >
                     {t('result:searchOtherAthletes')}
                 </Button>
-                <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mt: 0.5, display: 'block', textAlign: 'center' }}
-                >
-                    {t('result:comingSoon')}
-                </Typography>
             </Box>
 
             <Box sx={{ textAlign: 'center' }}>
@@ -345,7 +347,7 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                     onClick={handleStartEncoding}
                     disabled={
                         createEmptyResultsMutation.isLoading ||
-                        Object.values(selectedInscriptions).filter(Boolean)
+                        orderedParticipants.filter((p) => p.isSelected)
                             .length === 0
                     }
                 >
@@ -361,6 +363,14 @@ export const ParticipantsSelector: React.FC<ParticipantsSelectorProps> = ({
                     </Typography>
                 )}
             </Box>
+
+            {/* Search athlete modal */}
+            <SearchAthleteModal
+                open={searchModalOpen}
+                onClose={() => setSearchModalOpen(false)}
+                onSelectAthlete={handleAddExternalAthlete}
+                competitionDate={competition.date}
+            />
         </>
     );
 };
