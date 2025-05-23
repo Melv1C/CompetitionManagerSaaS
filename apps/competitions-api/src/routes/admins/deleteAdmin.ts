@@ -13,7 +13,9 @@ import {
     UpdateAdmin$,
 } from '@competition-manager/schemas';
 import { isAuthorized } from '@competition-manager/utils';
-import { router } from './createAdmin';
+import { Router } from 'express';
+
+export const router = Router();
 
 router.delete(
     '/:competitionEid/admins/:adminId',

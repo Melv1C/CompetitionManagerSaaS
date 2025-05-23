@@ -8,6 +8,7 @@ import {
 import { prisma } from '@competition-manager/prisma';
 import {
     Access,
+    Admin$,
     BaseAdmin$,
     Competition$,
     CreateAdmin$,
@@ -93,8 +94,11 @@ router.post(
                             },
                         },
                     },
+                    include: {
+                        user: true,
+                    },
                 });
-                res.send(admin);
+                res.send(Admin$.parse(admin));
             } catch (e: any) {
                 if (e.code === 'P2025') {
                     res.status(404).send('User not found');
