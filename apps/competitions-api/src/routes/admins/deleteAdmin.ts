@@ -12,6 +12,7 @@ import {
     Role,
     UpdateAdmin$,
 } from '@competition-manager/schemas';
+import { isAuthorized } from '@competition-manager/utils';
 import { router } from './createAdmin';
 
 router.delete(
@@ -33,13 +34,16 @@ router.delete(
                 res.status(404).send('Competition not found');
                 return;
             }
-            if (!checkAdminRole(
-                Access.COMPETITIONS,
-                req.user!.id,
-                BaseAdmin$.array().parse(competition.admins),
-                res,
-                req.t
-            )) {
+            if (
+                !isAuthorized(req.user!, Role.SUPERADMIN) &&
+                !checkAdminRole(
+                    Access.COMPETITIONS,
+                    req.user!.id,
+                    BaseAdmin$.array().parse(competition.admins),
+                    res,
+                    req.t
+                )
+            ) {
                 return;
             }
             await prisma.admin.delete({
