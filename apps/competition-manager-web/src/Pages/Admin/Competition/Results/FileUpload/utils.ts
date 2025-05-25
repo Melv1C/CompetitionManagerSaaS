@@ -99,7 +99,7 @@ export const handleHeats = (
                         value *= 1000;
                     }
                     const detail: CreateResultDetail = {
-                        tryNumber: tryNumber,
+                        tryNumber: eventType == EventType.HEIGHT ? value : tryNumber,
                         value,
                         wind: result.wind,
                         attempts:
