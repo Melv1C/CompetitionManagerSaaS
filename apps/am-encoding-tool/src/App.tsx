@@ -1,42 +1,27 @@
-import { useEffect, useState } from 'react';
-import './App.css';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { NavBar } from './Components/NavBar';
+import { Home } from './pages/Home';
+import { Truc } from './pages/Truc';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { CompetitionDashBoard } from './pages/CompetitionDashBoard';
+
+const queryClient = new QueryClient();
 
 function App() {
-    const [results, setResults] = useState<any[]>([]);
-    const [isConnected, setIsConnected] = useState(false);
+    const navItems = [{ label: 'Home', href: '/', icon: faHome }];
 
     return (
-        <>
-            <h1>Test</h1>
-            {/* <button onClick={async () => {
-                const result = await window.localDb.connectDb();
-                if (result.success) {
-                    setIsConnected(true);
-                    const data = await window.localDb.getResults();
-                    setResults(data);
-                } else {
-                    console.error('Connection failed:', 'error' in result ? result.error : 'Unknown error');
-                }
-            }}>Connect</button> */}
-
-            <input type="text" id="queryInput" placeholder="Enter SQL query" />
-            <button onClick={async () => {
-                const query = (document.getElementById('queryInput') as HTMLInputElement)?.value || '';
-                const result = await window.localDb.executeQuery(query);
-                if ('error' in result) {
-                    console.error('Query execution failed:', result.error);
-                } else {
-                    setResults(result);
-                }
-            }}>
-                Execute Query
-            </button>
-            {results.map((result, index) => (
-                <div key={index}>
-                    <pre>{JSON.stringify(result, null, 2)}</pre>
-                </div>
-            ))}
-        </>
+        <BrowserRouter>
+            <QueryClientProvider client={queryClient}>
+                <NavBar items={navItems} />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/truc" element={<Truc />} />
+                    <Route path="/competition/:competitionEid" element={<CompetitionDashBoard />} />
+                </Routes>
+            </QueryClientProvider>
+        </BrowserRouter>
     );
 }
 
