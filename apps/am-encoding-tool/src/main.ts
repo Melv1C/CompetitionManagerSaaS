@@ -106,6 +106,6 @@ ipcMain.handle('execute-query', async (_, query: string) => {
         return result.rows;
     } catch (err: any) {
         console.error(err);
-        return { error: err.message };
+        return [];
     }
 });
