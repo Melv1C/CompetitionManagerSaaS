@@ -120,18 +120,36 @@ router.post(
 
                 // Set up cleanup timeout for unused one-day athletes
                 setTimeout(async () => {
-                    //check if ath have inscriptions else delete it
-                    const inscriptions = await prisma.inscription.findFirst({
-                        where: {
-                            athleteId: newOneDayAth.id
-                        }
-                    });
-                    if(!inscriptions){
-                        await prisma.athlete.delete({
+                    try {
+                        //check if ath have inscriptions else delete it
+                        const inscriptions = await prisma.inscription.findFirst({
                             where: {
-                                id: newOneDayAth.id
+                                athleteId: newOneDayAth.id
                             }
                         });
+                        if(!inscriptions){
+                            await prisma.athlete.delete({
+                                where: {
+                                    id: newOneDayAth.id
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2025') {
+                            catchError(logger)(e, {
+                                message: 'One-day athlete already deleted',
+                                path: 'POST /:competitionEid/oneDayAthlete',
+                                status: 409,
+                                userId: req.user?.id
+                            });
+                        } else {
+                            catchError(logger)(e, {
+                                message: 'Error during one-day athlete cleanup',
+                                path: 'POST /:competitionEid/oneDayAthlete',
+                                status: 500,
+                                userId: req.user?.id
+                            });
+                        }
                     }
                 }, env.ONE_DAY_ATHLETE_TIMEOUT);
 
