@@ -1,5 +1,4 @@
-import { getRecords } from '@/api';
-import { CircleButton, Icons, Loading, StepperButtons } from '@/Components';
+import { CircleButton, Icons, StepperButtons } from '@/Components';
 import {
     competitionAtom,
     inscriptionDataAtom,
@@ -8,7 +7,6 @@ import {
 import {
     Event,
     Record,
-    Records as RecordsType,
 } from '@competition-manager/schemas';
 import { formatPerf } from '@competition-manager/utils';
 import {
@@ -20,9 +18,8 @@ import {
     Typography,
 } from '@mui/material';
 import { useAtom, useAtomValue } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
 import { UpdateRecordPopup } from './UpdateRecordPopup';
 
 type RecordsProps = {
@@ -43,20 +40,6 @@ export const Records: React.FC<RecordsProps> = ({ handleNext, handleBack }) => {
         useAtom(inscriptionDataAtom);
     if (!athlete) throw new Error('Athlete not found');
     if (inscriptionsData.length === 0) throw new Error('No selected events');
-
-    const setFetchRecords = (records: RecordsType) => {
-        const newInscriptionsData = inscriptionsData.map((inscriptionData) => {
-            const record =
-                inscriptionData.record ??
-                records[inscriptionData.competitionEvent.event.name] ??
-                null;
-            return { ...inscriptionData, record };
-        });
-        setInscriptionData((prev) => ({
-            ...prev,
-            inscriptionsData: newInscriptionsData,
-        }));
-    };
 
     const setNewRecord = (record: Record, event: Event) => {
         const newInscriptionsData = inscriptionsData.map((inscriptionData) => {
@@ -80,34 +63,6 @@ export const Records: React.FC<RecordsProps> = ({ handleNext, handleBack }) => {
         setEventInPopup(event);
         setIsPopupOpen(true);
     };
-
-    const {
-        data: fetchrecords,
-        isLoading,
-        isError,
-    } = useQuery(
-        [
-            'records',
-            athlete.license,
-            inscriptionsData.map((i) => i.competitionEvent.event.name),
-        ],
-        () =>
-            getRecords(
-                athlete.license,
-                inscriptionsData.map((i) => i.competitionEvent.event.name)
-            )
-    );
-
-    if (isError) throw new Error('Error while fetching records');
-
-    useEffect(() => {
-        if (fetchrecords) {
-            setFetchRecords(fetchrecords);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchrecords]);
-
-    if (isLoading) return <Loading />;
 
     return (
         <Box width={1}>
