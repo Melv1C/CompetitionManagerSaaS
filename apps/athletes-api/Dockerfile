@@ -1,6 +1,19 @@
 # Use the official Node Alpine image as the base image
 FROM node:20-alpine3.20
 
+# Install Chromium dependencies for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-dejavu
+
+# Set Puppeteer to use system Chromium to save space and avoid duplicate downloads
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 # Set the working directory to get shared package
 WORKDIR /competition-manager
 
